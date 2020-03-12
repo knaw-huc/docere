@@ -1,0 +1,42 @@
+{
+  "name": "@docere/frontend",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "backend": "./npm-run-backend.sh",
+    "build": "tsc -p",
+    "dev": "webpack-dev-server",
+    "dist": "webpack --config webpack.config.prod.js",
+    "prod": "webpack-dev-server --config webpack.config.prod.js",
+    "watch": "tsc -w"
+  },
+  "author": "",
+  "license": "GPL-3.0-or-later",
+  "dependencies": {
+    "@docere/common": "^1.0.0",
+    "@docere/ui-components": "^1.0.0",
+    "@docere/text-components": "^1.0.0",
+    "@docere/projects": "1.0.0",
+    "@docere/search": "^2.4.0",
+    "@docere/text": "^2.1.1",
+    "@emotion/core": "^10.0.27",
+    "@emotion/styled": "^10.0.27",
+    "emotion": "^10.0.27",
+    "lodash.debounce": "^4.0.8",
+    "openseadragon": "^2.4.2",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-emotion": "^10.0.0"
+  },
+  "devDependencies": {
+    "@types/lodash.debounce": "^4.0.6",
+    "@types/react": "^16.9.23",
+    "@types/react-dom": "^16.9.5",
+    "ts-loader": "^6.2.1",
+    "tslib": "^1.11.1",
+    "typescript": "^3.8.3",
+    "webpack": "^4.42.0",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "declaration": false,
+    "incremental": false,
+    "importHelpers": false,
+    "outDir": "./dist"
+  },
+  "extends": "../../tsconfig.json"
+}

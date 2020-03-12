@@ -1,0 +1,14 @@
+{
+  "name": "docere",
+  "version": "1.0.0",
+  "author": "Gijsjan Brouwer",
+  "license": "GPL-3.0-or-later",
+  "scripts": {
+    "install": "./install.sh",
+    "indexer": "node packages/api/build/api/src/indexer.js",
+    "start": "./packages/docker/start.sh"
+  },
+  "devDependencies": {
+    "lerna": "^3.20.2"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "name": "@docere/projects",
+  "version": "1.0.0",
+  "description": "",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dist": "webpack",
+    "watch": "tsc -w",
+    "watch:dist": "webpack -w"
+  },
+  "author": "Gijsjan Brouwer",
+  "license": "GPL-3.0-or-later",
+  "dependencies": {
+    "@docere/common": "^1.0.0",
+    "@docere/text": "^2.1.1",
+    "@docere/text-components": "^1.0.0",
+    "@docere/ui-components": "^1.0.0",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "styled-components": "^5.0.1"
+  },
+  "devDependencies": {
+    "@types/react": "^16.9.23",
+    "@types/react-dom": "^16.9.5",
+    "@types/styled-components": "5.0.1",
+    "ts-loader": "^6.2.1",
+    "tslib": "^1.11.1",
+    "typescript": "^3.8.3",
+    "webpack": "^4.42.0",
+    "webpack-cli": "^3.3.11"
+  }
+}

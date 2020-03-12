@@ -1,0 +1,24 @@
+{
+  "name": "@docere/text-components",
+  "version": "1.0.0",
+  "description": "",
+  "main": "build/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "tsc -w"
+  },
+  "author": "Gijsjan Brouwer",
+  "license": "GPL-3.0-or-later",
+  "dependencies": {
+    "@docere/common": "^1.0.0",
+    "@docere/text": "^2.1.1",
+    "react": "^16.12.0",
+    "styled-components": "^5.0.1"
+  },
+  "devDependencies": {
+    "@types/react": "^16.9.23",
+    "@types/styled-components": "5.0.1",
+    "tslib": "^1.11.1",
+    "typescript": "^3.8.3"
+  }
+}

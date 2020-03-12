@@ -1,0 +1,10 @@
+node_modules
+lerna-debug.log
+build
+dist
+secrets
+xml
+data
+facsimiles
+tsconfig.tsbuildinfo
+achterdeschermen

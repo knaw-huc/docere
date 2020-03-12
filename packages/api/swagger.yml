@@ -1,0 +1,107 @@
+openapi: 3.0.0
+info:
+  title: Docere API
+  version: 0.0.0
+
+servers:
+  - url: http://localhost:4000/api
+    description: Docere DEV server
+  - url: https://demo.docere.diginfra.net/api
+    description: Docere DEMO server
+
+components:
+  schemas:
+    JsonResponse200:
+      '200':    # status code
+        content:
+          application/json:
+    ProjectParameters:
+      name: projectId
+      in: path
+      required: true
+      description: ID of the project
+      schema:
+        type : string
+    DocumentParameters:
+      name: documentId
+      in: path
+      required: true
+      description: ID of the document
+      schema:
+        type : string
+
+paths:
+  /projects:
+    get:
+      summary: Returns a list of project IDs
+      responses:
+        $ref: '#/components/schemas/JsonResponse200'
+               
+  /projects/{projectId}/config:
+    get:
+      summary: Returns the config of a project
+      parameters:
+        - $ref: '#/components/schemas/ProjectParameters'
+      responses:
+        $ref: '#/components/schemas/JsonResponse200'
+               
+  /projects/{projectId}/mapping:
+    get:
+      summary: Returns the ElasticSearch index mapping of a project
+      parameters:
+        - $ref: '#/components/schemas/ProjectParameters'
+      responses:
+        $ref: '#/components/schemas/JsonResponse200'
+               
+  /projects/{projectId}/documents/{documentId}:
+    get:
+      summary: Returns a Docere document 
+      parameters:
+        - $ref: '#/components/schemas/ProjectParameters'
+        - $ref: '#/components/schemas/DocumentParameters'
+      responses:
+        $ref: '#/components/schemas/JsonResponse200'
+               
+  /projects/{projectId}/documents/{documentId}/metadata:
+    get:
+      summary: Returns metadata from a Docere document 
+      parameters:
+        - $ref: '#/components/schemas/ProjectParameters'
+        - $ref: '#/components/schemas/DocumentParameters'
+      responses:
+        $ref: '#/components/schemas/JsonResponse200'
+               
+  /projects/{projectId}/documents/{documentId}/fields:
+    get:
+      summary: Returns populated ElasticSearch fields for a Docere document 
+      parameters:
+        - $ref: '#/components/schemas/ProjectParameters'
+        - $ref: '#/components/schemas/DocumentParameters'
+      responses:
+        $ref: '#/components/schemas/JsonResponse200'
+               
+    post:
+      summary: Returns populated ElasticSearch fields for a Docere document 
+      parameters:
+        - $ref: '#/components/schemas/ProjectParameters'
+        - $ref: '#/components/schemas/DocumentParameters'
+        - name: Content-type
+          in: header
+          description: Content header
+          required: true
+          schema: 
+            type: string
+      requestBody:
+        description: Text content of an XML file
+        required: true
+        content:
+          application/xml:
+            schema:
+              type: string
+          text/xml:
+            schema:
+              type: string
+      responses:
+        $ref: '#/components/schemas/JsonResponse200'
+
+
