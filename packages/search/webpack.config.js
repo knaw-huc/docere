@@ -6,7 +6,7 @@ module.exports = {
 	output: {
 		filename: "[name].js",
 		globalObject: 'this',
-		library: "HucFacetedSearch",
+		library: "DocereSearch",
 		libraryTarget: "umd",
 		path: __dirname + "/dist",
 		publicPath: "/dist/",
@@ -20,7 +20,10 @@ module.exports = {
 				test: /\.tsx?$/,
 				exclude: /node_modules/,
 				loader: "ts-loader",
-				options: { configFile: "tsconfig.json" },
+				options: {
+					configFile: "tsconfig.json",
+					transpileOnly: true
+				},
 			}
 		]
 	},
