@@ -12,7 +12,7 @@ export async function prepareAndExtract(xml: string, documentId: string, project
 	try {
 		xmlRoot = domParser.parseFromString(xml, "application/xml")
 	} catch (err) {
-		return { __error: `Document ${documentId}: XML parser error\n${JSON.stringify(err)}` }
+		return { __error: `Document ${documentId}: XML parser error\n${err.toString()}` }
 	}
 
 	if (xmlRoot.querySelector('parsererror')) {
@@ -27,7 +27,6 @@ export async function prepareAndExtract(xml: string, documentId: string, project
 
 	// TODO use ID for when splitting is needed
 	// Prepare document
-	// console.log(prepareDocument.toString())
 	let doc: XMLDocument
 	try {
 		doc = await docereConfigData.prepareDocument(xmlRoot, docereConfigData.config, documentId)
@@ -36,12 +35,11 @@ export async function prepareAndExtract(xml: string, documentId: string, project
 	}
 
 	// Entities
-	// let entities: Record<string, string[]> = {}
 	let entities: Entity[] = []
 	try {
 		entities = docereConfigData.extractEntities(doc, docereConfigData.config)
 	} catch (err) {
-		return { __error: `Document ${documentId}: Entity extraction error\n${JSON.stringify(err)}` }
+		return { __error: `Document ${documentId}: Entity extraction error\n${err.toString()}` }
 	}
 
 	// Metadata
@@ -49,7 +47,7 @@ export async function prepareAndExtract(xml: string, documentId: string, project
 	try {
 		metadata = docereConfigData.extractMetadata(doc, docereConfigData.config, documentId)
 	} catch (err) {
-		return { __error: `Document ${documentId}: Metadata extraction error\n${JSON.stringify(err)}` }
+		return { __error: `Document ${documentId}: Metadata extraction error\n${err.toString()}` }
 	}
 
 	// Notes
@@ -57,7 +55,7 @@ export async function prepareAndExtract(xml: string, documentId: string, project
 	try {
 		notes = docereConfigData.extractNotes(doc, docereConfigData.config)
 	} catch (err) {
-		return { __error: `Document ${documentId}: Note extraction error\n${JSON.stringify(err)}` }
+		return { __error: `Document ${documentId}: Note extraction error\n${err.toString()}` }
 	}
 
 	// Facsimiles
