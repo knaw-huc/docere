@@ -1,27 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { getPb, Popup, Rs } from '@docere/text-components'
-import { DocereComponentContainer, Colors } from '@docere/common'
-
-interface NAProps { active: boolean, layer: TextLayer }
-const NoteAnchor = styled.div`
-	background-color: ${(props: NAProps) => props.active ? Colors.Brown : 'white' };
-	border-radius: 1em;
-	border: 2px solid ${Colors.Brown};
-	color: ${props => props.active ? 'white' : Colors.Brown };
-	cursor: pointer;
-	display: inline-block;
-	font-family: monospace;
-	font-size: .8rem;
-	font-weight: bold;
-	height: 1.4em;
-	line-height: 1.4em;
-	margin: 0 .25em;
-	position: ${props => props.layer.asideActive ? 'static' : 'relative'};
-	text-align: center;
-	transition: all 150ms;
-	width: 1.6em;
-`
+import { Note, getPb, Rs } from '@docere/text-components'
+import { DocereComponentContainer } from '@docere/common'
 
 const Ref = styled.span`border-bottom: 1px solid green;`
 const ref = function(props: DocereComponentProps) {
@@ -57,29 +37,6 @@ function person(personConfig: EntityConfig) {
 	}
 }
 
-function anchor(props: DocereComponentProps) {
-	const active = props.attributes.n === props.activeNote?.targetId
-
-	return (
-		<NoteAnchor
-			active={active}
-			layer={props.layer}
-			onClick={_ev => {
-				// console.log(props.entry.notes, props.attributes['xml:id'], )
-				props.entryDispatch({ type: 'SET_NOTE', id: props.attributes['xml:id'] })
-			}}
-		>
-			{props.attributes.n}
-			<Popup
-				active={active}
-				docereComponentProps={props}
-				node={props.entry.notes?.find(n => n.id === props.attributes['xml:id'])?.el}
-				title={`Note ${props.attributes.n}`}
-			/>
-		</NoteAnchor>
-	)
-}
-
 // const getComponents: GetComponents = function(config: DocereConfig) {
 export default function getComponents(config: DocereConfig) {
 	return async function(_container: DocereComponentContainer, _id: string) {
@@ -88,7 +45,13 @@ export default function getComponents(config: DocereConfig) {
 			ref,
 			pb: getPb(props => props.attributes.facs.slice(1)),
 			'rs[type="pers"]': person(personConfig),
-			anchor,
+			anchor: (props: DocereComponentProps) =>
+				<Note
+					{...props}
+					id={props.attributes['xml:id']}
+					n={props.attributes.n}
+					title={`Note ${props.attributes.n}`}
+				/>, 
 		}
 	}
 }

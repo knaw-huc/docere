@@ -4,6 +4,7 @@ import getPb from './pb'
 import Popup from './popup'
 import Rs, { EntityWrapper } from './rs'
 import Tooltip, { TooltipBody } from './tooltip'
+import Note from './note'
 
 const Hi = styled.span`
 	${(props: DocereComponentProps) => {
@@ -39,6 +40,7 @@ export {
 	getPb,
 	Hi,
 	Lb,
+	Note,
 	Popup,
 	Rs,
 	Tooltip,

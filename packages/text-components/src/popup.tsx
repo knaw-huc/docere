@@ -2,7 +2,7 @@ import React from 'react'
 import DocereTextView from '@docere/text'
 import Tooltip, { TooltipBody } from './tooltip'
 import styled from 'styled-components'
-import { DEFAULT_POPUP_BG_COLOR, TEXT_PANEL_GUTTER_WIDTH, TEXT_PANEL_TEXT_WIDTH, DEFAULT_SPACING } from '@docere/common'
+import { TEXT_PANEL_GUTTER_WIDTH, TEXT_PANEL_TEXT_WIDTH, DEFAULT_SPACING } from '@docere/common'
 
 const PopupAsideWrapper = styled(TooltipBody)`
 	backgroundColor: white;
@@ -32,12 +32,11 @@ const PopupHeader = styled.header`
 		padding: 1rem;
 	}
 `
-PopupHeader.defaultProps = { color: DEFAULT_POPUP_BG_COLOR }
 
 interface Props {
 	docereComponentProps: DocereComponentProps
 	active: boolean
-	color?: string
+	color: string
 	node: Node
 	title: string
 }
