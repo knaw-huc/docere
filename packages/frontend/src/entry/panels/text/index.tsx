@@ -26,7 +26,6 @@ const Wrapper = styled.div`
 
 interface TextProps {
 	hasFacs: boolean
-	layer: TextLayer
 }
 export const Text = styled.div`
 	color: #222;
@@ -36,7 +35,7 @@ export const Text = styled.div`
 	display: grid;
 	grid-template-columns: ${TEXT_PANEL_TEXT_WIDTH}px auto;
 	line-height: 2rem;
-	padding: ${DEFAULT_SPACING}px 0 200px ${(props: TextProps) => props.hasFacs ? TEXT_PANEL_GUTTER_WIDTH : 0}px;
+	padding: ${DEFAULT_SPACING}px 0 200px ${(props: TextProps) => props.hasFacs ? TEXT_PANEL_GUTTER_WIDTH : 2 * DEFAULT_SPACING}px;
 	position: relative;
 `
 
@@ -94,7 +93,6 @@ function TextPanel(props: TextPanelProps) {
 			>
 				<Text 
 					hasFacs={props.entry.facsimiles?.length > 0}
-					layer={props.layer}
 				>
 					<DocereTextView
 						customProps={customProps}

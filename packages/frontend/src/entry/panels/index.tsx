@@ -33,7 +33,6 @@ const Wrapper = styled.div`
 			grid-template-rows: 100% auto;
 		`
 	}}
-	grid-column-gap: ${DEFAULT_SPACING}px;
 	overflow-x: auto; 
 	width: 100%;
 `
