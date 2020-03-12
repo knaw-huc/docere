@@ -55,15 +55,30 @@ async function handleProject(projectId: string) {
 
 async function main() {
 	await puppenv.start()
-	
-	// TODO error if projec does not exist
-	let projects = process.argv.slice(2, 3)
-	if (!projects.length) projects = listProjects()
 
+	// List the project dirs => ['vangogh', 'kranten1700', 'gheys']
+	const projectDirs = listProjects()
+	
+	// Read input from the CLI
+	const project = process.argv.slice(2, 3)[0]
+
+	// If a projects was entered in the CLI, check if it exists, if not exit
+	if (project != null && project.length && projectDirs.indexOf(project) === -1) {
+		logError('Project not found: ', project)
+		await puppenv.close()
+		esClient.close()
+		return
+	}
+
+	// If project is empty (nothing entered in the CLI), default to all projects
+	const projects = project == null ? projectDirs : [project]
+
+	// Process every project
 	for (const projectSlug of projects) {
 		await handleProject(projectSlug)
 	}
 
+	// Clean up
 	await puppenv.close()
 	esClient.close()
 	console.log('')
