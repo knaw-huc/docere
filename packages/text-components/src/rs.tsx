@@ -120,8 +120,6 @@ export default function Rs(props: RsProps) {
 		setOpenToAside(props.active && props.customProps.entrySettings['panels.text.popup'] === 'aside')
 	}, [props.active, props.customProps.entrySettings['panels.text.popup']])
 
-
-	console.log(openToAside, props.customProps.entrySettings, props.active, props.config)
 	return (
 		<EntityWrapper
 			active={props.active}
