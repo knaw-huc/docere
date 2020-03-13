@@ -26,12 +26,17 @@ interface Facsimile {
 	versions: FacsimileVersion[]
 }
 
+interface EntrySettings {
+	'panels.text.popup'?: 'aside' | 'tooltip'
+}
+
 interface DocereConfig {
 	data?: Record<string, any>
 	metadata?: MetadataConfig[]
 	notes?: NotesConfig[]
 	pages?: PageConfig[]
 	searchResultCount?: number
+	entrySettings?: EntrySettings
 	slug: string
 	entities?: EntityConfig[]
 	layers?: LayerConfig[]
@@ -105,7 +110,6 @@ interface LayerConfig extends BaseConfig {
 }
 
 interface TextLayerConfig extends LayerConfig {
-	asideActive?: boolean
 	type: import('../enum').LayerType.Text
 }
 

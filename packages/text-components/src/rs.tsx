@@ -73,10 +73,10 @@ const svgByType: Record<string, React.FC<Pick<RsProps, 'active' | 'config' | 'on
 	[RsType.None]: null,
 }
 
-interface NWProps { layer: TextLayer }
+interface NWProps { openToAside: boolean }
 const NoWrap = styled.span`
 	display: inline-block;
-	position: ${(props: NWProps) => props.layer?.asideActive ? 'static' : 'relative'};
+	position: ${(props: NWProps) => props.openToAside ? 'static' : 'relative'};
 	white-space: nowrap;
 `
 
@@ -101,6 +101,7 @@ export const EntityWrapper = styled.span`
 
 export default function Rs(props: RsProps) {
 	const [showTooltip, setShowTooltip] = React.useState(false)
+	const [openToAside, setOpenToAside] = React.useState(props.customProps.entrySettings['panels.text.popup'] === 'aside')
 	const Icon = svgByType[props.config.type]
 
 	// To prevent a wrap between the icon and the first word the first word is extracted.
@@ -116,8 +117,11 @@ export default function Rs(props: RsProps) {
 
 	React.useEffect(() => {
 		if (!props.active) setShowTooltip(false)
-	}, [props.active])
+		setOpenToAside(props.active && props.customProps.entrySettings['panels.text.popup'] === 'aside')
+	}, [props.active, props.customProps.entrySettings['panels.text.popup']])
 
+
+	console.log(openToAside, props.customProps.entrySettings, props.active, props.config)
 	return (
 		<EntityWrapper
 			active={props.active}
@@ -128,7 +132,9 @@ export default function Rs(props: RsProps) {
 			}}
 			revealOnHover={props.revealOnHover}
 		>
-			<NoWrap layer={props.customProps?.layer}>
+			<NoWrap
+				openToAside={openToAside}
+			>
 				{
 					Icon != null &&
 					<Icon
@@ -142,6 +148,7 @@ export default function Rs(props: RsProps) {
 					color={props.config.color}
 					docereComponentProps={props.customProps}
 					node={null}
+					openToAside={openToAside}
 					title={props.config.type.toString()}
 				/>
 			</NoWrap>

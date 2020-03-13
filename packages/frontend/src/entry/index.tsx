@@ -17,18 +17,9 @@ function Entry(props: EntryProps) {
 			searchTab={props.searchTab}
 		>
 			<Panels
-				activeEntity={entryState.activeEntity}
-				activeNote={entryState.activeNote}
-				activeFacsimile={entryState.activeFacsimile}
-				activeFacsimileAreas={entryState.activeFacsimileAreas}
-				appDispatch={props.appDispatch}
-				asideTab={entryState.asideTab}
+				{...props}
+				{...entryState}
 				entryDispatch={entryDispatch}
-				entry={props.entry}
-				footerTab={entryState.footerTab}
-				layers={entryState.layers}
-				searchQuery={props.searchQuery}
-				searchTab={props.searchTab}
 			/>
 			<Aside
 				activeEntity={entryState.activeEntity}
@@ -40,6 +31,7 @@ function Entry(props: EntryProps) {
 				entryDispatch={entryDispatch}
 				entry={props.entry}
 				layers={entryState.layers}
+				settings={entryState.settings}
 			/>
 			<Footer
 				entryDispatch={entryDispatch}

@@ -29,7 +29,6 @@ const defaultLayerConfig: LayerConfig = {
 
 const defaultTextLayerConfig: TextLayerConfig = {
 	...defaultLayerConfig,
-	asideActive: false,
 	type: LayerType.Text
 }
 

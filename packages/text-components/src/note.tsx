@@ -3,7 +3,7 @@ import { DEFAULT_POPUP_BG_COLOR } from '@docere/common'
 import styled from 'styled-components'
 import Popup from './popup'
 
-interface NAProps { active: boolean, color: string, layer: TextLayer }
+interface NAProps { active: boolean, color: string, openToAside: boolean }
 const Wrapper = styled.div`
 	background-color: ${(props: NAProps) => props.active ? props.color : 'white' };
 	border-radius: 1em;
@@ -17,22 +17,23 @@ const Wrapper = styled.div`
 	height: 1.4em;
 	line-height: 1.4em;
 	margin: 0 .25em;
-	position: ${props => props.layer.asideActive ? 'static' : 'relative'};
+	position: ${props => props.openToAside ? 'static' : 'relative'};
 	text-align: center;
 	transition: all 150ms;
 	width: 1.6em;
 `
 export default function Note(props: DocereComponentProps & { id: string, title: string, n: string, color?: string }) {
 	const active = props.id === props.activeNote?.id
+	const openToAside = active && props.entrySettings['panels.text.popup'] === 'aside'
 
 	return (
 		<Wrapper
 			active={active}
 			color={props.color}
-			layer={props.layer}
 			onClick={() => {
 				props.entryDispatch({ type: 'SET_NOTE', id: props.id })
 			}}
+			openToAside={openToAside}
 		>
 			{props.n}
 			<Popup
@@ -40,6 +41,7 @@ export default function Note(props: DocereComponentProps & { id: string, title: 
 				color={props.color}
 				docereComponentProps={props}
 				node={props.entry.notes?.find(n => n.id === props.id)?.el}
+				openToAside={openToAside}
 				title={props.title}
 			/>
 		</Wrapper>

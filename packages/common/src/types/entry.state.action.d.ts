@@ -1,14 +1,9 @@
-interface ESA_Entry_Changed extends Pick<EntryState, 'activeFacsimile' | 'entry' | 'layers'> {
+interface ESA_Entry_Changed extends Pick<EntryState, 'activeFacsimile' | 'entry' | 'layers' | 'settings'> {
 	type: "ENTRY_CHANGED",
 }
 
 interface ESA_Toggle_Layer {
 	type: 'TOGGLE_LAYER'
-	id: string
-}
-
-interface ESA_Toggle_Text_Layer_Aside {
-	type: 'TOGGLE_TEXT_LAYER_ASIDE'
 	id: string
 }
 
@@ -48,5 +43,4 @@ type EntryStateAction =
 	ESA_Set_Note_Id |
 	ESA_Toggle_Aside_Tab |
 	ESA_Toggle_Footer_Tab |
-	ESA_Toggle_Layer |
-	ESA_Toggle_Text_Layer_Aside
+	ESA_Toggle_Layer

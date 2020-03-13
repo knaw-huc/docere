@@ -4,7 +4,7 @@ import Note from './note'
 
 // interface Props {
 
-type Props = Pick<EntryState, 'activeEntity' | 'activeFacsimile' | 'activeFacsimileAreas' | 'activeNote'> & {
+type Props = Pick<EntryState, 'activeEntity' | 'activeFacsimile' | 'activeFacsimileAreas' | 'activeNote' | 'settings'> & {
 	active: boolean
 	appDispatch: React.Dispatch<AppStateAction>
 	components: DocereComponents
@@ -44,6 +44,7 @@ function NotesList(props: Props) {
 						item={note}
 						key={note.id}
 						listId={props.type}
+						settings={props.settings}
 					/>
 				)
 			}

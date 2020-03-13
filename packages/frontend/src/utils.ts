@@ -8,9 +8,13 @@ export function isXmlLayer(layer: Layer): layer is XmlLayer {
 	return layer.type === LayerType.XML
 }
 
-export function getTextPanelWidth(layer: TextLayer) {
-	// return (layer.asideActive ? (TEXT_PANEL_TEXT_WIDTH * 1.5 + 64) : TEXT_PANEL_TEXT_WIDTH * 1.25) + 80
-	return layer.asideActive ? TEXT_PANEL_WIDTH_ASIDE_ACTIVE : TEXT_PANEL_WIDTH
+export function getTextPanelWidth(panelTextPopup: EntrySettings['panels.text.popup'], activeNote: Note, activeEntity: Entity) {
+	const asideActive = panelTextPopup === 'aside' &&
+		(activeNote != null || activeEntity != null)
+
+	return asideActive ?
+			TEXT_PANEL_WIDTH_ASIDE_ACTIVE :
+			TEXT_PANEL_WIDTH
 }
 
 export function analyzeWindowLocation() {

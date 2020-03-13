@@ -1,16 +1,17 @@
 import * as React from 'react'
-import { AsideTab, FooterTab } from '@docere/common'
-import { isTextLayer } from '../../utils'
+import { defaultEntrySettings, AsideTab, FooterTab } from '@docere/common'
+import AppContext from '../../app/context'
 
 const initialEntryState: EntryState = {
-	activeFacsimile: null,
 	activeEntity: null,
-	activeNote: null,
+	activeFacsimile: null,
 	activeFacsimileAreas: null,
-	entry: null,
-	layers: [],
+	activeNote: null,
 	asideTab: null,
+	entry: null,
 	footerTab: null,
+	layers: [],
+	settings: defaultEntrySettings,
 }
 
 function entryStateReducer(entryState: EntryState, action: EntryStateAction): EntryState {
@@ -41,7 +42,6 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 			let activeEntity = entryState.entry.entities?.find(e => e.id === action.id)
 			if (activeEntity == null) activeEntity = { id: action.id, type: null, value: null }
 
-			console.log(action.id, entryState.activeEntity)
 			if (action.id === entryState.activeEntity?.id) {
 				activeEntity = null
 				activeFacsimileAreas = null
@@ -124,19 +124,6 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 			}
 		}
 
-		case 'TOGGLE_TEXT_LAYER_ASIDE': {
-			return {
-				...entryState,
-				layers: entryState.layers.map(l => {
-					if (isTextLayer(l) && l.id === action.id) {
-						l.asideActive = !l.asideActive
-						return { ...l }
-					}
-					return l
-				})
-			}
-		}
-
 		default:
 			break
 	}
@@ -146,6 +133,7 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 
 
 export default function useEntryState(entry: Entry) {
+	const appContext = React.useContext(AppContext)
 	const x = React.useReducer(entryStateReducer, initialEntryState)
 
 	React.useEffect(() => {
@@ -156,6 +144,7 @@ export default function useEntryState(entry: Entry) {
 			activeFacsimile: entry.facsimiles?.length ? entry.facsimiles[0] : null,
 			entry,
 			layers: entry.layers,
+			settings: appContext.config.entrySettings,
 			type: 'ENTRY_CHANGED',
 		})
 	}, [entry])

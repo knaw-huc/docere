@@ -38,11 +38,12 @@ interface Props {
 	active: boolean
 	color: string
 	node: Node
+	openToAside: boolean
 	title: string
 }
 export default function Popup(props: Props) {
 	if (!props.active) return null
-	const Wrapper = props.docereComponentProps.layer.asideActive ?  PopupAsideWrapper : Tooltip
+	const Wrapper = props.openToAside ?  PopupAsideWrapper : Tooltip
 
 	return (
 		<Wrapper
@@ -51,27 +52,9 @@ export default function Popup(props: Props) {
 			<PopupHeader
 				color={props.color}
 			>
-				{
-					props.docereComponentProps.layer.asideActive ?
-						<span
-							onClick={ev => {
-								ev.stopPropagation()
-								props.docereComponentProps.entryDispatch({ type: 'TOGGLE_TEXT_LAYER_ASIDE', id: props.docereComponentProps.layer.id })
-							}}
-						>{`<<`}</span> :
-						<span />
-				}
+				<span></span>
 				<span>{props.title}</span>
-				{
-					!props.docereComponentProps.layer.asideActive ?
-						<span
-							onClick={ev => {
-								ev.stopPropagation()
-								props.docereComponentProps.entryDispatch({ type: 'TOGGLE_TEXT_LAYER_ASIDE', id: props.docereComponentProps.layer.id })
-							}}
-						>{`>>`}</span> :
-						<span />
-				}
+				<span></span>
 			</PopupHeader>
 			<DocereTextView 
 				customProps={props.docereComponentProps}

@@ -84,6 +84,7 @@ function Aside(props: EntryAsideProps) {
 						appDispatch={props.appDispatch}
 						entry={props.entry}
 						entryDispatch={props.entryDispatch}
+						settings={props.settings}
 					/>
 				}
 			</Body>

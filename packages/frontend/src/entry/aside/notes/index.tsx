@@ -7,7 +7,7 @@ import { DocereComponentContainer } from '@docere/common'
 // type Props =
 // 	Pick<EntryState,  'activeNote' | 'layers'> &
 
-type Props = Pick<EntryState, 'activeEntity' | 'activeFacsimile' | 'activeFacsimileAreas' | 'activeNote'> & {
+type Props = Pick<EntryState, 'activeEntity' | 'activeFacsimile' | 'activeFacsimileAreas' | 'activeNote' | 'settings'> & {
 	active: boolean
 	appDispatch: React.Dispatch<AppStateAction>
 	entry: Entry
@@ -42,6 +42,7 @@ function NotesAside(props: Props) {
 						notesByType={notesByType}
 						key={noteType}
 						setActiveType={setActiveType}
+						settings={props.settings}
 						type={noteType}
 					/>
 				)

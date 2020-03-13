@@ -8,15 +8,19 @@ import styled from '@emotion/styled'
 import { DEFAULT_SPACING, LayerType } from '@docere/common'
 
 interface PWProps {
+	activeEntity: Entity
 	activeLayers: Layer[]
+	activeNote: Note
+	panelsTextPopup: EntrySettings['panels.text.popup']
 }
 const Wrapper = styled.div`
 	display: grid;
 	height: 100%;
 	${(p: PWProps) => {
+		const tpw = getTextPanelWidth(p.panelsTextPopup, p.activeNote, p.activeEntity)
+
 		let columns = p.activeLayers
 			.map(layer => {
-				const tpw = getTextPanelWidth(layer as TextLayer)
 				return isTextLayer(layer) ?
 					`${tpw}px` :
 					`minmax(${DEFAULT_SPACING * 10}px, auto)`
@@ -26,7 +30,7 @@ const Wrapper = styled.div`
 		// If there is no facsimile active, the text panels should fill the available
 		// space (1fr)
 		if (!p.activeLayers.some(ap => ap.type === LayerType.Facsimile)) {
-			columns = p.activeLayers.map(layer => `minmax(${getTextPanelWidth(layer as TextLayer)}px, 1fr)`).join(' ')
+			columns = p.activeLayers.map(() => `minmax(${tpw}px, 1fr)`).join(' ')
 		}
 		return `
 			grid-template-columns: ${columns};
@@ -43,7 +47,10 @@ function Panels(props: PanelsProps) {
 	return (
 		<Wrapper
 			activeLayers={activeLayers}
+			activeEntity={props.activeEntity}
+			activeNote={props.activeNote}
 			className="panels"
+			panelsTextPopup={props.settings['panels.text.popup']}
 		>
 			{
 				activeLayers.map(layer => {
@@ -70,6 +77,7 @@ function Panels(props: PanelsProps) {
 								entry={props.entry}
 								key={layer.id}
 								searchQuery={props.searchQuery}
+								settings={props.settings}
 								layer={layer}
 							/>
 						)

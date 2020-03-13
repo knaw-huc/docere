@@ -59,7 +59,6 @@ document.addEventListener('DOMContentLoaded', async function() {
 // TODO add search link to annotation
 
 // Search
-// TODO add sort
 // TODO when clicking facsimile in search results, activate and scroll to that facsimile in entry view
 
 // Rest

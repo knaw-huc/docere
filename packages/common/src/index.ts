@@ -8,6 +8,5 @@ export * from './enum'
 export * from './constants'
 
 // Export extendConfigData
-import extendConfigData, { defaultMetadata } from './extend-config-data'
-export { extendConfigData, defaultMetadata }
+export * from './extend-config-data'
 

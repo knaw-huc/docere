@@ -1,14 +1,19 @@
 import { Colors, EsDataType, RsType } from './enum'
 
+export const defaultEntrySettings: EntrySettings = {
+	'panels.text.popup': 'aside',
+}
+
 const defaultConfig: DocereConfig = {
+	entities: [],
+	entrySettings: {},
+	layers: [],
 	metadata: [],
 	notes: [],
 	pages: [],
 	searchResultCount: 20,
 	slug: 'unknown-project',
 	title: 'Unknown project',
-	entities: [],
-	layers: []
 }
 
 export const defaultMetadata: MetadataConfig = {
@@ -48,8 +53,9 @@ function setPath(page: PageConfig) {
 	return page
 }
 
-export default function extendConfigData(configDataRaw: DocereConfigDataRaw): DocereConfigData {
-	const config = {...defaultConfig, ...configDataRaw.config}
+export function extendConfigData(configDataRaw: DocereConfigDataRaw): DocereConfigData {
+	const config = { ...defaultConfig, ...configDataRaw.config }
+	config.entrySettings = { ...defaultEntrySettings, ...config.entrySettings }
 	config.layers = config.layers.map(setTitle)
 
 	config.metadata = config.metadata.map(md => {

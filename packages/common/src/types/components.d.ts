@@ -34,6 +34,7 @@ type DocereComponentProps =
 		components: DocereComponents
 		config: DocereConfig
 		entryDispatch: React.Dispatch<EntryStateAction>
+		entrySettings: EntryState['settings']
 		insideNote: boolean
 		layer: TextLayer
 	}

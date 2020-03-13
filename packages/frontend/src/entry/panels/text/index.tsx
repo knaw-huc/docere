@@ -11,12 +11,12 @@ const TopWrapper = styled.div`
 	position: relative;
 `
 
-interface WProps { layer: TextLayer }
+interface WProps { activeEntity: Entity, activeNote: Note, textPanelPopup: EntrySettings['panels.text.popup'] }
 const Wrapper = styled.div`
 	box-sizing: border-box;
 	height: 100%;
 	overflow-y: auto;
-	width: ${(props: WProps) => getTextPanelWidth(props.layer)}px;
+	width: ${(props: WProps) => getTextPanelWidth(props.textPanelPopup, props.activeNote, props.activeEntity)}px;
 	will-change: transform;
 
 	& > div:first-of-type {
@@ -78,6 +78,7 @@ function TextPanel(props: TextPanelProps) {
 		config: appContext.config,
 		entry: props.entry,
 		entryDispatch: props.entryDispatch,
+		entrySettings: props.settings,
 		insideNote: false,
 		layer: props.layer
 	}
@@ -87,7 +88,9 @@ function TextPanel(props: TextPanelProps) {
 	return (
 		<TopWrapper className="text-panel">
 			<Wrapper
-				layer={props.layer}
+				textPanelPopup={props.settings['panels.text.popup']}
+				activeEntity={props.activeEntity}
+				activeNote={props.activeNote}
 				onScroll={handleScroll}
 				ref={textWrapperRef}
 			>
