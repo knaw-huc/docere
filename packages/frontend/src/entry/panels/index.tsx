@@ -11,13 +11,13 @@ interface PWProps {
 	activeEntity: Entity
 	activeLayers: Layer[]
 	activeNote: Note
-	panelsTextPopup: EntrySettings['panels.text.popup']
+	settings: EntrySettings
 }
 const Wrapper = styled.div`
 	display: grid;
 	height: 100%;
 	${(p: PWProps) => {
-		const tpw = getTextPanelWidth(p.panelsTextPopup, p.activeNote, p.activeEntity)
+		const tpw = getTextPanelWidth(p.settings, p.activeNote, p.activeEntity)
 
 		let columns = p.activeLayers
 			.map(layer => {
@@ -39,6 +39,18 @@ const Wrapper = styled.div`
 	}}
 	overflow-x: auto; 
 	width: 100%;
+
+	& > header {
+		height: ${DEFAULT_SPACING}px;
+		display: grid;
+		align-content: center;
+		padding: 0 ${DEFAULT_SPACING}px;
+		font-size: .8rem;
+		background: gray;
+		color: white;
+		text-transform: uppercase;
+		border-right: 2px solid #4a4a4a;
+	}
 `
 
 function Panels(props: PanelsProps) {
@@ -50,7 +62,7 @@ function Panels(props: PanelsProps) {
 			activeEntity={props.activeEntity}
 			activeNote={props.activeNote}
 			className="panels"
-			panelsTextPopup={props.settings['panels.text.popup']}
+			settings={props.settings}
 		>
 			{
 				activeLayers.map(layer => {
@@ -61,6 +73,8 @@ function Panels(props: PanelsProps) {
 								activeFacsimileAreas={props.activeFacsimileAreas}
 								entryDispatch={props.entryDispatch}
 								key={layer.id}
+								layer={layer}
+								settings={props.settings}
 							/>
 						)
 					}

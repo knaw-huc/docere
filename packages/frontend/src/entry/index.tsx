@@ -7,7 +7,6 @@ import useEntryState from './state'
 
 function Entry(props: EntryProps) {
 	if (props.entry == null) return null
-
 	const [entryState, entryDispatch] = useEntryState(props.entry)
 
 	return (
@@ -35,6 +34,7 @@ function Entry(props: EntryProps) {
 			/>
 			<Footer
 				entryDispatch={entryDispatch}
+				entrySettings={entryState.settings}
 				footerTab={entryState.footerTab}
 				layers={entryState.layers}
 			/>

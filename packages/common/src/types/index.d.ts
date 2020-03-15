@@ -21,3 +21,5 @@ interface AppState {
 type FileExplorerProps = Pick<AppState, 'entry' | 'searchTab' | 'viewport'> & {
 	appDispatch: React.Dispatch<AppStateAction>
 }
+
+interface SettingsOption { prop: keyof EntrySettings, title: string }

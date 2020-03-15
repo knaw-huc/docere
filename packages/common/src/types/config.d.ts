@@ -27,7 +27,12 @@ interface Facsimile {
 }
 
 interface EntrySettings {
-	'panels.text.popup'?: 'aside' | 'tooltip'
+	'panels.showHeaders'?: boolean
+	'panels.text.openPopupAsTooltip'?: boolean
+	'panels.text.showMinimap'?: boolean
+	'panels.text.showLineBeginnings'?: boolean
+	'panels.text.showEntities'?: boolean,
+	'panels.text.showNotes'?: boolean,
 }
 
 interface DocereConfig {

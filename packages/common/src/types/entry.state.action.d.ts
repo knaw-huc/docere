@@ -35,6 +35,11 @@ interface ESA_Set_Active_Facsimile_Areas {
 	ids: string[]
 }
 
+interface ESA_Toggle_Settings_Property {
+	type: 'TOGGLE_SETTINGS_PROPERTY',
+	property: keyof EntrySettings,
+}
+
 type EntryStateAction = 
 	ESA_Entry_Changed |
 	ESA_Set_Active_Facsimile |
@@ -43,4 +48,5 @@ type EntryStateAction =
 	ESA_Set_Note_Id |
 	ESA_Toggle_Aside_Tab |
 	ESA_Toggle_Footer_Tab |
-	ESA_Toggle_Layer
+	ESA_Toggle_Layer | 
+	ESA_Toggle_Settings_Property

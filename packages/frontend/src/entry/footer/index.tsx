@@ -1,8 +1,9 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
-import { FOOTER_HEIGHT, FOOTER_HANDLE_HEIGHT, DEFAULT_SPACING, FooterTab, TabPosition } from '@docere/common'
+import { FOOTER_HEIGHT, FOOTER_HANDLE_HEIGHT, FooterTab, TabPosition } from '@docere/common'
 import Tabs from '../../ui/tabs'
 import Layers from './layers'
+import Settings from './settings'
 
 const Wrapper = styled.footer`
 	bottom: -${FOOTER_HEIGHT}px;
@@ -23,16 +24,14 @@ const Wrapper = styled.footer`
 const Body = styled.div`
 	background-color: black;
 	color: white;
-	display: grid;
-	justify-content: center;
-	padding: ${DEFAULT_SPACING/2}px;
+	position: relative;
 `
-
 
 interface Props {
 	footerTab: EntryState['footerTab']
 	layers: EntryState['layers']
 	entryDispatch: React.Dispatch<EntryStateAction>
+	entrySettings: EntrySettings
 }
 function Footer(props: Props) {
 	const handleTabClick = React.useCallback(footerTab => {
@@ -46,12 +45,18 @@ function Footer(props: Props) {
 				onClick={handleTabClick}
 				position={TabPosition.Bottom}
 				tab={props.footerTab}
-				tabs={[FooterTab.PanelSelector]}
+				tabs={[FooterTab.Layers, FooterTab.Settings]}
 			/>
 			<Body>
 				<Layers
+					active={props.footerTab === FooterTab.Layers}
 					dispatch={props.entryDispatch}
 					layers={props.layers}
+				/>
+				<Settings
+					active={props.footerTab === FooterTab.Settings}
+					dispatch={props.entryDispatch}
+					entrySettings={props.entrySettings}
 				/>
 			</Body>
 		</Wrapper>

@@ -1,12 +1,12 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
 import { css } from '@emotion/core'
-import { TOP_OFFSET, DEFAULT_SPACING, ASIDE_WIDTH, RESULT_ASIDE_WIDTH, FOOTER_HEIGHT, FooterTab, SearchTab } from '@docere/common'
+import { TOP_OFFSET, DEFAULT_SPACING, ASIDE_WIDTH, RESULT_ASIDE_WIDTH, FOOTER_HEIGHT, SearchTab } from '@docere/common'
 
 // interface MainProps { asideTab: AsideTab, footerTab: FooterTab, searchTab: SearchTab }
 type MainProps = Pick<EntryState, 'asideTab' | 'footerTab'> & Pick<AppState, 'searchTab'>
 export const Main = styled.div`
-	bottom: ${(props: MainProps) => props.footerTab === FooterTab.PanelSelector ? `${FOOTER_HEIGHT}px` : 0};
+	bottom: ${(props: MainProps) => props.footerTab != null ? `${FOOTER_HEIGHT}px` : 0};
 	left: ${props => props.searchTab === SearchTab.Results ? `${RESULT_ASIDE_WIDTH}px` : 0};
 	position: fixed;
 	right: ${props => props.asideTab != null ? `${ASIDE_WIDTH}px` : 0};

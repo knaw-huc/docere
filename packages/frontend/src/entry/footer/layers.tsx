@@ -1,5 +1,6 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
+import { DEFAULT_SPACING } from '@docere/common'
 
 const LiWrapper = styled.li`
 	color: ${(p: PIWProps) => p.active ? '#EEE' : '#444'};
@@ -54,23 +55,41 @@ function Li(props: PIProps) {
 	)
 }
 
+export const BottomTabWrapper = styled.div`
+	bottom: 0;
+	left: 0;
+	padding: ${DEFAULT_SPACING / 2}px;
+	position: absolute;
+	right: 0;
+	top: 0;
+	z-index: ${(props: { active: boolean }) => props.active ? 1 : -1};
+`
+
+const Ul = styled.ul`
+	height: 100%;
+	text-align: center;
+` 
+
 interface Props {
+	active: boolean
 	dispatch: React.Dispatch<EntryStateAction>
 	layers: Layer[]
 }
 function Layers(props: Props) {
 	return (
-		<ul>
-			{
-				props.layers.map(tl =>
-					<Li
-						dispatch={props.dispatch}
-						key={tl.id}
-						layer={tl}
-					/>
-				)
-			}
-		</ul>
+		<BottomTabWrapper active={props.active}>
+			<Ul>
+				{
+					props.layers.map(tl =>
+						<Li
+							dispatch={props.dispatch}
+							key={tl.id}
+							layer={tl}
+						/>
+					)
+				}
+			</Ul>
+		</BottomTabWrapper>
 	)
 }
 

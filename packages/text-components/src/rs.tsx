@@ -100,8 +100,10 @@ export const EntityWrapper = styled.span`
 `
 
 export default function Rs(props: RsProps) {
+	if (!props.customProps.entrySettings['panels.text.showEntities']) return <span>{props.children}</span>
+
 	const [showTooltip, setShowTooltip] = React.useState(false)
-	const [openToAside, setOpenToAside] = React.useState(props.customProps.entrySettings['panels.text.popup'] === 'aside')
+	const [openToAside, setOpenToAside] = React.useState(!props.customProps.entrySettings['panels.text.openPopupAsTooltip'])
 	const Icon = svgByType[props.config.type]
 
 	// To prevent a wrap between the icon and the first word the first word is extracted.
@@ -117,8 +119,8 @@ export default function Rs(props: RsProps) {
 
 	React.useEffect(() => {
 		if (!props.active) setShowTooltip(false)
-		setOpenToAside(props.active && props.customProps.entrySettings['panels.text.popup'] === 'aside')
-	}, [props.active, props.customProps.entrySettings['panels.text.popup']])
+		setOpenToAside(props.active && !props.customProps.entrySettings['panels.text.openPopupAsTooltip'])
+	}, [props.active, props.customProps.entrySettings['panels.text.openPopupAsTooltip']])
 
 	return (
 		<EntityWrapper

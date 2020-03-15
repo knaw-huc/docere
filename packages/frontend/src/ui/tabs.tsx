@@ -10,7 +10,7 @@ export const Wrapper = styled.ul`
 	line-height: ${(props: WProps) => props.position === TabPosition.Bottom ? ASIDE_HANDLE_WIDTH : ASIDE_HANDLE_HEIGHT}px;
 	text-align: center;
 	user-select: none;
-	width: ${props => props.position === TabPosition.Bottom ? ASIDE_HANDLE_HEIGHT : ASIDE_HANDLE_WIDTH}px;
+	width: ${props => props.position === TabPosition.Bottom ? 'auto' : ASIDE_HANDLE_WIDTH}px;
 
 	& > li {
 		${props => {
@@ -50,7 +50,7 @@ export const Tab = styled.li`
 	border: 1px solid #CCC;
 	border-right: 0;
 	color: ${(props: TabProps) => props.active ? '#EEE' : '#888'};
-	display: grid;
+	display: ${props => props.position === TabPosition.Bottom ? 'inline-block' : 'grid'};
 	justify-content: center;
 	transition: all 150ms;
 

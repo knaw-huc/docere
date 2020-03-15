@@ -60,7 +60,8 @@ export enum AsideTab {
 }
 
 export enum FooterTab {
-	PanelSelector = 'Layers'
+	Layers = 'Layers',
+	Settings = 'Settings',
 }
 
 export enum SearchTab {

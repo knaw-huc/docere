@@ -1,10 +1,10 @@
 import * as React from 'react'
-import { Colors } from '@docere/common'
+import { Colors, DEFAULT_SPACING } from '@docere/common'
 import styled from 'styled-components'
 
 const Img = styled.img`
 	position: absolute;
-	left: 0;
+	left: ${DEFAULT_SPACING}px;
 	margin-top: 6px;
 	padding-bottom: 6px;
 	width: 32px;

@@ -124,6 +124,18 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 			}
 		}
 
+		case 'TOGGLE_SETTINGS_PROPERTY': {
+			const nextSettings = {
+				...entryState.settings,
+				[action.property]: !entryState.settings[action.property]
+			}
+			
+			return {
+				...entryState,
+				settings: nextSettings
+			}
+		}
+
 		default:
 			break
 	}

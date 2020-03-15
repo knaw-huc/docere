@@ -196,6 +196,7 @@ function line(props: DocereComponentProps) {
 		<TextLineWrapper
 			active={active}
 			onClick={handleClick}
+			showLineBeginnings={props.entrySettings['panels.text.showLineBeginnings']}
 		>
 			{props.children}
 		</TextLineWrapper>

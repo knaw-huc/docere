@@ -22,11 +22,11 @@ const Wrapper = styled.div`
 	vertical-align: super;
 `
 
-
-
 export default function Note(props: DocereComponentProps & { id: string, title: string, n: string, color?: string }) {
+	if (!props.entrySettings['panels.text.showNotes']) return <span>{props.children}</span>
+
 	const active = props.id === props.activeNote?.id
-	const openToAside = active && props.entrySettings['panels.text.popup'] === 'aside'
+	const openToAside = active && !props.entrySettings['panels.text.openPopupAsTooltip']
 
 	return (
 		<Wrapper

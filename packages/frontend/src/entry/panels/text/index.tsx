@@ -6,17 +6,18 @@ import AppContext, { useComponents } from '../../../app/context'
 import Minimap from './minimap'
 import { isTextLayer, getTextPanelWidth } from '../../../utils'
 import { DEFAULT_SPACING, TEXT_PANEL_TEXT_WIDTH, TEXT_PANEL_GUTTER_WIDTH, DocereComponentContainer } from '@docere/common'
+import PanelHeader from '../header'
 
 const TopWrapper = styled.div`
 	position: relative;
 `
 
-interface WProps { activeEntity: Entity, activeNote: Note, textPanelPopup: EntrySettings['panels.text.popup'] }
+interface WProps { activeEntity: Entity, activeNote: Note, settings: EntrySettings }
 const Wrapper = styled.div`
 	box-sizing: border-box;
-	height: 100%;
+	height: ${props => props.settings['panels.showHeaders'] ? `calc(100% - ${DEFAULT_SPACING}px)` : '100%'};
 	overflow-y: auto;
-	width: ${(props: WProps) => getTextPanelWidth(props.textPanelPopup, props.activeNote, props.activeEntity)}px;
+	width: ${(props: WProps) => getTextPanelWidth(props.settings, props.activeNote, props.activeEntity)}px;
 	will-change: transform;
 
 	& > div:first-of-type {
@@ -49,6 +50,8 @@ function TextPanel(props: TextPanelProps) {
 	const components = useComponents(DocereComponentContainer.Layer, layer.id)
 
 	const handleScroll = React.useCallback(() => {
+		if (!props.settings['panels.text.showMinimap']) return
+
 		const resetActiveArea = debounce(() => {
 			activeAreaRef.current.classList.remove('active')
 		}, 1000)
@@ -87,12 +90,21 @@ function TextPanel(props: TextPanelProps) {
 
 	return (
 		<TopWrapper className="text-panel">
+			{
+				props.settings['panels.showHeaders'] &&
+				<PanelHeader
+					entryDispatch={props.entryDispatch}
+					layer={props.layer}
+				>
+					{props.layer.title}
+				</PanelHeader>
+			}
 			<Wrapper
-				textPanelPopup={props.settings['panels.text.popup']}
 				activeEntity={props.activeEntity}
 				activeNote={props.activeNote}
 				onScroll={handleScroll}
 				ref={textWrapperRef}
+				settings={props.settings}
 			>
 				<Text 
 					hasFacs={props.entry.facsimiles?.length > 0}
@@ -107,12 +119,16 @@ function TextPanel(props: TextPanelProps) {
 					/>
 				</Text>
 			</Wrapper>
-			<Minimap
-				activeAreaRef={activeAreaRef}
-				highlightAreas={highlightAreas}
-				isReady={docereTextViewReady}
-				textWrapperRef={textWrapperRef}
-			/>
+			{
+				props.settings['panels.text.showMinimap'] &&
+				<Minimap
+					activeAreaRef={activeAreaRef}
+					hasHeader={props.settings['panels.showHeaders']}
+					highlightAreas={highlightAreas}
+					isReady={docereTextViewReady}
+					textWrapperRef={textWrapperRef}
+				/>
+			}
 		</TopWrapper>
 	)
 }

@@ -1,7 +1,12 @@
 import { Colors, EsDataType, RsType } from './enum'
 
 export const defaultEntrySettings: EntrySettings = {
-	'panels.text.popup': 'aside',
+	'panels.showHeaders': true,
+	'panels.text.openPopupAsTooltip': true,
+	'panels.text.showMinimap': true,
+	'panels.text.showLineBeginnings': true,
+	'panels.text.showEntities': true,
+	'panels.text.showNotes': true,
 }
 
 const defaultConfig: DocereConfig = {

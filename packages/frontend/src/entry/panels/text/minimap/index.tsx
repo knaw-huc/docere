@@ -8,7 +8,7 @@ const Wrapper = styled.div`
 	box-sizing: border-box;
 	left: calc(${TEXT_PANEL_GUTTER_WIDTH + TEXT_PANEL_TEXT_WIDTH + DEFAULT_SPACING}px);
 	overflow: auto;
-	padding-top: ${DEFAULT_SPACING}px;
+	padding-top: ${(props: { hasHeader: boolean }) => props.hasHeader ? 2 * DEFAULT_SPACING : DEFAULT_SPACING}px;
 	position: absolute;
 	scrollbar-width: none;
 	top: 0;
@@ -52,6 +52,7 @@ const Bar = styled.div`
 
 interface Props {
 	activeAreaRef: React.RefObject<HTMLDivElement>
+	hasHeader: boolean
 	highlightAreas: number[]
 	isReady: boolean
 	textWrapperRef: React.RefObject<HTMLDivElement>
@@ -86,6 +87,7 @@ function Minimap(props: Props) {
 	return (
 		<Wrapper
 			className="minimap"
+			hasHeader={props.hasHeader}
 			onWheel={() => false}
 			ref={miniMapRef}
 		>

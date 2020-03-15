@@ -2,6 +2,8 @@ import * as React from 'react'
 import styled from '@emotion/styled'
 import AppContext from '../../../app/context'
 import useAreaRenderer, { AreaRenderer } from './use-area-renderer'
+import PanelHeader from '../header'
+import { DEFAULT_SPACING } from '@docere/common'
 
 // TODO change facsimile when user scroll past a <pb />
 
@@ -130,9 +132,14 @@ function useActiveFacsimile(
 
 }
 
+const Container = styled.div`
+	height: ${(props: { hasHeader: boolean }) => props.hasHeader ? `calc(100% - ${DEFAULT_SPACING}px)` : '100%'};
+`
+
 type Props =
-	Pick<EntryState, 'activeFacsimile' | 'activeFacsimileAreas'> & {
+	Pick<EntryState, 'activeFacsimile' | 'activeFacsimileAreas' | 'settings'> & {
 		entryDispatch: React.Dispatch<EntryStateAction>
+		layer: Layer
 	}
 
 function FacsimilePanel(props: Props) {
@@ -145,7 +152,19 @@ function FacsimilePanel(props: Props) {
 
 	return (
 		<Wrapper className="facsimile-panel">
-			<div id="openseadragon" style={{ height: '100%' }}></div>
+			{
+				props.settings['panels.showHeaders'] &&
+				<PanelHeader
+					entryDispatch={props.entryDispatch}
+					layer={props.layer}
+				>
+					{props.layer.title}
+				</PanelHeader>
+			}
+			<Container
+				hasHeader={props.settings['panels.showHeaders']}
+				id="openseadragon"
+			/>
 		</Wrapper>
 	)
 }

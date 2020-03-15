@@ -18,14 +18,16 @@ const Hi = styled.span`
 	}}
 `
 
+interface LbProps { showLineBeginnings?: boolean }
 const Lb = styled.span`
-	display: block;
+	display: ${(props: LbProps) => props.showLineBeginnings ? 'block' : 'inline' };
 
 	&:before {
 		box-sizing: border-box;
 		color: #666;
 		content: counter(linenumber);
 		counter-increment: linenumber;
+		display: ${(props: LbProps) => props.showLineBeginnings ? 'block' : 'none' };
 		font-size: .8em;
 		position: absolute;
 		text-align: right;
