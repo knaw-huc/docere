@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { defaultEntrySettings, AsideTab, FooterTab } from '@docere/common'
+import { AsideTab, FooterTab, defaultEntrySettings } from '@docere/common'
 import AppContext from '../../app/context'
 
 const initialEntryState: EntryState = {
@@ -151,12 +151,20 @@ export default function useEntryState(entry: Entry) {
 	React.useEffect(() => {
 		if (entry == null) return
 
+		const [entryState, entryDispatch] = x
+
+		// Extend settings defined in the config with the current settings, to keep
+		// the settings between entry change. If current settings is equal to the default,
+		// use an empty object to not override the config settings
+		const currentSettings = entryState.settings === defaultEntrySettings ? {} : entryState.settings
+		const settings = { ...appContext.config.entrySettings, ...currentSettings }
+
 		// x[1] = dispatch
-		x[1]({
+		entryDispatch({
 			activeFacsimile: entry.facsimiles?.length ? entry.facsimiles[0] : null,
 			entry,
 			layers: entry.layers,
-			settings: appContext.config.entrySettings,
+			settings,
 			type: 'ENTRY_CHANGED',
 		})
 	}, [entry])
