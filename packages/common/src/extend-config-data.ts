@@ -5,6 +5,7 @@ export const defaultEntrySettings: EntrySettings = {
 	'panels.text.openPopupAsTooltip': true,
 	'panels.text.showMinimap': true,
 	'panels.text.showLineBeginnings': true,
+	'panels.text.showPageBeginnings': true,
 	'panels.text.showEntities': true,
 	'panels.text.showNotes': true,
 }

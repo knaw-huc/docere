@@ -1,15 +1,16 @@
 import React from 'react'
+import { TEXT_PANEL_TEXT_WIDTH, DEFAULT_SPACING, getTextPanelLeftSpacing } from '@docere/common'
 import DocereTextView from '@docere/text'
-import Tooltip, { TooltipBody } from './tooltip'
 import styled from 'styled-components'
-import { TEXT_PANEL_GUTTER_WIDTH, TEXT_PANEL_TEXT_WIDTH, DEFAULT_SPACING } from '@docere/common'
+import Tooltip, { TooltipBody } from './tooltip'
 
+interface PAW { settings: EntrySettings }
 const PopupAsideWrapper = styled(TooltipBody)`
 	backgroundColor: white;
 	height: auto;
-	left: ${TEXT_PANEL_GUTTER_WIDTH + TEXT_PANEL_TEXT_WIDTH + DEFAULT_SPACING}px;
+	left: ${(props: PAW) => getTextPanelLeftSpacing(props.settings) + TEXT_PANEL_TEXT_WIDTH + DEFAULT_SPACING}px;
 	margin-bottom: 5rem;
-	margin-top: -1.1rem;
+	margin-top: -1.7rem;
 	position: absolute;
 	text-align: left;
 	width: 240px;
@@ -47,7 +48,10 @@ export default function Popup(props: Props) {
 
 	return (
 		<Wrapper
+			activeEntity={props.docereComponentProps.activeEntity}
+			activeNote={props.docereComponentProps.activeNote}
 			color={props.color}
+			settings={props.docereComponentProps.entrySettings}
 		>
 			<PopupHeader
 				color={props.color}

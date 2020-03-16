@@ -1,4 +1,4 @@
-import { LayerType, TEXT_PANEL_WIDTH, TEXT_PANEL_ASIDE_WIDTH, TEXT_PANEL_MINIMAP_WIDTH, DEFAULT_SPACING } from '@docere/common'
+import { LayerType } from '@docere/common'
 
 export function isTextLayer(layer: Layer): layer is TextLayer {
 	return layer.type === LayerType.Text
@@ -6,26 +6,6 @@ export function isTextLayer(layer: Layer): layer is TextLayer {
 
 export function isXmlLayer(layer: Layer): layer is XmlLayer {
 	return layer.type === LayerType.XML
-}
-
-export function getTextPanelWidth(settings: EntrySettings, activeNote: Note, activeEntity: Entity) {
-	const asideActive = !settings['panels.text.openPopupAsTooltip'] &&
-		(activeNote != null || activeEntity != null)
-
-	let width = TEXT_PANEL_WIDTH
-	if (asideActive) width += TEXT_PANEL_ASIDE_WIDTH
-	if (settings['panels.text.showMinimap']) width += TEXT_PANEL_MINIMAP_WIDTH
-	if (asideActive || settings['panels.text.showMinimap']) width += DEFAULT_SPACING
-
-	return width
-
-	// console.log(asideActive)
-	// console.log(
-	// 		TEXT_PANEL_WIDTH_ASIDE_ACTIVE,
-	// 		TEXT_PANEL_WIDTH)
-	// return asideActive ?
-	// 		TEXT_PANEL_WIDTH_ASIDE_ACTIVE :
-	// 		TEXT_PANEL_WIDTH
 }
 
 export function analyzeWindowLocation() {

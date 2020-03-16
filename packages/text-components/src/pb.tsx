@@ -21,6 +21,8 @@ const Img = styled.img`
 
 export default function getPb(extractPbId: (props: DocereComponentProps) => string): React.FC<DocereComponentProps> {
 	return function Pb(props: DocereComponentProps) {
+		if (!props.entrySettings['panels.text.showPageBeginnings']) return null
+
 		const id = extractPbId(props)
 		const facsimile = props.entry.facsimiles.find(f => f.id === id)
 		if (facsimile == null) return null

@@ -3,9 +3,9 @@ import FacsimilePanel from './facsimile'
 import TextPanel from './text'
 // import WitnessAnimationPanel from './witness-animation'
 import XmlPanel from './xml'
-import { isTextLayer, isXmlLayer, getTextPanelWidth } from '../../utils'
+import { isTextLayer, isXmlLayer } from '../../utils'
 import styled from '@emotion/styled'
-import { DEFAULT_SPACING, LayerType } from '@docere/common'
+import { DEFAULT_SPACING, LayerType, getTextPanelWidth } from '@docere/common'
 
 interface PWProps {
 	activeEntity: Entity

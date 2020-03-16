@@ -10,3 +10,4 @@ export * from './constants'
 // Export extendConfigData
 export * from './extend-config-data'
 
+export * from './utils'

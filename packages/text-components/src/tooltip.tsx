@@ -1,6 +1,6 @@
 import * as React from "react"
 import styled from "styled-components"
-import { DEFAULT_POPUP_BG_COLOR, TEXT_PANEL_WIDTH } from '@docere/common'
+import { DEFAULT_POPUP_BG_COLOR, getTextPanelWidth } from '@docere/common'
 
 // Map of polygons. The key is confusing, it is the orientation
 // of the tooltip. When the orientation of the tooltip is `bottom`
@@ -23,7 +23,7 @@ import { DEFAULT_POPUP_BG_COLOR, TEXT_PANEL_WIDTH } from '@docere/common'
 
 interface P { offset: number }
 const Wrapper = styled.div`
-	margin-left: calc(50% - 160px + ${(p: P) => { console.log(p); return p.offset}}px);
+	margin-left: calc(50% - 160px + ${(p: P) => { return p.offset}}px);
 	margin-top: 1rem;
 	padding-bottom: 10vh;
 	position: absolute;
@@ -55,9 +55,12 @@ const Svg = styled.svg`
 
 // type Orientation = "top" | "right" | "bottom" | "left"
 interface Props {
+	activeNote: Note
+	activeEntity: Entity
 	bodyStyle?: React.CSSProperties
 	children: React.ReactNode
 	color?: string
+	settings: EntrySettings
 }
 function Tooltip(props: Props) {		
 	const wrapperRef: React.RefObject<HTMLDivElement> = React.useRef()
@@ -68,9 +71,8 @@ function Tooltip(props: Props) {
 		const textPanelLeft = wrapperRef.current.closest('.text-panel').getBoundingClientRect().left
 		if (tooltipRect.left < textPanelLeft) setOffset(textPanelLeft - tooltipRect.left)
 
-		const tooltipRight = tooltipRect.right
-		const textPanelRight = textPanelLeft + TEXT_PANEL_WIDTH - 64
-		if (tooltipRight > textPanelRight) setOffset(textPanelRight - tooltipRight)
+		const textPanelRight = textPanelLeft + getTextPanelWidth(props.settings, props.activeNote, props.activeEntity) - 64
+		if (tooltipRect.right > textPanelRight) setOffset(textPanelRight - tooltipRect.right)
 	}, [])
 
 	return (

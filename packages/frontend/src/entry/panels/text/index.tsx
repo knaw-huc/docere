@@ -4,8 +4,8 @@ import styled from '@emotion/styled'
 import debounce from 'lodash.debounce'
 import AppContext, { useComponents } from '../../../app/context'
 import Minimap from './minimap'
-import { isTextLayer, getTextPanelWidth } from '../../../utils'
-import { DEFAULT_SPACING, TEXT_PANEL_TEXT_WIDTH, TEXT_PANEL_GUTTER_WIDTH, DocereComponentContainer } from '@docere/common'
+import { isTextLayer } from '../../../utils'
+import { DEFAULT_SPACING, TEXT_PANEL_TEXT_WIDTH, DocereComponentContainer, getTextPanelWidth, getTextPanelLeftSpacing } from '@docere/common'
 import PanelHeader from '../header'
 
 const TopWrapper = styled.div`
@@ -26,7 +26,7 @@ const Wrapper = styled.div`
 `
 
 interface TextProps {
-	hasFacs: boolean
+	settings: EntrySettings
 }
 export const Text = styled.div`
 	color: #222;
@@ -36,8 +36,12 @@ export const Text = styled.div`
 	display: grid;
 	grid-template-columns: ${TEXT_PANEL_TEXT_WIDTH}px auto;
 	line-height: 2rem;
-	padding: ${DEFAULT_SPACING}px 0 200px ${(props: TextProps) => props.hasFacs ? TEXT_PANEL_GUTTER_WIDTH : 2 * DEFAULT_SPACING}px;
+	padding: ${DEFAULT_SPACING}px 0 200px ${(props: TextProps) => getTextPanelLeftSpacing(props.settings)}px;
 	position: relative;
+
+	& > div {
+		border-right: 1px solid #EEE;
+	}
 `
 
 function TextPanel(props: TextPanelProps) {
@@ -69,7 +73,7 @@ function TextPanel(props: TextPanelProps) {
 		activeAreaRef.current.style.transform = `translateY(${(scrollTop / 10)}px)`
 
 		resetActiveArea()
-	}, [])
+	}, [props.settings['panels.text.showMinimap']])
 
 	const customProps: DocereComponentProps = {
 		activeFacsimileAreas: props.activeFacsimileAreas,
@@ -107,7 +111,7 @@ function TextPanel(props: TextPanelProps) {
 				settings={props.settings}
 			>
 				<Text 
-					hasFacs={props.entry.facsimiles?.length > 0}
+					settings={props.settings}
 				>
 					<DocereTextView
 						customProps={customProps}

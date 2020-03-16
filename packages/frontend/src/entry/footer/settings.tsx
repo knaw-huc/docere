@@ -9,6 +9,10 @@ const textOptions: Option[] = [
 		title: 'Show line numbers'
 	},
 	{
+		prop: 'panels.text.showPageBeginnings',
+		title: 'Show facsimile thumbnails'
+	},
+	{
 		prop: 'panels.text.showMinimap',
 		title: 'Show minimap'
 	},

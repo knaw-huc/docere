@@ -31,6 +31,7 @@ interface EntrySettings {
 	'panels.text.openPopupAsTooltip'?: boolean
 	'panels.text.showMinimap'?: boolean
 	'panels.text.showLineBeginnings'?: boolean
+	'panels.text.showPageBeginnings'?: boolean
 	'panels.text.showEntities'?: boolean,
 	'panels.text.showNotes'?: boolean,
 }
