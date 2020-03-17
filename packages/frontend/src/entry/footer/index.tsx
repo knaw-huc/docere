@@ -28,6 +28,7 @@ const Body = styled.div`
 `
 
 interface Props {
+	activeFacsimile: Facsimile
 	footerTab: EntryState['footerTab']
 	layers: EntryState['layers']
 	entryDispatch: React.Dispatch<EntryStateAction>
@@ -50,6 +51,7 @@ function Footer(props: Props) {
 			<Body>
 				<Layers
 					active={props.footerTab === FooterTab.Layers}
+					activeFacsimile={props.activeFacsimile}
 					dispatch={props.entryDispatch}
 					layers={props.layers}
 				/>

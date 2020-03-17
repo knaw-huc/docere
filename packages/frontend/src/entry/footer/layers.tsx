@@ -1,6 +1,7 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
 import { DEFAULT_SPACING } from '@docere/common'
+import { LayerType } from '@docere/common/src/enum'
 
 const LiWrapper = styled.li`
 	color: ${(p: PIWProps) => p.active ? '#EEE' : '#444'};
@@ -21,6 +22,17 @@ const LiWrapper = styled.li`
 		height: 70%;
 		justify-content: center;
 		width: 100%;
+
+		& > div.text {
+			box-sizing: border-box;
+			height: 1000px;
+			line-height: 3rem;
+			padding: 140px;
+			text-align: left;
+			transform: scale(.09);
+			white-space: normal;
+			width: 1000px;
+		}
 	}
 
 	& > div:last-of-type {
@@ -35,6 +47,7 @@ interface PIWProps {
 	active: boolean
 }
 interface PIProps {
+	className?: string
 	dispatch: React.Dispatch<EntryStateAction>
 	layer: Layer
 }
@@ -45,15 +58,44 @@ function Li(props: PIProps) {
 
 	return (
 		<LiWrapper
+			className={props.className}
 			data-id={props.layer.id}
 			active={props.layer.active}
 			onClick={togglePanel}
 		>
-			<div>{props.layer.title.slice(0, 1)}</div>
+			{
+				props.layer.type !== LayerType.Facsimile ?
+					<div><div className="text">
+						Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+					</div></div> :
+					<div><div /></div>
+			}
 			<div>{props.layer.title}</div>
 		</LiWrapper>
 	)
 }
+
+interface P {
+	activeFacsimile: Facsimile
+	layer: Layer
+}
+const LiFacs = styled(Li)`
+	${(p: P) => {
+		const path = p.activeFacsimile.versions[0].path.replace('info.json', `full/!100,100/0/default.jpg`)
+		return `& > div:first-of-type {
+			display: block;
+
+			& > div {
+				background-image: url(${path});
+				background-repeat: no-repeat;
+				background-position: 50%, 50%;
+				height: 100%;
+				opacity: ${p.layer.active ? 1 : .2};
+				width: 100%;
+			}
+		}`
+	}}
+`
 
 export const BottomTabWrapper = styled.div`
 	bottom: 0;
@@ -72,6 +114,7 @@ const Ul = styled.ul`
 
 interface Props {
 	active: boolean
+	activeFacsimile: Facsimile
 	dispatch: React.Dispatch<EntryStateAction>
 	layers: Layer[]
 }
@@ -81,11 +124,18 @@ function Layers(props: Props) {
 			<Ul>
 				{
 					props.layers.map(tl =>
-						<Li
-							dispatch={props.dispatch}
-							key={tl.id}
-							layer={tl}
-						/>
+						tl.type === LayerType.Facsimile ?
+							<LiFacs
+								activeFacsimile={props.activeFacsimile}
+								dispatch={props.dispatch}
+								key={tl.id}
+								layer={tl}
+							/> :
+							<Li
+								dispatch={props.dispatch}
+								key={tl.id}
+								layer={tl}
+							/>
 					)
 				}
 			</Ul>

@@ -33,6 +33,7 @@ function Entry(props: EntryProps) {
 				settings={entryState.settings}
 			/>
 			<Footer
+				activeFacsimile={entryState.activeFacsimile}
 				entryDispatch={entryDispatch}
 				entrySettings={entryState.settings}
 				footerTab={entryState.footerTab}
