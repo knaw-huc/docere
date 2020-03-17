@@ -27,11 +27,6 @@ const Wrapper = styled.div`
 			})
 			.join(' ')
 
-		// If there is no facsimile active, the text panels should fill the available
-		// space (1fr)
-		if (!p.activeLayers.some(ap => ap.type === LayerType.Facsimile)) {
-			columns = p.activeLayers.map(() => `minmax(${tpw}px, 1fr)`).join(' ')
-		}
 		return `
 			grid-template-columns: ${columns};
 			grid-template-rows: 100% auto;
