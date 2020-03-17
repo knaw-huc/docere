@@ -14,11 +14,13 @@ export function getTextPanelLeftSpacing(settings: EntrySettings) {
 export function getTextPanelRightSpacing(settings: EntrySettings, activeNote: Note, activeEntity: Entity) {
 	let width = 2 * DEFAULT_SPACING
 
-	const asideActive = !settings['panels.text.openPopupAsTooltip'] &&
+	const asideActive = (
+		!settings['panels.text.openPopupAsTooltip'] &&
 		(activeNote != null || activeEntity != null)
+	)
 
 	if (asideActive) width += TEXT_PANEL_ASIDE_WIDTH
-	if (settings['panels.text.showMinimap']) width += TEXT_PANEL_MINIMAP_WIDTH
+	if (settings['panels.text.showMinimap']) width += TEXT_PANEL_MINIMAP_WIDTH + DEFAULT_SPACING
 	if (asideActive && settings['panels.text.showMinimap']) width -= DEFAULT_SPACING
 
 	return width
