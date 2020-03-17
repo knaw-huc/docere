@@ -19,8 +19,7 @@ export class AreaRenderer {
 	constructor(private osd: any, private OpenSeadragon: any, private entryDispatch: React.Dispatch<EntryStateAction>) {
 	}
 
-	activate(areas: FacsimileArea[]) {
-		// Deactivate currently active areas
+	private deactivate() {
 		this.overlays
 			.filter(o => o.active)
 			.map(o => { o.active = false; return o; })
@@ -28,6 +27,11 @@ export class AreaRenderer {
 				if (o.area.showOnHover) o.element.classList.remove('active')
 				else this.osd.removeOverlay(o.element)
 			})
+	}
+
+	activate(areas: FacsimileArea[]) {
+		// Deactivate currently active areas
+		this.deactivate()
 
 		// If areas does not exist or is empty, there is nothing to activate
 		if (!Array.isArray(areas) || !areas.length) return

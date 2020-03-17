@@ -43,6 +43,7 @@ export const TooltipBody = styled.div`
 	border-width: 2px;
 	color: #666;
 	height: 100%;
+	line-height: 1.5rem;
 `
 TooltipBody.defaultProps = { color: DEFAULT_POPUP_BG_COLOR }
 

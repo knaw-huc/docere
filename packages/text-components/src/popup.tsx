@@ -10,7 +10,7 @@ const PopupAsideWrapper = styled(TooltipBody)`
 	height: auto;
 	left: ${(props: PAW) => getTextPanelLeftSpacing(props.settings) + TEXT_PANEL_TEXT_WIDTH + DEFAULT_SPACING}px;
 	margin-bottom: 5rem;
-	margin-top: -1.7rem;
+	margin-top: -1.1rem;
 	position: absolute;
 	text-align: left;
 	width: 240px;

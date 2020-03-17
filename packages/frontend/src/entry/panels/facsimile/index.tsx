@@ -96,7 +96,7 @@ function useOpenSeadragon(): [any, any] {
 
 function useActiveFacsimileAreas(activeFacsimileAreas: FacsimileArea[], areaRenderer: AreaRenderer) {
 	React.useEffect(() => {
-		if (areaRenderer == null || activeFacsimileAreas == null) return
+		if (areaRenderer == null) return
 		areaRenderer.activate(activeFacsimileAreas)
 	}, [activeFacsimileAreas, areaRenderer])
 }
