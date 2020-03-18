@@ -60,11 +60,14 @@ export default function Popup(props: Props) {
 				<span>{props.title}</span>
 				<span></span>
 			</PopupHeader>
-			<DocereTextView 
-				customProps={props.docereComponentProps}
-				components={props.docereComponentProps.components}
-				node={props.node}
-			/>
+			{
+				props.node != null &&
+				<DocereTextView 
+					customProps={props.docereComponentProps}
+					components={props.docereComponentProps.components}
+					node={props.node}
+				/>
+			}
 		</Wrapper>
 	)
 }
