@@ -42,6 +42,7 @@ export default function getComponents(config: DocereConfig) {
 	return async function(_container: DocereComponentContainer, _id: string) {
 		const personConfig = config.entities.find(td => td.id === 'pers')
 		return {
+			ab: styled.div`margin-bottom: 1rem;`,
 			anchor: (props: DocereComponentProps) =>
 				<Note
 					{...props}
