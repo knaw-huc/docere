@@ -23,8 +23,9 @@ import { DEFAULT_POPUP_BG_COLOR, getTextPanelWidth } from '@docere/common'
 
 interface P { offset: number }
 const Wrapper = styled.div`
-	margin-left: calc(50% - 160px + ${(p: P) => { return p.offset}}px);
+	margin-left: calc(50% - 160px + ${(p: P) => { return p.offset ? p.offset : 0}}px);
 	margin-top: 1rem;
+	opacity: ${p => p.offset == null ? 0 : 1};
 	padding-bottom: 10vh;
 	position: absolute;
 	text-align: left;
@@ -65,15 +66,19 @@ interface Props {
 }
 function Tooltip(props: Props) {		
 	const wrapperRef: React.RefObject<HTMLDivElement> = React.useRef()
-	const [offset, setOffset] = React.useState(0)
+	const [offset, setOffset] = React.useState(null)
 
 	React.useEffect(() => {
+		let offset = 0
+
 		const tooltipRect = wrapperRef.current.getBoundingClientRect()
 		const textPanelLeft = wrapperRef.current.closest('.text-panel').getBoundingClientRect().left
-		if (tooltipRect.left < textPanelLeft) setOffset(textPanelLeft - tooltipRect.left)
+		if (tooltipRect.left < textPanelLeft) offset = textPanelLeft - tooltipRect.left
 
 		const textPanelRight = textPanelLeft + getTextPanelWidth(props.settings, props.activeNote, props.activeEntity) - 64
-		if (tooltipRect.right > textPanelRight) setOffset(textPanelRight - tooltipRect.right)
+		if (tooltipRect.right > textPanelRight) offset = textPanelRight - tooltipRect.right
+
+		setOffset(offset)
 	}, [])
 
 	return (

@@ -28,10 +28,10 @@ const PopupHeader = styled.header`
 	justify-items: center;
 	line-height: .8rem;
 	padding: .5rem 1rem;
-	
-	& + div {
-		padding: 1rem;
-	}
+`
+
+const Body = styled.div`
+	padding: 1rem;
 `
 
 interface Props {
@@ -62,11 +62,13 @@ export default function Popup(props: Props) {
 			</PopupHeader>
 			{
 				props.node != null &&
-				<DocereTextView 
-					customProps={props.docereComponentProps}
-					components={props.docereComponentProps.components}
-					node={props.node}
-				/>
+				<Body>
+					<DocereTextView 
+						customProps={props.docereComponentProps}
+						components={props.docereComponentProps.components}
+						node={props.node}
+					/>
+				</Body>
 			}
 		</Wrapper>
 	)
