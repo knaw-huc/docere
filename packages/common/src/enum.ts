@@ -60,6 +60,7 @@ export enum AsideTab {
 }
 
 export enum FooterTab {
+	Downloads = "Downloads",
 	Layers = 'Layers',
 	Settings = 'Settings',
 }

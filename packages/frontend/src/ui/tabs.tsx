@@ -78,7 +78,9 @@ export const Tab = styled.li`
 		}
 		else if (props.position === TabPosition.Bottom) {
 			const style = `
-				width: 100px;
+				box-sizing: border-box;
+				padding: 0 1rem;
+				min-width: 100px;
 			`
 			return (props.active) ?
 				`${style} background: black;` :
@@ -86,18 +88,6 @@ export const Tab = styled.li`
 		}
 	}}
 `
-	// transform: rotate(0deg);
-
-
-	// &:hover {
-	// 	color: #777;
-	// 	font-size: .8em;
-	// 	transform: rotate(-90deg);
-
-	// 	& > span {
-	// 		transform: rotate(90deg);
-	// 	}
-	// }
 
 interface WProps {
 	position?: TabPosition
@@ -118,7 +108,6 @@ function Tabs(props: Props) {
 			{
 				props.tabs
 					.map((tab) => {
-						// const Icon = icons[tab]
 						return (
 							<Tab
 								active={props.tab === tab}
@@ -128,11 +117,6 @@ function Tabs(props: Props) {
 								position={props.position}
 							>
 								<span>{tab}</span>
-								{/* {
-									Icon != null ?
-										<Icon active={props.tab === tab} /> :
-										tab.slice(0, 1)
-								} */}
 							</Tab>
 						)
 					})

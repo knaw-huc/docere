@@ -4,6 +4,7 @@ import { FOOTER_HEIGHT, FOOTER_HANDLE_HEIGHT, FooterTab, TabPosition } from '@do
 import Tabs from '../../ui/tabs'
 import Layers from './layers'
 import Settings from './settings'
+import Downloads from './downloads'
 
 const Wrapper = styled.footer`
 	bottom: -${FOOTER_HEIGHT}px;
@@ -32,6 +33,7 @@ interface Props {
 	footerTab: EntryState['footerTab']
 	layers: EntryState['layers']
 	entryDispatch: React.Dispatch<EntryStateAction>
+	entry: Entry
 	entrySettings: EntrySettings
 }
 function Footer(props: Props) {
@@ -46,7 +48,7 @@ function Footer(props: Props) {
 				onClick={handleTabClick}
 				position={TabPosition.Bottom}
 				tab={props.footerTab}
-				tabs={[FooterTab.Layers, FooterTab.Settings]}
+				tabs={[FooterTab.Layers, FooterTab.Settings, FooterTab.Downloads]}
 			/>
 			<Body>
 				<Layers
@@ -60,6 +62,11 @@ function Footer(props: Props) {
 					dispatch={props.entryDispatch}
 					entrySettings={props.entrySettings}
 				/>
+				<Downloads
+					active={props.footerTab === FooterTab.Downloads}
+					entry={props.entry}
+				/>
+
 			</Body>
 		</Wrapper>
 	)

@@ -35,6 +35,7 @@ function Entry(props: EntryProps) {
 			<Footer
 				activeFacsimile={entryState.activeFacsimile}
 				entryDispatch={entryDispatch}
+				entry={props.entry}
 				entrySettings={entryState.settings}
 				footerTab={entryState.footerTab}
 				layers={entryState.layers}

@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { BottomTabWrapper } from './layers'
 import Option from './options'
+import styled from '@emotion/styled'
 
 interface Option { prop: keyof EntrySettings, title: string }
 const textOptions: Option[] = [
@@ -37,12 +38,20 @@ const panelsOptions: Option[] = [
 	}
 ]
 
+const OptionLists = styled.div`
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	
+	& > ul {
+		columns: 2;
+	}
+`
+
 interface Props {
 	active: boolean
 	dispatch: React.Dispatch<EntryStateAction>
 	entrySettings: EntrySettings
 }
-
 function Layers(props: Props) {
 	const toggleSettingsProperty = React.useCallback(ev => {
 		const property = ev.currentTarget.dataset.prop
@@ -51,30 +60,32 @@ function Layers(props: Props) {
 
 	return (
 		<BottomTabWrapper active={props.active}>
-			<ul>
-				{
-					textOptions.map(option =>
-						<Option
-							checked={props.entrySettings[option.prop]}
-							key={option.prop}
-							onClick={toggleSettingsProperty}
-							option={option}
-						/>
-					)
-				}
-			</ul>
-			<ul>
-				{
-					panelsOptions.map(option =>
-						<Option
-							checked={props.entrySettings[option.prop]}
-							key={option.prop}
-							onClick={toggleSettingsProperty}
-							option={option}
-						/>
-					)
-				}
-			</ul>
+			<OptionLists>
+				<ul>
+					{
+						textOptions.map(option =>
+							<Option
+								checked={props.entrySettings[option.prop]}
+								key={option.prop}
+								onClick={toggleSettingsProperty}
+								option={option}
+							/>
+						)
+					}
+				</ul>
+				<ul>
+					{
+						panelsOptions.map(option =>
+							<Option
+								checked={props.entrySettings[option.prop]}
+								key={option.prop}
+								onClick={toggleSettingsProperty}
+								option={option}
+							/>
+						)
+					}
+				</ul>
+			</OptionLists>
 		</BottomTabWrapper>
 	)
 }
