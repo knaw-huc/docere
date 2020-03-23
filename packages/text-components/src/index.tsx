@@ -2,7 +2,7 @@ import styled from 'styled-components'
 
 import getPb from './pb'
 import Popup from './popup'
-import Rs, { EntityWrapper } from './rs'
+import Entity from './entity'
 import Tooltip, { TooltipBody } from './tooltip'
 import Note from './note'
 
@@ -38,13 +38,12 @@ const Lb = styled.span`
 `
 
 export {
-	EntityWrapper,
 	getPb,
 	Hi,
 	Lb,
 	Note,
 	Popup,
-	Rs,
+	Entity,
 	Tooltip,
 	TooltipBody
 }

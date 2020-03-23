@@ -1,0 +1,20 @@
+{
+  "name": "@docere/text_",
+  "version": "2.1.1",
+  "description": "",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dist": "./dist.sh",
+    "watch": "tsc -w"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@docere/common": "1.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^3.8.3"
+  }
+}

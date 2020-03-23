@@ -51,7 +51,6 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 				...entryState,
 				activeEntity,
 				activeFacsimileAreas,
-				// asideTab: AsideTab.TextData
 			}
 		}
 

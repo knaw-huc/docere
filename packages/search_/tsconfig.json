@@ -1,5 +1,5 @@
 {
-  "compilerOptions": {
+	"compilerOptions": {
 		"declaration": true,
 		"esModuleInterop": true,
 		"importHelpers": true,
@@ -17,7 +17,7 @@
 		"resolveJsonModule": true,
 		"target": "es6",
 		"types": []
-  },
-  "include": ["./src/index.tsx"],
-  "exclude": ["./node_modules", "./build", "./dist"]
+	},
+	"include": ["./src/index.tsx"],
+	"exclude": ["./node_modules", "./build", "./dist"]
 }

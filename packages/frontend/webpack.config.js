@@ -43,7 +43,6 @@ module.exports = {
 					test: /\.tsx?$/,
 					loader: "ts-loader",
 					options: {
-						// configFile: 'tsconfig.dev.json',
 						transpileOnly: true
 					}
 				}
@@ -56,12 +55,5 @@ module.exports = {
 	},
 	resolve: {
 		extensions: [".webpack.js", ".web.js", ".ts", ".tsx", ".js"],
-		// alias: {
-		// 	'@docere/search': path.resolve(__dirname, '../search'),
-		// 	'@docere/projects': path.resolve(__dirname, '../projects'),
-		// 	'@docere/text': path.resolve(__dirname, '../text'),
-		// 	'@docere/frontend': path.resolve(__dirname, '../frontend/src/export'),
-		// }
-		// plugins: [new TsconfigPathsPlugin({ configFile: './tsconfig.dev.json' })]
 	}
 };

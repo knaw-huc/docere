@@ -6,6 +6,7 @@ interface TextData {
 }
 
 interface Entity extends TextData {
+	element?: Element
 	value: string
 }
 

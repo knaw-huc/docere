@@ -1,5 +1,5 @@
 import * as React from 'react'
-import DocereTextView from '@docere/text'
+import DocereTextView from '../../../../text/src/index'
 import styled from '@emotion/styled'
 import { TEXT_PANEL_WIDTH } from '../../constants'
 import { Text } from './text'

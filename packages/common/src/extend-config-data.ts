@@ -31,9 +31,10 @@ export const defaultMetadata: MetadataConfig = {
 	showInAside: true,
 }
 
-const defaultEntity: EntityConfig = {
+export const defaultEntityConfig: EntityConfig = {
 	...defaultMetadata,
 	color: Colors.Blue,
+	id: RsType.None,
 	type: RsType.None,
 }
 
@@ -47,7 +48,7 @@ const defaultDocereFunctions: DocereConfigFunctions = {
 	extractLayers: function extractTextLayers(_doc) { return [] }
 }
 
-function setTitle<T extends FacetConfigBase>(entityConfig: T): T {
+export function setTitle<T extends FacetConfigBase>(entityConfig: T): T {
 	if (entityConfig.title == null) {
 		entityConfig.title = entityConfig.id.charAt(0).toUpperCase() + entityConfig.id.slice(1)
 	}
@@ -70,7 +71,7 @@ export function extendConfigData(configDataRaw: DocereConfigDataRaw): DocereConf
 	})
 
 	config.entities = config.entities.map(td => {
-		const textDataConfig = {...defaultEntity, ...td } as EntityConfig
+		const textDataConfig = {...defaultEntityConfig, ...td } as EntityConfig
 		if (!Array.isArray(td.textLayers)) {
 			textDataConfig.textLayers = config.layers.map(tl => tl.id)
 		}

@@ -76,8 +76,6 @@ export default function extractLayers(doc: XMLDocument) {
 		.slice(0, 2) // Keep the 2 biggest arrays
 		.reduce((p, c) => p.concat(c), []) // Flatten 2 largests arrays
 
-	console.log(lemmas)
-
 	const nodeIterator2 = document.createNodeIterator(
 		element,
 		NodeFilter.SHOW_ELEMENT,

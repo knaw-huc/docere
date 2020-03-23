@@ -3,6 +3,13 @@ import { EsDataType, TextDataExtractionType, LayerType, RsType, Colors } from '@
 const config: DocereConfig = {
 	slug: 'gheys',
 	title: 'Gheborcht Ys',
+	// customSettings: [
+	// 	{
+	// 		id: 'showSuggestions',
+	// 		title: 'Show suggestions',
+	// 		defaultValue: true
+	// 	}
+	// ],
 	metadata: [
 		{
 			id: 'toegang_level0',
@@ -129,6 +136,12 @@ const config: DocereConfig = {
 			id: 'date',
 			showAsFacet: false
 		},
+		{
+			color: Colors.Red,
+			id: 'string',
+			showAsFacet: false,
+			showInAside: false,
+		}
 	],
 	layers: [
 		{
@@ -138,10 +151,6 @@ const config: DocereConfig = {
 		{
 			id: 'text',
 		},
-		{
-			active: false,
-			id: 'suggestions',
-		}
 	]
 }
 

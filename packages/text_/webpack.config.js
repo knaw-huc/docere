@@ -1,3 +1,5 @@
+const path = require('path')
+
 module.exports = {
 	entry: {
 		bundle: "./src/index.tsx",
@@ -6,10 +8,10 @@ module.exports = {
 	output: {
 		filename: "[name].js",
 		globalObject: 'this',
-		library: "DocereSearch",
+		library: "DocereText",
 		libraryTarget: "umd",
-		path: __dirname + "/dist",
-		publicPath: "/dist/",
+		// path: __dirname + "/dist",
+		path: path.resolve(__dirname, '../text')
 	},
 	resolve: {
 		extensions: [".webpack.js", ".web.js", ".ts", ".tsx", ".js"]
@@ -20,10 +22,6 @@ module.exports = {
 				test: /\.tsx?$/,
 				exclude: /node_modules/,
 				loader: "ts-loader",
-				options: {
-					configFile: "tsconfig.json",
-					transpileOnly: true
-				},
 			}
 		]
 	},

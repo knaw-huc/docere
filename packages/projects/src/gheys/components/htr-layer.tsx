@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import { Colors } from '@docere/common'
-import { EntityWrapper, Rs, getPb, Lb } from '@docere/text-components'
+import { Entity, getPb, Lb } from '@docere/text-components'
 
 const TextLineWrapper = styled(Lb)`
 	min-height: 2rem;
@@ -93,100 +93,46 @@ function block(props: DocereComponentProps) {
 
 const pb = getPb(props => props.attributes.path)
 
-function entity(configByType: Map<string, EntityConfig>) {
-	return function Entity(props: DocereComponentProps) {
-		const handleClick = React.useCallback(ev => {
-			ev.stopPropagation()
-			props.entryDispatch({
-				type: 'SET_ENTITY',
-				id: props.attributes.ref,
-			})
-		}, [])
+const EntityBodyWrapper = styled.div`
+	padding: 1rem;
 
-		const type = props.attributes.type.split(' ')[0]
+	& > label {
+		font-size: .8rem;
+	}
+
+	& > div {
+		color: #222;
+	}
+`
+
+function EntityBody(props: DocereComponentProps) {
+	return (
+		<EntityBodyWrapper>
+			<label>suggestion</label>
+			<div>{props.attributes.suggestion}</div>
+		</EntityBodyWrapper>
+	)
+}
+
+function entity(config: DocereConfig) {
+	return function(props: DocereComponentProps) {
+		const isEntity = props.attributes.hasOwnProperty('type')
+		const hasSuggestion = props.attributes.hasOwnProperty('suggestion')
+		const type = props.attributes.type?.split(' ')[0]
 
 		return (
-			<Rs
-				active={
-					(
-						props.activeEntity != null &&
-						props.activeEntity.id === props.attributes.ref
-					) ||
-					props.activeFacsimileAreas?.some(fa => props.attributes.area.indexOf(fa.id) > -1)
-				}
-				config={configByType.get(type)}
+			<Entity
 				customProps={props}
-				onClick={handleClick}
+				entitiesConfig={config.entities}
+				id={isEntity ? props.attributes.ref : props.attributes.id}
+				configId={isEntity ? type : 'string'}
+				PopupBody={hasSuggestion ? EntityBody : null}
+				revealOnHover={isEntity || hasSuggestion ? false : true}
 			>
 				{props.children}
-			</Rs>
+			</Entity>
 		)
 	}
-}
-
-const Tooltip = styled.div`
-	background: ${Colors.Red};
-	border-radius: .2em;
-	color: white;
-	display: none;
-	font-family: sans-serif;
-	font-weight: normal;
-	left: -50%;
-	padding: .5em 1em;
-	position: absolute;
-	text-shadow: 1px 1px 1px #585858;
-	top: 2em;
-	white-space: nowrap;
-	z-index: 1;
-
-	&:after {
-		border-color: transparent transparent ${Colors.Red} transparent;
-		border-style: solid;
-		border-width: 10px;
-		content: '';
-		height: 0;
-		left: calc(50% - 10px);
-		position: absolute;
-		top: -20px;
-		width: 0;
-	}
-`
-
-const Suggestion = styled.span`
-	border-bottom: 2px dashed ${Colors.Red};
-	position: relative;
-
-	&:hover > div {
-		display: block;
-	}
-`
-
-function StringBody(props: { children: React.ReactNode, suggestion: string }) {
-	if (props.suggestion == null) return <span>{props.children}</span>
-
-	return (
-		<Suggestion>
-			{props.children}
-			<Tooltip>{props.suggestion}</Tooltip>
-		</Suggestion>
-	)
-}
-
-function string(props: DocereComponentProps) {
-	const [active, handleClick] = useActive(props)
-
-	return (
-		<EntityWrapper
-			active={active}
-			color={Colors.Red}
-			onClick={handleClick}
-			revealOnHover
-		>
-			<StringBody suggestion={props.attributes.suggestion}>
-				{props.children}
-			</StringBody>
-		</EntityWrapper>
-	)
 }
 
 function line(props: DocereComponentProps) {
@@ -204,18 +150,79 @@ function line(props: DocereComponentProps) {
 }
 
 
-export default (configByType: Map<string, EntityConfig>) => ({
-	text: {
-		block,
-		pb,
-		'string[type]': entity(configByType),
-		string,
-		line
-	},
-	suggestions: {
+export default function (config: DocereConfig) {
+	const string = entity(config)
+
+	return {
 		block,
 		pb,
 		string,
 		line
 	}
-})
+}
+
+
+// const Tooltip = styled.div`
+// 	background: ${Colors.Red};
+// 	border-radius: .2em;
+// 	color: white;
+// 	display: none;
+// 	font-family: sans-serif;
+// 	font-weight: normal;
+// 	left: -50%;
+// 	padding: .5em 1em;
+// 	position: absolute;
+// 	text-shadow: 1px 1px 1px #585858;
+// 	top: 2em;
+// 	white-space: nowrap;
+// 	z-index: 1;
+
+// 	&:after {
+// 		border-color: transparent transparent ${Colors.Red} transparent;
+// 		border-style: solid;
+// 		border-width: 10px;
+// 		content: '';
+// 		height: 0;
+// 		left: calc(50% - 10px);
+// 		position: absolute;
+// 		top: -20px;
+// 		width: 0;
+// 	}
+// `
+
+// const Suggestion = styled.span`
+// 	border-bottom: 2px dashed ${Colors.Red};
+// 	position: relative;
+
+// 	&:hover > div {
+// 		display: block;
+// 	}
+// `
+
+// function StringBody(props: { children: React.ReactNode, suggestion: string }) {
+// 	if (props.suggestion == null) return <span>{props.children}</span>
+
+// 	return (
+// 		<Suggestion>
+// 			{props.children}
+// 			<Tooltip>{props.suggestion}</Tooltip>
+// 		</Suggestion>
+// 	)
+// }
+
+// function string(props: DocereComponentProps) {
+// 	const [active, handleClick] = useActive(props)
+
+// 	return (
+// 		<EntityWrapper
+// 			active={active}
+// 			color={Colors.Red}
+// 			onClick={handleClick}
+// 			revealOnHover
+// 		>
+// 			<StringBody suggestion={props.attributes.suggestion}>
+// 				{props.children}
+// 			</StringBody>
+// 		</EntityWrapper>
+// 	)
+// }

@@ -1,6 +1,6 @@
 import React from 'react'
 import { TEXT_PANEL_TEXT_WIDTH, DEFAULT_SPACING, getTextPanelLeftSpacing } from '@docere/common'
-import DocereTextView from '@docere/text'
+import DocereTextView from '@docere/text_'
 import styled from 'styled-components'
 import Tooltip, { TooltipBody } from './tooltip'
 
@@ -24,10 +24,13 @@ const PopupHeader = styled.header`
 	color: white;
 	display: grid;
 	font-size: .8rem;
+	font-weight: bold;
 	grid-template-columns: 1fr 8fr 1fr;
 	justify-items: center;
 	line-height: .8rem;
-	padding: .5rem 1rem;
+	padding: .666rem 1rem;
+	text-shadow: 1px 1px 0 #888;
+	text-transform: uppercase;
 `
 
 const Body = styled.div`
@@ -38,8 +41,9 @@ interface Props {
 	docereComponentProps: DocereComponentProps
 	active: boolean
 	color: string
-	node: Node
+	node?: Node
 	openToAside: boolean
+	PopupBody?: React.FC<DocereComponentProps>
 	title: string
 }
 export default function Popup(props: Props) {
@@ -61,14 +65,17 @@ export default function Popup(props: Props) {
 				<span></span>
 			</PopupHeader>
 			{
-				props.node != null &&
-				<Body>
-					<DocereTextView 
-						customProps={props.docereComponentProps}
-						components={props.docereComponentProps.components}
-						node={props.node}
-					/>
-				</Body>
+				(props.node != null || props.PopupBody != null) ?
+					props.node != null ?
+						<Body>
+							<DocereTextView 
+								customProps={props.docereComponentProps}
+								components={props.docereComponentProps.components}
+								node={props.node}
+							/>
+						</Body> :
+						<props.PopupBody {...props.docereComponentProps} /> :
+					null
 			}
 		</Wrapper>
 	)

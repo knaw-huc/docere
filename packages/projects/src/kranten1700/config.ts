@@ -1,4 +1,5 @@
 import { EsDataType, TextDataExtractionType, LayerType, Colors } from '@docere/common'
+import { RsType } from '@docere/common'
 
 const config: DocereConfig = {
 	slug: 'kranten1700',
@@ -40,6 +41,7 @@ const config: DocereConfig = {
 			identifier: {
 				type: TextDataExtractionType.TextContent
 			},
+			type: RsType.Person,
 		},
 		{
 			color: Colors.Blue,
@@ -47,6 +49,7 @@ const config: DocereConfig = {
 			identifier: {
 				type: TextDataExtractionType.TextContent
 			},
+			type: RsType.Location,
 		},
 		{
 			color: Colors.BlueLight,
@@ -62,17 +65,17 @@ const config: DocereConfig = {
 			id: 'Origineel',
 			type: LayerType.Text,
 		},
-		{
-			active: true,
-			id: 'Contemporain',
-			type: LayerType.Text,
-		},
-		{
-			active: false,
-			id: 'tei',
-			title: 'TEI',
-			type: LayerType.XML,
-		},
+		// {
+		// 	active: true,
+		// 	id: 'Contemporain',
+		// 	type: LayerType.Text,
+		// },
+		// {
+		// 	active: false,
+		// 	id: 'tei',
+		// 	title: 'TEI',
+		// 	type: LayerType.XML,
+		// },
 	]
 }
 

@@ -67,6 +67,7 @@ function useOpenSeadragon(): [any, any] {
 		import('openseadragon' as any)
 			.then(OpenSeadragon => {
 				const osdInstance = OpenSeadragon.default({
+					crossOriginPolicy: 'Anonymous',
 					constrainDuringPan: true,
 					controlsFadeDelay: 0,
 					controlsFadeLength: 300,

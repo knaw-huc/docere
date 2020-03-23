@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { EntityWrapper, Lb } from '@docere/text-components'
+import { Entity, Lb } from '@docere/text-components'
 import { Colors } from '@docere/common'
 import styled from 'styled-components'
 
@@ -58,6 +58,7 @@ function TextLine(props: DocereComponentProps) {
 		<TextLineWrapper
 			active={active}
 			onClick={handleClick}
+			showLineBeginnings={props.entrySettings['panels.text.showLineBeginnings']}
 		>
 			{props.children}
 		</TextLineWrapper>
@@ -67,17 +68,14 @@ function TextLine(props: DocereComponentProps) {
 // const pb = getPb(props => props.attributes.path)
 
 function String(props: DocereComponentProps) {
-	const [active, handleClick] = useActive(props)
-
 	return (
-		<EntityWrapper
-			active={active}
-			color={Colors.Red}
-			onClick={handleClick}
+		<Entity
+			customProps={props}
+			id={props.attributes.ID}
 			revealOnHover
 		>
 			{props.attributes.CONTENT}
-		</EntityWrapper>
+		</Entity>
 	)
 }
 

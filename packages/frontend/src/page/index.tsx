@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from '@emotion/styled'
-import DocereTextView from '@docere/text'
+import DocereTextView from '@docere/text_'
 import { TOP_OFFSET, DEFAULT_SPACING, DocereComponentContainer } from '@docere/common'
 import { useComponents } from '../app/context'
 

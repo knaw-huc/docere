@@ -39,12 +39,13 @@ export const TooltipBody = styled.div`
 	font-family: sans-serif;
 	font-weight: 300;
 	border-color: ${(props: { color: string }) => props.color};
-	border-radius: 2px;
+	border-radius: 6px;
 	border-style: solid;
 	border-width: 2px;
 	color: #666;
 	height: 100%;
 	line-height: 1.5rem;
+	box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 `
 TooltipBody.defaultProps = { color: DEFAULT_POPUP_BG_COLOR }
 

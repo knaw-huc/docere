@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { Note, getPb, Rs, Lb } from '@docere/text-components'
+import { Note, getPb, Entity, Lb } from '@docere/text-components'
 import { DocereComponentContainer } from '@docere/common'
 
 const Ref = styled.span`border-bottom: 1px solid green;`
@@ -19,20 +19,17 @@ const ref = function(props: DocereComponentProps) {
 	)
 }
 
-function person(personConfig: EntityConfig) {
+function person(entitiesConfig: EntityConfig[]) {
 	return function Person(props: DocereComponentProps) {
 		return (
-			<Rs
-				active={props.attributes.key === props.activeEntity?.id}
-				config={personConfig}
+			<Entity
+				configId={props.attributes.type}
 				customProps={props}
-				onClick={ev => {
-					ev.stopPropagation()
-					props.entryDispatch({ type: 'SET_ENTITY', id: props.attributes.key })
-				}}
+				entitiesConfig={entitiesConfig}
+				id={props.attributes.key}
 			>
 				{props.children}
-			</Rs>
+			</Entity>
 		)
 	}
 }
@@ -40,7 +37,7 @@ function person(personConfig: EntityConfig) {
 // const getComponents: GetComponents = function(config: DocereConfig) {
 export default function getComponents(config: DocereConfig) {
 	return async function(_container: DocereComponentContainer, _id: string) {
-		const personConfig = config.entities.find(td => td.id === 'pers')
+		// const personConfig = config.entities.find(td => td.id === 'pers')
 		return {
 			ab: styled.div`margin-bottom: 1rem;`,
 			anchor: (props: DocereComponentProps) =>
@@ -53,7 +50,7 @@ export default function getComponents(config: DocereConfig) {
 			lb: (props: DocereComponentProps) => <Lb showLineBeginnings={props.entrySettings['panels.text.showLineBeginnings']} />,
 			pb: getPb(props => props.attributes.facs.slice(1)),
 			ref,
-			'rs[type="pers"]': person(personConfig),
+			'rs': person(config.entities),
 		}
 	}
 }

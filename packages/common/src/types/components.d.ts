@@ -40,14 +40,14 @@ type DocereComponentProps =
 	}
 
 interface RsProps {
-	active?: boolean,
 	children: React.ReactNode
-	// color?: string
-	config: EntityConfig
+	configId?: string
 	customProps: DocereComponentProps
+	entitiesConfig?: DocereConfig['entities']
+	id: string
 	onClick?: (ev: any) => void
+	PopupBody?: React.FC<DocereComponentProps>
 	revealOnHover?: boolean
-	// icon?: RsType
 }
 
 

@@ -32,3 +32,16 @@ export function getTextPanelWidth(settings: EntrySettings, activeNote: Note, act
 
 	return left + TEXT_PANEL_TEXT_WIDTH + right
 }
+
+function byteToHex(byte: number) {
+	const hex = ('0' + byte.toString(16)).slice(-2);
+	return hex
+}
+
+export function generateId(len = 10) {
+	var arr = new Uint8Array((len || 40) / 2);
+	window.crypto.getRandomValues(arr);
+	const tail = [].map.call(arr, byteToHex).join("");
+	const head = String.fromCharCode(97 + Math.floor(Math.random() * 26))
+	return `${head}${tail}`
+}
