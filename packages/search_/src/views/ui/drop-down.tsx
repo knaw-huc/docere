@@ -1,5 +1,5 @@
 import * as React from 'react'
-import styled from '@emotion/styled'
+import styled from 'styled-components'
 import { Button } from '../header/page-number'
 
 const Wrapper = styled.div`

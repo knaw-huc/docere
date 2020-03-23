@@ -1,6 +1,6 @@
 import * as React from 'react'
 import FacetValueView from './value'
-import styled from '@emotion/styled'
+import styled from 'styled-components'
 import MoreLessButton from './more-less-buttons'
 
 const DURATION = 500

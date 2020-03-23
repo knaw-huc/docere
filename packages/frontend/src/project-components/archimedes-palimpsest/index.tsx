@@ -1,4 +1,4 @@
-import styled from "@emotion/styled";
+import styled from 'styled-components';
 import { lb } from '../index'
 
 const getComponents: GetComponents = function(_config) {

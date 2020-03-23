@@ -1,5 +1,5 @@
 import * as React from 'react'
-import styled from '@emotion/styled'
+import styled from 'styled-components'
 import HucFacetedSearch  from '@docere/search_'
 import { DEFAULT_SPACING, TOP_OFFSET, RESULT_ASIDE_WIDTH, EsDataType, UIComponentType, defaultMetadata, SearchTab } from '@docere/common'
 import { fetchJson } from '../utils'

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import styled from '@emotion/styled'
+import styled from 'styled-components'
 import ActiveArea, { activeAreaRGB } from './active-area'
 import { TEXT_PANEL_MINIMAP_WIDTH, DEFAULT_SPACING, TEXT_PANEL_GUTTER_WIDTH, TEXT_PANEL_TEXT_WIDTH } from '@docere/common'
 
@@ -43,7 +43,7 @@ const Blocker = styled.div`
 
 const Bar = styled.div`
 	position: absolute;
-	top: ${(props: any) => props.top}px;
+	top: ${(props: { top: number }) => props.top}px;
 	height: .3em;
 	background-color: rgba(255, 255, 0, 1);
 	margin-top: -.07em;

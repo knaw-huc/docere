@@ -1,6 +1,6 @@
 import * as React from 'react'
 // import Slider from './slider'
-import styled from '@emotion/styled'
+import styled from 'styled-components'
 import Histogram from './histogram'
 import { isDateFacet } from '../../../constants'
 import { getEndDate, formatDate } from './utils'

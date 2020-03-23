@@ -4,7 +4,7 @@ import TextPanel from './text'
 // import WitnessAnimationPanel from './witness-animation'
 import XmlPanel from './xml'
 import { isTextLayer, isXmlLayer } from '../../utils'
-import styled from '@emotion/styled'
+import styled from 'styled-components'
 import { DEFAULT_SPACING, LayerType, getTextPanelWidth } from '@docere/common'
 
 interface PWProps {

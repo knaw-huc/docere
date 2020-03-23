@@ -1,7 +1,7 @@
 /// <reference path="../../types.d.ts" />
 
 import * as React from 'react'
-import styled from '@emotion/styled'
+import styled from 'styled-components'
 import { rsPerson } from '../rs';
 import { BROWN_DARK, AsideTab } from '../../constants'
 import getPb from '../pb';

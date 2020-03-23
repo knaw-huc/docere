@@ -1,5 +1,5 @@
 import * as React from 'react'
-import styled from '@emotion/styled'
+import styled from 'styled-components'
 import getResultBody, { ResultBodyProps } from '../result-body'
 import { Label } from '../generic-result-body'
 

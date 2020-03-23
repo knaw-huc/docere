@@ -1,4 +1,4 @@
-import styled from '@emotion/styled'
+import styled from 'styled-components'
 import { SPOT_COLOR } from '../constants'
 
 const Button = styled('button')`

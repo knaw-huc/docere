@@ -1,5 +1,5 @@
 import * as React from 'react'
-import styled from '@emotion/styled'
+import styled from 'styled-components'
 import { AsideTab } from '../../constants';
 
 /* Active when NER ID in text data aside is selected */

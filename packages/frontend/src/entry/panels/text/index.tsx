@@ -1,6 +1,6 @@
 import * as React from 'react'
 import DocereTextView from '@docere/text_'
-import styled from '@emotion/styled'
+import styled from 'styled-components'
 import debounce from 'lodash.debounce'
 import AppContext, { useComponents } from '../../../app/context'
 import Minimap from './minimap'

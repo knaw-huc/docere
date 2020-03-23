@@ -1,5 +1,5 @@
 import * as React from 'react'
-import styled from '@emotion/styled'
+import styled from 'styled-components'
 import DocereTextView from '@docere/text_'
 import AppContext from '../../../app/context'
 import { Colors } from '@docere/common'

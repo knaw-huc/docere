@@ -1,5 +1,5 @@
 import * as React from 'react'
-import styled from "@emotion/styled";
+import styled from 'styled-components';
 import { ASIDE_HANDLE_HEIGHT, ASIDE_HANDLE_WIDTH, TabPosition, SearchTab, FooterTab, AsideTab, Colors } from '@docere/common';
 // import icons from './icons'
 

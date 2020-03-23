@@ -1,5 +1,5 @@
 import * as React from 'react'
-import styled from '@emotion/styled'
+import styled from 'styled-components'
 import { FOOTER_HEIGHT, FOOTER_HANDLE_HEIGHT, FooterTab, TabPosition } from '@docere/common'
 import Tabs from '../../ui/tabs'
 import Layers from './layers'

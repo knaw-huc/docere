@@ -1,8 +1,8 @@
-import styled from '@emotion/styled'
+import styled from 'styled-components'
 import { lb } from '../index'
 import getPb from '../pb';
 
-// import styled from "@emotion/styled";
+// import styled from 'styled-components';
 // import { lb } from '../index'
 
 // function pb(props: { activeFacsimilePath: string, facs: string, setActiveFacsimile: (a: string) => void }) {

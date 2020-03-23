@@ -1,6 +1,6 @@
 import React from 'react'
 import { DEFAULT_SPACING } from '@docere/common'
-import styled from '@emotion/styled'
+import styled from 'styled-components'
 
 const Header = styled.header`
 	background: #EEE;

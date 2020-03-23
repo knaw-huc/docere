@@ -1,5 +1,5 @@
 import * as React from 'react'
-import styled from '@emotion/styled'
+import styled from 'styled-components'
 import AutoSuggest from './auto-suggest'
 import debounce from 'lodash.debounce'
 

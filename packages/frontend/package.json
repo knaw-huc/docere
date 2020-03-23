@@ -19,11 +19,7 @@
     "@docere/text_": "^2.1.1",
     "@docere/text-components": "^1.0.0",
     "@docere/projects": "1.0.0",
-    "@emotion/core": "^10.0.27",
-    "@emotion/styled": "^10.0.27",
-    "emotion": "^10.0.27",
-    "openseadragon": "^2.4.2",
-    "react-emotion": "^10.0.0"
+    "openseadragon": "^2.4.2"
   },
   "devDependencies": {
     "typescript": "^3.8.3",

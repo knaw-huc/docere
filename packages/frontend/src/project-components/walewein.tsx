@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { lb, hi } from "./index"
-import styled from '@emotion/styled'
+import styled from 'styled-components'
 
 const StyledNote = styled.span`
 	cursor: pointer;

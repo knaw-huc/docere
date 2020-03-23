@@ -1,6 +1,5 @@
 import * as React from 'react'
-import styled from "@emotion/styled"
-import { css } from '@emotion/core'
+import styled, { css } from "styled-components"
 
 const Wrapper = styled('li')`
 	cursor: pointer;
@@ -18,6 +17,7 @@ const common = (props: { active: boolean }) => css`
 	font-size: .9em;
 	font-weight: ${props.active ? 'bold' : 'normal' };
 `
+
 const Key = styled('span')`
 	${common}
 	overflow: hidden;

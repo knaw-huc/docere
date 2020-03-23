@@ -1,7 +1,7 @@
 /// <reference path="./types/index.d.ts" />
 
 import * as React from 'react'
-import styled from '@emotion/styled'
+import styled from 'styled-components'
 
 import BooleanFacet from './views/facets/boolean'
 import HierarchyFacet from './views/facets/hierarchy'

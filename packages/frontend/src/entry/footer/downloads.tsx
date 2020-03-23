@@ -2,7 +2,7 @@ import * as React from 'react'
 import { BottomTabWrapper } from './layers'
 import AppContext from '../../app/context'
 import { fetchEntryXml } from '../../utils'
-import styled from '@emotion/styled'
+import styled from 'styled-components'
 
 function fetchAndDownloadXml(slug: string, id: string) {
 	fetchEntryXml(slug, id)

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import styled from '@emotion/styled'
+import styled from 'styled-components'
 import { BACKGROUND_GRAY, SPOT_COLOR } from '../../constants'
 
 export const Button = styled.div`

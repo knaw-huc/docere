@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { BottomTabWrapper } from './layers'
 import Option from './options'
-import styled from '@emotion/styled'
+import styled from 'styled-components'
 
 interface Option { prop: keyof EntrySettings, title: string }
 const textOptions: Option[] = [

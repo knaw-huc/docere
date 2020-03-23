@@ -1,5 +1,5 @@
 import * as React from 'react'
-import styled from '@emotion/styled'
+import styled from 'styled-components'
 import { TOP_OFFSET, ASIDE_HANDLE_WIDTH, RESULT_ASIDE_WIDTH, Viewport, SearchTab, TabPosition } from '@docere/common'
 import Tabs from '../ui/tabs';
 

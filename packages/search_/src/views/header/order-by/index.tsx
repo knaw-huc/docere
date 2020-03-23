@@ -1,7 +1,7 @@
 import * as React from 'react'
 import OrderOption from './option'
 import DropDown from '../../ui/drop-down'
-import styled from '@emotion/styled'
+import styled from 'styled-components'
 
 const SortByDropDown = styled(DropDown)`
 	& > .huc-fs-dropdown-button {

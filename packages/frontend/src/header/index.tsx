@@ -1,5 +1,5 @@
 import * as React from 'react'
-import styled from '@emotion/styled'
+import styled from 'styled-components'
 import { MAINHEADER_HEIGHT, TOP_OFFSET, DEFAULT_SPACING, TOPMENU_HEIGHT, Viewport } from '@docere/common'
 import PagesMenu from './pages'
 import AppContext from '../app/context'

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import FacetValueView from '../list/value'
 import FacetHeader from '../header'
-import styled from '@emotion/styled'
+import styled from 'styled-components'
 import FacetWrapper from '../facet'
 
 const List = styled('ul')`

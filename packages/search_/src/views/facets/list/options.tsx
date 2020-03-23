@@ -1,5 +1,5 @@
 import * as React from 'react'
-import styled from '@emotion/styled'
+import styled from 'styled-components'
 import { Input } from '../../full-text-search'
 import debounce from 'lodash.debounce'
 import { SortDirection, SortBy } from '../../../constants'

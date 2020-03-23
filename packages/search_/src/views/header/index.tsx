@@ -1,7 +1,7 @@
 import * as React from 'react'
 import SortBy from './order-by'
 import ActiveFilters from './active-filters'
-import styled from '@emotion/styled'
+import styled from 'styled-components'
 import Pagination from './pagination'
 
 const Wrapper = styled.header`

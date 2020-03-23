@@ -1,5 +1,5 @@
 import * as React from 'react'
-import styled from '@emotion/styled'
+import styled from 'styled-components'
 import PageNumber, { Button } from './page-number'
 
 function getRange(start: number, end: number) {

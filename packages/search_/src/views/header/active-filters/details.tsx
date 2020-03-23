@@ -1,6 +1,6 @@
 import * as React from 'react'
 import DropDown from '../../ui/drop-down'
-import styled from '@emotion/styled'
+import styled from 'styled-components'
 
 const ActiveFiltersDropDown = styled(DropDown)`
 	.huc-fs-dropdown-button {

@@ -1,6 +1,6 @@
 // import * as React from 'react'
 // import { ItemInText, small } from '../entry/index.components'
-// import styled from '@emotion/styled';
+// import styled from 'styled-components';
 // import { ID_ATTRIBUTE_NAME } from '../entry'
 
 // const Wrapper = styled.div`

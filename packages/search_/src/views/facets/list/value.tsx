@@ -1,6 +1,5 @@
 import * as React from 'react'
-import styled from "@emotion/styled"
-import { css } from '@emotion/core'
+import styled, { css } from 'styled-components'
 
 const Wrapper = styled('li')`
 	cursor: pointer;

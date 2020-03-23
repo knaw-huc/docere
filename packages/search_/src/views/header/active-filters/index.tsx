@@ -1,7 +1,7 @@
 import * as React from 'react'
 // import ActiveFilter from './active-filter'
 import { Button } from '../page-number'
-import styled from '@emotion/styled'
+import styled from 'styled-components'
 import useFilters from './use-filters'
 import Details from './details'
 

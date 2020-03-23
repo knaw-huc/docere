@@ -4,7 +4,7 @@ import FacetHeader from '../header'
 // import { FacetMenuButton } from '../../button'
 // import Options from './options'
 import FacetWrapper from '../facet'
-import styled from '@emotion/styled'
+import styled from 'styled-components'
 
 const FacetWrapper2 = styled(FacetWrapper)`
 	.child {

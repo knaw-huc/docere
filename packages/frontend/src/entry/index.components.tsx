@@ -1,6 +1,5 @@
 import * as React from 'react'
-import styled from '@emotion/styled'
-import { css } from '@emotion/core'
+import styled, { css } from 'styled-components'
 import { TOP_OFFSET, DEFAULT_SPACING, ASIDE_WIDTH, RESULT_ASIDE_WIDTH, FOOTER_HEIGHT, SearchTab } from '@docere/common'
 
 // interface MainProps { asideTab: AsideTab, footerTab: FooterTab, searchTab: SearchTab }
