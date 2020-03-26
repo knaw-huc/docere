@@ -11,7 +11,7 @@ const Button = styled('button')`
 `
 
 export const MoreLessButton = styled(Button)`
-	margin-left: 24px;
+	font-weight: normal;
 `
 
 export const FacetMenuButton = styled(Button)`

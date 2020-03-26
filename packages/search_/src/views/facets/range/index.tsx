@@ -1,18 +1,18 @@
 import * as React from 'react'
-import FacetHeader from '../header'
-import FacetWrapper from '../facet'
+import Facet from '../facet'
 import RangeFacetBody from './body'
 
 
 function RangeFacetView(props: RangeFacetProps) {
 	return (
-		<FacetWrapper>
-			<FacetHeader facetData={props.facetData} />
+		<Facet
+			facetProps={props}
+		>
 			{
 				props.values.length > 0 &&
 				<RangeFacetBody { ...props } />
 			}
-		</FacetWrapper>
+		</Facet>
 	)
 }
 

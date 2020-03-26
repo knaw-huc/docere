@@ -1,8 +1,7 @@
 import * as React from 'react'
 import FacetValueView from '../list/value'
-import FacetHeader from '../header'
 import styled from 'styled-components'
-import FacetWrapper from '../facet'
+import Facet from '../facet'
 
 const List = styled('ul')`
 	margin: 0;
@@ -11,8 +10,10 @@ const List = styled('ul')`
 
 function BooleanFacet(props: BooleanFacetProps) {
 	return (
-		<FacetWrapper>
-			<FacetHeader facetData={props.facetData} />
+		<Facet
+			facetProps={props}
+		>
+			{/* <FacetHeader facetData={props.facetData} /> */}
 			<List>
 				{
 					props.values
@@ -30,7 +31,7 @@ function BooleanFacet(props: BooleanFacetProps) {
 						)
 				}
 			</List>
-		</FacetWrapper>
+		</Facet>
 	)
 }
 

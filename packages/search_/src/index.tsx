@@ -23,8 +23,9 @@ const Wrapper = styled.div`
 			return `
 				display: grid;
 				font-family: sans-serif;
-				grid-template-columns: minmax(32px, auto) 352px minmax(320px, 672px) minmax(32px, auto);
+				grid-template-columns: auto 300px minmax(320px, 672px) auto;
 				grid-template-rows: 104px auto;
+				grid-column-gap: 64px;
 
 				& > #huc-full-text-search {
 					grid-column: 2;
@@ -37,13 +38,14 @@ const Wrapper = styled.div`
 				& > #huc-fs-facets {
 					grid-column: 2;
 					grid-row: 2;
+					margin-top: 48px;
 					margin-bottom: 10vh;
-					padding-right: 32px;
 				}
 
 				& > #huc-fs-search-results {
 					grid-column: 3;
 					grid-row: 2;
+					margin-top: 48px;
 					padding-left: 32px;
 				}
 			`

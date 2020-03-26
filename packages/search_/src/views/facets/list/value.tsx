@@ -1,32 +1,32 @@
 import * as React from 'react'
-import styled, { css } from 'styled-components'
-
+import styled from 'styled-components'
+//•
+interface WProps { active: boolean }
 const Wrapper = styled('li')`
 	cursor: pointer;
-	display: grid;
-	grid-template-columns: 20px 4fr 1fr;
-	margin-bottom: .2em;
+	font-size: .8rem;
+	font-weight: ${(p: WProps) => p.active ? 'bold' : 'normal' };
+	margin-bottom: .4rem;
+	margin-left: 1rem;
+	text-indent: -1rem;
 
-	& > input {
-		margin-left: 0;
+	${p => p.active ?
+		`&:before {
+			position: absolute;
+			content: '•';
+		}` : ''
 	}
-`
 
-const common = (props: { active: boolean }) => css`
-	color: ${props.active ? '#444' : '#888' };
-	font-size: .9em;
-	font-weight: ${props.active ? 'bold' : 'normal' };
-`
-const Key = styled('span')`
-	${common}
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-`
-
-const Count = styled('span')`
-	${common}
-	text-align: right;
+	&:hover:before {
+		position: absolute;
+		content: '◦';
+	}
+	 
+	& > .count {
+		color: #999;
+		font-size: .7rem;
+		padding-left: .4rem;
+	}
 `
 
 interface Props {
@@ -46,23 +46,24 @@ function FacetValueView(props: Props) {
 
 	return (
 		<Wrapper
+			active={props.active}
 			onClick={handleChange}
 			title={props.value.key}
 		>
-			<input
-				checked={props.active}
-				onChange={handleChange}
-				type="checkbox"
+			<span
+				className="value"
+				dangerouslySetInnerHTML={{ __html: props.keyFormatter(props.value.key) }}
 			/>
-			<Key active={props.active} dangerouslySetInnerHTML={{ __html: props.keyFormatter(props.value.key) }}></Key>
-			<Count active={props.active}>{props.value.count}</Count>
+			<span className="count">({props.value.count})</span>
 		</Wrapper>
 
 	)
 }
 
 FacetValueView.defaultProps = {
-	keyFormatter: (value: string) => value
+	// TODO use keyFormatter higher up the tree? now everytime the facet value is rendered,
+	// the keyFormatter function is run
+	keyFormatter: (value: string) => value.trim().length > 0 ? value : '<i>&lt;empty&gt;</i>'
 }
 
 export default React.memo(FacetValueView)

@@ -4,7 +4,6 @@ import { Input } from '../../full-text-search'
 import debounce from 'lodash.debounce'
 import { SortDirection, SortBy } from '../../../constants'
 
-
 const Wrapper = styled('div')`
 	font-size: .9em;
 	margin-bottom: 2em;

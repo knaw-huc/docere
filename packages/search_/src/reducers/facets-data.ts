@@ -48,18 +48,31 @@ function initRangeFacet(rangeFacetConfig: RangeFacetConfig): RangeFacetData {
 	}
 }
 
+function initFacet(facetConfig: FacetConfigBase): FacetData {
+	if		(isListFacet(facetConfig))		return initListFacet(facetConfig)
+	else if (isBooleanFacet(facetConfig))	return initBooleanFacet(facetConfig)
+	else if (isHierarchyFacet(facetConfig))	return initHierarchyFacet(facetConfig)
+	else if (isRangeFacet(facetConfig))		return initRangeFacet(facetConfig)
+	else if (isDateFacet(facetConfig))		return initDateFacet(facetConfig)
+
+	return null
+}
+
 export function initFacetsData(fields: AppProps['fields']) {
+	const initMap: FacetsData = new Map()
 	return fields
 		.reduce((prev, curr) => {
-			if		(isListFacet(curr))			prev.set(curr.id, initListFacet(curr))
-			else if (isBooleanFacet(curr))		prev.set(curr.id, initBooleanFacet(curr))
-			else if (isHierarchyFacet(curr))	prev.set(curr.id, initHierarchyFacet(curr))
-			else if (isRangeFacet(curr))		prev.set(curr.id, initRangeFacet(curr))
-			else if (isDateFacet(curr))			prev.set(curr.id, initDateFacet(curr))
-			// else								prev.set(curr.id, initListFacet(curr as ListFacetConfig))
+			const facetData = initFacet(curr)
+
+			if (facetData != null) {
+				if (facetData.title == null) {
+					facetData.title = facetData.id.charAt(0).toUpperCase() + facetData.id.slice(1)
+				}
+				prev.set(curr.id, facetData)
+			}
 
 			return prev
-		}, new Map())
+		}, initMap)
 }
 
 export default function useFacetsDataReducer(fields: AppProps['fields']) {

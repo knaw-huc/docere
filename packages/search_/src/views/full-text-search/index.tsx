@@ -6,7 +6,7 @@ import debounce from 'lodash.debounce'
 export const Wrapper = styled.div`
 	align-self: end;
 	background-color: white;
-	border-bottom: 1px solid #EEE;
+	border-bottom: 2px solid #CCC;
 	box-sizing: border-box;
 	position: sticky;
 	top: 0;

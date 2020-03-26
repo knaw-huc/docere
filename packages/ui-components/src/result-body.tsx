@@ -15,7 +15,7 @@ const Wrapper = styled.div`
 	font-size: ${(props: WProps) => props.small ? '.8em' : '1em'};
 	grid-column-gap: ${(props: WProps) => props.small ? 32 / 2 : 32}px;
 	grid-template-columns: ${(props: WProps) => props.hasFacsimile ?
-		`${props.small ? '64px 0' : '128px auto'}` :
+		`${props.small ? '64px 0' : '64px auto'}` :
 		'auto'
 	};
 	padding: 1.5em 0;
@@ -78,7 +78,7 @@ const FacsimileThumb = styled.li`
 
 function FacsimileThumbs(props: { facsimiles: string[], small: boolean }) {
 	if (props.facsimiles == null || !props.facsimiles.length) return null
-	const thumbWidth = props.small ? 64 : 128
+	const thumbWidth = 64
 	return props.facsimiles.length === 1 ?
 		<img
 			src={props.facsimiles[0].replace('info.json', `full/${thumbWidth},/0/default.jpg`)}

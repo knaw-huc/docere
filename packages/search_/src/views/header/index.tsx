@@ -7,7 +7,7 @@ import Pagination from './pagination'
 const Wrapper = styled.header`
 	align-items: center;
 	background: white;
-	border-bottom: 1px solid #EEE;
+	border-bottom: 2px solid #CCC;
 	color: #888;
 	display: grid;
 	font-size: .85em;
