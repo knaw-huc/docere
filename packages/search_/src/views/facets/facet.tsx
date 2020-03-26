@@ -8,6 +8,7 @@ const Wrapper = styled.div`
 	margin-bottom: ${(p: WP) => p.collapse ? 0 : '2rem'};
 	margin-top: ${(p: WP) => p.collapse ? 0 : '1rem'};
 	position: relative;
+	transition: margin 100ms;
 `
 
 type FacetProps = any
