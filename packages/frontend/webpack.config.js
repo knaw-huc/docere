@@ -18,11 +18,16 @@ module.exports = {
 				target: 'http://localhost:9200',
 				pathRewrite: {'^/search': ''}
 			},
+			'/iiif/encyclopaedia-britannica': {
+				changeOrigin: true,
+				target: 'https://view.nls.uk/iiif',
+				pathRewrite: {'^/iiif/encyclopaedia-britannica': ''}
+			},
 			'/iiif': {
 				changeOrigin: true,
 				target: 'http://localhost:5004',
 				pathRewrite: {'^/iiif': ''}
-			}
+			},
 		},
 		watchOptions: {
 			ignored: /node_modules/

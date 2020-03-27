@@ -48,7 +48,8 @@ export default function extractFacsimiles(doc: XMLDocument, config: DocereConfig
 		id: path,
 		versions: [{
 			areas: extractFacsimileAreas(doc, config),
-			path: `https://view.nls.uk/iiif/${path}/info.json`,
+			path: `http://localhost:4000/iiif/encyclopaedia-britannica/${path}/info.json`,
+			// path: `https://view.nls.uk/iiif/${path}/info.json`,
 		}]
 	})
 
