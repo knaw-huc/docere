@@ -11,8 +11,8 @@ module.exports = {
 		library: "DocereSearch",
 		libraryTarget: "umd",
 		// path: __dirname + "/dist",
-		path: path.resolve(__dirname, '../search'),
-		publicPath: "/dist/",
+		path: path.resolve(__dirname, '../search/dist'),
+		// publicPath: "/dist/",
 	},
 	resolve: {
 		extensions: [".webpack.js", ".web.js", ".ts", ".tsx", ".js"]

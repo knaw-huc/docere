@@ -1,9 +1,10 @@
 {
   "name": "@docere/text",
-  "version": "2.1.1",
+  "version": "1.0.0",
   "description": "",
-  "main": "bundle.js",
+  "main": "dist/bundle.js",
   "types": "types/index.d.ts",
+  "files": ["dist/", "types/"],
   "author": "Gijsjan Brouwer",
   "license": "GPL-3.0-or-later"
 }

@@ -1,13 +1,14 @@
 {
   "name": "@docere/text_",
-  "version": "2.1.1",
+  "version": "0.0.0",
   "description": "",
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "scripts": {
-    "build": "tsc",
+    "build": "rm -rf build && tsc",
     "dist": "./dist.sh",
-    "watch": "tsc -w"
+    "watch": "tsc -w",
+    "watch:dev": "webpack -w"
   },
   "author": "",
   "license": "ISC",

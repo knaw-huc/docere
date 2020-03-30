@@ -11,7 +11,7 @@ module.exports = {
 		library: "DocereText",
 		libraryTarget: "umd",
 		// path: __dirname + "/dist",
-		path: path.resolve(__dirname, '../text')
+		path: path.resolve(__dirname, '../text/dist')
 	},
 	resolve: {
 		extensions: [".webpack.js", ".web.js", ".ts", ".tsx", ".js"]

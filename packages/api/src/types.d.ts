@@ -1,3 +1,5 @@
+/// <reference types="@docere/common" />
+
 type PrepareAndExtractOutput = Omit<Entry, 'doc' | 'layers'> & {
 	text: string
 	layers: ExtractedLayer[]

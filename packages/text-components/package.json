@@ -4,14 +4,14 @@
   "description": "",
   "main": "build/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rm -rf build && tsc",
     "watch": "tsc -w"
   },
   "author": "Gijsjan Brouwer",
   "license": "GPL-3.0-or-later",
   "dependencies": {
     "@docere/common": "^1.0.0",
-    "@docere/text_": "^2.1.1"
+    "@docere/text_": "0.0.0"
   },
   "devDependencies": {
     "typescript": "^3.8.3"

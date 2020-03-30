@@ -5,14 +5,14 @@
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "scripts": {
-    "build": "tsc",
+    "build": "rm -rf build && tsc",
     "watch": "tsc -w"
   },
   "author": "Gijsjan Brouwer",
   "license": "GPL-3.0-or-later",
   "dependencies": {
     "@docere/common": "^1.0.0",
-    "@docere/text": "^2.1.1",
+    "@docere/text_": "0.0.0",
     "@docere/text-components": "^1.0.0",
     "@docere/ui-components": "^1.0.0"
   },

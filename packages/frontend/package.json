@@ -3,10 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "backend": "./npm-run-backend.sh",
-    "build": "tsc -p",
+    "build": "rm -rf build && tsc",
     "dev": "webpack-dev-server",
-    "dist": "webpack --config webpack.config.prod.js",
+    "dist": "rm -rf dist && webpack --config webpack.config.prod.js",
     "prod": "webpack-dev-server --config webpack.config.prod.js",
     "watch": "tsc -w"
   },
@@ -15,8 +14,8 @@
   "dependencies": {
     "@docere/common": "^1.0.0",
     "@docere/ui-components": "^1.0.0",
-    "@docere/search_": "^2.4.0",
-    "@docere/text_": "^2.1.1",
+    "@docere/search_": "0.0.0",
+    "@docere/text_": "0.0.0",
     "@docere/text-components": "^1.0.0",
     "@docere/projects": "1.0.0",
     "openseadragon": "^2.4.2"
