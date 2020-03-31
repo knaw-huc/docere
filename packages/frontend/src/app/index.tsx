@@ -4,6 +4,7 @@ import Header from '../header'
 import Entry from '../entry'
 import PageView from '../page'
 import useAppState from './state'
+import type { DocereConfigData } from '@docere/common'
 
 interface AppProps {
 	configData: DocereConfigData

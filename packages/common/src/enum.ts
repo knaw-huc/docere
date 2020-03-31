@@ -79,3 +79,13 @@ export enum Viewport {
 	Entry,
 	EntrySelector
 }
+
+export enum SortBy {
+	Count = '_count',
+	Key = '_term',
+}
+
+export enum SortDirection {
+	Asc = 'asc',
+	Desc = 'desc',
+}

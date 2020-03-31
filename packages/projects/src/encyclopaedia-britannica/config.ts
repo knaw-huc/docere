@@ -1,4 +1,5 @@
 import { LayerType, EsDataType } from '@docere/common'
+import { DocereConfig } from '@docere/common'
 import sets from './data/sets.json'
 
 const config: DocereConfig = {

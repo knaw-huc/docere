@@ -1,4 +1,5 @@
 import { fetchXml, getPageXmlPath } from '../../utils'
+import type { DocereConfigData, Page } from '@docere/common'
 
 export default async function getPage(id: string, configData: DocereConfigData): Promise<Page> {
 	// Flatten pages before using .find

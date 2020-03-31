@@ -3,6 +3,7 @@ import NoteList from "./list"
 import { useTextData, Wrapper } from '../list'
 import AppContext, { useComponents } from '../../../app/context'
 import { DocereComponentContainer } from '@docere/common'
+import type { EntryState, AppStateAction, Entry, EntryStateAction } from '@docere/common'
 
 // type Props =
 // 	Pick<EntryState,  'activeNote' | 'layers'> &

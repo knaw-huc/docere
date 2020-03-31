@@ -1,6 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import { SearchTab, Colors } from '@docere/common'
+import type { DocereResultBodyProps } from '@docere/common'
 // import { DEFAULT_SPACING, MAINHEADER_HEIGHT } from '../constants'
 // import Tooltip from './tooltip'
 

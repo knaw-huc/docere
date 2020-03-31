@@ -2,8 +2,9 @@ import * as React from 'react'
 import getEntry from './get-entry'
 import getPage from './get-page'
 import { analyzeWindowLocation } from '../../utils'
-import { SearchTab, Viewport } from '@docere/common'
 import HistoryNavigator from './history-navigator'
+import { SearchTab, Viewport } from '@docere/common'
+import type { AppState, AppStateAction, DocereConfigData } from '@docere/common'
 
 const initialAppState: AppState = {
 	entryId: null,

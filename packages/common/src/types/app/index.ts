@@ -1,3 +1,19 @@
+import { SearchTab, Viewport } from '../../enum'
+import type { PageConfig } from '../config-data/config'
+import type { Entry } from '../entry'
+
+export interface AppState {
+	entry: Entry
+	entryId: string
+	page: Page
+	pageId: string
+	searchQuery: string[]
+	searchTab: SearchTab
+	viewport: Viewport
+}
+
+export type Page = PageConfig & { doc: XMLDocument }
+
 interface ASA_Project_Changed {
 	type: 'PROJECT_CHANGED'
 	entryId: string
@@ -30,7 +46,7 @@ interface ASA_Unset_Page {
 
 interface ASA_Set_Search_Tab {
 	type: 'SET_SEARCH_TAB'
-	tab: import('../enum').SearchTab
+	tab: SearchTab
 }
 
 interface ASA_Set_Search_Query {
@@ -40,10 +56,10 @@ interface ASA_Set_Search_Query {
 
 interface ASA_Set_Viewport {
 	type: 'SET_VIEWPORT'
-	viewport: import('../enum').Viewport
+	viewport: Viewport
 }
 
-type AppStateAction = 
+export type AppStateAction = 
 	ASA_Project_Changed |
 	ASA_Set_Entry_Id |
 	ASA_Set_Entry |

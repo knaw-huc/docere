@@ -1,5 +1,6 @@
 import pages from './data/pages/index.json'
 import { LayerType } from '@docere/common'
+import type { DocereConfig } from '@docere/common'
 
 const config: DocereConfig = {
 	data: {

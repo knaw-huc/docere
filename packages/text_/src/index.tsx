@@ -1,9 +1,9 @@
-/// <reference path="./types.d.ts" />
-
 import * as React from 'react'
 import useGetComponentTree from './use-get-component-tree'
 import useHighlight from './use-highlight'
 import useComponentDidMount from './use-component-did-mount'
+import type { DocereComponents } from '@docere/common'
+import type { ComponentLeaf } from './types'
 
 function renderComponentTree(tree: ComponentLeaf, props: DocereTextViewProps): React.ReactNode {
 	if (tree == null || typeof tree === 'string') return tree
@@ -15,6 +15,21 @@ function renderComponentTree(tree: ComponentLeaf, props: DocereTextViewProps): R
 	)
 }
 
+export interface DocereTextViewProps {
+	components?: DocereComponents
+	// TODO rename to componentProps
+	customProps?: { [ key: string ]: any }
+	highlight?: string[]
+	html?: string
+	ignore?: string[]
+	onLoad?: (isReady: boolean) => void
+	node?: Node
+	onRootElementChange?: (newRoot: Element) => void
+	rootSelector?: string
+	setHighlightAreas?: (areas: number[]) => void
+	url?: string
+	xml?: string
+}
 function DocereTextView(props: DocereTextViewProps) {
 	const wrapperRef = React.useRef()
 	const componentTree = useGetComponentTree(props)

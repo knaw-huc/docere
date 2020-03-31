@@ -1,13 +1,20 @@
 import * as React from 'react'
-import FacetValuesView from '../list/values'
+import ListFacetValuesView from '../list/values'
 import FacetBase from '../facet'
 import styled from 'styled-components'
+import type { HierarchyFacetData, FacetsDataReducerAction, HierarchyFacetValues } from '@docere/common'
 
 const Facet = styled(FacetBase)`
 	.child {
 		margin-left: .5rem;
 	}
 `
+
+interface HierarchyFacetProps {
+	facetData: HierarchyFacetData
+	facetsDataDispatch: React.Dispatch<FacetsDataReducerAction>
+	values: HierarchyFacetValues
+}
 function HierarchyFacet(props: HierarchyFacetProps) {
 	return (
 		<Facet facetProps={props}>
@@ -21,7 +28,7 @@ function renderNodes(props: HierarchyFacetProps) {
 		if (values == null || !values.values.length) return null
 		return (
 			<>
-				<FacetValuesView
+				<ListFacetValuesView
 					facetData={props.facetData}
 					facetsDataDispatch={props.facetsDataDispatch}
 					values={values}

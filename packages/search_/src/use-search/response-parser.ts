@@ -1,3 +1,5 @@
+import { FSResponse, Hit } from '@docere/common';
+
 export default function ESResponseParser(response: any): FSResponse {
 	return {
 		results: response.hits.hits

@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import Histogram from './histogram'
 import { isDateFacet } from '../../../constants'
 import { getEndDate, formatDate } from './utils'
+import type { DateFacetProps } from '.'
 
 const Dates = styled('div')`
 	color: #888;

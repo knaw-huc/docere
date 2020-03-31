@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { isListFacet, isBooleanFacet, isRangeFacet, isDateFacet, isHierarchyFacet } from '../../../constants'
 import { formatDate } from '../../facets/date/utils'
+import type { FacetData, FacetsData, ActiveFilter } from '@docere/common'
 
 function hasFilter(facetData: FacetData) {
 	if (facetData.filters == null) return false

@@ -1,4 +1,5 @@
 import { LayerType } from '@docere/common'
+import type { Layer, TextLayer, XmlLayer, PageConfig } from '@docere/common'
 
 export function isTextLayer(layer: Layer): layer is TextLayer {
 	return layer.type === LayerType.Text

@@ -1,4 +1,5 @@
 import { EsDataType, TextDataExtractionType, LayerType, RsType, Colors } from '@docere/common'
+import type { DocereConfig } from '@docere/common'
 
 const config: DocereConfig = {
 	slug: 'gheys',

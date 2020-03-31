@@ -1,9 +1,10 @@
 import * as React from 'react'
+import styled from 'styled-components'
 import { BottomTabWrapper } from './layers'
 import Option from './options'
-import styled from 'styled-components'
+import type { DocereConfig, EntryStateAction } from '@docere/common'
 
-interface Option { prop: keyof EntrySettings, title: string }
+interface Option { prop: keyof DocereConfig['entrySettings'], title: string }
 const textOptions: Option[] = [
 	{
 		prop: 'panels.text.showLineBeginnings',
@@ -50,7 +51,7 @@ const OptionLists = styled.div`
 interface Props {
 	active: boolean
 	dispatch: React.Dispatch<EntryStateAction>
-	entrySettings: EntrySettings
+	entrySettings: DocereConfig['entrySettings']
 }
 function Layers(props: Props) {
 	const toggleSettingsProperty = React.useCallback(ev => {

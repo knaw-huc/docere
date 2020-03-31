@@ -1,8 +1,9 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import DocereTextView from '@docere/text_'
-import { TOP_OFFSET, DEFAULT_SPACING, DocereComponentContainer } from '@docere/common'
 import { useComponents } from '../app/context'
+import { TOP_OFFSET, DEFAULT_SPACING, DocereComponentContainer } from '@docere/common'
+import type { AppStateAction, Page } from '@docere/common'
 
 const Wrapper = styled.div`
 	background: white;

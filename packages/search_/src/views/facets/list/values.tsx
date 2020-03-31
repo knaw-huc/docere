@@ -1,8 +1,9 @@
 import * as React from 'react'
-import FacetValueView from './value'
+import ListFacetValueView from './value'
 import styled from 'styled-components'
 import MoreLessButton from './more-less-buttons'
 import { isHierarchyFacet } from '../../../constants'
+import type { ListFacetData, HierarchyFacetData, FacetsDataReducerAction, ListFacetValues } from '@docere/common'
 
 // const DURATION = 500
 // const FRAME_DURATION = 16
@@ -42,7 +43,7 @@ export interface Props {
 	facetsDataDispatch: React.Dispatch<FacetsDataReducerAction>
 	values: ListFacetValues
 }
-function FacetValuesView(props: Props) {
+function ListFacetValuesView(props: Props) {
 	// const ref = React.useRef()
 	// useAnimate(props.collapse, ref)
 
@@ -60,7 +61,7 @@ function FacetValuesView(props: Props) {
 						// 	return 0
 						// })
 						.map(value =>
-							<FacetValueView
+							<ListFacetValueView
 								active={props.facetData.filters.has(value.key.toString())}
 								facetId={props.facetData.id}
 								facetsDataDispatch={props.facetsDataDispatch}
@@ -84,4 +85,4 @@ function FacetValuesView(props: Props) {
 	)
 }
 
-export default React.memo(FacetValuesView)
+export default React.memo(ListFacetValuesView)

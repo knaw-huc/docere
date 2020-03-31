@@ -1,6 +1,8 @@
 import { DEFAULT_SPACING, TEXT_PANEL_ASIDE_WIDTH, TEXT_PANEL_MINIMAP_WIDTH, TEXT_PANEL_TEXT_WIDTH } from './constants'
+import type { DocereConfig } from './types/config-data/config'
+import type { Note, Entity } from './types/config-data/functions'
 
-export function getTextPanelLeftSpacing(settings: EntrySettings) {
+export function getTextPanelLeftSpacing(settings: DocereConfig['entrySettings']) {
 	let width = DEFAULT_SPACING
 
 	if (settings['panels.text.showLineBeginnings']) width += 2 * DEFAULT_SPACING
@@ -11,7 +13,7 @@ export function getTextPanelLeftSpacing(settings: EntrySettings) {
 	return width
 }
 
-export function getTextPanelRightSpacing(settings: EntrySettings, activeNote: Note, activeEntity: Entity) {
+export function getTextPanelRightSpacing(settings: DocereConfig['entrySettings'], activeNote: Note, activeEntity: Entity) {
 	let width = 2 * DEFAULT_SPACING
 
 	const asideActive = (
@@ -26,7 +28,7 @@ export function getTextPanelRightSpacing(settings: EntrySettings, activeNote: No
 	return width
 }
 
-export function getTextPanelWidth(settings: EntrySettings, activeNote: Note, activeEntity: Entity) {
+export function getTextPanelWidth(settings: DocereConfig['entrySettings'], activeNote: Note, activeEntity: Entity) {
 	const left = getTextPanelLeftSpacing(settings)
 	const right = getTextPanelRightSpacing(settings, activeNote, activeEntity)
 

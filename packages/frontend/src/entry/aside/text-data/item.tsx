@@ -1,6 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import { small } from '../../index.components'
+import type { EntryStateAction, Entity } from '@docere/common'
 
 const Li = styled.li`
 	color: #CCC;

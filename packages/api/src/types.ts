@@ -1,6 +1,6 @@
-/// <reference types="@docere/common" />
+import type { Entry, ExtractedLayer } from '@docere/common'
 
-type PrepareAndExtractOutput = Omit<Entry, 'doc' | 'layers'> & {
+export type PrepareAndExtractOutput = Omit<Entry, 'doc' | 'layers'> & {
 	text: string
 	layers: ExtractedLayer[]
 }
@@ -8,7 +8,7 @@ type PrepareAndExtractOutput = Omit<Entry, 'doc' | 'layers'> & {
 /**
  * JSON object which represents a ElasticSearch document
  */
-interface ElasticSearchDocument {
+export interface ElasticSearchDocument {
 	facsimiles: string[]
 	id: string
 	text: string
@@ -16,18 +16,18 @@ interface ElasticSearchDocument {
 	[key: string]: any
 }
 
-type MappingProperties = Record<string, {
+export type MappingProperties = Record<string, {
 	type: import('../../common/src/enum').EsDataType
 	[key: string]: string | number | boolean
 }>
 
-interface Mapping {
+export interface Mapping {
 	mappings: {
 		properties: MappingProperties
 	}
 }
 
-interface DocereApiError {
+export interface DocereApiError {
 	__error: string
 	code?: number
 }

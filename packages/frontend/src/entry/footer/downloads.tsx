@@ -1,8 +1,9 @@
 import * as React from 'react'
+import styled from 'styled-components'
 import { BottomTabWrapper } from './layers'
 import AppContext from '../../app/context'
 import { fetchEntryXml } from '../../utils'
-import styled from 'styled-components'
+import type { Entry } from '@docere/common'
 
 function fetchAndDownloadXml(slug: string, id: string) {
 	fetchEntryXml(slug, id)

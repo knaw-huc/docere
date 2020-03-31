@@ -1,6 +1,7 @@
 import * as React from "react"
 import styled from "styled-components"
 import { DEFAULT_POPUP_BG_COLOR, getTextPanelWidth } from '@docere/common'
+import type { Note, Entity, DocereConfig } from '@docere/common'
 
 // Map of polygons. The key is confusing, it is the orientation
 // of the tooltip. When the orientation of the tooltip is `bottom`
@@ -63,7 +64,7 @@ interface Props {
 	bodyStyle?: React.CSSProperties
 	children: React.ReactNode
 	color?: string
-	settings: EntrySettings
+	settings: DocereConfig['entrySettings']
 }
 function Tooltip(props: Props) {		
 	const wrapperRef: React.RefObject<HTMLDivElement> = React.useRef()

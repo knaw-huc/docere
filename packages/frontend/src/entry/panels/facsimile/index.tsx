@@ -4,6 +4,7 @@ import AppContext from '../../../app/context'
 import useAreaRenderer, { AreaRenderer } from './use-area-renderer'
 import PanelHeader from '../header'
 import { DEFAULT_SPACING } from '@docere/common'
+import type { Layer, FacsimileArea, DocereConfig, EntryState, EntryStateAction } from '@docere/common'
 
 // TODO change facsimile when user scroll past a <pb />
 

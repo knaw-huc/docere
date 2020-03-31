@@ -1,3 +1,6 @@
+import type { PrepareAndExtractOutput } from '../types'
+import type { DocereConfigData, Entity, Metadata, Note, Facsimile, ExtractedLayer } from '@docere/common'
+
 declare global {
 	const DocereProjects: any
 }

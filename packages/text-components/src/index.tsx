@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-
+import type { DocereComponentProps } from '@docere/common'
 import getPb from './pb'
 import Popup from './popup'
 import Entity from './entity'

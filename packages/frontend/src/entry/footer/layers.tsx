@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { DEFAULT_SPACING } from '@docere/common'
-import { LayerType } from '@docere/common/src/enum'
+import { DEFAULT_SPACING, LayerType } from '@docere/common'
+import type { EntryStateAction, Layer, Facsimile } from '@docere/common'
 
 const LiWrapper = styled.li`
 	color: ${(p: PIWProps) => p.active ? '#EEE' : '#444'};

@@ -1,4 +1,5 @@
 import { LayerType } from '@docere/common'
+import type { DocereConfig } from '@docere/common'
 
 export default function extractTextLayers(doc: XMLDocument, config: DocereConfig) {
 	const element = doc.querySelector('text')

@@ -1,6 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import { DocereComponentContainer } from '@docere/common'
+import type { DocereConfig, DocereComponentProps } from '@docere/common'
 
 const Coords = styled.span`
 	cursor: pointer;

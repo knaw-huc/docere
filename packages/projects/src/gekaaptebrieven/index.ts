@@ -7,7 +7,7 @@ import getComponents from './components'
 import getUIComponent from './ui-components'
 import { extendConfigData } from '@docere/common'
 
-const docereConfigDataRaw: DocereConfigDataRaw = {
+export default extendConfigData({
 	config,
 	extractFacsimiles,
 	extractMetadata,
@@ -15,6 +15,4 @@ const docereConfigDataRaw: DocereConfigDataRaw = {
 	getComponents,
 	getUIComponent,
 	prepareDocument
-}
-
-export default extendConfigData(docereConfigDataRaw)
+})

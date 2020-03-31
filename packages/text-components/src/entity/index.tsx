@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import Popup from '../popup'
 import { useConfig, useChildren } from './hooks'
+import type { DocereComponentProps, DocereConfig } from '@docere/common'
 
 interface NWProps { openToAside: boolean }
 const NoWrap = styled.span`
@@ -29,6 +30,16 @@ const EntityWrapper = styled.span`
 	transition: all 300ms;
 `
 
+interface RsProps {
+	children: React.ReactNode
+	configId?: string
+	customProps: DocereComponentProps
+	entitiesConfig?: DocereConfig['entities']
+	id: string
+	onClick?: (ev: any) => void
+	PopupBody?: React.FC<DocereComponentProps>
+	revealOnHover?: boolean
+}
 function Entity(props: RsProps) {
 	if (!props.customProps.entrySettings['panels.text.showEntities']) return <span>{props.children}</span>
 

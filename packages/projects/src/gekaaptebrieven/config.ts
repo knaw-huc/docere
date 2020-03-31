@@ -1,4 +1,5 @@
 import { EsDataType, TextDataExtractionType, RsType, LayerType } from '@docere/common'
+import { DocereConfig } from '@docere/common'
 
 const config: DocereConfig = {
 	slug: 'gekaaptebrieven',

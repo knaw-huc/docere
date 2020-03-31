@@ -1,6 +1,7 @@
 import * as React from 'react'
 import DropDown from '../../ui/drop-down'
 import styled from 'styled-components'
+import type { FacetsDataReducerAction, ActiveFilter } from '@docere/common'
 
 const ActiveFiltersDropDown = styled(DropDown)`
 	.huc-fs-dropdown-button {

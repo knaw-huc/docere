@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import { Note, getPb, Entity, Lb } from '@docere/text-components'
-import { DocereComponentContainer } from '@docere/common'
+import type { DocereComponentContainer, DocereComponentProps, EntityConfig, DocereConfig } from '@docere/common'
 
 const Ref = styled.span`border-bottom: 1px solid green;`
 const ref = function(props: DocereComponentProps) {

@@ -2,6 +2,7 @@ import * as React from 'react'
 import styled from 'styled-components'
 import AsideList from '../list'
 import ItemInText from './item'
+import type { EntryState, EntityConfig, EntryStateAction, Entity } from '@docere/common'
 
 interface AIProps {
 	activeIndex: number

@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { Entity, Lb } from '@docere/text-components'
 import { Colors } from '@docere/common'
+import type { EntryStateAction, DocereComponentProps, DocereComponents } from '@docere/common'
 import styled from 'styled-components'
 
 function setActiveFacsimileArea(dispatch: React.Dispatch<EntryStateAction>, ids: string[]) {

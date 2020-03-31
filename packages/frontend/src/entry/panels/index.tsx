@@ -1,17 +1,19 @@
 import * as React from 'react'
+import styled from 'styled-components'
 import FacsimilePanel from './facsimile'
 import TextPanel from './text'
 // import WitnessAnimationPanel from './witness-animation'
 import XmlPanel from './xml'
 import { isTextLayer, isXmlLayer } from '../../utils'
-import styled from 'styled-components'
 import { DEFAULT_SPACING, LayerType, getTextPanelWidth } from '@docere/common'
+import type { DocereConfig, Entity, Layer, Note, EntryState, EntryStateAction } from '@docere/common'
+import type { EntryProps } from '..'
 
 interface PWProps {
 	activeEntity: Entity
 	activeLayers: Layer[]
 	activeNote: Note
-	settings: EntrySettings
+	settings: DocereConfig['entrySettings']
 }
 const Wrapper = styled.div`
 	display: grid;
@@ -47,6 +49,10 @@ const Wrapper = styled.div`
 		border-right: 2px solid #4a4a4a;
 	}
 `
+
+export type PanelsProps = EntryProps & EntryState & {
+	entryDispatch: React.Dispatch<EntryStateAction>
+}
 
 function Panels(props: PanelsProps) {
 	const activeLayers = props.layers.filter(ap => ap.active)

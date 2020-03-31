@@ -1,5 +1,6 @@
 import React from 'react'
 import { DEFAULT_POPUP_BG_COLOR } from '@docere/common'
+import type { DocereComponentProps } from '@docere/common'
 import styled from 'styled-components'
 import Popup from './popup'
 

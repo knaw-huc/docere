@@ -1,11 +1,12 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import { ResultBody } from '@docere/ui-components'
+import type { DocereResultBodyProps } from '@docere/common'
 
 const H3 = styled.h3`margin: 0;`
 const H4 = styled.h4`margin: 0;`
 
-function GekaapteBrievenResultBody(props: ResultBodyProps) {
+function GekaapteBrievenResultBody(props: DocereResultBodyProps) {
 	let locations: any[] = []
 	if (Array.isArray(props.result.loc)) locations = locations.concat(props.result.loc)
 	if (Array.isArray(props.result.locactions)) locations = locations.concat(props.result.locations)

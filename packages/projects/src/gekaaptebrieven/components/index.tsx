@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { DocereComponentContainer } from '@docere/common'
+import type { DocereConfig, DocereComponents } from '@docere/common'
 import { Entity, getPb } from '@docere/text-components'
 
 export default function getComponents(config: DocereConfig) {

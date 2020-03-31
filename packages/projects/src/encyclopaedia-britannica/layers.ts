@@ -1,4 +1,5 @@
 import { LayerType } from '@docere/common'
+import type { TextLayer } from '@docere/common'
 
 /*
 function updateToPosition(currentPosition: Position, el: Element): Position {

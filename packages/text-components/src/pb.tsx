@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { Colors, DEFAULT_SPACING } from '@docere/common'
+import type { DocereComponentProps } from '@docere/common'
 import styled from 'styled-components'
 
 const Img = styled.img`

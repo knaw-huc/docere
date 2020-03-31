@@ -1,4 +1,5 @@
 import { EsDataType, TextDataExtractionType, LayerType, Colors } from '@docere/common'
+import { DocereConfig } from '@docere/common'
 import { RsType } from '@docere/common'
 
 const config: DocereConfig = {

@@ -1,4 +1,5 @@
 import { EsDataType, LayerType, RsType, TextDataExtractionType } from '@docere/common'
+import type { DocereConfig } from '@docere/common'
 
 const config: DocereConfig = {
 	slug: 'vangogh',

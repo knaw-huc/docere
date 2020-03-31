@@ -1,4 +1,5 @@
 import { AsideTab } from '@docere/common'
+import type { FacsimileArea, DocereConfig, Facsimile } from '@docere/common'
 
 function parseArea(id: string)  {
 	return id

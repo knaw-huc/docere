@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { Section, ResultList, Result } from './components'
+import type { AppProps, FSResponse } from '@docere/common'
 
 type Props = Pick<AppProps, 'onClickResult' | 'ResultBodyComponent' | 'resultBodyProps'> & {
 	searchResult: FSResponse

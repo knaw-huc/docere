@@ -1,3 +1,7 @@
+import type { AppProps } from '.'
+import type { RangeFacetFilter } from './facets'
+import { SortBy, SortDirection } from '../../enum'
+
 interface FacetsDataReducerActionClear {
 	type: 'clear'
 	fields: AppProps['fields']
@@ -18,8 +22,8 @@ interface FacetsDataReducerActionRemoveFilter {
 interface FacetsDataReducerActionSetSort {
 	type: 'set_sort'
 	facetId: string
-	by: import('../constants').SortBy
-	direction: import('../constants').SortDirection
+	by: SortBy
+	direction: SortDirection
 }
 
 interface FacetsDataReducerActionSetQuery {
@@ -44,7 +48,7 @@ type FacetsDataReducerActionSetRange = RangeFacetFilter & {
 	type: 'set_range'
 }
 
-type FacetsDataReducerAction =
+export type FacetsDataReducerAction =
 	FacetsDataReducerActionClear |
 	FacetsDataReducerActionAddFilter |
 	FacetsDataReducerActionRemoveFilter |

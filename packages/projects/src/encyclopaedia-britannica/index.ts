@@ -6,13 +6,11 @@ import extractMetadata from './metadata'
 import getComponents from './components'
 import { extendConfigData } from '@docere/common'
 
-const docereConfigDataRaw: DocereConfigDataRaw = {
+export default extendConfigData({
 	config,
 	getComponents,
 	extractFacsimiles,
 	extractLayers,
 	extractMetadata,
 	// prepareDocument
-}
-
-export default extendConfigData(docereConfigDataRaw)
+})

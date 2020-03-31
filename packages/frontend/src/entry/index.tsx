@@ -4,7 +4,9 @@ import Panels from './panels'
 import Aside from './aside'
 import Footer from './footer'
 import useEntryState from './state'
+import { AppState, AppStateAction } from '@docere/common'
 
+export type EntryProps = Pick<AppState, 'entry' | 'searchQuery' | 'searchTab'> & { appDispatch: React.Dispatch<AppStateAction> }
 function Entry(props: EntryProps) {
 	if (props.entry == null) return null
 	const [entryState, entryDispatch] = useEntryState(props.entry)

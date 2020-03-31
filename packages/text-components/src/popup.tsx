@@ -1,10 +1,11 @@
 import React from 'react'
-import { TEXT_PANEL_TEXT_WIDTH, DEFAULT_SPACING, getTextPanelLeftSpacing } from '@docere/common'
 import DocereTextView from '@docere/text_'
 import styled from 'styled-components'
 import Tooltip, { TooltipBody } from './tooltip'
+import { TEXT_PANEL_TEXT_WIDTH, DEFAULT_SPACING, getTextPanelLeftSpacing } from '@docere/common'
+import type { DocereComponentProps, DocereConfig } from '@docere/common'
 
-interface PAW { settings: EntrySettings }
+interface PAW { settings: DocereConfig['entrySettings'] }
 const PopupAsideWrapper = styled(TooltipBody)`
 	backgroundColor: white;
 	height: auto;

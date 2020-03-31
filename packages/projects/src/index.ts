@@ -1,3 +1,5 @@
+import type { DocereConfigData } from '@docere/common'
+
 export default  {
 	achterdeschermen: async function() { return await import('./achterdeschermen') },
 	'encyclopaedia-britannica': async function() { return await import('./encyclopaedia-britannica') },

@@ -2,6 +2,7 @@ import * as React from 'react'
 import EntityList from "./list"
 import { useTextData, Wrapper } from '../list'
 import AppContext from '../../../app/context'
+import type { EntryState, EntryStateAction, Entity } from '@docere/common'
 
 type Props =
 	Pick<EntryState, 'activeEntity' | 'layers'> &

@@ -1,5 +1,6 @@
 import React from 'react'
 import { RsType } from '@docere/common'
+import type { EntityConfig } from '@docere/common'
 
 export type IconProps = { active: boolean, config: EntityConfig }
 

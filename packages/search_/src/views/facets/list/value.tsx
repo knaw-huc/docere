@@ -1,6 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
-//•
+import type { FacetsDataReducerAction, KeyCount } from '@docere/common'
+
 interface WProps { active: boolean }
 const Wrapper = styled('li')`
 	cursor: pointer;
@@ -37,7 +38,7 @@ interface Props {
 	value: KeyCount
 }
 
-function FacetValueView(props: Props) {
+function ListFacetValueView(props: Props) {
 	const handleChange = React.useCallback(() => {
 		const type = props.active ? 'remove_filter' : 'add_filter'
 		props.facetsDataDispatch({ type, facetId: props.facetId, value: props.value.key })
@@ -60,10 +61,10 @@ function FacetValueView(props: Props) {
 	)
 }
 
-FacetValueView.defaultProps = {
+ListFacetValueView.defaultProps = {
 	// TODO use keyFormatter higher up the tree? now everytime the facet value is rendered,
 	// the keyFormatter function is run
 	keyFormatter: (value: string) => value.trim().length > 0 ? value : '<i>&lt;empty&gt;</i>'
 }
 
-export default React.memo(FacetValueView)
+export default React.memo(ListFacetValueView)

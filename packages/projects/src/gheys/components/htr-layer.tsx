@@ -1,6 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import { Colors } from '@docere/common'
+import type { DocereConfig, EntryStateAction, DocereComponentProps } from '@docere/common'
 import { Entity, getPb, Lb } from '@docere/text-components'
 
 const TextLineWrapper = styled(Lb)`

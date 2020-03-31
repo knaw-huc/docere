@@ -1,13 +1,19 @@
 import * as React from 'react'
-import FacetValueView from '../list/value'
+import ListFacetValueView from '../list/value'
 import styled from 'styled-components'
 import Facet from '../facet'
+import type { BooleanFacetData, FacetsDataReducerAction, BooleanFacetValues } from '@docere/common'
 
 const List = styled('ul')`
 	margin: 0;
 	padding: 0;
 `
 
+interface BooleanFacetProps {
+	facetData: BooleanFacetData
+	facetsDataDispatch: React.Dispatch<FacetsDataReducerAction>
+	values: BooleanFacetValues
+}
 function BooleanFacet(props: BooleanFacetProps) {
 	return (
 		<Facet
@@ -19,7 +25,7 @@ function BooleanFacet(props: BooleanFacetProps) {
 					props.values
 						.filter(v => v.count > 0)
 						.map(value =>
-							<FacetValueView
+							<ListFacetValueView
 								active={props.facetData.filters.has(value.key)}
 								facetId={props.facetData.id}
 								facetsDataDispatch={props.facetsDataDispatch}

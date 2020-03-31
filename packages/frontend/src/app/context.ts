@@ -1,5 +1,6 @@
 import * as React from 'react'
-import { DocereComponentContainer, UIComponentType } from '@docere/common'
+import { DocereComponentContainer, UIComponentType, DocereConfig } from '@docere/common'
+import type { DocereComponents, GetComponents, GetUIComponent } from '@docere/common'
 
 export function useComponents(container: DocereComponentContainer, id?: string) {
 	const [components, setComponents] = React.useState<DocereComponents>(null)

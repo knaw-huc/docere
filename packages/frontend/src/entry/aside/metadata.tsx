@@ -2,6 +2,7 @@ import * as React from 'react'
 import styled from 'styled-components'
 import { MetadataItem } from '../index.components'
 import { DEFAULT_SPACING, TOP_OFFSET, defaultMetadata } from '@docere/common'
+import type { Metadata } from '@docere/common'
 import AppContext from '../../app/context'
 
 interface WProps { active: boolean }

@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import DocereTextView from '@docere/text_'
 import AppContext from '../../../app/context'
 import { Colors } from '@docere/common'
+import type { EntryState, AppStateAction, DocereComponents, Entry, EntryStateAction, DocereComponentProps, Note } from '@docere/common'
 
 const Li = styled.li`
 	color: ${(props: { active: boolean }) => props.active ? '#FFF' : '#BBB' };

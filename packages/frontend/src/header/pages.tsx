@@ -1,6 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import { DEFAULT_SPACING } from '@docere/common'
+import type { PageConfig, AppStateAction } from '@docere/common'
 import AppContext from '../app/context'
 
 const Wrapper = styled.ul`

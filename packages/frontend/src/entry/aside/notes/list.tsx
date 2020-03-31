@@ -1,6 +1,7 @@
 import * as React from 'react'
 import AsideList from '../list'
-import Note from './note'
+import NoteComp from './note'
+import type { EntryState, AppStateAction, DocereComponents, Entry, EntryStateAction, Note, NotesConfig } from '@docere/common'
 
 // interface Props {
 
@@ -31,7 +32,7 @@ function NotesList(props: Props) {
 		>
 			{
 				notes.map(note =>
-					<Note
+					<NoteComp
 						active={note.id === props.activeNote?.id}
 						activeEntity={props.activeEntity}
 						activeFacsimile={props.activeFacsimile}

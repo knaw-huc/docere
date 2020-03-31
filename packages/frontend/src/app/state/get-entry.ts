@@ -1,4 +1,5 @@
 import { LayerType } from '@docere/common'
+import type { FacsimileArea, Facsimile, LayerConfig, TextLayerConfig, Layer, DocereConfigData, Entry } from '@docere/common'
 import { fetchEntryXml, isTextLayer, isXmlLayer } from '../../utils'
 
 const defaultFacsimileArea: Pick<FacsimileArea, 'showOnHover' | 'target' | 'unit'> = {

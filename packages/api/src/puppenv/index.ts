@@ -1,5 +1,3 @@
-/// <reference types="@docere/common" />
-
 import * as fs from 'fs'
 import * as path from 'path'
 import puppeteer from 'puppeteer'
@@ -8,6 +6,8 @@ import { Server } from 'http'
 import { getType, getProjectsSourceDir, readFileContents, getEntryIdFromFilePath, getXMLPath, isError, getElasticSearchDocument } from '../utils'
 import { prepareAndExtract } from './prepare-and-extract'
 import { EsDataType } from '../../../common/src/enum'
+import type { DocereConfigData } from '@docere/common'
+import type { PrepareAndExtractOutput, DocereApiError, Mapping, MappingProperties } from '../types'
 const projects = require('esm')(module)(path.resolve(process.cwd(), './packages/projects')).default
 
 const port = 3334

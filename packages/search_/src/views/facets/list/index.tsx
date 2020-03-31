@@ -1,15 +1,21 @@
 import * as React from 'react'
-import FacetValuesView from './values'
+import ListFacetValuesView from './values'
 import Options from './options'
 import Facet from '../facet'
+import type { ListFacetData, FacetsDataReducerAction, ListFacetValues } from '@docere/common'
 
+export interface ListFacetProps {
+	facetData: ListFacetData
+	facetsDataDispatch: React.Dispatch<FacetsDataReducerAction>
+	values: ListFacetValues
+}
 function ListFacet(props: ListFacetProps) {
 	return (
 		<Facet
 			facetProps={props}
 			Options={Options}
 		>
-			<FacetValuesView
+			<ListFacetValuesView
 				facetData={props.facetData}
 				facetsDataDispatch={props.facetsDataDispatch}
 				values={props.values}

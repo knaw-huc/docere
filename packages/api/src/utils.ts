@@ -3,6 +3,8 @@ import * as fs from 'fs'
 import { Response as ExpressResponse } from 'express'
 import chalk from 'chalk'
 import { EsDataType } from '../../common/src/enum'
+import type { DocereConfig } from '@docere/common'
+import type { PrepareAndExtractOutput, DocereApiError, ElasticSearchDocument } from './types'
 
 export function getProjectsSourceDir() {
 	// The current working dir is api/, the projects/ dir shares the same parent as api/
@@ -110,7 +112,6 @@ export async function getXmlFiles(projectId: string, maxPerDir: number = null) {
 export function isError(payload: any | DocereApiError): payload is DocereApiError {
 	return payload.hasOwnProperty('__error')
 }
-
 
 export function getElasticSearchDocument(input: PrepareAndExtractOutput | DocereApiError): ElasticSearchDocument | DocereApiError {
 	if (isError(input)) return input

@@ -7,12 +7,14 @@ import Minimap from './minimap'
 import { isTextLayer } from '../../../utils'
 import { DEFAULT_SPACING, TEXT_PANEL_TEXT_WIDTH, DocereComponentContainer, getTextPanelWidth, getTextPanelLeftSpacing } from '@docere/common'
 import PanelHeader from '../header'
+import type { DocereComponentProps, Entity, Note, DocereConfig, TextLayer } from '@docere/common'
+import type { PanelsProps } from '..'
 
 const TopWrapper = styled.div`
 	position: relative;
 `
 
-interface WProps { activeEntity: Entity, activeNote: Note, settings: EntrySettings }
+interface WProps { activeEntity: Entity, activeNote: Note, settings: DocereConfig['entrySettings'] }
 const Wrapper = styled.div`
 	box-sizing: border-box;
 	height: ${props => props.settings['panels.showHeaders'] ? `calc(100% - ${DEFAULT_SPACING}px)` : '100%'};
@@ -26,7 +28,7 @@ const Wrapper = styled.div`
 `
 
 interface TextProps {
-	settings: EntrySettings
+	settings: DocereConfig['entrySettings']
 }
 export const Text = styled.div`
 	color: #222;
@@ -43,6 +45,11 @@ export const Text = styled.div`
 		border-right: 1px solid #EEE;
 	}
 `
+
+type TextPanelBaseProps = Pick<PanelsProps, 'activeEntity' | 'activeNote' | 'activeFacsimile' | 'activeFacsimileAreas' | 'appDispatch' | 'entryDispatch' | 'entry' | 'searchQuery' | 'settings'>
+interface TextPanelProps extends TextPanelBaseProps {
+	layer: TextLayer
+}
 
 function TextPanel(props: TextPanelProps) {
 	const appContext = React.useContext(AppContext)

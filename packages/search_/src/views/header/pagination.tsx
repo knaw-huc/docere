@@ -1,6 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import PageNumber, { Button } from './page-number'
+import type { FSResponse } from '@docere/common'
 
 function getRange(start: number, end: number) {
 	return Array.from({length: end - start + 1}, (_value, key) => key + start)

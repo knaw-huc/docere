@@ -1,3 +1,20 @@
+import type { DocereConfig } from '../config-data/config'
+import type { Entity, Note, Facsimile, Layer, FacsimileArea } from '../config-data/functions'
+import type { Entry } from '.'
+import { AsideTab, FooterTab } from '../../enum'
+
+export interface EntryState {
+	activeFacsimileAreas: FacsimileArea[]
+	activeFacsimile: Facsimile
+	activeEntity: Entity,
+	activeNote: Note,
+	asideTab: AsideTab
+	entry: Entry
+	footerTab: FooterTab
+	layers: Layer[]
+	settings: DocereConfig['entrySettings']
+}
+
 interface ESA_Entry_Changed extends Pick<EntryState, 'activeFacsimile' | 'entry' | 'layers' | 'settings'> {
 	type: "ENTRY_CHANGED",
 }
@@ -37,10 +54,10 @@ interface ESA_Set_Active_Facsimile_Areas {
 
 interface ESA_Toggle_Settings_Property {
 	type: 'TOGGLE_SETTINGS_PROPERTY',
-	property: keyof EntrySettings,
+	property: keyof DocereConfig['entrySettings'],
 }
 
-type EntryStateAction = 
+export type EntryStateAction = 
 	ESA_Entry_Changed |
 	ESA_Set_Active_Facsimile |
 	ESA_Set_Entity_Id |

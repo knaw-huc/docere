@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { AsideTab, FooterTab, defaultEntrySettings } from '@docere/common'
+import type { EntryState, EntryStateAction, FacsimileArea, Entry } from '@docere/common'
 import AppContext from '../../app/context'
 
 const initialEntryState: EntryState = {

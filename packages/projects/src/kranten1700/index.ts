@@ -7,7 +7,7 @@ import getUIComponent from './ui-components'
 import extractLayers from './text-layers'
 import extractEntities from './text-data'
 
-const docereConfigDataRaw: DocereConfigDataRaw = {
+export default extendConfigData({
 	config,
 	extractMetadata,
 	getComponents,
@@ -15,6 +15,4 @@ const docereConfigDataRaw: DocereConfigDataRaw = {
 	prepareDocument,
 	extractEntities,
 	extractLayers,
-}
-
-export default extendConfigData(docereConfigDataRaw)
+})

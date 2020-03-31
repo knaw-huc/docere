@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { Colors } from '@docere/common'
+import type { FacsimileArea, EntryStateAction } from '@docere/common'
 
 interface Overlay {
 	active: boolean

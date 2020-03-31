@@ -1,5 +1,3 @@
-/// <reference path="./types/index.d.ts" />
-
 import * as React from 'react'
 import styled from 'styled-components'
 
@@ -14,6 +12,8 @@ import SearchResult from './views/search-result'
 import FullTextSearch from './views/full-text-search'
 import useFacetsDataReducer from './reducers/facets-data'
 import useSearch from './use-search'
+import { SortOrder } from '@docere/common'
+import type { AppProps, ListFacetValues, BooleanFacetValues, HierarchyFacetValues, RangeFacetValues, ResultBodyProps } from '@docere/common'
 
 const Wrapper = styled.div`
 	margin-bottom: 10vh;
@@ -115,7 +115,7 @@ function FacetedSearch(props: AppProps) {
 							if (isListFacet(facetData)) {
 								return (
 									<ListFacet
-										facetData={facetData as ListFacetData}
+										facetData={facetData}
 										facetsDataDispatch={facetsDataDispatch}
 										key={facetData.id}
 										values={values as ListFacetValues}
@@ -125,7 +125,7 @@ function FacetedSearch(props: AppProps) {
 							else if (isBooleanFacet(facetData)) {
 								return (
 									<BooleanFacet
-										facetData={facetData as BooleanFacetData}
+										facetData={facetData}
 										facetsDataDispatch={facetsDataDispatch}
 										key={facetData.id}
 										values={values as BooleanFacetValues}
@@ -135,7 +135,7 @@ function FacetedSearch(props: AppProps) {
 							else if (isHierarchyFacet(facetData)) {
 								return (
 									<HierarchyFacet
-										facetData={facetData as HierarchyFacetData}
+										facetData={facetData}
 										facetsDataDispatch={facetsDataDispatch}
 										key={facetData.id}
 										values={values as HierarchyFacetValues}
@@ -186,3 +186,6 @@ FacetedSearch.defaultProps = {
 }
 
 export default React.memo(FacetedSearch)
+export type {
+	ResultBodyProps
+}

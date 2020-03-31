@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { ComponentTree } from './types'
 
 function wrap(node: Text, index: number, found: string) {
 	const textRange = document.createRange()

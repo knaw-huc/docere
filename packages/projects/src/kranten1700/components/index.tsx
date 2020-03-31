@@ -1,6 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import { DocereComponentContainer } from '@docere/common'
+import type { DocereComponentProps, DocereConfig, DocereComponents } from '@docere/common'
 import { Entity } from '@docere/text-components'
 
 const Dl = styled.dl`

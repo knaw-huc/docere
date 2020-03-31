@@ -5,12 +5,12 @@ import getComponents from './components'
 import extractFacsimiles from './facsimiles'
 import prepareDocument from './prepare'
 
-const docereConfigDataRaw: DocereConfigDataRaw = {
+
+
+export default extendConfigData({
 	config,
 	extractFacsimiles,
 	extractLayers,
 	getComponents,
 	prepareDocument,
-}
-
-export default extendConfigData(docereConfigDataRaw)
+})

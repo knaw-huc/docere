@@ -1,10 +1,11 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { FOOTER_HEIGHT, FOOTER_HANDLE_HEIGHT, FooterTab, TabPosition } from '@docere/common'
 import Tabs from '../../ui/tabs'
 import Layers from './layers'
 import Settings from './settings'
 import Downloads from './downloads'
+import { FOOTER_HEIGHT, FOOTER_HANDLE_HEIGHT, FooterTab, TabPosition } from '@docere/common'
+import type { Facsimile, EntryState, EntryStateAction, Entry, DocereConfig } from '@docere/common'
 
 const Wrapper = styled.footer`
 	bottom: -${FOOTER_HEIGHT}px;
@@ -34,7 +35,7 @@ interface Props {
 	layers: EntryState['layers']
 	entryDispatch: React.Dispatch<EntryStateAction>
 	entry: Entry
-	entrySettings: EntrySettings
+	entrySettings: DocereConfig['entrySettings']
 }
 function Footer(props: Props) {
 	const handleTabClick = React.useCallback(footerTab => {

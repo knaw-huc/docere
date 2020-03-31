@@ -1,6 +1,10 @@
 import { Colors, EsDataType, RsType } from './enum'
+import { DocereConfig, MetadataConfig, EntityConfig, PageConfig } from './types/config-data/config'
+import { DocereConfigFunctions } from './types/config-data/functions'
+import { FacetConfigBase } from './types/search/facets'
+import { DocereConfigDataRaw, DocereConfigData } from './types/config-data'
 
-export const defaultEntrySettings: EntrySettings = {
+export const defaultEntrySettings: DocereConfig['entrySettings'] = {
 	'panels.showHeaders': true,
 	'panels.text.openPopupAsTooltip': true,
 	'panels.text.showMinimap': true,

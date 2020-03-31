@@ -21,7 +21,6 @@
   "include": [
     "src/index.ts",
     "src/indexer.ts",
-    "src/types.d.ts",
     "src/tests"
   ]
 }

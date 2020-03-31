@@ -2,6 +2,7 @@ import * as React from 'react'
 import styled from 'styled-components'
 import { small } from '../index.components'
 import { DEFAULT_SPACING, Colors } from '@docere/common'
+import type { NotesConfig, TextData } from '@docere/common'
 
 export const Wrapper = styled.div`
 	background: ${Colors.Grey};

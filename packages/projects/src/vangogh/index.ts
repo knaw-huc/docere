@@ -5,6 +5,7 @@ import extractFacsimiles from './facsimiles'
 import extractEntities from './text-data'
 import extractLayers from './textlayers'
 import { extendConfigData } from '@docere/common'
+import type { DocereConfigDataRaw } from '@docere/common'
 import getComponents from './components'
 import prepareDocument from './prepare'
 

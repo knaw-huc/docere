@@ -4,6 +4,7 @@ import { Button } from '../page-number'
 import styled from 'styled-components'
 import useFilters from './use-filters'
 import Details from './details'
+import type { FacetsDataReducerAction, FacetsData } from '@docere/common'
 
 const Wrapper = styled.div`
 	line-height: 24px;

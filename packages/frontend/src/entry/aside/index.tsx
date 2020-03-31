@@ -3,8 +3,10 @@ import styled from 'styled-components';
 import MetadataAside from './metadata'
 import NotesAside from './notes'
 import TextDataAside from './text-data'
-import { ASIDE_HANDLE_WIDTH, ASIDE_WIDTH, TOP_OFFSET, AsideTab, Colors } from '@docere/common'
 import Tabs from '../../ui/tabs';
+import type { EntryProps } from '..';
+import { ASIDE_HANDLE_WIDTH, ASIDE_WIDTH, TOP_OFFSET, AsideTab, Colors } from '@docere/common'
+import type { EntryState, EntryStateAction } from '@docere/common'
 
 const Wrapper = styled.aside`
 	bottom: 0;
@@ -36,6 +38,12 @@ function isEmpty(obj: Object | Array<any>) {
 	return Object.keys(obj).length === 0
 }
 
+type EntryAsideProps =
+	Pick<EntryProps, 'appDispatch' | 'entry'> &
+	Pick<EntryState, 'activeEntity' | 'activeFacsimile' | 'activeFacsimileAreas' | 'activeNote' | 'asideTab' | 'layers' | 'settings'> &
+	{
+		entryDispatch: React.Dispatch<EntryStateAction>
+	}
 function Aside(props: EntryAsideProps) {
 	if (props.entry == null) return
 

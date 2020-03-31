@@ -2,6 +2,8 @@ import * as React from 'react'
 import OrderOption from './option'
 import DropDown from '../../ui/drop-down'
 import styled from 'styled-components'
+import { SetSortOrder, SortOrder } from '@docere/common'
+import type { FacetsData } from '@docere/common'
 
 const SortByDropDown = styled(DropDown)`
 	& > .huc-fs-dropdown-button {

@@ -1,6 +1,7 @@
 import * as React from 'react'
 import styled, { css } from 'styled-components'
 import { ResultBody } from '@docere/ui-components'
+import type { DocereResultBodyProps } from '@docere/common'
 
 const Bold = styled.div`
 	font-weight: bold;
@@ -41,7 +42,7 @@ function formatList(items: string[], label: string) {
 	return `${items.length} ${label}${s}`
 }
 
-function GekaapteBrievenResultBody(props: ResultBodyProps) {
+function GekaapteBrievenResultBody(props: DocereResultBodyProps) {
 	let locations: any[] = []
 	if (Array.isArray(props.result.loc)) locations = locations.concat(props.result.loc)
 	if (Array.isArray(props.result.locactions)) locations = locations.concat(props.result.locations)

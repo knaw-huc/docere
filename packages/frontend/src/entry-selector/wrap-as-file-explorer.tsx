@@ -1,6 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import { TOP_OFFSET, ASIDE_HANDLE_WIDTH, RESULT_ASIDE_WIDTH, Viewport, SearchTab, TabPosition } from '@docere/common'
+import type { AppState, AppStateAction } from '@docere/common'
 import Tabs from '../ui/tabs';
 
 const Wrapper = styled.div`
@@ -27,6 +28,9 @@ const Wrapper = styled.div`
 	}
 `
 
+export type FileExplorerProps = Pick<AppState, 'entry' | 'searchTab' | 'viewport'> & {
+	appDispatch: React.Dispatch<AppStateAction>
+}
 export default function wrapAsFileExplorer(FileExplorer: React.FC<FileExplorerProps>) {
 	return function FileExplorerWrapper(props: FileExplorerProps) {
 		return (

@@ -1,5 +1,7 @@
-import { isBooleanFacet, isListFacet, isRangeFacet, isDateFacet, isHierarchyFacet, getChildFieldName, SortDirection, SortBy } from '../constants'
+import { isBooleanFacet, isListFacet, isRangeFacet, isDateFacet, isHierarchyFacet, getChildFieldName } from '../constants'
 import ESRequest from './request-creator'
+import { SortBy, SortDirection } from '@docere/common'
+import type { ElasticSearchRequestOptions, ListFacetData, BooleanFacetData, HierarchyFacetData, RangeFacetData, BooleanFacetConfig, DateFacetData } from '@docere/common'
 
 interface AggregationRequest {
 	aggs: any

@@ -1,6 +1,7 @@
 import React from 'react'
 import { isListFacet, isBooleanFacet, isRangeFacet, isDateFacet, isHierarchyFacet } from '../constants'
 import { EsDataType } from '@docere/common'
+import type { BooleanFacetConfig, BooleanFacetData, DateFacetConfig, DateFacetData, HierarchyFacetConfig, HierarchyFacetData, ListFacetConfig, ListFacetData, RangeFacetConfig, RangeFacetData, FacetConfigBase, FacetData, AppProps, FacetsData, FacetsDataReducerAction } from '@docere/common'
 
 function initBooleanFacet(booleanFacetConfig: BooleanFacetConfig): BooleanFacetData {
 	return {

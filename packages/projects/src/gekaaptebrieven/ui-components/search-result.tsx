@@ -1,6 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import { ResultBody } from '@docere/ui-components'
+import type { DocereResultBodyProps } from '@docere/common'
 
 const Label = styled.div`
 	color: #888;
@@ -59,7 +60,7 @@ function SenderOrRecipient(props: SoRProps) {
 	)
 }
 
-function GekaapteBrievenResultBody(props: ResultBodyProps) {
+function GekaapteBrievenResultBody(props: DocereResultBodyProps) {
 	return (
 		<ResultBody {...props}>
 			{

@@ -1,6 +1,7 @@
 import React from 'react'
-import { DEFAULT_SPACING } from '@docere/common'
 import styled from 'styled-components'
+import { DEFAULT_SPACING } from '@docere/common'
+import type {  EntryStateAction, Layer } from '@docere/common'
 
 const Header = styled.header`
 	background: #EEE;

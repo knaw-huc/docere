@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import type { DocereConfig } from '@docere/common'
 
 const Option = styled.li`
 	color: #CCC;
@@ -20,6 +21,8 @@ const Option = styled.li`
 		user-select: none;
 	}
 `
+
+interface SettingsOption { prop: keyof DocereConfig['entrySettings'], title: string }
 
 interface Props {
 	checked: boolean

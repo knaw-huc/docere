@@ -1,3 +1,5 @@
+import type { AppProps, ElasticSearchRequestOptions } from '@docere/common'
+
 export default class ESRequest {
 	_source: { include?: AppProps['resultFields'], exclude?: AppProps['excludeResultFields'] }
 	from: number

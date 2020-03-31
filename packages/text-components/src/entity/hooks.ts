@@ -1,5 +1,6 @@
 import React from 'react'
 import { defaultEntityConfig, setTitle } from '@docere/common'
+import type { EntityConfig } from '@docere/common'
 import IconsByType, { IconProps } from './icons'
 
 // The config is a state of an Entity, because the config can be null,

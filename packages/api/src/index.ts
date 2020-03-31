@@ -1,5 +1,3 @@
-/// <reference path="./types.d.ts" />
-
 import * as path from 'path'
 import express from 'express'
 import Puppenv from './puppenv'
@@ -7,6 +5,7 @@ import { listProjects, isError, getElasticSearchDocument, send } from './utils'
 import handleProjectApi from './api/project'
 import handleDtsApi from './api/dts'
 import chalk from 'chalk'
+import type { PrepareAndExtractOutput } from './types'
 
 const copyright = `Docere Copyright (C) 2018 - 2020 Gijsjan Brouwer
 
