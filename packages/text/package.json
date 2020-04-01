@@ -4,7 +4,10 @@
   "description": "",
   "main": "dist/bundle.js",
   "types": "types/index.d.ts",
-  "files": ["dist/", "types/"],
+  "files": [
+    "dist/",
+    "types/"
+  ],
   "author": "Gijsjan Brouwer",
   "license": "GPL-3.0-or-later",
   "dependencies": {

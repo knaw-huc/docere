@@ -14,8 +14,8 @@
   "license": "GPL-3.0-or-later",
   "dependencies": {
     "@docere/common": "^1.0.0",
-    "@docere/text_": "^1.0.0",
     "@docere/text-components": "^1.0.0",
+    "@docere/text_": "^1.0.0",
     "@docere/ui-components": "^1.0.0"
   },
   "devDependencies": {
