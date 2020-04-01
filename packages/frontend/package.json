@@ -2,6 +2,7 @@
   "name": "@docere/frontend",
   "version": "1.0.0",
   "description": "",
+  "private": true,
   "scripts": {
     "build": "rm -rf build && tsc",
     "dev": "webpack-dev-server",

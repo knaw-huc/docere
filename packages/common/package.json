@@ -4,6 +4,7 @@
   "description": "",
   "main": "build/index.js",
   "types": "build/index.d.ts",
+  "private": true,
   "scripts": {
     "build": "rm -rf build && tsc",
     "watch": "tsc -w"
