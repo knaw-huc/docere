@@ -2,9 +2,12 @@
   "name": "@docere/common",
   "version": "1.0.0",
   "description": "",
+  "files": [
+    "build",
+    "!build/tsconfig.tsbuildinfo"
+  ],
   "main": "build/index.js",
   "types": "build/index.d.ts",
-  "private": true,
   "scripts": {
     "build": "rm -rf build && tsc",
     "watch": "tsc -w"
