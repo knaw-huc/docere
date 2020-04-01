@@ -1,9 +1,10 @@
-import * as React from 'react'
-// import ActiveFilter from './active-filter'
-import { Button } from '../page-number'
+import React from 'react'
 import styled from 'styled-components'
+
+import { Button } from '../page-number'
 import useFilters from './use-filters'
 import Details from './details'
+
 import type { FacetsDataReducerAction, FacetsData } from '@docere/common'
 
 const Wrapper = styled.div`

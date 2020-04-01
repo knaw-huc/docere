@@ -1,6 +1,8 @@
-import * as React from 'react'
-import DropDown from '../../ui/drop-down'
+import React from 'react'
 import styled from 'styled-components'
+
+import DropDown from '../../ui/drop-down'
+
 import type { FacetsDataReducerAction, ActiveFilter } from '@docere/common'
 
 const ActiveFiltersDropDown = styled(DropDown)`

@@ -1,9 +1,10 @@
+import React from 'react'
+
 import ESRequestWithFacets from './request-with-facets-creator'
 import ESResponseWithFacetsParser from './response-with-facets-parser'
-// import ESRequest from './request-creator'
 import ESResponseParser from './response-parser'
-import * as React from 'react'
 import fetchSearchResults from './fetch'
+
 import type { FSResponse, ElasticSearchRequestOptions, FacetValues } from '@docere/common'
 
 const initialSearchResult: FSResponse = {

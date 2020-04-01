@@ -1,7 +1,8 @@
-import * as React from 'react'
+import React from 'react'
 import styled from 'styled-components'
-import AutoSuggest from './auto-suggest'
 import debounce from 'lodash.debounce'
+
+import AutoSuggest from './auto-suggest'
 
 export const Wrapper = styled.div`
 	align-self: end;

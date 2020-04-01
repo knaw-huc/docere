@@ -1,7 +1,9 @@
-import * as React from 'react'
+import React from 'react'
+import styled from 'styled-components'
+
 import ListFacetValuesView from '../list/values'
 import FacetBase from '../facet'
-import styled from 'styled-components'
+
 import type { HierarchyFacetData, FacetsDataReducerAction, HierarchyFacetValues } from '@docere/common'
 
 const Facet = styled(FacetBase)`

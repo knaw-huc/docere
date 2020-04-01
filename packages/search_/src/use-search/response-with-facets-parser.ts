@@ -1,5 +1,6 @@
 import { isListFacet, isBooleanFacet, isRangeFacet, isDateFacet, isHierarchyFacet, getChildFieldName } from '../constants'
 import ESResponseParser from './response-parser'
+
 import type { HierarchyKeyCount, HierarchyFacetValues, FacetsData, FSResponse, FacetValues, RangeFacetValues } from '@docere/common'
 
 interface Bucket {

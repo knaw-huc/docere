@@ -27,8 +27,17 @@ module.exports = {
 		]
 	},
 	externals: {
-		react: 'React',
-		'react-dom': 'ReactDOM',
-		'styled-components': 'styled'
+		react: {
+			commonjs: "react",
+			commonjs2: "react",
+			amd: "React",
+			root: "React"
+		},
+		'styled-components': {
+			commonjs: "styled-components",
+			commonjs2: "styled-components",
+			amd: "styled",
+			root: "styled"
+		}
 	}
 };

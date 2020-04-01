@@ -1,6 +1,8 @@
-import * as React from 'react'
+import React from 'react'
 import styled from 'styled-components'
+
 import PageNumber, { Button } from './page-number'
+
 import type { FSResponse } from '@docere/common'
 
 function getRange(start: number, end: number) {

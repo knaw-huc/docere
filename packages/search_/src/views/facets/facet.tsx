@@ -1,5 +1,6 @@
-import * as React from 'react'
+import React from 'react'
 import styled from "styled-components"
+
 import FacetHeader from './header'
 
 interface WP { collapse: boolean }

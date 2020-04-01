@@ -1,5 +1,6 @@
-import * as React from 'react'
-import { DocereTextViewProps } from '.'
+import React from 'react'
+
+import type { DocereTextViewProps } from '.'
 
 export default function useComponentDidMount(props: DocereTextViewProps, tree: React.ReactNode) {
 	const [isReady, setIsReady] = React.useState(false)

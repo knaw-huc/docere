@@ -1,9 +1,10 @@
-import * as React from 'react'
-// import Slider from './slider'
+import React from 'react'
 import styled from 'styled-components'
+
 import Histogram from './histogram'
 import { isDateFacet } from '../../../constants'
 import { getEndDate, formatDate } from './utils'
+
 import type { DateFacetProps } from '.'
 
 const Dates = styled('div')`

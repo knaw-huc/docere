@@ -1,8 +1,10 @@
-import * as React from 'react'
-import ListFacetValueView from './value'
+import React from 'react'
 import styled from 'styled-components'
+
+import ListFacetValueView from './value'
 import MoreLessButton from './more-less-buttons'
 import { isHierarchyFacet } from '../../../constants'
+
 import type { ListFacetData, HierarchyFacetData, FacetsDataReducerAction, ListFacetValues } from '@docere/common'
 
 // const DURATION = 500

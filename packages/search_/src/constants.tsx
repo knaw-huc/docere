@@ -1,4 +1,5 @@
 import { EsDataType } from '@docere/common'
+
 import type { FacetConfigBase, BooleanFacetConfig, DateFacetConfig, HierarchyFacetConfig, ListFacetConfig, RangeFacetConfig } from '@docere/common'
 
 export const SPOT_COLOR = '#08c'

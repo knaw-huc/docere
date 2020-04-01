@@ -1,6 +1,7 @@
-import * as React from 'react'
-import FacetValueView from '../list-facet/value'
+import React from 'react'
 import styled from 'styled-components'
+
+import FacetValueView from '../list-facet/value'
 
 const List = styled('ul')`
 	margin: 0;

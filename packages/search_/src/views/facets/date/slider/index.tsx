@@ -1,4 +1,5 @@
-import * as React from 'react'
+import React from 'react'
+
 import Handle from './handle'
 
 export const VIEW_BOX_WIDTH = 400

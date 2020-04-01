@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import { Section, ResultList, Result } from './components'
 import type { AppProps, FSResponse } from '@docere/common'
 

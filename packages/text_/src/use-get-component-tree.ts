@@ -1,5 +1,6 @@
-import * as React from 'react'
+import React from 'react'
 import { /*wrap,*/ fetchXml, attrsToObject } from './utils'
+
 import type { ReactComponent } from '@docere/common'
 import type { DocereTextViewProps } from '.'
 import type { ComponentLeaf, ComponentTree } from './types'

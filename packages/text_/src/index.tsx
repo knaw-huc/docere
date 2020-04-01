@@ -1,7 +1,8 @@
-import * as React from 'react'
+import React from 'react'
 import useGetComponentTree from './use-get-component-tree'
 import useHighlight from './use-highlight'
 import useComponentDidMount from './use-component-did-mount'
+
 import type { DocereComponents } from '@docere/common'
 import type { ComponentLeaf } from './types'
 

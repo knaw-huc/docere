@@ -1,7 +1,9 @@
-import * as React from 'react'
-import ListFacetValueView from '../list/value'
+import React from 'react'
 import styled from 'styled-components'
+
+import ListFacetValueView from '../list/value'
 import Facet from '../facet'
+
 import type { BooleanFacetData, FacetsDataReducerAction, BooleanFacetValues } from '@docere/common'
 
 const List = styled('ul')`

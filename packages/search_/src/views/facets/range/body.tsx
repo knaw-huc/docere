@@ -1,7 +1,8 @@
-import * as React from 'react'
-// import Slider from './slider'
+import React from 'react'
 import styled from 'styled-components'
+
 import Histogram from './histogram'
+
 import type { RangeFacetProps } from '.'
 
 const Dates = styled('div')`

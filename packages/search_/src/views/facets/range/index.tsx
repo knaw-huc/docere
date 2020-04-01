@@ -1,6 +1,8 @@
-import * as React from 'react'
+import React from 'react'
+
 import Facet from '../facet'
 import RangeFacetBody from './body'
+
 import type { RangeFacetData, FacetsDataReducerAction, RangeFacetValues } from '@docere/common'
 
 export interface RangeFacetProps {

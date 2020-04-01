@@ -1,10 +1,11 @@
-import * as React from 'react'
+import React from 'react'
+import styled from 'styled-components'
+
 import SortBy from './order-by'
 import ActiveFilters from './active-filters'
-import styled from 'styled-components'
 import Pagination from './pagination'
-import { SetSortOrder, SortOrder } from '@docere/common'
-import type { AppProps, FacetsDataReducerAction, FacetsData, FSResponse } from '@docere/common'
+
+import type { AppProps, FacetsDataReducerAction, FacetsData, FSResponse, SetSortOrder, SortOrder } from '@docere/common'
 // import type { AppProps } from '../..'
 // import type { FacetsData } from '../../types/facets'
 // import type { FSResponse, SetSortOrder, SortOrder } from '../../types'

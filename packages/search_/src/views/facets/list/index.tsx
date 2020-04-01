@@ -1,7 +1,9 @@
-import * as React from 'react'
+import React from 'react'
+
 import ListFacetValuesView from './values'
 import Options from './options'
 import Facet from '../facet'
+
 import type { ListFacetData, FacetsDataReducerAction, ListFacetValues } from '@docere/common'
 
 export interface ListFacetProps {

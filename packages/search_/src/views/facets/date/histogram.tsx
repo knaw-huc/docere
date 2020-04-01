@@ -1,8 +1,8 @@
-import * as React from 'react'
+import React from 'react'
 import styled from 'styled-components'
+
 import { getEndDate } from './utils'
 import { DateFacetProps } from '.'
-// import { getEndDate } from './utils'
 
 interface WrapperProps { barCount: number }
 const Wrapper = styled.div`

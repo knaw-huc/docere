@@ -1,6 +1,7 @@
-import * as React from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import debounce from 'lodash.debounce'
+
 import { DropDownBody } from '../ui/drop-down'
 
 const SuggestionsDropDownBody = styled(DropDownBody)`

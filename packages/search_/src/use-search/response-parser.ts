@@ -1,4 +1,4 @@
-import { FSResponse, Hit } from '@docere/common';
+import type { FSResponse, Hit } from '@docere/common';
 
 export default function ESResponseParser(response: any): FSResponse {
 	return {

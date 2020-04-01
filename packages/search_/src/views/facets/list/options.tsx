@@ -1,9 +1,11 @@
-import * as React from 'react'
+import React from 'react'
 import styled from 'styled-components'
-import { Input } from '../../full-text-search'
 import debounce from 'lodash.debounce'
-import { ListFacetProps } from '.'
 import { SortBy, SortDirection } from '@docere/common'
+
+import { Input } from '../../full-text-search'
+
+import type { ListFacetProps } from '.'
 
 const Wrapper = styled('div')`
 	font-size: .9em;

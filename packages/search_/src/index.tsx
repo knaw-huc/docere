@@ -1,5 +1,6 @@
-import * as React from 'react'
+import React from 'react'
 import styled from 'styled-components'
+import { SortOrder } from '@docere/common'
 
 import BooleanFacet from './views/facets/boolean'
 import HierarchyFacet from './views/facets/hierarchy'
@@ -12,7 +13,7 @@ import SearchResult from './views/search-result'
 import FullTextSearch from './views/full-text-search'
 import useFacetsDataReducer from './reducers/facets-data'
 import useSearch from './use-search'
-import { SortOrder } from '@docere/common'
+
 import type { AppProps, ListFacetValues, BooleanFacetValues, HierarchyFacetValues, RangeFacetValues, ResultBodyProps } from '@docere/common'
 
 const Wrapper = styled.div`

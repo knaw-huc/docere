@@ -1,7 +1,9 @@
-import * as React from 'react'
-import { MoreLessButton } from '../../button'
-import { Props } from './values'
+import React from 'react'
 import styled from 'styled-components'
+
+import { MoreLessButton } from '../../button'
+
+import type { Props } from './values'
 
 const MoreButton = styled(MoreLessButton)`
 	margin-right: 1rem;	
