@@ -7,7 +7,6 @@
   "scripts": {
     "build": "rm -rf build && tsc",
     "test": "node build/api/src/tests/index.js",
-    "indexer": "node build/api/src/indexer.js",
     "watch": "tsc -w"
   },
   "dependencies": {

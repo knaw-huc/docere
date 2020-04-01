@@ -12,5 +12,6 @@
   "license": "GPL-3.0-or-later",
   "dependencies": {
     "@docere/common": "^1.0.0"
-  }
+  },
+  "gitHead": "3744a745572b682ef34f4b0fad66e6ead1cda351"
 }
