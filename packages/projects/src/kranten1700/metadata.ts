@@ -1,3 +1,5 @@
+import type { DocereConfigData, Metadata } from '@docere/common'
+
 const extractMetadata: DocereConfigData['extractMetadata'] = function extractMetadata(doc) {
 	const selector = "meta"
 	let els = doc.querySelectorAll(selector)

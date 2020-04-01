@@ -1,3 +1,4 @@
+import type { DocereConfig, Entity } from '@docere/common'
 
 export default function extractTextData(doc: XMLDocument, _config: DocereConfig) {
 	const selector = 'div[type="translation"] rs[type="pers"]'

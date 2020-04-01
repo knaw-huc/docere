@@ -1,3 +1,5 @@
+import type { Note } from '@docere/common';
+
 function toExtractedNote(el: Element): Note {
 	return {
 		el,

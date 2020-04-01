@@ -1,3 +1,5 @@
+import type { DocereConfig } from '@docere/common'
+
 const renameMap: [RegExp, string][] = [
 	[new RegExp(/^NHA_1972/), 'RHC-NHA/1972'],
 	[new RegExp(/^NAN_disk2/), 'NAN2/1.04.02'],

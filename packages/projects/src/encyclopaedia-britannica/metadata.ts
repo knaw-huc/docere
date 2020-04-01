@@ -1,3 +1,5 @@
+import type { DocereConfig } from '@docere/common'
+
 export default function extractMetadata(_doc: XMLDocument, config: DocereConfig, id: string) {
 	// const metadata: Metadata = {}
 

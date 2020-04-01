@@ -1,3 +1,5 @@
+import type { ExtractedLayer } from '@docere/common'
+
 export default function extractTextLayers(doc: XMLDocument) {
 	doc
 	// const element = doc.querySelector('text#OpdDD body')

@@ -4,6 +4,8 @@
 // 		.map(x => parseInt(x, 10))
 // }
 
+import type { FacsimileArea, DocereConfig, Facsimile } from '@docere/common'
+
 function elementToArea(el: Element): FacsimileArea {
 	// const id = el.getAttribute('id')
 	// const area = el.getAttribute('area')

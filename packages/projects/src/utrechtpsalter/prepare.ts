@@ -1,3 +1,5 @@
+import type { DocereConfig } from '@docere/common'
+
 export default function prepareDocument(doc: XMLDocument, config: DocereConfig, id: string) {
 	const page = config.data.pages.find((p: any) => p.id === parseInt(id, 10) - 1)
 

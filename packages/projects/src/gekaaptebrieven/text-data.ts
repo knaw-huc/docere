@@ -1,3 +1,5 @@
+import type { DocereConfig, Entity } from '@docere/common'
+
 export default function extractTextData(doc: XMLDocument, _config: DocereConfig): Entity[] {
 	const selector = 'ner'
 	const entities: Map<string, Entity> = new Map()

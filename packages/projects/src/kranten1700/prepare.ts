@@ -1,3 +1,5 @@
+import type { DocereConfigData } from '@docere/common'
+
 const prepareDocument: DocereConfigData['prepareDocument'] = function prepareDocument(doc) {
 	const typeById: Map<string, string> = new Map()
 	doc.querySelectorAll('w').forEach(el => {

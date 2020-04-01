@@ -10,8 +10,8 @@
   },
   "devDependencies": {
     "@types/lodash.debounce": "^4.0.6",
-    "@types/react": "^16.9.23",
-    "@types/react-dom": "^16.9.5",
+    "@types/react": "^16.9.31",
+    "@types/react-dom": "^16.9.6",
     "@types/styled-components": "5.0.1",
     "lerna": "^3.20.2",
     "ts-loader": "^6.2.2",

@@ -1,3 +1,5 @@
+import type { Metadata } from '@docere/common'
+
 export default function extractMetadata(doc: XMLDocument) {
 	const selector = "meta"
 	let els = doc.querySelectorAll(selector)

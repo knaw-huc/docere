@@ -1,3 +1,5 @@
+import type { DocereConfigData, Metadata } from '@docere/common';
+
 function normaliseDate(date: string | number) {
 	date = date.toString();
 	if (date === '') return null

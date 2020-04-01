@@ -1,3 +1,5 @@
+import type { DocereConfigData } from '@docere/common'
+
 const extractFacsimiles: DocereConfigData['extractFacsimiles'] = function extractFacsimiles(doc) {
 	return Array.from(doc.querySelectorAll('facsimile zone'))
 		.map(zone => {

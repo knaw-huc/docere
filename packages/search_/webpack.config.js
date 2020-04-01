@@ -12,7 +12,7 @@ module.exports = {
 		libraryTarget: "umd",
 		// path: __dirname + "/dist",
 		path: path.resolve(__dirname, '../search/dist'),
-		// publicPath: "/dist/",
+		// publicPath: "/dist/"
 	},
 	resolve: {
 		extensions: [".webpack.js", ".web.js", ".ts", ".tsx", ".js"]

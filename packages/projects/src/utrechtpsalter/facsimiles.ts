@@ -1,3 +1,5 @@
+import type { FacsimileArea, Facsimile } from '@docere/common'
+
 function extractFacsimileAreas(doc: XMLDocument) {
 	const areas: FacsimileArea[] = []
 
