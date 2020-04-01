@@ -8,6 +8,6 @@
   "author": "Gijsjan Brouwer",
   "license": "GPL-3.0-or-later",
   "dependencies": {
-    "@docere/common": "1.0.0"
+    "@docere/common": "^1.0.0"
   }
 }

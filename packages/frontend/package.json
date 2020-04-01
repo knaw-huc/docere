@@ -15,10 +15,10 @@
   "dependencies": {
     "@docere/common": "^1.0.0",
     "@docere/ui-components": "^1.0.0",
-    "@docere/search_": "0.0.0",
-    "@docere/text_": "0.0.0",
+    "@docere/search_": "^1.0.0",
+    "@docere/text_": "^1.0.0",
     "@docere/text-components": "^1.0.0",
-    "@docere/projects": "1.0.0",
+    "@docere/projects": "^1.0.0",
     "openseadragon": "^2.4.2"
   },
   "devDependencies": {

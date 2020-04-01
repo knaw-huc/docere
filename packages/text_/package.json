@@ -1,6 +1,6 @@
 {
   "name": "@docere/text_",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -14,7 +14,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@docere/common": "1.0.0"
+    "@docere/common": "^1.0.0"
   },
   "devDependencies": {
     "typescript": "^3.8.3"
