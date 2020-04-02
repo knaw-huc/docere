@@ -6,6 +6,8 @@ import useComponentDidMount from './use-component-did-mount'
 import type { DocereComponents } from '@docere/common'
 import type { ComponentLeaf } from './types'
 
+export type { DocereComponents } from '@docere/common'
+
 function renderComponentTree(tree: ComponentLeaf, props: DocereTextViewProps): React.ReactNode {
 	if (tree == null || typeof tree === 'string') return tree
 
