@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import ListFacetValueView from './value'
+import ListFacetValue from './value'
 import MoreLessButton from './more-less-buttons'
 import { isHierarchyFacet } from '../../../constants'
 
@@ -15,7 +15,8 @@ const Wrapper = styled('div')`
 	overflow: hidden;
 `
 
-const List = styled('ul')`
+export const FacetValuesList = styled('ul')`
+	list-style: none;
 	margin: 0;
 	padding: 0;
 `
@@ -52,7 +53,7 @@ function ListFacetValuesView(props: Props) {
 	return (
 		// <Wrapper ref={ref}>
 		<Wrapper>
-			<List>
+			<FacetValuesList>
 				{
 					props.values.values
 						// .sort((value1, value2) => {
@@ -63,7 +64,7 @@ function ListFacetValuesView(props: Props) {
 						// 	return 0
 						// })
 						.map(value =>
-							<ListFacetValueView
+							<ListFacetValue
 								active={props.facetData.filters.has(value.key.toString())}
 								facetId={props.facetData.id}
 								facetsDataDispatch={props.facetsDataDispatch}
@@ -72,7 +73,7 @@ function ListFacetValuesView(props: Props) {
 							/>
 						)
 				}
-			</List>
+			</FacetValuesList>
 			{
 				// Don't show MoreLessButton, when the results are filtered by a query,
 				// because the MoreLess-count does not take the filter into account

@@ -1,15 +1,16 @@
-import type { FacetsData, FacetConfigBase } from './facets'
 import { SortDirection, SearchTab } from '../../enum'
+
+import type { FacetsData, FacetConfig } from './facets'
 
 export * from './facets-data.action'
 export * from './facets'
 
-export interface AppProps {
+export interface FacetedSearchProps {
 	autoSuggest?: (query: string) => Promise<string[]>
 	className?: string /* className prop is used by StyledComponents */
 	disableDefaultStyle?: boolean
 	excludeResultFields?: string[]
-	fields: FacetConfigBase[]
+	fields: FacetConfig[]
 	onClickResult: (result: any, ev: React.MouseEvent<HTMLLIElement>) => void
 	resultFields?: string[]
 	ResultBodyComponent: React.FC<ResultBodyProps>
@@ -24,7 +25,7 @@ export interface AppProps {
 export type SortOrder = Map<string, SortDirection>
 export type SetSortOrder = (sortOrder: SortOrder) => void
 
-export type ElasticSearchRequestOptions = Pick<AppProps, 'excludeResultFields' | 'resultFields' | 'resultsPerPage'> & {
+export type ElasticSearchRequestOptions = Pick<FacetedSearchProps, 'excludeResultFields' | 'resultFields' | 'resultsPerPage'> & {
 	currentPage: number
 	facetsData: FacetsData
 	query: string

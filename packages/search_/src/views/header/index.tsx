@@ -5,7 +5,7 @@ import SortBy from './order-by'
 import ActiveFilters from './active-filters'
 import Pagination from './pagination'
 
-import type { AppProps, FacetsDataReducerAction, FacetsData, FSResponse, SetSortOrder, SortOrder } from '@docere/common'
+import type { FacetedSearchProps, FacetsDataReducerAction, FacetsData, FSResponse, SetSortOrder, SortOrder } from '@docere/common'
 // import type { AppProps } from '../..'
 // import type { FacetsData } from '../../types/facets'
 // import type { FSResponse, SetSortOrder, SortOrder } from '../../types'
@@ -43,8 +43,8 @@ const Wrapper = styled.header`
 	}
 `
 
-type Props = Pick<AppProps, 'resultsPerPage'> & {
-	autoSuggest: AppProps['autoSuggest']
+type Props = Pick<FacetedSearchProps, 'resultsPerPage'> & {
+	autoSuggest: FacetedSearchProps['autoSuggest']
 	clearActiveFilters: () => void
 	clearFullTextInput: () => void
 	currentPage: number

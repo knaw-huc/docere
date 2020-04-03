@@ -5,7 +5,7 @@ import { fetchJson } from '../utils'
 import AppContext, { useUIComponent } from '../app/context'
 import { FileExplorerProps } from './wrap-as-file-explorer'
 import { DEFAULT_SPACING, TOP_OFFSET, RESULT_ASIDE_WIDTH, EsDataType, UIComponentType, defaultMetadata, SearchTab } from '@docere/common'
-import type { DocereConfig, FacetConfigBase, Hit } from '@docere/common'
+import type { DocereConfig, FacetConfig, Hit } from '@docere/common'
 
 const searchBaseUrl = '/search/'
 
@@ -64,7 +64,7 @@ const FS = styled(HucFacetedSearch)`
 
 const ignoreKeys = ['text', 'text_suggest', 'facsimiles', 'id']
 function useFields(config: DocereConfig) {
-	const [fields, setFields] = React.useState<FacetConfigBase[]>([])
+	const [fields, setFields] = React.useState<FacetConfig[]>([])
 
 	React.useEffect(() => {
 		fetchJson(`${searchBaseUrl}${config.slug}/_mapping`)

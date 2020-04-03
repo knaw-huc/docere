@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { SortOrder } from '@docere/common'
+import { SortOrder, EsDataType } from '@docere/common'
 
 import BooleanFacet from './views/facets/boolean'
 import HierarchyFacet from './views/facets/hierarchy'
@@ -14,7 +14,11 @@ import FullTextSearch from './views/full-text-search'
 import useFacetsDataReducer from './reducers/facets-data'
 import useSearch from './use-search'
 
-import type { AppProps, ListFacetValues, BooleanFacetValues, HierarchyFacetValues, RangeFacetValues, ResultBodyProps } from '@docere/common'
+import type { FacetedSearchProps, ListFacetValues, BooleanFacetValues, HierarchyFacetValues, RangeFacetValues, ResultBodyProps } from '@docere/common'
+
+export { EsDataType }
+
+export type { FacetedSearchProps }
 
 const Wrapper = styled.div`
 	margin-bottom: 10vh;
@@ -54,7 +58,7 @@ const Wrapper = styled.div`
 	}}
 `
 
-function FacetedSearch(props: AppProps) {
+function FacetedSearch(props: FacetedSearchProps) {
 	const [query, setQuery] = React.useState('')
 	const [currentPage, setCurrentPage] = React.useState(1)
 	const [sortOrder, setSortOrder] = React.useState<SortOrder>(new Map())

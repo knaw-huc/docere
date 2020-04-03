@@ -1,8 +1,8 @@
 import React from 'react'
 import { Section, ResultList, Result } from './components'
-import type { AppProps, FSResponse } from '@docere/common'
+import type { FacetedSearchProps, FSResponse } from '@docere/common'
 
-type Props = Pick<AppProps, 'onClickResult' | 'ResultBodyComponent' | 'resultBodyProps'> & {
+type Props = Pick<FacetedSearchProps, 'onClickResult' | 'ResultBodyComponent' | 'resultBodyProps'> & {
 	searchResult: FSResponse
 }
 

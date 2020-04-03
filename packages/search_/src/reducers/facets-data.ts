@@ -3,7 +3,7 @@ import { EsDataType } from '@docere/common'
 
 import { isListFacet, isBooleanFacet, isRangeFacet, isDateFacet, isHierarchyFacet } from '../constants'
 
-import type { BooleanFacetConfig, BooleanFacetData, DateFacetConfig, DateFacetData, HierarchyFacetConfig, HierarchyFacetData, ListFacetConfig, ListFacetData, RangeFacetConfig, RangeFacetData, FacetConfigBase, FacetData, AppProps, FacetsData, FacetsDataReducerAction } from '@docere/common'
+import type { BooleanFacetConfig, BooleanFacetData, DateFacetConfig, DateFacetData, HierarchyFacetConfig, HierarchyFacetData, ListFacetConfig, ListFacetData, RangeFacetConfig, RangeFacetData, FacetConfigBase, FacetData, FacetedSearchProps, FacetsData, FacetsDataReducerAction } from '@docere/common'
 
 function initBooleanFacet(booleanFacetConfig: BooleanFacetConfig): BooleanFacetData {
 	return {
@@ -58,10 +58,10 @@ function initFacet(facetConfig: FacetConfigBase): FacetData {
 	else if (isRangeFacet(facetConfig))		return initRangeFacet(facetConfig)
 	else if (isDateFacet(facetConfig))		return initDateFacet(facetConfig)
 
-	return null
+	return initListFacet(facetConfig as ListFacetConfig)
 }
 
-export function initFacetsData(fields: AppProps['fields']) {
+export function initFacetsData(fields: FacetedSearchProps['fields']) {
 	const initMap: FacetsData = new Map()
 	return fields
 		.reduce((prev, curr) => {
@@ -78,7 +78,7 @@ export function initFacetsData(fields: AppProps['fields']) {
 		}, initMap)
 }
 
-export default function useFacetsDataReducer(fields: AppProps['fields']) {
+export default function useFacetsDataReducer(fields: FacetedSearchProps['fields']) {
 	const x = React.useReducer(facetsDataReducer, null)
 
 	React.useEffect(() => {

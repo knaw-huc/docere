@@ -1,7 +1,7 @@
-import type { AppProps, ElasticSearchRequestOptions } from '@docere/common'
+import type { FacetedSearchProps, ElasticSearchRequestOptions } from '@docere/common'
 
 export default class ESRequest {
-	_source: { include?: AppProps['resultFields'], exclude?: AppProps['excludeResultFields'] }
+	_source: { include?: FacetedSearchProps['resultFields'], exclude?: FacetedSearchProps['excludeResultFields'] }
 	from: number
 	size: number
 	sort: any
