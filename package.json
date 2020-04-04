@@ -4,6 +4,10 @@
   "author": "Gijsjan Brouwer",
   "license": "GPL-3.0-or-later",
   "scripts": {
+    "build": "lerna run build",
+    "dist": "lerna run dist",
+    "test": "lerna run test",
+    "publish": "lerna publish",
     "install": "./install.sh",
     "indexer": "node packages/api/build/api/src/indexer.js",
     "start": "./packages/docker/start.sh"
