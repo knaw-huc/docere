@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "declaration": false,
+		"declarationMap": false,
     "incremental": false,
     "importHelpers": false,
     "outDir": "./dist"

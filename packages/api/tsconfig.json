@@ -2,6 +2,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "declaration": true,
+    "declarationMap": true,
     "esModuleInterop": true,
     "importHelpers": true,
     "jsx": "react",
