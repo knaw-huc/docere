@@ -1,10 +1,9 @@
 import styled from 'styled-components'
-import { SPOT_COLOR } from '../constants'
 
 const Button = styled('button')`
 	background: none;
 	border: none;
-	color: ${SPOT_COLOR};
+	color: ${(props: { spotColor: string }) => props.spotColor};
 	cursor: pointer;
 	outline: none;
 	padding: 0;

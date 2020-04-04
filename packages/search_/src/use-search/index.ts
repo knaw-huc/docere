@@ -4,6 +4,7 @@ import ESRequestWithFacets from './request-with-facets-creator'
 import ESResponseWithFacetsParser from './response-with-facets-parser'
 import ESResponseParser from './response-parser'
 import fetchSearchResults from './fetch'
+import FacetedSearchContext from '../context'
 
 import type { FSResponse, ElasticSearchRequestOptions, FacetValues } from '@docere/common'
 
@@ -12,14 +13,15 @@ const initialSearchResult: FSResponse = {
 	total: 0
 }
 
-export default function useSearch(url: string, options: ElasticSearchRequestOptions): [FSResponse, Record<string, FacetValues>] {
+export default function useSearch(options: ElasticSearchRequestOptions): [FSResponse, Record<string, FacetValues>] {
 	const [searchResult, setSearchResult] = React.useState(initialSearchResult)
 	const [facetValues, setFacetValues] = React.useState({})
+	const context = React.useContext(FacetedSearchContext)
 
 	React.useEffect(() => {
-		const searchRequest = new ESRequestWithFacets(options)
+		const searchRequest = new ESRequestWithFacets(options, context)
 
-		fetchSearchResults(url, searchRequest)
+		fetchSearchResults(context.url, searchRequest)
 			.then(result => {
 				const searchResponse = ESResponseParser(result)
 				setSearchResult(searchResponse)
@@ -27,13 +29,13 @@ export default function useSearch(url: string, options: ElasticSearchRequestOpti
 			.catch(err => {
 				console.log(err)
 			})
-	}, [url, options.currentPage, options.excludeResultFields, options.resultFields, options.resultsPerPage, options.sortOrder])
+	}, [context.url, options.currentPage, options.sortOrder])
 
 	React.useEffect(() => {
 		if (options.facetsData == null) return
-		const searchRequest = new ESRequestWithFacets(options)
+		const searchRequest = new ESRequestWithFacets(options, context)
 
-		fetchSearchResults(url, searchRequest)
+		fetchSearchResults(context.url, searchRequest)
 			.then(result => {
 				const [searchResponse, facetValues] = ESResponseWithFacetsParser(result, options.facetsData)
 				setSearchResult(searchResponse)
@@ -42,7 +44,7 @@ export default function useSearch(url: string, options: ElasticSearchRequestOpti
 			.catch(err => {
 				console.log(err)
 			})
-	}, [url, options.facetsData, options.query])
+	}, [context.url, options.facetsData, options.query])
 
 	return [searchResult, facetValues]
 }

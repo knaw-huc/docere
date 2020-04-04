@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
+import FacetedSearchContext from '../../context'
 import PageNumber, { Button } from './page-number'
 
 import type { FSResponse } from '@docere/common'
@@ -13,6 +14,8 @@ const Wrapper = styled.div`
 	align-items: center;
 	color: #AAA;
 	display: grid;
+	grid-column: 2;
+	grid-row: 2;
 	grid-template-columns: 16px auto 16px;
 	height: 48px;
 	margin: 0 .2em;
@@ -71,13 +74,14 @@ function usePages(currentPage: number, pageCount: number) {
 
 interface Props {
 	currentPage: number
-	resultsPerPage: number
 	searchResults: FSResponse
 	setCurrentPage: (pageNumber: number) => void
 }
 
 function Pagination(props: Props) {
-	const pageCount = Math.ceil(props.searchResults.total / props.resultsPerPage)
+	const context = React.useContext(FacetedSearchContext)
+
+	const pageCount = Math.ceil(props.searchResults.total / context.resultsPerPage)
 	if (isNaN(pageCount) || pageCount === 1) return null
 
 	const { first, current, last } = usePages(props.currentPage, pageCount)
@@ -109,18 +113,18 @@ function Pagination(props: Props) {
 	return (
 		<Wrapper className="pagination">
 			{props.currentPage !== 1 ?
-				<Prev onClick={toPrev}>◂</Prev> :
+				<Prev onClick={toPrev} spotColor={context.style.spotColor}>◂</Prev> :
 				<div />
 			}
 			<PageNumbers className="pagenumbers">
 				{first.length > 0 && first.map(toPageNumber)}
-				{first.length > 0 && current.length > 0 && <Button onClick={toBetweenFirstAndCurrent}>…</Button>}
+				{first.length > 0 && current.length > 0 && <Button onClick={toBetweenFirstAndCurrent} spotColor={context.style.spotColor}>…</Button>}
 				{current.map(toPageNumber)}
-				{last.length > 0 && <Button onClick={toBetweenCurrentAndLast}>…</Button>}
+				{last.length > 0 && <Button onClick={toBetweenCurrentAndLast} spotColor={context.style.spotColor}>…</Button>}
 				{last.length > 0 && last.map(toPageNumber)}
 			</PageNumbers>
 			{props.currentPage !== pageCount ?
-				<Next onClick={toNext}>▸</Next> :
+				<Next onClick={toNext} spotColor={context.style.spotColor}>▸</Next> :
 				<div />
 			}
 		</Wrapper>

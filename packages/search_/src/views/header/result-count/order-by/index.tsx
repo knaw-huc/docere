@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 import OrderOption from './option'
-import DropDown from '../../ui/drop-down'
+import DropDown from '../../../ui/drop-down'
 
 import type { FacetsData, SetSortOrder, SortOrder } from '@docere/common'
 

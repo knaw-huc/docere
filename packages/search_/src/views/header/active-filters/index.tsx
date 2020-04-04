@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
+import FacetedSearchContext from '../../../context'
 import { Button } from '../page-number'
 import useFilters from './use-filters'
 import Details from './details'
@@ -8,7 +9,9 @@ import Details from './details'
 import type { FacetsDataReducerAction, FacetsData } from '@docere/common'
 
 const Wrapper = styled.div`
+	grid-column: 1 / span 2;
 	line-height: 24px;
+	padding-left: 32px;
 
 	& > * {
 		display: inline-block;
@@ -41,6 +44,7 @@ interface Props {
 	query: string
 }
 function ActiveFilters(props: Props) {
+	const context = React.useContext(FacetedSearchContext)
 	const filters = useFilters(props.facetsData)
 	if (!props.query.length && !filters.length) return null
 
@@ -57,6 +61,7 @@ function ActiveFilters(props: Props) {
 			/>
 			<Button
 				onClick={props.clearActiveFilters}
+				spotColor={context.style.spotColor}
 			>
 				clear
 			</Button>

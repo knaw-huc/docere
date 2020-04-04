@@ -17,6 +17,9 @@ export interface FacetedSearchProps {
 	resultBodyProps?: Record<string, any>
 	resultsPerPage?: number
 	track_total_hits?: number
+	style?: {
+		spotColor: string
+	}
 	url: string
 }
 
@@ -25,12 +28,11 @@ export interface FacetedSearchProps {
 export type SortOrder = Map<string, SortDirection>
 export type SetSortOrder = (sortOrder: SortOrder) => void
 
-export type ElasticSearchRequestOptions = Pick<FacetedSearchProps, 'excludeResultFields' | 'resultFields' | 'resultsPerPage'> & {
+export interface ElasticSearchRequestOptions {
 	currentPage: number
 	facetsData: FacetsData
 	query: string
 	sortOrder: SortOrder
-	track_total_hits: number
 }
 
 export interface Hit {

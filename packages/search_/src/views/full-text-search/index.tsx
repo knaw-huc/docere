@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import debounce from 'lodash.debounce'
+import FacetedSearchContext from '../../context'
 
 import AutoSuggest from './auto-suggest'
 
@@ -68,11 +69,11 @@ function hideLoader(loaderRef: any) {
 
 
 interface Props {
-	autoSuggest: (query: string) => Promise<string[]>
 	query: string
 	setQuery: (query: string) => void
 }
 function FullTextSearch(props: Props) {
+	const context = React.useContext(FacetedSearchContext)
 	const loaderRef = React.useRef()
 	const [suggestActive, setSuggestActive] = React.useState(false)
 	const [inputValue, setInputValue] = React.useState('')
@@ -85,7 +86,7 @@ function FullTextSearch(props: Props) {
 	)
 	const handleInputChange = React.useCallback(
 		(ev: React.ChangeEvent<HTMLInputElement>) => {
-			setSuggestActive(props.autoSuggest != null) // Set suggestActive state only to true if props.autoSuggest exists
+			setSuggestActive(context.autoSuggest != null) // Set suggestActive state only to true if props.autoSuggest exists
 			setInputValue(ev.target.value)
 			setQuery(ev.target.value)
 			showLoader(loaderRef)
@@ -116,7 +117,7 @@ function FullTextSearch(props: Props) {
 			{
 				suggestActive &&
 				<AutoSuggest
-					autoSuggest={props.autoSuggest}
+					autoSuggest={context.autoSuggest}
 					onClick={query => {
 						setInputValue(query)
 						setQuery(query)

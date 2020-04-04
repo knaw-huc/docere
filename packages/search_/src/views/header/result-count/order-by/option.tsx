@@ -2,7 +2,8 @@ import React from 'react'
 import styled from 'styled-components'
 import { SortDirection } from '@docere/common'
 
-import { Button } from '../page-number'
+import FacetedSearchContext from '../../../../context'
+import { Button } from '../../page-number'
 
 import type { FacetData, SortOrder, SetSortOrder } from '@docere/common'
 
@@ -44,6 +45,8 @@ interface Props {
 	setSortOrder: SetSortOrder
 }
 function OrderOption(props: Props) {
+	const context = React.useContext(FacetedSearchContext)
+
 	const setDirection = React.useCallback(ev => {
 		ev.stopPropagation()
 
@@ -78,6 +81,7 @@ function OrderOption(props: Props) {
 				<Button
 					className="toggle-direction"
 					onClick={setDirection}
+					spotColor={context.style.spotColor}
 					title={direction === SortDirection.Desc ? 'Descending' : 'Ascending'}
 				>
 					{direction === SortDirection.Desc ? '▼' : '▲'}

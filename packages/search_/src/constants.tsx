@@ -2,7 +2,6 @@ import { EsDataType } from '@docere/common'
 
 import type { FacetConfigBase, BooleanFacetConfig, DateFacetConfig, HierarchyFacetConfig, ListFacetConfig, RangeFacetConfig } from '@docere/common'
 
-export const SPOT_COLOR = '#08c'
 export const BACKGROUND_GRAY = '#f6f6f6'
 
 export function isBooleanFacet(facetConfig: FacetConfigBase): facetConfig is BooleanFacetConfig {

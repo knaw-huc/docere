@@ -1,5 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
+
+import FacetedSearchContext from '../../context'
 import { Button } from '../header/page-number'
 
 const Wrapper = styled.div`
@@ -66,6 +68,7 @@ interface Props {
 	z: number
 }
 function DropDown(props: Props) {
+	const context = React.useContext(FacetedSearchContext)
 	const [showBody, setShowBody] = React.useState(false)
 	const hideMenu = React.useCallback(() => setShowBody(false), [])
 
@@ -87,6 +90,7 @@ function DropDown(props: Props) {
 				className="huc-fs-dropdown-button"
 				onClick={handleClick}
 				showMenu={showBody}
+				spotColor={context.style.spotColor}
 				z={props.z}
 			>
 				{props.label} <span>{showBody ? '▲' : '▼'}</span>

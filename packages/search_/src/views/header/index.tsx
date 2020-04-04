@@ -1,11 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import SortBy from './order-by'
 import ActiveFilters from './active-filters'
 import Pagination from './pagination'
+import ResultCount from './result-count'
 
-import type { FacetedSearchProps, FacetsDataReducerAction, FacetsData, FSResponse, SetSortOrder, SortOrder } from '@docere/common'
+import type { FacetsDataReducerAction, FacetsData, FSResponse, SetSortOrder, SortOrder } from '@docere/common'
 // import type { AppProps } from '../..'
 // import type { FacetsData } from '../../types/facets'
 // import type { FSResponse, SetSortOrder, SortOrder } from '../../types'
@@ -23,28 +23,9 @@ const Wrapper = styled.header`
 	padding-top: 32px;
 	position: sticky;
 	top: -54px;
-
-	& > #huc-fs-active-filters {
-		grid-column: 1 / span 2;
-		padding-left: 32px;
-	}
-
-	& > .right {
-		grid-column: 1;
-		grid-row: 2;
-		padding-left: 32px;
-		height: 48px;
-		line-height: 46px;
-	}
-
-	& > .pagination {
-		grid-column: 2;
-		grid-row: 2;
-	}
 `
 
-type Props = Pick<FacetedSearchProps, 'resultsPerPage'> & {
-	autoSuggest: FacetedSearchProps['autoSuggest']
+interface Props {
 	clearActiveFilters: () => void
 	clearFullTextInput: () => void
 	currentPage: number
@@ -57,12 +38,6 @@ type Props = Pick<FacetedSearchProps, 'resultsPerPage'> & {
 	sortOrder: SortOrder
 }
 function Header(props: Props) {
-	let from = (props.currentPage - 1) * props.resultsPerPage + 1
-	if (from > props.searchResult.total) from = props.searchResult.total
-
-	let to = from + props.resultsPerPage - 1
-	if (to > props.searchResult.total) to = props.searchResult.total
-
 	return (
 		<Wrapper id="huc-fs-header">
 			<ActiveFilters
@@ -72,17 +47,15 @@ function Header(props: Props) {
 				facetsData={props.facetsData}
 				query={props.query}
 			/>
-			<div className="right">
-				{from}-{to} of {props.searchResult.total} result{props.searchResult.total === 1 ? '' : 's'},&nbsp;
-				<SortBy
-					facetsData={props.facetsData}
-					setSortOrder={props.setSortOrder}
-					sortOrder={props.sortOrder}
-				/>
-			</div>
+			<ResultCount
+				currentPage={props.currentPage}
+				facetsData={props.facetsData}
+				searchResult={props.searchResult}
+				setSortOrder={props.setSortOrder}
+				sortOrder={props.sortOrder}
+			/>
 			<Pagination
 				currentPage={props.currentPage}
-				resultsPerPage={props.resultsPerPage}
 				searchResults={props.searchResult}
 				setCurrentPage={props.setCurrentPage}
 			/>

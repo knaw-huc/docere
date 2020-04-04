@@ -1,4 +1,4 @@
-import { SortBy, SortDirection } from '@docere/common'
+import { SortBy, SortDirection, FacetedSearchProps } from '@docere/common'
 
 import { isBooleanFacet, isListFacet, isRangeFacet, isDateFacet, isHierarchyFacet, getChildFieldName } from '../constants'
 import ESRequest from './request-creator'
@@ -26,8 +26,8 @@ export default class ESRequestWithFacets extends ESRequest {
 	post_filter: Record<string, any>
 	query: Record<string, any>
 
-	constructor(options: ElasticSearchRequestOptions) {
-		super(options)
+	constructor(options: ElasticSearchRequestOptions, context: FacetedSearchProps) {
+		super(options, context)
 
 		if (options.facetsData == null) return
 

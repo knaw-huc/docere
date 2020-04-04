@@ -1,12 +1,15 @@
 import React from 'react'
-import { Section, ResultList, Result } from './components'
-import type { FacetedSearchProps, FSResponse } from '@docere/common'
 
-type Props = Pick<FacetedSearchProps, 'onClickResult' | 'ResultBodyComponent' | 'resultBodyProps'> & {
+import FacetedSearchContext from '../../context'
+import { Section, ResultList, Result } from './components'
+
+import type { FSResponse } from '@docere/common'
+
+interface Props {
 	searchResult: FSResponse
 }
-
 function HucSearchResults(props: Props) {
+	const context = React.useContext(FacetedSearchContext)
 	return (
 		<Section id="huc-fs-search-results">
 			<ResultList>
@@ -15,23 +18,17 @@ function HucSearchResults(props: Props) {
 						<Result
 							key={i}
 							onClick={(ev) => {
-								if (props.onClickResult != null) props.onClickResult(hit, ev)
+								if (context.onClickResult != null) context.onClickResult(hit, ev)
 							}}
 						>
-							<props.ResultBodyComponent
-								{...props.resultBodyProps}
+							<context.ResultBodyComponent
+								{...context.resultBodyProps}
 								result={hit}
 							/>
 						</Result>
 					)
 				}
 			</ResultList>
-			{/* <Pagination
-				currentPage={props.currentPage}
-				resultsPerPage={props.resultsPerPage}
-				searchResults={props.searchResult}
-				setCurrentPage={props.setCurrentPage}
-			/> */}
 		</Section>
 	)
 }

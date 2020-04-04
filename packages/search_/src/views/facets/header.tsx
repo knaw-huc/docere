@@ -1,17 +1,18 @@
 import React from 'react'
 import styled from 'styled-components'
 
+import FacetedSearchContext from '../../context'
 import { FacetMenuButton } from '../button'
 
 import type { FacetData } from '@docere/common'
 
-interface HProps { collapse: boolean }
 const Header = styled('header')`
 	& > button {
 		margin-left: .2rem;
 	}
 `
 
+type HProps = Pick<Props, 'collapse'> & { spotColor: string }
 const H3 = styled('h3')`
 	cursor: pointer;
 	display: inline-block;
@@ -20,7 +21,7 @@ const H3 = styled('h3')`
 	user-select: none;
 
 	&:before {
-		color: #08c;
+		color: ${props => props.spotColor};
 		content: '<';
 		font-size: 0.5rem;
 		line-height: 1rem;
@@ -38,11 +39,13 @@ interface Props {
 	toggleOptions: () => void
 }
 function FacetHeader(props: Props) {
+	const context = React.useContext(FacetedSearchContext)
 	return (
 		<Header>
 			<H3
 				collapse={props.collapse}
 				onClick={props.toggleCollapse}
+				spotColor={context.style.spotColor}
 			>
 				{props.facetData.title}
 			</H3>
@@ -51,6 +54,7 @@ function FacetHeader(props: Props) {
 				props.hasOptions &&
 				<FacetMenuButton
 					onClick={props.toggleOptions}
+					spotColor={context.style.spotColor}
 				>
 					<svg viewBox="0 0 21.589 21.589" width="12px" height="12px" fill="#AAA">
 						<path d="M18.622,8.371l-0.545-1.295c0,0,1.268-2.861,1.156-2.971l-1.679-1.639c-0.116-0.113-2.978,1.193-2.978,1.193l-1.32-0.533

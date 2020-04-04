@@ -7,9 +7,9 @@ export default class ESRequest {
 	sort: any
 	track_total_hits: number
 
-	constructor(options: ElasticSearchRequestOptions) {
-		this.setSource(options)
-		this.size = options.resultsPerPage
+	constructor(options: ElasticSearchRequestOptions, context: FacetedSearchProps) {
+		this.setSource(context)
+		this.size = context.resultsPerPage
 		if (options.currentPage > 1) this.from = this.size * (options.currentPage - 1) 
 		if (options.sortOrder.size) {
 			this.sort = []
@@ -18,17 +18,17 @@ export default class ESRequest {
 			})
 			this.sort.push('_score')
 		}
-		if (options.track_total_hits != null) {
-			this.track_total_hits = options.track_total_hits
+		if (context.track_total_hits != null) {
+			this.track_total_hits = context.track_total_hits
 		}
 	}
 
-	private setSource(options: ElasticSearchRequestOptions) {
-		if (!options.resultFields.length && !options.excludeResultFields.length) return
+	private setSource(context: FacetedSearchProps) {
+		if (!context.resultFields.length && !context.excludeResultFields.length) return
 
 		this._source = {
-			include: options.resultFields,
-			exclude: options.excludeResultFields
+			include: context.resultFields,
+			exclude: context.excludeResultFields
 		}
 	}
 }
