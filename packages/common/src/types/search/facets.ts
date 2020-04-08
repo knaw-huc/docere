@@ -26,6 +26,14 @@ interface OtherFacetConfig extends FacetConfigBase {
 
 export type FacetConfig = BooleanFacetConfig | DateFacetConfig | HierarchyFacetConfig | ListFacetConfig | RangeFacetConfig | OtherFacetConfig
 
+// FACET FILTERS
+export type ListFacetFilter = Set<string>
+export interface RangeFacetFilter {
+	from: number
+	to?: number
+}
+export type FacetFilter = ListFacetFilter | RangeFacetFilter
+
 // BOOLEAN FACET
 export interface BooleanFacetConfig extends FacetConfigBase {
 	readonly datatype: EsDataType.Boolean
@@ -33,7 +41,7 @@ export interface BooleanFacetConfig extends FacetConfigBase {
 }
 
 export type BooleanFacetData = BooleanFacetConfig & {
-	filters: Set<string>
+	filters: ListFacetFilter
 } 
 
 export type BooleanFacetValues = [
@@ -58,7 +66,7 @@ export interface HierarchyFacetConfig extends FacetConfigBase {
 }
 
 export type HierarchyFacetData = HierarchyFacetConfig & {
-	filters: Set<string>
+	filters: ListFacetFilter
 	viewSize: number
 } 
 
@@ -85,7 +93,7 @@ export interface KeyCount {
 }
 
 export type ListFacetData = ListFacetConfig & {
-	filters: Set<string>
+	filters: ListFacetFilter
 	query: string
 	sort: {
 		by: SortBy,
@@ -103,11 +111,6 @@ export interface ListFacetValues {
 export interface RangeFacetConfig extends FacetConfigBase {
 	readonly datatype: EsDataType.Integer
 	readonly interval: number,
-}
-
-export interface RangeFacetFilter {
-	from: number
-	to?: number
 }
 
 interface RangeKeyCount {

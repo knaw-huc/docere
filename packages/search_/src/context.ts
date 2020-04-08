@@ -4,6 +4,7 @@ import { Colors } from '@docere/common'
 import type { FacetedSearchProps } from '@docere/common'
 
 export const defaultFacetedSearchProps: FacetedSearchProps = {
+	activeFilters: {},
 	ResultBodyComponent: () => null,
 	excludeResultFields: [],
 	fields: [],

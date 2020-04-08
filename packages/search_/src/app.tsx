@@ -60,7 +60,7 @@ export default function FacetedSearch() {
 	const [query, setQuery] = React.useState('')
 	const [currentPage, setCurrentPage] = React.useState(1)
 	const [sortOrder, setSortOrder] = React.useState<SortOrder>(new Map())
-	const [facetsData, facetsDataDispatch] = useFacetsDataReducer(context.fields)
+	const [facetsData, facetsDataDispatch] = useFacetsDataReducer(context.fields, context.activeFilters)
 	const [searchResult, facetValues] = useSearch({
 		currentPage,
 		facetsData,
@@ -71,7 +71,7 @@ export default function FacetedSearch() {
 	const clearActiveFilters = React.useCallback(() => {
 		setQuery('')
 		setSortOrder(new Map())
-		facetsDataDispatch({ type: 'clear', fields: context.fields })
+		facetsDataDispatch({ type: 'clear', fields: context.fields, activeFilters: {} })
 	}, [context.fields])
 
 	const clearFullTextInput = React.useCallback(() => {

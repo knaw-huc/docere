@@ -3,12 +3,15 @@ import * as path from 'path'
 import puppeteer from 'puppeteer'
 import express from 'express'
 import { Server } from 'http'
+
+import { EsDataType } from '../../../common/src/enum'
 import { getType, getProjectsSourceDir, readFileContents, getEntryIdFromFilePath, getXMLPath, isError, getElasticSearchDocument } from '../utils'
 import { prepareAndExtract } from './prepare-and-extract'
-import { EsDataType } from '../../../common/src/enum'
+
+const projects = require('esm')(module)(path.resolve(process.cwd(), './packages/projects')).default
+
 import type { DocereConfigData } from '@docere/common'
 import type { PrepareAndExtractOutput, DocereApiError, Mapping, MappingProperties } from '../types'
-const projects = require('esm')(module)(path.resolve(process.cwd(), './packages/projects')).default
 
 const port = 3334
 

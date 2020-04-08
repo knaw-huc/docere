@@ -4,6 +4,7 @@ import { SortBy, SortDirection } from '../../enum'
 
 interface FacetsDataReducerActionClear {
 	type: 'clear'
+	activeFilters: FacetedSearchProps['activeFilters']
 	fields: FacetedSearchProps['fields']
 }
 

@@ -1,11 +1,12 @@
 import { SortDirection, SearchTab } from '../../enum'
 
-import type { FacetsData, FacetConfig } from './facets'
+import type { FacetsData, FacetConfig, FacetFilter } from './facets'
 
 export * from './facets-data.action'
 export * from './facets'
 
 export interface FacetedSearchProps {
+	activeFilters?: Record<string, FacetFilter>
 	autoSuggest?: (query: string) => Promise<string[]>
 	className?: string /* className prop is used by StyledComponents */
 	disableDefaultStyle?: boolean

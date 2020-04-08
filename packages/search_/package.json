@@ -8,8 +8,7 @@
   "scripts": {
     "build": "rm -rf build && tsc",
     "dist": "./dist.sh",
-    "watch": "tsc -w",
-    "watch:dev": "webpack -w"
+    "watch": "tsc -w"
   },
   "author": "",
   "license": "GPL-3.0-or-later",
