@@ -6,11 +6,6 @@ export type FacetValues = ListFacetValues | BooleanFacetValues | RangeFacetValue
 export type FacetData = ListFacetData | BooleanFacetData | HierarchyFacetData | RangeFacetData | DateFacetData
 export type FacetsData = Map<string, FacetData>
 
-// interface FacetProps {
-// 	id: string
-// 	title: string
-// }
-
 /*
  * FacetConfigBase is defined in @docere/common because it is also the
  * base for metadata and entities config
@@ -40,7 +35,8 @@ export interface BooleanFacetConfig extends FacetConfigBase {
 	readonly labels?: { false: string, true: string }
 }
 
-export type BooleanFacetData = BooleanFacetConfig & {
+export interface BooleanFacetData {
+	config: BooleanFacetConfig
 	filters: ListFacetFilter
 } 
 
@@ -54,7 +50,8 @@ export interface DateFacetConfig extends FacetConfigBase {
 	readonly datatype: EsDataType.Date
 }
 
-export interface DateFacetData extends DateFacetConfig {
+export interface DateFacetData {
+	config: DateFacetConfig
 	filters: RangeFacetFilter,
 	interval?: 'year' | 'month' | 'day'
 } 
@@ -65,9 +62,10 @@ export interface HierarchyFacetConfig extends FacetConfigBase {
 	readonly size?: number
 }
 
-export type HierarchyFacetData = HierarchyFacetConfig & {
+export interface HierarchyFacetData {
+	config: HierarchyFacetConfig
 	filters: ListFacetFilter
-	viewSize: number
+	size: number
 } 
 
 export interface HierarchyKeyCount {
@@ -84,23 +82,25 @@ export interface HierarchyFacetValues {
 // LIST FACET
 export interface ListFacetConfig extends FacetConfigBase {
 	readonly datatype: EsDataType.Keyword
-	readonly size?: number
+	size?: number
+	sort?: {
+		by: SortBy,
+		direction: SortDirection,
+	}
 }
+
+export interface ListFacetData {
+	config: ListFacetConfig
+	filters: ListFacetFilter
+	query: string
+	size: ListFacetConfig['size']
+	sort: ListFacetConfig['sort']
+} 
 
 export interface KeyCount {
 	key: string,
 	count: number
 }
-
-export type ListFacetData = ListFacetConfig & {
-	filters: ListFacetFilter
-	query: string
-	sort: {
-		by: SortBy,
-		direction: SortDirection,
-	}
-	viewSize: number
-} 
 
 export interface ListFacetValues {
 	total: number
@@ -119,7 +119,8 @@ interface RangeKeyCount {
 }
 export type RangeFacetValues = RangeKeyCount[]
 
-export interface RangeFacetData extends RangeFacetConfig {
+export interface RangeFacetData {
+	config: RangeFacetConfig
 	filters: RangeFacetFilter,
 	min: number,
 	max: number

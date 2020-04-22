@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 import Histogram from './histogram'
-import { isDateFacet } from '../../../constants'
+import { isDateFacetData } from '../../../utils'
 import { getEndDate, formatDate } from './utils'
 
 import type { DateFacetProps } from '.'
@@ -32,8 +32,8 @@ function DateFacetBody(props: DateFacetProps) {
 	const minValue = props.values[0].key
 	const maxValue = getEndDate(props.values[props.values.length - 1].key, props.facetData.interval)
 
-	const minDate = isDateFacet(props.facetData) ? formatDate(minValue, props.facetData.interval) : props.values[0].count
-	const maxDate = isDateFacet(props.facetData) ? formatDate(maxValue, props.facetData.interval) : props.values.reduce((prev, curr) => prev + curr.count, 0)
+	const minDate = isDateFacetData(props.facetData) ? formatDate(minValue, props.facetData.interval) : props.values[0].count
+	const maxDate = isDateFacetData(props.facetData) ? formatDate(maxValue, props.facetData.interval) : props.values.reduce((prev, curr) => prev + curr.count, 0)
 
 	// console.log(minValue, maxValue)
 	// console.log(props.facetData, minDate, maxDate)

@@ -50,31 +50,31 @@ function OrderOption(props: Props) {
 	const setDirection = React.useCallback(ev => {
 		ev.stopPropagation()
 
-		const nextDirection = props.sortOrder.get(props.facetData.id) === SortDirection.Desc ?
+		const nextDirection = props.sortOrder.get(props.facetData.config.id) === SortDirection.Desc ?
 			SortDirection.Asc :
 			SortDirection.Desc
 
-		const nextSortOrder = updateSortOrder(props.sortOrder, props.facetData.id, nextDirection)
+		const nextSortOrder = updateSortOrder(props.sortOrder, props.facetData.config.id, nextDirection)
 		props.setSortOrder(nextSortOrder)
 	}, [props.sortOrder, props.facetData])
 
 	const setFacetId = React.useCallback(ev => {
 		ev.stopPropagation()
-		const direction = props.sortOrder.get(props.facetData.id)
-		const nextSortOrder = updateSortOrder(props.sortOrder, props.facetData.id, direction)
+		const direction = props.sortOrder.get(props.facetData.config.id)
+		const nextSortOrder = updateSortOrder(props.sortOrder, props.facetData.config.id, direction)
 		props.setSortOrder(nextSortOrder)
 	}, [props.sortOrder, props.facetData])
 
-	const direction = props.sortOrder.get(props.facetData.id)
+	const direction = props.sortOrder.get(props.facetData.config.id)
 
 	return (
 		<Wrapper
 			active={direction != null}
-			key={props.facetData.id}
+			key={props.facetData.config.id}
 			onClick={setFacetId}
 		>
 			<div className="title">
-				{props.facetData.title || props.facetData.id}
+				{props.facetData.config.title}
 			</div>
 			{
 				direction != null &&

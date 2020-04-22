@@ -1,93 +1,79 @@
 import React from 'react'
-import { EsDataType, ListFacetFilter, RangeFacetFilter } from '@docere/common'
+import { ListFacetFilter, RangeFacetFilter } from '@docere/common'
 
-import { isListFacet, isBooleanFacet, isRangeFacet, isDateFacet, isHierarchyFacet } from '../constants'
+import { isListFacetData, isBooleanFacetData, isRangeFacetData, isDateFacetData, isHierarchyFacetData, isListFacetConfig, isBooleanFacetConfig, isHierarchyFacetConfig, isRangeFacetConfig, isDateFacetConfig } from '../utils'
 
-import type { BooleanFacetConfig, BooleanFacetData, DateFacetConfig, DateFacetData, HierarchyFacetConfig, HierarchyFacetData, ListFacetConfig, ListFacetData, RangeFacetConfig, RangeFacetData, FacetConfigBase, FacetData, FacetedSearchProps, FacetsData, FacetsDataReducerAction } from '@docere/common'
+import type { FacetConfig, FacetedSearchContext, BooleanFacetConfig, BooleanFacetData, DateFacetConfig, DateFacetData, HierarchyFacetConfig, HierarchyFacetData, ListFacetConfig, ListFacetData, RangeFacetConfig, RangeFacetData, FacetData, FacetsData, FacetsDataReducerAction } from '@docere/common'
 
-function initBooleanFacet(config: BooleanFacetConfig, activeFilters: FacetedSearchProps['activeFilters']): BooleanFacetData {
+function initBooleanFacet(config: BooleanFacetConfig, activeFilters: FacetedSearchContext['activeFilters']): BooleanFacetData {
 	const filters = (activeFilters.hasOwnProperty(config.id)) ? activeFilters[config.id] as ListFacetFilter : new Set<string>()
 
 	return {
-		...config,
+		config,
 		filters,
-		labels: config.labels || { true: 'Yes', false: 'No' }
 	}
 }
 
-function initDateFacet(config: DateFacetConfig, activeFilters: FacetedSearchProps['activeFilters']): DateFacetData {
+function initDateFacet(config: DateFacetConfig, activeFilters: FacetedSearchContext['activeFilters']): DateFacetData {
 	const filters = (activeFilters.hasOwnProperty(config.id)) ? activeFilters[config.id] as RangeFacetFilter : null
 	return {
-		...config,
+		config,
 		filters,
-		interval: null,
 	}
 }
 
-function initHierarchyFacet(config: HierarchyFacetConfig, activeFilters: FacetedSearchProps['activeFilters']): HierarchyFacetData {
+function initHierarchyFacet(config: HierarchyFacetConfig, activeFilters: FacetedSearchContext['activeFilters']): HierarchyFacetData {
 	const filters = (activeFilters.hasOwnProperty(config.id)) ? activeFilters[config.id] as ListFacetFilter : new Set<string>()
 
 	return {
-		...config,
+		config,
 		filters,
-		size: config.size || 10,
-		viewSize: config.size || 10,
+		size: config.size
 	}
 }
 
-function initListFacet(config: ListFacetConfig, activeFilters: FacetedSearchProps['activeFilters']): ListFacetData {
+function initListFacet(config: ListFacetConfig, activeFilters: FacetedSearchContext['activeFilters']): ListFacetData {
 	const filters = (activeFilters.hasOwnProperty(config.id)) ? activeFilters[config.id] as ListFacetFilter : new Set<string>()
 
 	return {
-		...config,
-		datatype: EsDataType.Keyword, /* Explicitly set the datatype, for it is the default; facetConfig's without a datatype are converted to ListFacet's */
+		config,
 		filters,
-		sort: null,
 		query: '',
-		size: config.size || 10,
-		viewSize: config.size || 10,
+		size: config.size,
+		sort: config.sort,
 	}
 }
 
-function initRangeFacet(config: RangeFacetConfig, activeFilters: FacetedSearchProps['activeFilters']): RangeFacetData {
+function initRangeFacet(config: RangeFacetConfig, activeFilters: FacetedSearchContext['activeFilters']): RangeFacetData {
 	const filters = (activeFilters.hasOwnProperty(config.id)) ? activeFilters[config.id] as RangeFacetFilter : null
 
 	return {
-		...config,
+		config,
 		filters,
 		max: null,
 		min: null,
 	}
 }
 
-function initFacet(facetConfig: FacetConfigBase, activeFilters: FacetedSearchProps['activeFilters']): FacetData {
-	if		(isListFacet(facetConfig))		return initListFacet(facetConfig, activeFilters)
-	else if (isBooleanFacet(facetConfig))	return initBooleanFacet(facetConfig, activeFilters)
-	else if (isHierarchyFacet(facetConfig))	return initHierarchyFacet(facetConfig, activeFilters)
-	else if (isRangeFacet(facetConfig))		return initRangeFacet(facetConfig, activeFilters)
-	else if (isDateFacet(facetConfig))		return initDateFacet(facetConfig, activeFilters)
-
-	return initListFacet(facetConfig as ListFacetConfig, activeFilters)
+function initFacet(facetConfig: FacetConfig, activeFilters: FacetedSearchContext['activeFilters']): FacetData {
+	if		(isListFacetConfig(facetConfig))		return initListFacet(facetConfig, activeFilters)
+	else if (isBooleanFacetConfig(facetConfig))		return initBooleanFacet(facetConfig, activeFilters)
+	else if (isHierarchyFacetConfig(facetConfig))	return initHierarchyFacet(facetConfig, activeFilters)
+	else if (isRangeFacetConfig(facetConfig))		return initRangeFacet(facetConfig, activeFilters)
+	else if (isDateFacetConfig(facetConfig))		return initDateFacet(facetConfig, activeFilters)
 }
 
-export function initFacetsData(fields: FacetedSearchProps['fields'], activeFilters: FacetedSearchProps['activeFilters']) {
+export function initFacetsData(fields: FacetedSearchContext['facetsConfig'], activeFilters: FacetedSearchContext['activeFilters']) {
 	const initMap: FacetsData = new Map()
-	return fields
-		.reduce((prev, curr) => {
-			const facetData = initFacet(curr, activeFilters)
-
-			if (facetData != null) {
-				if (facetData.title == null) {
-					facetData.title = facetData.id.charAt(0).toUpperCase() + facetData.id.slice(1)
-				}
-				prev.set(curr.id, facetData)
-			}
-
+	return Object.keys(fields)
+		.reduce((prev, field) => {
+			const facetData = initFacet(fields[field], activeFilters)
+			prev.set(facetData.config.id, facetData)
 			return prev
 		}, initMap)
 }
 
-export default function useFacetsDataReducer(fields: FacetedSearchProps['fields'], activeFilters: FacetedSearchProps['activeFilters']) {
+export default function useFacetsDataReducer(fields: FacetedSearchContext['facetsConfig'], activeFilters: FacetedSearchContext['activeFilters']) {
 	const x = React.useReducer(facetsDataReducer, null)
 
 	React.useEffect(() => {
@@ -104,7 +90,7 @@ function facetsDataReducer(facetsData: FacetsData, action: FacetsDataReducerActi
 
 	const facet = facetsData.get(action.facetId)
 
-	if (isHierarchyFacet(facet)) {
+	if (isHierarchyFacetData(facet)) {
 		switch(action.type) {
 			case 'remove_filter': {
 				const filters = Array.from(facet.filters)
@@ -115,7 +101,7 @@ function facetsDataReducer(facetsData: FacetsData, action: FacetsDataReducerActi
 		}
 	}
 
-	if (isListFacet(facet) || isBooleanFacet(facet)) {
+	if (isListFacetData(facet) || isBooleanFacetData(facet)) {
 		switch(action.type) {
 			case 'remove_filter': {
 				facet.filters.delete(action.value)
@@ -125,7 +111,7 @@ function facetsDataReducer(facetsData: FacetsData, action: FacetsDataReducerActi
 		}
 	}
 
-	if (isListFacet(facet) || isBooleanFacet(facet) || isHierarchyFacet(facet)) {
+	if (isListFacetData(facet) || isBooleanFacetData(facet) || isHierarchyFacetData(facet)) {
 		switch(action.type) {
 			case 'add_filter': {
 				facet.filters = new Set(facet.filters.add(action.value))
@@ -134,7 +120,7 @@ function facetsDataReducer(facetsData: FacetsData, action: FacetsDataReducerActi
 		}
 	}
 
-	if (isRangeFacet(facet) || isDateFacet(facet)) {
+	if (isRangeFacetData(facet) || isDateFacetData(facet)) {
 		switch(action.type) {
 			case 'set_range': {
 				const { type, ...filter } = action
@@ -150,7 +136,7 @@ function facetsDataReducer(facetsData: FacetsData, action: FacetsDataReducerActi
 		}
 	}
 
-	if (isListFacet(facet)) {
+	if (isListFacetData(facet)) {
 		switch(action.type) {
 			case 'set_query': {
 				facet.query = action.value
@@ -164,20 +150,20 @@ function facetsDataReducer(facetsData: FacetsData, action: FacetsDataReducerActi
 		}
 	}
 
-	if (isListFacet(facet) || isHierarchyFacet(facet)) {
+	if (isListFacetData(facet) || isHierarchyFacetData(facet)) {
 		switch(action.type) {
 			case 'view_less': {
-				if (facet.viewSize > facet.size) {
-					facet.viewSize -= facet.size
-					if (facet.viewSize < facet.size) facet.viewSize = facet.size
+				if (facet.size > facet.config.size) {
+					facet.size -= facet.config.size
+					if (facet.size < facet.config.size) facet.size = facet.config.size
 					return new Map(facetsData)
 				}
 				break
 			}
 
 			case 'view_more': {
-				if (action.total - facet.viewSize > 0) {
-					facet.viewSize += facet.size
+				if (action.total - facet.size > 0) {
+					facet.size += facet.config.size
 					return new Map(facetsData)
 				}
 				break

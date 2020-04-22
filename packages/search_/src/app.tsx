@@ -7,7 +7,7 @@ import HierarchyFacet from './views/facets/hierarchy'
 import DateFacet from './views/facets/date'
 import ListFacet from './views/facets/list'
 import RangeFacet from './views/facets/range'
-import { isBooleanFacet, isListFacet, isRangeFacet, isDateFacet, isHierarchyFacet } from './constants'
+import { isBooleanFacetData, isListFacetData, isRangeFacetData, isDateFacetData, isHierarchyFacetData } from './utils'
 import Header from './views/header'
 import SearchResult from './views/search-result'
 import FullTextSearch from './views/full-text-search'
@@ -60,7 +60,7 @@ export default function FacetedSearch() {
 	const [query, setQuery] = React.useState('')
 	const [currentPage, setCurrentPage] = React.useState(1)
 	const [sortOrder, setSortOrder] = React.useState<SortOrder>(new Map())
-	const [facetsData, facetsDataDispatch] = useFacetsDataReducer(context.fields, context.activeFilters)
+	const [facetsData, facetsDataDispatch] = useFacetsDataReducer(context.facetsConfig, context.activeFilters)
 	const [searchResult, facetValues] = useSearch({
 		currentPage,
 		facetsData,
@@ -71,8 +71,8 @@ export default function FacetedSearch() {
 	const clearActiveFilters = React.useCallback(() => {
 		setQuery('')
 		setSortOrder(new Map())
-		facetsDataDispatch({ type: 'clear', fields: context.fields, activeFilters: {} })
-	}, [context.fields])
+		facetsDataDispatch({ type: 'clear', fields: context.facetsConfig, activeFilters: {} })
+	}, [context.facetsConfig])
 
 	const clearFullTextInput = React.useCallback(() => {
 		setQuery('')
@@ -106,54 +106,54 @@ export default function FacetedSearch() {
 				{
 					Array.from(facetsData.values())
 						.map(facetData => {
-							const values = facetValues[facetData.id]
+							const values = facetValues[facetData.config.id]
 
-							if (isListFacet(facetData)) {
+							if (isListFacetData(facetData)) {
 								return (
 									<ListFacet
 										facetData={facetData}
 										facetsDataDispatch={facetsDataDispatch}
-										key={facetData.id}
+										key={facetData.config.id}
 										values={values as ListFacetValues}
 									/>
 								)
 							}
-							else if (isBooleanFacet(facetData)) {
+							else if (isBooleanFacetData(facetData)) {
 								return (
 									<BooleanFacet
 										facetData={facetData}
 										facetsDataDispatch={facetsDataDispatch}
-										key={facetData.id}
+										key={facetData.config.id}
 										values={values as BooleanFacetValues}
 									/>
 								)
 							}
-							else if (isHierarchyFacet(facetData)) {
+							else if (isHierarchyFacetData(facetData)) {
 								return (
 									<HierarchyFacet
 										facetData={facetData}
 										facetsDataDispatch={facetsDataDispatch}
-										key={facetData.id}
+										key={facetData.config.id}
 										values={values as HierarchyFacetValues}
 									/>
 								)
 							}
-							else if (isDateFacet(facetData)) {
+							else if (isDateFacetData(facetData)) {
 								return (
 									<DateFacet
 										facetData={facetData}
 										facetsDataDispatch={facetsDataDispatch}
-										key={facetData.id}
+										key={facetData.config.id}
 										values={values as RangeFacetValues}
 									/>
 								)
 							}
-							else if (isRangeFacet(facetData)) {
+							else if (isRangeFacetData(facetData)) {
 								return (
 									<RangeFacet
 										facetData={facetData}
 										facetsDataDispatch={facetsDataDispatch}
-										key={facetData.id}
+										key={facetData.config.id}
 										values={values as RangeFacetValues}
 									/>
 								)

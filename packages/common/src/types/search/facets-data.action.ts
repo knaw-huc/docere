@@ -1,11 +1,11 @@
-import type { FacetedSearchProps } from '.'
+import type { FacetedSearchContext } from '.'
 import type { RangeFacetFilter } from './facets'
 import { SortBy, SortDirection } from '../../enum'
 
 interface FacetsDataReducerActionClear {
 	type: 'clear'
-	activeFilters: FacetedSearchProps['activeFilters']
-	fields: FacetedSearchProps['fields']
+	activeFilters: FacetedSearchContext['activeFilters']
+	fields: FacetedSearchContext['facetsConfig']
 }
 
 interface FacetsDataReducerActionAddFilter {

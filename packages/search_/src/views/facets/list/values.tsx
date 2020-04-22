@@ -3,9 +3,9 @@ import styled from 'styled-components'
 
 import ListFacetValue from './value'
 import MoreLessButton from './more-less-buttons'
-import { isHierarchyFacet } from '../../../constants'
 
 import type { ListFacetData, HierarchyFacetData, FacetsDataReducerAction, ListFacetValues } from '@docere/common'
+import { isHierarchyFacetData } from '../../../utils'
 
 // const DURATION = 500
 // const FRAME_DURATION = 16
@@ -66,7 +66,7 @@ function ListFacetValuesView(props: Props) {
 						.map(value =>
 							<ListFacetValue
 								active={props.facetData.filters.has(value.key.toString())}
-								facetId={props.facetData.id}
+								facetId={props.facetData.config.id}
 								facetsDataDispatch={props.facetsDataDispatch}
 								key={value.key}
 								value={value}
@@ -77,7 +77,10 @@ function ListFacetValuesView(props: Props) {
 			{
 				// Don't show MoreLessButton, when the results are filtered by a query,
 				// because the MoreLess-count does not take the filter into account
-				(isHierarchyFacet(props.facetData) || !props.facetData.query.length) && 
+				(
+					isHierarchyFacetData(props.facetData) ||
+					!props.facetData.query.length
+				) && 
 				<MoreLessButton
 					facetData={props.facetData}
 					facetsDataDispatch={props.facetsDataDispatch}

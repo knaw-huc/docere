@@ -1,4 +1,4 @@
-import { isListFacet, isBooleanFacet, isRangeFacet, isDateFacet, isHierarchyFacet, getChildFieldName } from '../constants'
+import { isListFacetData, isBooleanFacetData, isRangeFacetData, isDateFacetData, isHierarchyFacetData, getChildFieldName } from '../utils'
 import ESResponseParser from './response-parser'
 
 import type { HierarchyKeyCount, HierarchyFacetValues, FacetsData, FSResponse, FacetValues, RangeFacetValues } from '@docere/common'
@@ -41,44 +41,44 @@ export default function ESResponseWithFacetsParser(response: any, facets: Facets
 	const facetValues: Record<string, FacetValues> = {}
 
 	facets.forEach(facet => {
-		const buckets = getBuckets(response, facet.id)
+		const buckets = getBuckets(response, facet.config.id)
 
-		if (isListFacet(facet)) {
-			facetValues[facet.id] = {
-				total: response.aggregations[`${facet.id}-count`][`${facet.id}-count`].value,
+		if (isListFacetData(facet)) {
+			facetValues[facet.config.id] = {
+				total: response.aggregations[`${facet.config.id}-count`][`${facet.config.id}-count`].value,
 				values: buckets.map((b: any) => ({ key: b.key, count: b.doc_count }))
 			}
 		}
-		if (isHierarchyFacet(facet)) {
+		if (isHierarchyFacetData(facet)) {
 			const values: HierarchyFacetValues = {
-				total: response.aggregations[`${facet.id}-count`][`${facet.id}-count`].value,
-				values: buckets.map(addHierarchyBucket(facet.id, response))
+				total: response.aggregations[`${facet.config.id}-count`][`${facet.config.id}-count`].value,
+				values: buckets.map(addHierarchyBucket(facet.config.id, response))
 			}
 
-			facetValues[facet.id] = values
+			facetValues[facet.config.id] = values
 		}
-		else if (isBooleanFacet(facet)) {
+		else if (isBooleanFacetData(facet)) {
 			const trueBucket = buckets.find((b: any) => b.key === 1)
 			const trueCount = trueBucket != null ? trueBucket.doc_count : 0
 			const falseBucket = buckets.find((b: any) => b.key === 0)
 			const falseCount = falseBucket != null ? falseBucket.doc_count : 0
 
-			facetValues[facet.id] = [
+			facetValues[facet.config.id] = [
 				{ key: 'true', count: trueCount },
 				{ key: 'false', count: falseCount },
 			]
 		}
-		else if (isDateFacet(facet)) {
+		else if (isDateFacetData(facet)) {
 			// TODO set values to from and to, so we have to calculate less in the views
-			facetValues[facet.id] = buckets.map(hv => ({
+			facetValues[facet.config.id] = buckets.map(hv => ({
 				key: hv.key,
 				count: hv.doc_count,
 			})) as RangeFacetValues
 
-			facet.interval = response.aggregations[facet.id][facet.id].interval
+			facet.interval = response.aggregations[facet.config.id][facet.config.id].interval
 		}
-		else if (isRangeFacet(facet)) {
-			facetValues[facet.id] = buckets.map(hv => ({
+		else if (isRangeFacetData(facet)) {
+			facetValues[facet.config.id] = buckets.map(hv => ({
 				key: hv.key,
 				count: hv.doc_count,
 			})) as RangeFacetValues

@@ -33,16 +33,22 @@ function SortBy(props: Props) {
 		>
 			{
 				Array.from(props.facetsData.values())
-					.sort((field1, field2) => {
-						const a = props.sortOrder.has(field1.id)
-						const b = props.sortOrder.has(field2.id)
-						if (a === b) return field1.order - field2.order
+					.sort((facetData1, facetData2) => {
+						const a = props.sortOrder.has(facetData1.config.id)
+						const b = props.sortOrder.has(facetData2.config.id)
+
+						if (a === b) {
+							const order1 = facetData1.config.order
+							const order2 = facetData2.config.order
+							return order1 - order2
+						}
+
 						return a ? -1 : 1
 					})
-					.map(field =>
+					.map(facetData =>
 						<OrderOption
-							facetData={field}
-							key={field.id}
+							facetData={facetData}
+							key={facetData.config.id}
 							sortOrder={props.sortOrder}
 							setSortOrder={props.setSortOrder}
 						/>

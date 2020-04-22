@@ -24,7 +24,7 @@ function BooleanFacet(props: BooleanFacetProps) {
 						.map(value =>
 							<ListFacetValueView
 								active={props.facetData.filters.has(value.key)}
-								facetId={props.facetData.id}
+								facetId={props.facetData.config.id}
 								facetsDataDispatch={props.facetsDataDispatch}
 								key={value.key}
 								// TODO remove labels and use props.keyFormatter

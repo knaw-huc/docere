@@ -47,7 +47,7 @@ function Histogram(props: Props) {
 		let { index } = ev.currentTarget.dataset
 		index = parseInt(index, 10)
 		const value = props.values[index]
-		props.facetsDataDispatch({ type: 'set_range', facetId: props.facetData.id, from: value.key, to: value.key + props.facetData.interval })
+		props.facetsDataDispatch({ type: 'set_range', facetId: props.facetData.config.id, from: value.key, to: value.key + props.facetData.config.interval })
 	}, [props.values])
 
 	return (

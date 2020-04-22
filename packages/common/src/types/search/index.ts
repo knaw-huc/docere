@@ -24,6 +24,8 @@ export interface FacetedSearchProps {
 	url: string
 }
 
+export type FacetedSearchContext = Omit<FacetedSearchProps, 'fields'> & { facetsConfig: Record<string, FacetConfig> }
+
 // type Filters = Map<string, Set<string>>
 
 export type SortOrder = Map<string, SortDirection>

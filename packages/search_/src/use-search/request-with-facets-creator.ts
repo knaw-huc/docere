@@ -1,9 +1,9 @@
-import { SortBy, SortDirection, FacetedSearchProps } from '@docere/common'
+import { SortBy, SortDirection, FacetedSearchContext } from '@docere/common'
 
-import { isBooleanFacet, isListFacet, isRangeFacet, isDateFacet, isHierarchyFacet, getChildFieldName } from '../constants'
+import { isBooleanFacetData, isListFacetData, isRangeFacetData, isDateFacetData, isHierarchyFacetData, getChildFieldName } from '../utils'
 import ESRequest from './request-creator'
 
-import type { ElasticSearchRequestOptions, ListFacetData, BooleanFacetData, HierarchyFacetData, RangeFacetData, BooleanFacetConfig, DateFacetData } from '@docere/common'
+import type { ElasticSearchRequestOptions, ListFacetData, BooleanFacetData, HierarchyFacetData, RangeFacetData, DateFacetData } from '@docere/common'
 
 interface AggregationRequest {
 	aggs: any
@@ -26,7 +26,7 @@ export default class ESRequestWithFacets extends ESRequest {
 	post_filter: Record<string, any>
 	query: Record<string, any>
 
-	constructor(options: ElasticSearchRequestOptions, context: FacetedSearchProps) {
+	constructor(options: ElasticSearchRequestOptions, context: FacetedSearchContext) {
 		super(options, context)
 
 		if (options.facetsData == null) return
@@ -38,17 +38,17 @@ export default class ESRequestWithFacets extends ESRequest {
 
 	private setPostFilter(options: ElasticSearchRequestOptions) {
 		function toPostFilter(facet: ListFacetData | BooleanFacetData) {
-			const allFacetFilters = [...facet.filters].map(key => ({ term: { [facet.id]: key } }))
+			const allFacetFilters = [...facet.filters].map(key => ({ term: { [facet.config.id]: key } }))
 			if (allFacetFilters.length === 1) return allFacetFilters[0]
 			else if (allFacetFilters.length > 1) return { bool: { should: allFacetFilters } }
 			return {}
 		}
 
-		function toHierarchyPostFilter(id: HierarchyFacetData['id'], filters: HierarchyFacetData['filters']) {
-			const allFacetFilters = [...filters].map((key, index) => {
+		function toHierarchyPostFilter(facetData: HierarchyFacetData) {
+			const allFacetFilters = [...facetData.filters].map((key, index) => {
 				const field = index === 0 ?
-					id :
-					getChildFieldName(id, index)
+					facetData.config.id :
+					getChildFieldName(facetData.config.id, index)
 				return { term: { [field]: key } }
 			})
 			if (allFacetFilters.length === 1) return allFacetFilters[0]
@@ -59,19 +59,19 @@ export default class ESRequestWithFacets extends ESRequest {
 		const facetsData = Array.from(options.facetsData.values())
 
 		const BooleanAndListPostFilters = facetsData
-			.filter(facet => (isBooleanFacet(facet) || isListFacet(facet)) && facet.filters.size) // Only set post_filter where facet has filters (check if Set is empty)
+			.filter(facet => (isBooleanFacetData(facet) || isListFacetData(facet)) && facet.filters.size) // Only set post_filter where facet has filters (check if Set is empty)
 			.map((facet: ListFacetData | BooleanFacetData) => toPostFilter(facet))
 
 		const HierarchyPostFilters = facetsData
-			.filter(facet => isHierarchyFacet(facet) && facet.filters.size) // Only set post_filter where facet has filters (check if Set is empty)
-			.map((facet: HierarchyFacetData) => toHierarchyPostFilter(facet.id, facet.filters))
+			.filter(facet => isHierarchyFacetData(facet) && facet.filters.size) // Only set post_filter where facet has filters (check if Set is empty)
+			.map(toHierarchyPostFilter)
 
 		const DatePostFilters = facetsData
-			.filter(isDateFacet)
-			.filter((facetData: RangeFacetData) => facetData.filters != null)
-			.map((facet: RangeFacetData) => ({
+			.filter(isDateFacetData)
+			.filter(facetData => facetData.filters != null)
+			.map(facet => ({
 				range: {
-					[facet.id]: {
+					[facet.config.id]: {
 						gte: new Date(facet.filters.from).toISOString(),
 						lte: facet.filters.to != null ? new Date(facet.filters.to).toISOString() : null
 					}
@@ -79,11 +79,11 @@ export default class ESRequestWithFacets extends ESRequest {
 			}))
 
 		const RangePostFilters = facetsData
-			.filter(isRangeFacet)
+			.filter(isRangeFacetData)
 			.filter((facetData: RangeFacetData) => facetData.filters != null)
 			.map((facet: RangeFacetData) => ({
 				range: {
-					[facet.id]: {
+					[facet.config.id]: {
 						gte: facet.filters.from,
 						lte: facet.filters.to != null ? facet.filters.to : null
 					}
@@ -110,11 +110,11 @@ export default class ESRequestWithFacets extends ESRequest {
 	private setAggregations(options: ElasticSearchRequestOptions) {
 		for (const facetData of options.facetsData.values()) {
 			let facetAggs	
-			if (isBooleanFacet(facetData)) facetAggs = this.createBooleanAggregation(facetData)
-			if (isDateFacet(facetData)) facetAggs = this.createDateHistogramAggregation(facetData)
-			if (isHierarchyFacet(facetData)) facetAggs = this.createHierarchyAggregation(facetData)
-			if (isListFacet(facetData)) facetAggs = this.createListAggregation(facetData)
-			if (isRangeFacet(facetData)) facetAggs = this.createHistogramAggregation(facetData)
+			if (isBooleanFacetData(facetData)) facetAggs = this.createBooleanAggregation(facetData)
+			if (isDateFacetData(facetData)) facetAggs = this.createDateHistogramAggregation(facetData)
+			if (isHierarchyFacetData(facetData)) facetAggs = this.createHierarchyAggregation(facetData)
+			if (isListFacetData(facetData)) facetAggs = this.createListAggregation(facetData)
+			if (isRangeFacetData(facetData)) facetAggs = this.createHistogramAggregation(facetData)
 
 			if (facetAggs != null) {
 				this.aggs = {
@@ -158,21 +158,21 @@ export default class ESRequestWithFacets extends ESRequest {
 		return agg
 	}
 
-	private createBooleanAggregation(facet: BooleanFacetConfig) {
+	private createBooleanAggregation(facet: BooleanFacetData) {
 		const values = {
 			terms: {
-				field: facet.id
+				field: facet.config.id
 			}
 		}
 
-		return this.addFilter(facet.id, values)
+		return this.addFilter(facet.config.id, values)
 	}
 
 	private tmp(facetData: HierarchyFacetData, filters: string[], index: number = 0): Record<string, any> {
-		const field = index === 0 ? facetData.id : getChildFieldName(facetData.id, index)
+		const field = index === 0 ? facetData.config.id : getChildFieldName(facetData.config.id, index)
 		const terms: ListAggregationTerms = {
 			field,
-			size: facetData.viewSize,
+			size: facetData.size,
 		}
 
 		const [currentFilter, ...nextFilters] = filters
@@ -194,12 +194,12 @@ export default class ESRequestWithFacets extends ESRequest {
 		 * the top level count aggegration always has to be run. If filters
 		 * has values, the reduce will add the underlying levels
 		 */
-		const topLevelFilter = this.addFilter(`${facetData.id}-count`, {
-			cardinality: { field: facetData.id }
+		const topLevelFilter = this.addFilter(`${facetData.config.id}-count`, {
+			cardinality: { field: facetData.config.id }
 		})
 
 		const countFilters = filters.reduce((prev, _curr, index) => {
-			const field = getChildFieldName(facetData.id, ++index)
+			const field = getChildFieldName(facetData.config.id, ++index)
 			prev = {
 				...prev,
 				...this.addFilter(`${field}-count`, {
@@ -221,18 +221,19 @@ export default class ESRequestWithFacets extends ESRequest {
 
 	private createListAggregation(facetData: ListFacetData) {
 		const terms: ListAggregationTerms = {
-			field: facetData.id,
-			size: facetData.viewSize,
+			field: facetData.config.id,
+			size: facetData.size,
 		}
 
+		// TODO is always filled? or only add when not the default (sort by frequency descending)?
 		if (facetData.sort != null) terms.order = { [facetData.sort.by]: facetData.sort.direction }
 		if (facetData.query.length) terms.include = `.*${facetData.query}.*`
 		
 		const agg = {
-			...this.addFilter(facetData.id, { terms }),
-			...this.addFilter(`${facetData.id}-count`, {
+			...this.addFilter(facetData.config.id, { terms }),
+			...this.addFilter(`${facetData.config.id}-count`, {
 				cardinality: {
-					field: facetData.id
+					field: facetData.config.id
 				}
 			})
 		}
@@ -243,22 +244,22 @@ export default class ESRequestWithFacets extends ESRequest {
 	private createHistogramAggregation(facet: RangeFacetData): Record<string, any> {
 		const values = {
 			histogram: {
-				field: facet.id,
-				interval: facet.interval,
+				field: facet.config.id,
+				interval: facet.config.interval,
 			}
 		}
 
-		return this.addFilter(facet.id, values)
+		return this.addFilter(facet.config.id, values)
 	}
 
 	private createDateHistogramAggregation(facet: DateFacetData): Record<string, any> {
 		const values = {
 			auto_date_histogram: {
-				field: facet.id,
+				field: facet.config.id,
 			}
 		}
 
-		return this.addFilter(facet.id, values)
+		return this.addFilter(facet.config.id, values)
 	}
 
 	private setQuery(options: ElasticSearchRequestOptions) {

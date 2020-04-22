@@ -65,7 +65,7 @@ function RangeFacetBody(props: RangeFacetProps) {
 						</>
 					} */}
 				</ActiveDates>
-				<DateMax>{props.values[props.values.length - 1].key + props.facetData.interval}</DateMax>
+				<DateMax>{props.values[props.values.length - 1].key + props.facetData.config.interval}</DateMax>
 			</Dates>
 		</>
 	)

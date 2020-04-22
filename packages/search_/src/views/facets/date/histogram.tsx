@@ -53,7 +53,7 @@ function Histogram(props: Props) {
 
 		props.facetsDataDispatch({
 			type: 'set_range',
-			facetId: props.facetData.id,
+			facetId: props.facetData.config.id,
 			from,
 			to,
 		})

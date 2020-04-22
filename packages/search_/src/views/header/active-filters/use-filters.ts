@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { isListFacet, isBooleanFacet, isRangeFacet, isDateFacet, isHierarchyFacet } from '../../../constants'
+import { isListFacetData, isBooleanFacetData, isRangeFacetData, isDateFacetData, isHierarchyFacetData } from '../../../utils'
 import { formatDate } from '../../facets/date/utils'
 
 import type { FacetData, FacetsData, ActiveFilter } from '@docere/common'
@@ -8,10 +8,10 @@ import type { FacetData, FacetsData, ActiveFilter } from '@docere/common'
 function hasFilter(facetData: FacetData) {
 	if (facetData.filters == null) return false
 
-	if (isListFacet(facetData) || isBooleanFacet(facetData) || isHierarchyFacet(facetData)) {
+	if (isListFacetData(facetData) || isBooleanFacetData(facetData) || isHierarchyFacetData(facetData)) {
 		return facetData.filters.size > 0
 	}
-	else if (isRangeFacet(facetData) || isDateFacet(facetData)) {
+	else if (isRangeFacetData(facetData) || isDateFacetData(facetData)) {
 		return facetData.filters.hasOwnProperty('from') && facetData.filters.from != null
 	}
 
@@ -21,13 +21,13 @@ function hasFilter(facetData: FacetData) {
 function getFilterValue(facetData: FacetData): string[] {
 	if (!hasFilter(facetData)) return []
 
-	if (isListFacet(facetData) || isBooleanFacet(facetData) || isHierarchyFacet(facetData)) {
+	if (isListFacetData(facetData) || isBooleanFacetData(facetData) || isHierarchyFacetData(facetData)) {
 		return Array.from(facetData.filters)
 	}
-	else if (isRangeFacet(facetData)) {
+	else if (isRangeFacetData(facetData)) {
 		return [`${facetData.filters.from} - ${facetData.filters.to}`]
 	}
-	else if (isDateFacet(facetData)) {
+	else if (isDateFacetData(facetData)) {
 		return [`${formatDate(facetData.filters.from, facetData.interval)} - ${formatDate(facetData.filters.to, facetData.interval)}`]
 	}
 
@@ -44,8 +44,8 @@ export default function useFilters(facetsData: FacetsData) {
 
 			if (values.length) {
 				activeFilters.push({
-					id: facetData.id,
-					title: facetData.title,
+					id: facetData.config.id,
+					title: facetData.config.title,
 					values,
 				})
 			}
