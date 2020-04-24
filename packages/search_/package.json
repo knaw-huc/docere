@@ -1,6 +1,6 @@
 {
   "name": "@docere/search_",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -17,6 +17,6 @@
     "typescript": "^3.8.3"
   },
   "dependencies": {
-    "@docere/common": "^1.0.3"
+    "@docere/common": "^1.1.0"
   }
 }

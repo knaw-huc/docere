@@ -1,6 +1,6 @@
 {
   "name": "@docere/search",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "",
   "main": "dist/bundle.js",
   "types": "types/index.d.ts",
@@ -12,7 +12,7 @@
   "author": "Gijsjan Brouwer",
   "license": "GPL-3.0-or-later",
   "dependencies": {
-    "@docere/common": "^1.0.3"
+    "@docere/common": "^1.1.0"
   },
   "gitHead": "3744a745572b682ef34f4b0fad66e6ead1cda351"
 }
