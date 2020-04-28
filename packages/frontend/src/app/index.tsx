@@ -1,20 +1,30 @@
 import * as React from 'react'
+import { SearchContext, useSearchReducer } from '@docere/search_'
+
 import EntrySelector from '../entry-selector'
 import Header from '../header'
 import Entry from '../entry'
 import PageView from '../page'
 import useAppState from './state'
+
+// import SearchFilterContext, { searchFilterReducer, initialSearchFilterState } from './search-filter-context'
+
 import type { DocereConfigData } from '@docere/common'
+import useFacetsConfig from '../entry-selector/use-fields'
 
 interface AppProps {
 	configData: DocereConfigData
 	EntrySelector: typeof EntrySelector
 }
-function App(props: AppProps): any {
+function App(props: AppProps) {
 	const [appState, appDispatch] = useAppState(props.configData)
+	// const [state, dispatch] = React.useReducer(searchFilterReducer, initialSearchFilterState)
+
+	const facetsConfig = useFacetsConfig(props.configData.config)
+	const [state, dispatch] = useSearchReducer(facetsConfig)
 
 	return (
-		<>
+		<SearchContext.Provider value={{ state, dispatch }}>
 			<Header
 				appDispatch={appDispatch}
 			/>
@@ -31,10 +41,9 @@ function App(props: AppProps): any {
 			<Entry 
 				appDispatch={appDispatch}
 				entry={appState.entry}
-				searchQuery={appState.searchQuery}
 				searchTab={appState.searchTab}
 			/>
-		</>
+		</SearchContext.Provider>
 	)
 }
 

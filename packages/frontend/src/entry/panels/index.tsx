@@ -91,7 +91,6 @@ function Panels(props: PanelsProps) {
 								entryDispatch={props.entryDispatch}
 								entry={props.entry}
 								key={layer.id}
-								searchQuery={props.searchQuery}
 								settings={props.settings}
 								layer={layer}
 							/>

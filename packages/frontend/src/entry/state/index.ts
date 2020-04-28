@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { AsideTab, FooterTab, defaultEntrySettings } from '@docere/common'
 import type { EntryState, EntryStateAction, FacsimileArea, Entry } from '@docere/common'
-import AppContext from '../../app/context'
+import ProjectContext from '../../app/context'
 
 const initialEntryState: EntryState = {
 	activeEntity: null,
@@ -145,7 +145,7 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 
 
 export default function useEntryState(entry: Entry) {
-	const appContext = React.useContext(AppContext)
+	const { config } = React.useContext(ProjectContext)
 	const x = React.useReducer(entryStateReducer, initialEntryState)
 
 	React.useEffect(() => {
@@ -157,7 +157,7 @@ export default function useEntryState(entry: Entry) {
 		// the settings between entry change. If current settings is equal to the default,
 		// use an empty object to not override the config settings
 		const currentSettings = entryState.settings === defaultEntrySettings ? {} : entryState.settings
-		const settings = { ...appContext.config.entrySettings, ...currentSettings }
+		const settings = { ...config.entrySettings, ...currentSettings }
 
 		// x[1] = dispatch
 		entryDispatch({

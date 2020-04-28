@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import AppContext from '../../../app/context'
+import ProjectContext from '../../../app/context'
 import useAreaRenderer, { AreaRenderer } from './use-area-renderer'
 import PanelHeader from '../header'
 import { DEFAULT_SPACING } from '@docere/common'
@@ -145,11 +145,11 @@ type Props =
 	}
 
 function FacsimilePanel(props: Props) {
-	const appContext = React.useContext(AppContext)
+	const { config } = React.useContext(ProjectContext)
 	const [osd, OpenSeadragon] = useOpenSeadragon()
 	const areaRenderer = useAreaRenderer(osd, OpenSeadragon, props.entryDispatch)
 
-	useActiveFacsimile(props.activeFacsimile, appContext.config.slug, areaRenderer, osd)
+	useActiveFacsimile(props.activeFacsimile, config.slug, areaRenderer, osd)
 	useActiveFacsimileAreas(props.activeFacsimileAreas, areaRenderer)
 
 	return (

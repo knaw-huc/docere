@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import DocereTextView from '@docere/text_'
-import AppContext from '../../../app/context'
+import ProjectContext from '../../../app/context'
 import { Colors } from '@docere/common'
 import type { EntryState, AppStateAction, DocereComponents, Entry, EntryStateAction, DocereComponentProps, Note } from '@docere/common'
 
@@ -40,7 +40,7 @@ type Props = Pick<EntryState, 'activeEntity' | 'activeFacsimile' | 'activeFacsim
 	listId: string
 }
 export default function Note(props: Props) {
-	const appContext = React.useContext(AppContext)
+	const projectContext = React.useContext(ProjectContext)
 	const handleClick = React.useCallback(() => {
 		props.entryDispatch({ type: 'SET_NOTE', id: props.item.id })
 	}, [props.item, props.listId])
@@ -52,7 +52,7 @@ export default function Note(props: Props) {
 		activeNote: props.activeNote,
 		appDispatch: props.appDispatch,
 		components: props.components,
-		config: appContext.config,
+		config: projectContext.config,
 		entry: props.entry,
 		entryDispatch: props.entryDispatch,
 		entrySettings: props.settings,

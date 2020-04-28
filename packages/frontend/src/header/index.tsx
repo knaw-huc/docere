@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { MAINHEADER_HEIGHT, TOP_OFFSET, DEFAULT_SPACING, TOPMENU_HEIGHT, Viewport } from '@docere/common'
 import type { AppStateAction } from '@docere/common'
 import PagesMenu from './pages'
-import AppContext from '../app/context'
+import ProjectContext from '../app/context'
 
 const Wrapper = styled.header`
 	background: linear-gradient(to right, #988258, #c7aa71);
@@ -56,7 +56,7 @@ interface Props {
 	appDispatch: React.Dispatch<AppStateAction>
 }
 export default React.memo(function Header(props: Props) {
-	const appContext = React.useContext(AppContext)
+	const { config } = React.useContext(ProjectContext)
 	const setSearchTab = React.useCallback(() =>
 		props.appDispatch({ type: 'SET_VIEWPORT', viewport: Viewport.EntrySelector }),
 	[])
@@ -67,7 +67,7 @@ export default React.memo(function Header(props: Props) {
 				<H1
 					onClick={setSearchTab}
 				>
-					{appContext.config.title}
+					{config.title}
 				</H1>
 				<PagesMenu
 					appDispatch={props.appDispatch}

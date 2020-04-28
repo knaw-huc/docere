@@ -7,7 +7,6 @@ export interface AppState {
 	entryId: string
 	page: Page
 	pageId: string
-	searchQuery: string[]
 	searchTab: SearchTab
 	viewport: Viewport
 }
@@ -49,11 +48,6 @@ interface ASA_Set_Search_Tab {
 	tab: SearchTab
 }
 
-interface ASA_Set_Search_Query {
-	type: 'SET_SEARCH_QUERY'
-	query: string[]
-}
-
 interface ASA_Set_Viewport {
 	type: 'SET_VIEWPORT'
 	viewport: Viewport
@@ -61,11 +55,10 @@ interface ASA_Set_Viewport {
 
 export type AppStateAction = 
 	ASA_Project_Changed |
-	ASA_Set_Entry_Id |
 	ASA_Set_Entry |
-	ASA_Set_Page_Id |
+	ASA_Set_Entry_Id |
 	ASA_Set_Page |
-	ASA_Unset_Page |
+	ASA_Set_Page_Id |
 	ASA_Set_Search_Tab |
-	ASA_Set_Search_Query |
-	ASA_Set_Viewport
+	ASA_Set_Viewport |
+	ASA_Unset_Page

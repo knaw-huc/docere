@@ -1,6 +1,7 @@
 import { Colors } from './enum';
 
 export const DEFAULT_POPUP_BG_COLOR = Colors.Blue
+export const SPOT_COLOR = Colors.BlueBright
 
 export const DEFAULT_SPACING = 32
 

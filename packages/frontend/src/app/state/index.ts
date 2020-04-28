@@ -1,9 +1,11 @@
 import * as React from 'react'
+import { SearchTab, Viewport } from '@docere/common'
+
+import { analyzeWindowLocation } from '../../utils'
 import getEntry from './get-entry'
 import getPage from './get-page'
-import { analyzeWindowLocation } from '../../utils'
 import HistoryNavigator from './history-navigator'
-import { SearchTab, Viewport } from '@docere/common'
+
 import type { AppState, AppStateAction, DocereConfigData } from '@docere/common'
 
 const initialAppState: AppState = {
@@ -11,7 +13,6 @@ const initialAppState: AppState = {
 	entry: null,
 	pageId: null,
 	page: null,
-	searchQuery: null,
 	searchTab: null,
 	viewport: null
 }
@@ -38,8 +39,6 @@ function appStateReducer(appState: AppState, action: AppStateAction): AppState {
 			const searchTab = appState.searchTab === SearchTab.Search ?
 				null :
 				appState.searchTab
-
-			
 
 			return {
 				...appState,
@@ -92,16 +91,6 @@ function appStateReducer(appState: AppState, action: AppStateAction): AppState {
 				...appState,
 				searchTab,
 				viewport
-			}
-		}
-
-		case 'SET_SEARCH_QUERY': {
-			// if searchTab is Search, viewport has to be EntrySelector
-			// and if searchTab is Results, viewport has to be Entry
-
-			return {
-				...appState,
-				searchQuery: action.query,
 			}
 		}
 

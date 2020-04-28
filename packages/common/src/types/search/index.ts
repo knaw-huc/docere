@@ -11,8 +11,9 @@ export interface FacetedSearchProps {
 	className?: string /* className prop is used by StyledComponents */
 	disableDefaultStyle?: boolean
 	excludeResultFields?: string[]
-	fields: FacetConfig[]
+	facetsConfig: FacetConfig[]
 	onClickResult: (result: any, ev: React.MouseEvent<HTMLLIElement>) => void
+	onFiltersChange?: (filters: FacetedSearchProps['activeFilters']) => void
 	resultFields?: string[]
 	ResultBodyComponent: React.FC<ResultBodyProps>
 	resultBodyProps?: Record<string, any>
@@ -24,7 +25,7 @@ export interface FacetedSearchProps {
 	url: string
 }
 
-export type FacetedSearchContext = Omit<FacetedSearchProps, 'fields'> & { facetsConfig: Record<string, FacetConfig> }
+export type FacetedSearchContext = Omit<FacetedSearchProps, 'facetsConfig'> & { facetsConfig: Record<string, FacetConfig> }
 
 // type Filters = Map<string, Set<string>>
 

@@ -2,13 +2,14 @@ import * as React from 'react'
 import DocereTextView from '@docere/text_'
 import styled from 'styled-components'
 import debounce from 'lodash.debounce'
-import AppContext, { useComponents } from '../../../app/context'
+import ProjectContext, { useComponents } from '../../../app/context'
 import Minimap from './minimap'
 import { isTextLayer } from '../../../utils'
 import { DEFAULT_SPACING, TEXT_PANEL_TEXT_WIDTH, DocereComponentContainer, getTextPanelWidth, getTextPanelLeftSpacing } from '@docere/common'
 import PanelHeader from '../header'
 import type { DocereComponentProps, Entity, Note, DocereConfig, TextLayer } from '@docere/common'
 import type { PanelsProps } from '..'
+import { SearchContext } from '@docere/search_'
 
 const TopWrapper = styled.div`
 	position: relative;
@@ -46,13 +47,15 @@ export const Text = styled.div`
 	}
 `
 
-type TextPanelBaseProps = Pick<PanelsProps, 'activeEntity' | 'activeNote' | 'activeFacsimile' | 'activeFacsimileAreas' | 'appDispatch' | 'entryDispatch' | 'entry' | 'searchQuery' | 'settings'>
+type TextPanelBaseProps = Pick<PanelsProps, 'activeEntity' | 'activeNote' | 'activeFacsimile' | 'activeFacsimileAreas' | 'appDispatch' | 'entryDispatch' | 'entry' | 'settings'>
 interface TextPanelProps extends TextPanelBaseProps {
 	layer: TextLayer
 }
 
 function TextPanel(props: TextPanelProps) {
-	const appContext = React.useContext(AppContext)
+	const { config } = React.useContext(ProjectContext)
+	const searchContext = React.useContext(SearchContext)
+
 	const textWrapperRef = React.useRef<HTMLDivElement>()
 	const activeAreaRef = React.useRef<HTMLDivElement>()
 	const [docereTextViewReady, setDocereTextViewReady] = React.useState(false)
@@ -89,7 +92,7 @@ function TextPanel(props: TextPanelProps) {
 		activeNote: props.activeNote,
 		appDispatch: props.appDispatch,
 		components,
-		config: appContext.config,
+		config,
 		entry: props.entry,
 		entryDispatch: props.entryDispatch,
 		entrySettings: props.settings,
@@ -123,7 +126,7 @@ function TextPanel(props: TextPanelProps) {
 					<DocereTextView
 						customProps={customProps}
 						components={components}
-						highlight={props.searchQuery}
+						highlight={searchContext.state.query}
 						onLoad={setDocereTextViewReady}
 						node={layer.element}
 						setHighlightAreas={setHighlightAreas}

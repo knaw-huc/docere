@@ -2,7 +2,7 @@ import * as React from 'react'
 import styled from 'styled-components'
 import AsideList from '../list'
 import ItemInText from './item'
-import type { EntryState, EntityConfig, EntryStateAction, Entity } from '@docere/common'
+import type { EntryState, EntityConfig, EntryStateAction, Entity, AppStateAction } from '@docere/common'
 
 interface AIProps {
 	activeIndex: number
@@ -21,6 +21,7 @@ const ActiveIndicator = styled.li`
 interface Props {
 	active: boolean
 	activeEntity: EntryState['activeEntity']
+	appDispatch: React.Dispatch<AppStateAction>
 	config: EntityConfig
 	containerHeight: number
 	entryDispatch: React.Dispatch<EntryStateAction>
@@ -53,7 +54,7 @@ function EntityList(props: Props) {
 						<ItemInText
 							active={entity.id === props.activeEntity?.id}
 							entity={entity}
-							dispatch={props.entryDispatch}
+							entryDispatch={props.entryDispatch}
 							key={entity.id}
 						/>
 					)

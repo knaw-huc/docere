@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import { BottomTabWrapper } from './layers'
-import AppContext from '../../app/context'
+import ProjectContext from '../../app/context'
 import { fetchEntryXml } from '../../utils'
 import type { Entry } from '@docere/common'
 
@@ -44,13 +44,13 @@ interface Props {
 	entry: Entry
 }
 function Layers(props: Props) {
-	const appContext = React.useContext(AppContext)
+	const { config } = React.useContext(ProjectContext)
 	return (
 		<BottomTabWrapper active={props.active}>
 			<Ul>
 				<li
 					onClick={() =>
-						fetchAndDownloadXml(appContext.config.slug, props.entry.id)
+						fetchAndDownloadXml(config.slug, props.entry.id)
 					}
 				>
 					<button>Original XML</button>

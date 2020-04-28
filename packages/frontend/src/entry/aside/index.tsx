@@ -1,12 +1,14 @@
 import * as React from 'react'
 import styled from 'styled-components';
-import MetadataAside from './metadata'
+import { ASIDE_HANDLE_WIDTH, ASIDE_WIDTH, TOP_OFFSET, AsideTab, Colors } from '@docere/common'
+
+import Tabs from '../../ui/tabs';
+import MetadataAside from './metadata/index'
 import NotesAside from './notes'
 import TextDataAside from './text-data'
-import Tabs from '../../ui/tabs';
-import type { EntryProps } from '..';
-import { ASIDE_HANDLE_WIDTH, ASIDE_WIDTH, TOP_OFFSET, AsideTab, Colors } from '@docere/common'
+
 import type { EntryState, EntryStateAction } from '@docere/common'
+import type { EntryProps } from '..';
 
 const Wrapper = styled.aside`
 	bottom: 0;
@@ -68,6 +70,7 @@ function Aside(props: EntryAsideProps) {
 					hasMetadata &&
 					<MetadataAside
 						active={props.asideTab === AsideTab.Metadata}
+						appDispatch={props.appDispatch}
 						metadata={props.entry.metadata}
 					/>
 				}
@@ -76,6 +79,7 @@ function Aside(props: EntryAsideProps) {
 					<TextDataAside
 						active={props.asideTab === AsideTab.TextData}
 						activeEntity={props.activeEntity}
+						appDispatch={props.appDispatch}
 						entryDispatch={props.entryDispatch}
 						layers={props.layers}
 						entities={props.entry.entities}

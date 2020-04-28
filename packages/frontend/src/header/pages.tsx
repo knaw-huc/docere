@@ -2,7 +2,7 @@ import * as React from 'react'
 import styled from 'styled-components'
 import { DEFAULT_SPACING } from '@docere/common'
 import type { PageConfig, AppStateAction } from '@docere/common'
-import AppContext from '../app/context'
+import ProjectContext from '../app/context'
 
 const Wrapper = styled.ul`
 	text-align: right;
@@ -80,11 +80,11 @@ interface Props {
 	appDispatch: React.Dispatch<AppStateAction>
 }
 export default React.memo(function PagesMenu(props: Props) {
-	const appContext = React.useContext(AppContext)
+	const { config } = React.useContext(ProjectContext)
 	return (
 		<Wrapper>
 			{
-				appContext.config.pages.map(page =>
+				config.pages.map(page =>
 					page.hasOwnProperty('children') ?
 						<li key={page.id}>
 							<span>{page.title} ▾</span>

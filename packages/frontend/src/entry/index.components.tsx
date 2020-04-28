@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled, { css } from 'styled-components'
-import { TOP_OFFSET, DEFAULT_SPACING, ASIDE_WIDTH, RESULT_ASIDE_WIDTH, FOOTER_HEIGHT, SearchTab } from '@docere/common'
+import { TOP_OFFSET, ASIDE_WIDTH, RESULT_ASIDE_WIDTH, FOOTER_HEIGHT, SearchTab } from '@docere/common'
 import type { EntryState, AppState } from '@docere/common'
 
 // interface MainProps { asideTab: AsideTab, footerTab: FooterTab, searchTab: SearchTab }
@@ -36,18 +36,6 @@ export const Menu = styled.div`
 
 	& > div:last-of-type {
 		direction: rtl;
-	}
-`
-
-export const MetadataItem = styled.li`
-	margin-bottom: ${DEFAULT_SPACING}px;
-
-	& span:first-of-type {
-		color: #888;
-		display: block;
-		font-size: .75rem;
-		margin-bottom: .25rem;
-		text-transform: uppercase;
 	}
 `
 

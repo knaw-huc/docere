@@ -15,11 +15,11 @@ export type {
 }
 
 export default function FacetedSearch(props: FacetedSearchProps) {
-	const [facetsConfig, setFacetsConfig] = React.useState<FacetedSearchContext['facetsConfig']>(extendFacetConfig(props.fields))
+	const [facetsConfig, setFacetsConfig] = React.useState<FacetedSearchContext['facetsConfig']>(extendFacetConfig(props.facetsConfig))
 
 	React.useEffect(() => {
-		setFacetsConfig(extendFacetConfig(props.fields))	
-	}, [props.fields])
+		setFacetsConfig(extendFacetConfig(props.facetsConfig))	
+	}, [props.facetsConfig])
 
 	return (
 		<Context.Provider value={{ ...defaultFacetedSearchProps, ...props, facetsConfig }}>

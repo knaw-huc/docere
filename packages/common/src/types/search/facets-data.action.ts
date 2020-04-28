@@ -2,6 +2,8 @@ import type { FacetedSearchContext } from '.'
 import type { RangeFacetFilter } from './facets'
 import { SortBy, SortDirection } from '../../enum'
 
+// TODO move back from common to search_?
+
 interface FacetsDataReducerActionClear {
 	type: 'clear'
 	activeFilters: FacetedSearchContext['activeFilters']

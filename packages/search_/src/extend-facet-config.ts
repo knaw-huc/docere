@@ -42,7 +42,7 @@ function initFacet(facetConfig: FacetConfig): FacetConfig {
 	console.error(`Facet config with datatype: '${facetConfig.datatype}' not found!`)
 }
 
-export default function extendFacetConfig(facetsConfig: FacetedSearchProps['fields']) {
+export default function extendFacetConfig(facetsConfig: FacetedSearchProps['facetsConfig']) {
 	return facetsConfig
 		.reduce((prev, facetConfig) => {
 			const extendedFacetConfig = initFacet(facetConfig)

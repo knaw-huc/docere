@@ -1,13 +1,15 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import HucFacetedSearch  from '@docere/search_'
-import { fetchJson } from '../utils'
-import AppContext, { useUIComponent } from '../app/context'
-import { FileExplorerProps } from './wrap-as-file-explorer'
-import { DEFAULT_SPACING, TOP_OFFSET, RESULT_ASIDE_WIDTH, EsDataType, UIComponentType, defaultMetadata, SearchTab } from '@docere/common'
-import type { DocereConfig, FacetConfig, Hit } from '@docere/common'
+import { DEFAULT_SPACING, TOP_OFFSET, RESULT_ASIDE_WIDTH, UIComponentType, SearchTab } from '@docere/common'
 
-const searchBaseUrl = '/search/'
+import ProjectContext, { useUIComponent } from '../app/context'
+import { FileExplorerProps } from './wrap-as-file-explorer'
+import useAutoSuggest from './use-auto-suggest'
+
+import type { Hit } from '@docere/common'
+
+export const searchBaseUrl = '/search/'
 
 const FS = styled(HucFacetedSearch)`
 	background: white;
@@ -62,72 +64,28 @@ const FS = styled(HucFacetedSearch)`
 	}}
 `
 
-const ignoreKeys = ['text', 'text_suggest', 'facsimiles', 'id']
-function useFields(config: DocereConfig) {
-	const [fields, setFields] = React.useState<FacetConfig[]>([])
-
-	React.useEffect(() => {
-		fetchJson(`${searchBaseUrl}${config.slug}/_mapping`)
-			.then(json => {
-				const { properties } = json[config.slug].mappings
-				const tmpFields = Object.keys(properties)
-					.filter(key => ignoreKeys.indexOf(key) === -1)
-					.map(key => {
-						let mdConfig = config.metadata.find(md => md.id === key)
-						if (mdConfig == null) mdConfig = config.entities.find(td => td.id === key)
-						if (mdConfig == null) mdConfig = {
-							...defaultMetadata,
-							id: key,
-							title: key.charAt(0).toUpperCase() + key.slice(1)
-						}
-						return mdConfig
-					})
-					.filter(field => field.showAsFacet && field.datatype !== EsDataType.Null && field.datatype !== EsDataType.Text )
-					.sort((f1, f2) => f1.order - f2.order)
-				setFields(tmpFields)
-			})
-			.catch(err => console.log(err))
-	}, [config.slug])
-	
-	return fields
-}
-
-function useAutoSuggest(projectId: string) {
-	const url = `${searchBaseUrl}${projectId}/_search`
-	return async function autoSuggest(query: string) {
-		const r = await fetch(url, {
-			method: 'POST',
-			headers: {
-				'Content-type': 'application/json'
-			},
-			body: JSON.stringify({
-				suggest: {
-					mysuggest: {
-						text: query,
-						completion: {
-							field: 'text_suggest',
-							size: 10,
-							skip_duplicates: true,
-						}
-					}
-				}
-			})
-		})
-
-		const json = await r.json()
-		return json.suggest.mysuggest[0].options
-			.map((s: any) => s.text)
-			.filter((item: string, index: number, arr: string[]) => arr.indexOf(item) === index)
-	}
-}
-
 const excludeResultFields = ['text', 'text_suggest']
 
 function Search(props: FileExplorerProps) {
-	const appContext = React.useContext(AppContext)
-	const autoSuggest = useAutoSuggest(appContext.config.slug)
-	const fields = useFields(appContext.config)
+	const { config } = React.useContext(ProjectContext)
+	const autoSuggest = useAutoSuggest(config.slug)
 	const ResultBodyComponent = useUIComponent(UIComponentType.SearchResult)
+
+	const onClickResult = React.useCallback((result: Hit) => {
+		// if (result.snippets.length) {
+		// 	const query = result.snippets.reduce((prev, curr) => {
+		// 		const found = curr.split('<em>')
+		// 			.filter((t: string) => t.indexOf('</em>') > -1)
+		// 			.map((t: string) => t.slice(0, t.indexOf('</em>')))
+		// 		return prev.concat(found)
+
+		// 	}, [])
+
+		// 	searchFilterContext.dispatch({ type: 'SET_SEARCH_QUERY', query })
+		// }
+		props.appDispatch({ type: 'SET_ENTRY_ID', id: result.id })
+	}, [])
+
 	if (ResultBodyComponent == null) return null
 
 	return (
@@ -135,29 +93,16 @@ function Search(props: FileExplorerProps) {
 			autoSuggest={autoSuggest}
 			disableDefaultStyle={props.searchTab === SearchTab.Results}
 			excludeResultFields={excludeResultFields}
-			fields={fields}
+			// facetsConfig={facetsConfig}
 			ResultBodyComponent={ResultBodyComponent}
-			onClickResult={(result: Hit) => {
-				if (result.snippets.length) {
-					const query = result.snippets.reduce((prev, curr) => {
-						const found = curr.split('<em>')
-							.filter((t: string) => t.indexOf('</em>') > -1)
-							.map((t: string) => t.slice(0, t.indexOf('</em>')))
-						return prev.concat(found)
-
-					}, [])
-
-					props.appDispatch({ type: 'SET_SEARCH_QUERY', query })
-				}
-				props.appDispatch({ type: 'SET_ENTRY_ID', id: result.id })
-			}}
+			// onFiltersChange={handleFiltersChange}
+			onClickResult={onClickResult}
 			resultBodyProps={{
 				activeId: props.entry == null ? null : props.entry.id,
 				searchTab: props.searchTab,
 			}}
-			resultsPerPage={appContext.config.searchResultCount}
-			track_total_hits={210000}
-			url={`${searchBaseUrl}${appContext.config.slug}/_search`}
+			resultsPerPage={config.searchResultCount}
+			url={`${searchBaseUrl}${config.slug}/_search`}
 		/>
 	)
 }

@@ -13,9 +13,9 @@ import SearchResult from './views/search-result'
 import FullTextSearch from './views/full-text-search'
 import useFacetsDataReducer from './reducers/facets-data'
 import useSearch from './use-search'
-import FacetedSearchContext from './context'
+import Context from './context'
 
-import type { ListFacetValues, BooleanFacetValues, HierarchyFacetValues, RangeFacetValues } from '@docere/common'
+import type { FacetedSearchContext, ListFacetValues, BooleanFacetValues, HierarchyFacetValues, RangeFacetValues } from '@docere/common'
 
 const Wrapper = styled.div`
 	margin-bottom: 10vh;
@@ -56,7 +56,7 @@ const Wrapper = styled.div`
 `
 
 export default function FacetedSearch() {
-	const context = React.useContext(FacetedSearchContext)
+	const context = React.useContext(Context)
 	const [query, setQuery] = React.useState('')
 	const [currentPage, setCurrentPage] = React.useState(1)
 	const [sortOrder, setSortOrder] = React.useState<SortOrder>(new Map())
@@ -77,6 +77,22 @@ export default function FacetedSearch() {
 	const clearFullTextInput = React.useCallback(() => {
 		setQuery('')
 	}, [])
+
+	React.useEffect(() => {
+		if (facetsData == null || !facetsData.size) return
+		const activeFilters = Array.from(facetsData.values()).reduce((prev, curr) => {
+			if (curr.filters != null) prev[curr.config.id] = curr.filters
+			return prev	
+		}, {} as FacetedSearchContext['activeFilters'])
+
+		context.onFiltersChange(activeFilters)
+	}, [facetsData])
+
+	React.useEffect(() => {
+		setQuery('')
+		setSortOrder(new Map())
+		facetsDataDispatch({ type: 'clear', fields: context.facetsConfig, activeFilters: context.activeFilters })
+	}, [context.activeFilters])
 
 	if (facetsData == null) return null
 
