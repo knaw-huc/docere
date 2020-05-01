@@ -25,6 +25,7 @@ interface Props extends WProps {
 	metadata: Entry['metadata']
 }
 function MetadataAside(props: Props) {
+	console.log(props.metadata)
 	return (
 		<Wrapper active={props.active}>
 			{

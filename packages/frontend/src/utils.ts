@@ -9,6 +9,7 @@ export function isXmlLayer(layer: Layer): layer is XmlLayer {
 	return layer.type === LayerType.XML
 }
 
+// TODO Move window analyzer to app state reducer?
 export function analyzeWindowLocation() {
 	const [, projectId, documentType, ...documentId] = window.location.pathname.split('/')
 
@@ -17,6 +18,10 @@ export function analyzeWindowLocation() {
 		documentType,
 		documentId: documentId.join('/'),
 	}
+}
+
+export function isSearchPage() {
+	return analyzeWindowLocation().documentType === 'search'
 }
 
 function getProjectDir(projectId: string) {

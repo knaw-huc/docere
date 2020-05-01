@@ -150,10 +150,12 @@ const config: DocereConfig = {
 	],
 	layers: [
 		{
+			// active: false,
 			id: 'scan',
 			type: LayerType.Facsimile
 		},
 		{
+			// active: false,
 			id: 'text',
 		},
 	]
