@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { small } from '../../index.components'
 
 import type { EntryStateAction, Entity } from '@docere/common'
-import MetadataValue from '../metadata/value'
+import ListFacetValue from '../metadata/list-value'
 
 const Li = styled.li`
 	align-content: center;
@@ -26,28 +26,18 @@ interface Props {
 	entity: Entity
 }
 export default function ItemInText(props: Props) {
-	// const searchContext = React.useContext(SearchContext)
-
 	const handleClick = React.useCallback(() => {
 		props.entryDispatch({ type: 'SET_ENTITY', id: props.entity.id })
 	}, [props.entity])
-
-	// const handleSetSearchFilter = React.useCallback(() => {
-	// 	searchContext.dispatch({ type: 'SET_SEARCH_FILTER', facetId: props.entity.type, value: props.entity.value })
-	// }, [props.entity])
 
 	return (
 		<Li
 			count={props.entity.count}
 			onClick={handleClick}
 		>
-			<MetadataValue
-				facetId={props.entity.type}
-				value={props.entity.value}
+			<ListFacetValue
+				metadataItem={props.entity}
 			/>
 		</Li>
 	)
 }
-
-			{/* <div>{props.entity.value}</div>
-			<div onClick={handleSetSearchFilter}>s</div> */}

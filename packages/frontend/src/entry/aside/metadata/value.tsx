@@ -1,9 +1,6 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import { SPOT_COLOR } from '@docere/common'
-import { SearchContext } from '@docere/search_'
-
-import type { MetadataItem } from '@docere/common'
 
 const ValueWrapper = styled.span`
 	display: grid;
@@ -53,7 +50,13 @@ const ValueWrapper = styled.span`
 	}
 `
 
-function Value(props: any) {
+interface ValueProps {
+	active: boolean
+	children: React.ReactNode
+	id: string
+	onClick: (ev: any) => void
+}
+export default function Value(props: ValueProps) {
 	const svg = (
 		<svg 
 			viewBox="0 0 250.313 250.313">
@@ -105,51 +108,4 @@ function Value(props: any) {
 			
 		</ValueWrapper>
 	)
-}
-
-interface Props {
-	facetId: string
-	value: MetadataItem[keyof MetadataItem]
-}
-export default function MetadataValue(props: Props) {
-	const searchContext = React.useContext(SearchContext)
-	const { facets } = searchContext.state
-
-	const handleSetSearchFilter = React.useCallback(ev => {
-		ev.stopPropagation()
-
-		const { facetId, value } = ev.currentTarget.dataset
-		const type: 'ADD_SEARCH_FILTER' | 'SET_SEARCH_FILTER' | 'REMOVE_SEARCH_FILTER' = ev.currentTarget.dataset.type
-
-
-		searchContext.dispatch({
-			type,
-			facetId,
-			value
-		})
-	}, [])
-
-	return Array.isArray(props.value) ?
-		<>
-			{
-				props.value.map(v =>
-					<Value
-						active={facets.get(props.facetId)?.filters?.has(v)}
-						id={props.facetId}
-						key={`${props.facetId}${v}`}
-						onClick={handleSetSearchFilter}
-					>
-						{v}
-					</Value>
-				)
-			}
-		</> :
-		<Value
-			active={facets.get(props.facetId)?.filters?.has(props.value)}
-			id={props.facetId}
-			// key={`${props.facetId}${props.value}`}
-			onClick={handleSetSearchFilter}
-		>
-			{props.value}
-		</Value>
 }

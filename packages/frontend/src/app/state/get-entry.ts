@@ -1,4 +1,4 @@
-import { LayerType, defaultMetadata } from '@docere/common'
+import { EsDataType, LayerType, defaultMetadata, MetadataItem } from '@docere/common'
 
 import { fetchEntryXml, isTextLayer, isXmlLayer } from '../../utils'
 
@@ -62,31 +62,50 @@ async function extractLayers(doc: XMLDocument, configData: DocereConfigData) {
 
 function extractMetadata(doc: XMLDocument, configData: DocereConfigData, entryId: string): Entry['metadata'] {
 	const extractedMetadata = configData.extractMetadata(doc, configData.config, entryId)
+	const extractedMetadataKeys = Object.keys(extractedMetadata)
 
-	return Object.keys(extractedMetadata)
+	return extractedMetadataKeys
+		// Remove sub levels of hierarchy facet, their values will be added to the hierarchy metadata later
+		.filter(field => !/level\d+$/.test(field))
+
+		// Map extracted IDs to configured metadata
 		.map(id => {
-			const data = configData.config.metadata.find(md => md.id === id)
-			return (data == null) ?
+			const config = configData.config.metadata.find(md => md.id === id)
+			return (config == null) ?
 				{ ...defaultMetadata, title: id } :
-				data
+				config
 		})
-		.filter(data => data.showInAside)
-		.sort((data1, data2) => data1.order - data2.order)
-		.map(x => {
-			return {
-				...x,
-				value: extractedMetadata[x.id]
-			} 
-		})
-		// .reduce((prev, curr, index, array) => {
-		// 	// if (isHierarchyFacetConfig(curr)) {
-		// 	// 	if (!/0$/.test(curr.id)) return prev
-		// 	// 	const hierarchyFacetId
-		// 	// 	curr.value = 
-		// 	// }
-		// 	// TODO merge hierarchy facets
-		// 	return prev
-		// }, [] as Entry['metadata'])
+
+		// Remove metadata which are configured to not be shown in the aside
+		.filter(config => config.showInAside)
+
+		// Add value to the config to create a MetadataItem
+		.map(config => ({
+			...config,
+			value: extractedMetadata[config.id]
+		} as MetadataItem))
+
+		// Add hierarchy facet metadata
+		.concat(
+			configData.config.metadata
+				.filter(md => md.datatype === EsDataType.Hierarchy)
+				.map(md => {
+					return {
+						...md,
+						value: extractedMetadataKeys
+							.filter(key => new RegExp(`^${md.id}_level`).test(key))
+							.sort((key1, key2) => {
+								const number1 = parseInt(key1.match(/\d+$/)[0], 10)
+								const number2 = parseInt(key2.match(/\d+$/)[0], 10)
+								return number1 - number2
+							})
+							.map(key => extractedMetadata[key] as string)
+					} as MetadataItem
+				})
+		)
+
+		// Sort metadata config by order
+		.sort((config1, config2) => config1.order - config2.order)
 }
 
 export default async function getEntry(id: string, configData: DocereConfigData): Promise<Entry> {

@@ -1,8 +1,8 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { DEFAULT_SPACING, TOP_OFFSET } from '@docere/common'
+import { DEFAULT_SPACING, TOP_OFFSET, MetadataItem } from '@docere/common'
 
-import MetadataItem from './get-metadata-value'
+import MetadataItemComp from './get-metadata-value'
 
 import type { AppStateAction, Entry } from '@docere/common'
 
@@ -25,13 +25,12 @@ interface Props extends WProps {
 	metadata: Entry['metadata']
 }
 function MetadataAside(props: Props) {
-	console.log(props.metadata)
 	return (
 		<Wrapper active={props.active}>
 			{
 				props.metadata
-					.map((data, index) =>
-						<MetadataItem
+					.map((data: MetadataItem, index) =>
+						<MetadataItemComp
 							key={index}
 							metadataItem={data}
 						/>

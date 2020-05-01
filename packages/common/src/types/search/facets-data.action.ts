@@ -18,13 +18,13 @@ interface SetConfig {
 interface FacetsDataReducerActionAddFilter {
 	type: 'ADD_SEARCH_FILTER'
 	facetId: string
-	value: string
+	value: string | string[]
 }
 
 interface SetSearchFilter {
 	type: 'SET_SEARCH_FILTER'
 	facetId: string
-	value: string
+	value: string | string[]
 }
 
 interface FacetsDataReducerActionRemoveFilter {

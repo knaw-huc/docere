@@ -82,7 +82,9 @@ function facetsDataReducer(state: FacetsState, action: FacetsDataReducerAction):
 	if (isListFacetData(facet) || isBooleanFacetData(facet) || isHierarchyFacetData(facet)) {
 		switch(action.type) {
 			case 'ADD_SEARCH_FILTER': {
-				facet.filters = new Set(facet.filters.add(action.value))
+				if (Array.isArray(action.value)) action.value.forEach(v => facet.filters.add(v))
+				else facet.filters.add(action.value)
+				facet.filters = new Set(facet.filters)
 
 				return {
 					...state,
@@ -93,7 +95,8 @@ function facetsDataReducer(state: FacetsState, action: FacetsDataReducerAction):
 			case 'SET_SEARCH_FILTER': {
 				const facets = initFacetsData(state.facetsConfig)
 				const facet = facets.get(action.facetId)
-				facet.filters = new Set([action.value])
+				const nextFilters = Array.isArray(action.value) ? action.value : [action.value]
+				facet.filters = new Set(nextFilters)
 
 				return {
 					...state,
