@@ -3,6 +3,7 @@ import styled from 'styled-components'
 
 import { getEndDate } from './utils'
 import { DateFacetProps } from '.'
+import SearchContext from '../../../facets-context'
 
 interface WrapperProps { barCount: number }
 const Wrapper = styled.div`
@@ -39,8 +40,9 @@ const BarFill = styled.div`
 `
 
 // TODO remove lower/upperlimit
-type Props = Pick<DateFacetProps, 'facetData' | 'facetsDataDispatch' | 'values'>
+type Props = Pick<DateFacetProps, 'facetData' | 'values'>
 function Histogram(props: Props) {
+	const searchContext = React.useContext(SearchContext)
 	const counts = props.values.map(v => v.count)
 	const maxCount = Math.max(...counts)
 
@@ -51,7 +53,7 @@ function Histogram(props: Props) {
 		const from = value.key
 		const to = getEndDate(value.key, props.facetData.interval)
 
-		props.facetsDataDispatch({
+		searchContext.dispatch({
 			type: 'set_range',
 			facetId: props.facetData.config.id,
 			from,

@@ -1,13 +1,16 @@
 import React from 'react'
 import { EsDataType, SortBy, SortDirection } from '@docere/common'
 
+import SearchContext from './facets-context'
+import useSearchReducer from './facets-context/facets-data'
+
 import Context, { defaultFacetedSearchProps } from './context'
 import App from './app'
-import extendFacetConfig from './extend-facet-config'
 
-import type { FacetedSearchContext, FacetedSearchProps, ResultBodyProps } from '@docere/common'
+import type { FacetedSearchProps, ResultBodyProps } from '@docere/common'
 
-export { EsDataType, SortBy, SortDirection }
+export * from './utils'
+export { EsDataType, SearchContext, useSearchReducer, SortBy, SortDirection }
 
 export type {
 	FacetedSearchProps,
@@ -15,14 +18,8 @@ export type {
 }
 
 export default function FacetedSearch(props: FacetedSearchProps) {
-	const [facetsConfig, setFacetsConfig] = React.useState<FacetedSearchContext['facetsConfig']>(extendFacetConfig(props.facetsConfig))
-
-	React.useEffect(() => {
-		setFacetsConfig(extendFacetConfig(props.facetsConfig))	
-	}, [props.facetsConfig])
-
 	return (
-		<Context.Provider value={{ ...defaultFacetedSearchProps, ...props, facetsConfig }}>
+		<Context.Provider value={{ ...defaultFacetedSearchProps, ...props }}>
 			<App />
 		</Context.Provider>
 	)

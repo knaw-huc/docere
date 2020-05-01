@@ -3,11 +3,10 @@ import React from 'react'
 import Facet from '../facet'
 import DateFacetBody from './body'
 
-import type { DateFacetData, FacetsDataReducerAction, RangeFacetValues } from '@docere/common'
+import type { DateFacetData, RangeFacetValues } from '@docere/common'
 
 export interface DateFacetProps {
 	facetData: DateFacetData
-	facetsDataDispatch: React.Dispatch<FacetsDataReducerAction>
 	values: RangeFacetValues
 }
 function DateFacetView(props: DateFacetProps) {

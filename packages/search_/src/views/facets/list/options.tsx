@@ -6,6 +6,7 @@ import { SortBy, SortDirection } from '@docere/common'
 import { Input } from '../../full-text-search'
 
 import type { ListFacetProps } from '.'
+import SearchContext from '../../../facets-context'
 
 const Wrapper = styled('div')`
 	font-size: .9em;
@@ -40,10 +41,11 @@ const FilterInput = styled(Input)`
 `
 
 function Options(props: ListFacetProps) {
+	const searchContext = React.useContext(SearchContext)
 	const [filterInputValue, setFilterInputValue] = React.useState('')
 
 	const handleCheckboxChange = React.useCallback(
-		ev => props.facetsDataDispatch({
+		ev => searchContext.dispatch({
 			type: 'set_sort',
 			facetId: props.facetData.config.id,
 			by: ev.target.dataset.by,
@@ -52,22 +54,7 @@ function Options(props: ListFacetProps) {
 		[props.facetData.config.id]
 	)
 
-	// const handleLowestFirstChange = React.useCallback(
-	// 	() => props.facetsDataDispatch({ type: 'set_sort', facetId: props.facetData.config.id, by: SortBy.Count, direction: SortDirection.Asc }),
-	// 	[props.facetData.config.id]
-	// )
-
-	// const handleZaChange = React.useCallback(
-	// 	() => props.facetsDataDispatch({ type: 'set_sort', facetId: props.facetData.config.id, by: SortBy.Key, direction: SortDirection.Desc }),
-	// 	[props.facetData.config.id]
-	// )
-
-	// const handleAzChange = React.useCallback(
-	// 	() => props.facetsDataDispatch({ type: 'set_sort', facetId: props.facetData.config.id, by: SortBy.Key, direction: SortDirection.Asc }),
-	// 	[props.facetData.config.id]
-	// )
-
-	const setQuery = debounce((value: string) => props.facetsDataDispatch({ type: 'set_query', facetId: props.facetData.config.id, value }), 600)
+	const setQuery = debounce((value: string) => searchContext.dispatch({ type: 'set_query', facetId: props.facetData.config.id, value }), 600)
 	const handleFilterInputChange = React.useCallback(
 		(ev: React.ChangeEvent<HTMLInputElement>) => {
 			setFilterInputValue(ev.target.value)

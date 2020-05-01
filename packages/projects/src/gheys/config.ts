@@ -13,23 +13,27 @@ const config: DocereConfig = {
 	// ],
 	metadata: [
 		{
-			id: 'toegang_level0',
+			datatype: EsDataType.Hierarchy,
+			id: 'toegang',
+			levels: 4,
 			order: 10,
 			title: '"Toegang"',
-			datatype: EsDataType.Hierarchy
 		},
-		{
-			id: 'toegang_level1',
-			showAsFacet: false,
-		},
-		{
-			id: 'toegang_level2',
-			showAsFacet: false,
-		},
-		{
-			id: 'toegang_level3',
-			showAsFacet: false,
-		},
+		// {
+		// 	datatype: EsDataType.Hierarchy,
+		// 	id: 'toegang_level1',
+		// 	showAsFacet: false,
+		// },
+		// {
+		// 	datatype: EsDataType.Hierarchy,
+		// 	id: 'toegang_level2',
+		// 	showAsFacet: false,
+		// },
+		// {
+		// 	datatype: EsDataType.Hierarchy,
+		// 	id: 'toegang_level3',
+		// 	showAsFacet: false,
+		// },
 		{
 			id: 'normalised_dates',
 			order: 30,

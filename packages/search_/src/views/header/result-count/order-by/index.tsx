@@ -1,10 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import OrderOption from './option'
+import SearchContext from '../../../../facets-context'
 import DropDown from '../../../ui/drop-down'
+import OrderOption from './option'
 
-import type { FacetsData, SetSortOrder, SortOrder } from '@docere/common'
+import type { SetSortOrder, SortOrder } from '@docere/common'
 
 const SortByDropDown = styled(DropDown)`
 	& > .huc-fs-dropdown-button {
@@ -18,11 +19,12 @@ const SortByDropDown = styled(DropDown)`
 `
 
 interface Props {
-	facetsData: FacetsData
 	setSortOrder: SetSortOrder
 	sortOrder: SortOrder
 }
 function SortBy(props: Props) {
+	const searchContext = React.useContext(SearchContext)
+
 	let label = 'sort by'
 	if (props.sortOrder.size > 0) label += ` (${props.sortOrder.size})` 
 
@@ -32,7 +34,7 @@ function SortBy(props: Props) {
 			z={998}
 		>
 			{
-				Array.from(props.facetsData.values())
+				Array.from(searchContext.state.facets.values())
 					.sort((facetData1, facetData2) => {
 						const a = props.sortOrder.has(facetData1.config.id)
 						const b = props.sortOrder.has(facetData2.config.id)
@@ -45,10 +47,10 @@ function SortBy(props: Props) {
 
 						return a ? -1 : 1
 					})
-					.map(facetData =>
+					.map(facetState =>
 						<OrderOption
-							facetData={facetData}
-							key={facetData.config.id}
+							facetData={facetState}
+							key={facetState.config.id}
 							sortOrder={props.sortOrder}
 							setSortOrder={props.setSortOrder}
 						/>

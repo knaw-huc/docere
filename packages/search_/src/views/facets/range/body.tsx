@@ -36,7 +36,6 @@ function RangeFacetBody(props: RangeFacetProps) {
 		<>
 			<Histogram
 				facetData={props.facetData}
-				facetsDataDispatch={props.facetsDataDispatch}
 				values={props.values}
 			/>
 			{/* <Slider

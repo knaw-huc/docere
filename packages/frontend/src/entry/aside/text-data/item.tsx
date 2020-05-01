@@ -3,16 +3,14 @@ import styled from 'styled-components'
 import { small } from '../../index.components'
 
 import type { EntryStateAction, Entity } from '@docere/common'
-// import { SearchContext } from '@docere/search_'
 import MetadataValue from '../metadata/value'
 
 const Li = styled.li`
+	align-content: center;
 	color: #CCC;
 	cursor: pointer;
 	display: grid;
-	grid-template-columns: 4fr 1fr;
 	height: 48px;
-	line-height: 48px;
 	padding-left: 1em;
 
 	&:after {
@@ -47,8 +45,9 @@ export default function ItemInText(props: Props) {
 				facetId={props.entity.type}
 				value={props.entity.value}
 			/>
-			{/* <div>{props.entity.value}</div>
-			<div onClick={handleSetSearchFilter}>s</div> */}
 		</Li>
 	)
 }
+
+			{/* <div>{props.entity.value}</div>
+			<div onClick={handleSetSearchFilter}>s</div> */}

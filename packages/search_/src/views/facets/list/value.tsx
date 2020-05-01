@@ -1,7 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import type { FacetsDataReducerAction, KeyCount } from '@docere/common'
+import type { KeyCount } from '@docere/common'
+import SearchContext from '../../../facets-context'
 
 interface WProps { active: boolean }
 const Wrapper = styled('li')`
@@ -34,15 +35,15 @@ const Wrapper = styled('li')`
 interface Props {
 	active: boolean
 	facetId: string
-	facetsDataDispatch: React.Dispatch<FacetsDataReducerAction>
 	keyFormatter?: (key: string | number) => string
 	value: KeyCount
 }
 
 function ListFacetValueView(props: Props) {
+	const searchContext = React.useContext(SearchContext)
 	const handleChange = React.useCallback(() => {
-		const type = props.active ? 'remove_filter' : 'add_filter'
-		props.facetsDataDispatch({ type, facetId: props.facetId, value: props.value.key })
+		const type = props.active ? 'REMOVE_SEARCH_FILTER' : 'ADD_SEARCH_FILTER'
+		searchContext.dispatch({ type, facetId: props.facetId, value: props.value.key })
 
 	}, [props.active, props.facetId, props.value.key])
 
@@ -68,4 +69,4 @@ ListFacetValueView.defaultProps = {
 	keyFormatter: (value: string) => value.trim().length > 0 ? value : '<i>&lt;empty&gt;</i>'
 }
 
-export default React.memo(ListFacetValueView)
+export default ListFacetValueView

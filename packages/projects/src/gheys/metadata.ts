@@ -1,4 +1,4 @@
-import type { DocereConfigData, Metadata } from '@docere/common';
+import type { DocereConfigData, ExtractedMetadata } from '@docere/common';
 
 function normaliseDate(date: string | number) {
 	date = date.toString();
@@ -9,7 +9,7 @@ function normaliseDate(date: string | number) {
 	return null
 }
 const extractMetadata: DocereConfigData['extractMetadata'] = function extractMetadata(doc, _config, id) {
-	const metadata: Metadata = {}
+	const metadata: ExtractedMetadata = {}
 
 	metadata.n = parseInt(id.split('_').slice(-1)[0], 10)
 	metadata.blocks = doc.querySelectorAll('block').length

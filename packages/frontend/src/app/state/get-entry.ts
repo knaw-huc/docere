@@ -1,6 +1,8 @@
-import { LayerType } from '@docere/common'
-import type { FacsimileArea, Facsimile, LayerConfig, TextLayerConfig, Layer, DocereConfigData, Entry } from '@docere/common'
+import { LayerType, defaultMetadata } from '@docere/common'
+
 import { fetchEntryXml, isTextLayer, isXmlLayer } from '../../utils'
+
+import type { FacsimileArea, Facsimile, LayerConfig, TextLayerConfig, Layer, DocereConfigData, Entry } from '@docere/common'
 
 const defaultFacsimileArea: Pick<FacsimileArea, 'showOnHover' | 'target' | 'unit'> = {
 	showOnHover: true,
@@ -58,6 +60,35 @@ async function extractLayers(doc: XMLDocument, configData: DocereConfigData) {
 		})
 }
 
+function extractMetadata(doc: XMLDocument, configData: DocereConfigData, entryId: string): Entry['metadata'] {
+	const extractedMetadata = configData.extractMetadata(doc, configData.config, entryId)
+
+	return Object.keys(extractedMetadata)
+		.map(id => {
+			const data = configData.config.metadata.find(md => md.id === id)
+			return (data == null) ?
+				{ ...defaultMetadata, title: id } :
+				data
+		})
+		.filter(data => data.showInAside)
+		.sort((data1, data2) => data1.order - data2.order)
+		.map(x => {
+			return {
+				...x,
+				value: extractedMetadata[x.id]
+			} 
+		})
+		// .reduce((prev, curr, index, array) => {
+		// 	// if (isHierarchyFacetConfig(curr)) {
+		// 	// 	if (!/0$/.test(curr.id)) return prev
+		// 	// 	const hierarchyFacetId
+		// 	// 	curr.value = 
+		// 	// }
+		// 	// TODO merge hierarchy facets
+		// 	return prev
+		// }, [] as Entry['metadata'])
+}
+
 export default async function getEntry(id: string, configData: DocereConfigData): Promise<Entry> {
 	// Fetch and prepare XML document
 	let doc = await fetchEntryXml(configData.config.slug, id)
@@ -68,6 +99,7 @@ export default async function getEntry(id: string, configData: DocereConfigData)
 	const facsimiles = configData.extractFacsimiles(doc, configData.config, id).map(extendFacsimile)
 	const layers = await extractLayers(doc, configData)
 	const notes = configData.extractNotes(doc, configData.config)
+	const metadata = extractMetadata(doc, configData, id)
 
 	return {
 		doc,
@@ -75,7 +107,7 @@ export default async function getEntry(id: string, configData: DocereConfigData)
 		facsimiles: facsimiles.length ? facsimiles : null,
 		id,
 		layers,
-		metadata: configData.extractMetadata(doc, configData.config, id),
+		metadata,
 		notes: notes.length ? notes : null, // Empty array should be null to prevent rerenders
 	}
 }

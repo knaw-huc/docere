@@ -1,6 +1,7 @@
-import type { Entry, ExtractedLayer } from '@docere/common'
+import type { Entry, ExtractedLayer, ExtractedMetadata } from '@docere/common'
 
-export type PrepareAndExtractOutput = Omit<Entry, 'doc' | 'layers'> & {
+export type PrepareAndExtractOutput = Omit<Entry, 'doc' | 'layers' | 'metadata'> & {
+	metadata: ExtractedMetadata
 	text: string
 	layers: ExtractedLayer[]
 }

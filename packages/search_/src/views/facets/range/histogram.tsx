@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 import type { RangeFacetProps } from '.'
+import SearchContext from '../../../facets-context'
 
 interface WrapperProps { barCount: number }
 const Wrapper = styled.div`
@@ -38,8 +39,9 @@ const BarFill = styled.div`
 `
 
 // TODO remove lower/upperlimit
-type Props = Pick<RangeFacetProps, 'facetData' | 'facetsDataDispatch' | 'values'>
+type Props = Pick<RangeFacetProps, 'facetData' | 'values'>
 function Histogram(props: Props) {
+	const searchContext = React.useContext(SearchContext)
 	const counts = props.values.map(v => v.count)
 	const maxCount = Math.max(...counts)
 
@@ -47,7 +49,7 @@ function Histogram(props: Props) {
 		let { index } = ev.currentTarget.dataset
 		index = parseInt(index, 10)
 		const value = props.values[index]
-		props.facetsDataDispatch({ type: 'set_range', facetId: props.facetData.config.id, from: value.key, to: value.key + props.facetData.config.interval })
+		searchContext.dispatch({ type: 'set_range', facetId: props.facetData.config.id, from: value.key, to: value.key + props.facetData.config.interval })
 	}, [props.values])
 
 	return (

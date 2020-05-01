@@ -42,8 +42,12 @@ export function isRangeFacetConfig(facetConfig: FacetConfig): facetConfig is Ran
 	return facetConfig.datatype === EsDataType.Integer
 }
 
-export function getChildFieldName(parentFieldName: string, number?: number) {
-	const [field, extractedNumber] = parentFieldName.split('_level')
-	number = number != null ? number : parseInt(extractedNumber, 10) + 1
-	return `${field}_level${number}`
+export function getHierarchyField(facetId: string, number = 0) {
+	return `${facetId}_level${number}`
+}
+
+export function getHierarchyChildField(parentField: string) {
+	const [facetId, splitter /* _level */, number] = parentField.split(/(_level)(\d+)$/)
+	const childNumber = parseInt(number, 10) + 1
+	return `${facetId}${splitter}${childNumber}`
 }

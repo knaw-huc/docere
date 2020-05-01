@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import debounce from 'lodash.debounce'
 import FacetedSearchContext from '../../context'
-
+import SearchContext from '../../facets-context'
 import AutoSuggest from './auto-suggest'
 
 export const Wrapper = styled.div`
@@ -67,19 +67,16 @@ function hideLoader(loaderRef: any) {
 	loaderRef.current.style.width = '0'
 }
 
-
-interface Props {
-	query: string
-	setQuery: (query: string) => void
-}
-function FullTextSearch(props: Props) {
+function FullTextSearch() {
 	const context = React.useContext(FacetedSearchContext)
+	const searchContext = React.useContext(SearchContext)
 	const loaderRef = React.useRef()
 	const [suggestActive, setSuggestActive] = React.useState(false)
 	const [inputValue, setInputValue] = React.useState('')
 	const setQuery = debounce(
 		(value: string) => {
-			props.setQuery(value)
+			// props.setQuery(value)
+			searchContext.dispatch({ type: 'SET_QUERY', value })
 			hideLoader(loaderRef)
 		},
 		1000
@@ -95,8 +92,8 @@ function FullTextSearch(props: Props) {
 	)
 
 	React.useEffect(() => {
-		if (props.query !== inputValue) setInputValue(props.query) 
-	}, [props.query])
+		if (searchContext.state.query !== inputValue) setInputValue(searchContext.state.query) 
+	}, [searchContext.state.query])
 
 	return (
 		<Wrapper id="huc-full-text-search">
@@ -130,4 +127,4 @@ function FullTextSearch(props: Props) {
 	)
 }
 
-export default React.memo(FullTextSearch)
+export default FullTextSearch

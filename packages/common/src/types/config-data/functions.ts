@@ -4,7 +4,7 @@ import { LayerType, AsideTab } from '../../enum'
 
 export interface DocereConfigFunctions {
 	extractFacsimiles: (doc: XMLDocument, config: DocereConfig, id: string) => Facsimile[]
-	extractMetadata: (doc: XMLDocument, config: DocereConfig, id: string) => Metadata
+	extractMetadata: (doc: XMLDocument, config: DocereConfig, id: string) => ExtractedMetadata
 	extractNotes: (doc: XMLDocument, config: DocereConfig) => Note[]
 	extractText: (doc: XMLDocument, config: DocereConfig) => string
 	extractEntities: (doc: XMLDocument, config: DocereConfig) => Entity[]
@@ -32,7 +32,7 @@ export interface Note extends TextData {
 }
 
 // EXTRACT METADATA
-export type Metadata = Record<string, number | boolean | string | string[]>
+export type ExtractedMetadata = Record<string, number | boolean | string | string[]>
 
 // EXTRACT LAYERS
 export interface TextLayerConfig extends LayerConfig {

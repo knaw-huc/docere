@@ -1,13 +1,13 @@
-import type { FacetedSearchContext, ElasticSearchRequestOptions } from '@docere/common'
+import type { FacetedSearchProps, ElasticSearchRequestOptions } from '@docere/common'
 
 export default class ESRequest {
-	_source: { include?: FacetedSearchContext['resultFields'], exclude?: FacetedSearchContext['excludeResultFields'] }
+	_source: { include?: FacetedSearchProps['resultFields'], exclude?: FacetedSearchProps['excludeResultFields'] }
 	from: number
 	size: number
 	sort: any
 	track_total_hits: number
 
-	constructor(options: ElasticSearchRequestOptions, context: FacetedSearchContext) {
+	constructor(options: ElasticSearchRequestOptions, context: FacetedSearchProps) {
 		this.setSource(context)
 		this.size = context.resultsPerPage
 		if (options.currentPage > 1) this.from = this.size * (options.currentPage - 1) 
@@ -23,7 +23,7 @@ export default class ESRequest {
 		}
 	}
 
-	private setSource(context: FacetedSearchContext) {
+	private setSource(context: FacetedSearchProps) {
 		if (!context.resultFields.length && !context.excludeResultFields.length) return
 
 		this._source = {

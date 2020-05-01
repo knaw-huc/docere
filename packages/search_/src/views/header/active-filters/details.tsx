@@ -42,12 +42,22 @@ const ActiveFiltersDropDown = styled(DropDown)`
 `
 
 interface Props {
-	clearFullTextInput: () => void
 	dispatch: React.Dispatch<FacetsDataReducerAction>
 	filters: ActiveFilter[]
 	query: string
 }
 function ActiveFiltersDetails(props: Props) {
+	const clearFullTextInput = React.useCallback(ev => {
+		ev.stopPropagation()
+		props.dispatch({ type: 'SET_QUERY', value: '' })
+	}, [])
+
+	const removeSearchFilter = React.useCallback(ev => {
+		ev.stopPropagation()
+		const { facetId, value } = ev.currentTarget.dataset
+		props.dispatch({ type: 'REMOVE_SEARCH_FILTER', facetId, value })
+	}, [])
+
 	return (
 		<ActiveFiltersDropDown
 			label={`active (${props.filters.reduce((p, c) => p + c.values.length, !props.query.length ? 0 : 1)})`}
@@ -60,10 +70,7 @@ function ActiveFiltersDetails(props: Props) {
 						<div>Full text query</div>
 						<ul>
 							<li
-								onClick={ev => {
-									ev.stopPropagation()
-									props.clearFullTextInput()
-								}}
+								onClick={clearFullTextInput}
 							>
 								{props.query}
 							</li>		
@@ -78,11 +85,10 @@ function ActiveFiltersDetails(props: Props) {
 								{
 									filter.values.map(value =>
 										<li
+											data-facet-id={filter.id}
+											data-value={value}
 											key={value}
-											onClick={ev => {
-												ev.stopPropagation()
-												props.dispatch({ type: 'remove_filter', facetId: filter.id, value })
-											}}
+											onClick={removeSearchFilter}
 										>
 											{value}
 										</li>		

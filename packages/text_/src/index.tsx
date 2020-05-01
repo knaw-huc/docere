@@ -22,7 +22,7 @@ export interface DocereTextViewProps {
 	components?: DocereComponents
 	// TODO rename to componentProps
 	customProps?: { [ key: string ]: any }
-	highlight?: string[]
+	highlight?: string | string[]
 	html?: string
 	ignore?: string[]
 	onLoad?: (isReady: boolean) => void

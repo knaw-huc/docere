@@ -5,6 +5,7 @@ import FacetedSearchContext from '../../../context'
 import { MoreLessButton } from '../../button'
 
 import type { Props } from './values'
+import SearchContext from '../../../facets-context'
 
 const MoreButton = styled(MoreLessButton)`
 	margin-right: 1rem;	
@@ -12,12 +13,14 @@ const MoreButton = styled(MoreLessButton)`
 
 export default function(props: Props) {
 	const context = React.useContext(FacetedSearchContext)
+	const searchContext = React.useContext(SearchContext)
+
 	const handleLess = React.useCallback(() => {
-		props.facetsDataDispatch({ type: 'view_less', facetId: props.facetData.config.id })
+		searchContext.dispatch({ type: 'view_less', facetId: props.facetData.config.id })
 	}, [props.facetData.config.id, props.values])
 
 	const handleMore = React.useCallback(() => {
-		props.facetsDataDispatch({ type: 'view_more', facetId: props.facetData.config.id, total: props.values.total })
+		searchContext.dispatch({ type: 'view_more', facetId: props.facetData.config.id, total: props.values.total })
 	}, [props.facetData.config.id, props.values.total])
 
 	return (

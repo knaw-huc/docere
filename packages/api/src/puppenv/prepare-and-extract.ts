@@ -1,5 +1,5 @@
 import type { PrepareAndExtractOutput } from '../types'
-import type { DocereConfigData, Entity, Metadata, Note, Facsimile, ExtractedLayer } from '@docere/common'
+import type { DocereConfigData, Entity, ExtractedMetadata, Note, Facsimile, ExtractedLayer } from '@docere/common'
 
 declare global {
 	const DocereProjects: any
@@ -46,7 +46,7 @@ export async function prepareAndExtract(xml: string, documentId: string, project
 	}
 
 	// Metadata
-	let metadata: Metadata = {}
+	let metadata: ExtractedMetadata = {}
 	try {
 		metadata = docereConfigData.extractMetadata(doc, docereConfigData.config, documentId)
 	} catch (err) {

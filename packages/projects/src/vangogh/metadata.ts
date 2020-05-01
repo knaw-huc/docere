@@ -1,7 +1,7 @@
-import type { DocereConfigData, Metadata } from '@docere/common'
+import type { DocereConfigData, ExtractedMetadata } from '@docere/common'
 
 const extractMetadata: DocereConfigData['extractMetadata'] = function extractMetadata(doc) {
-	const metadata: Metadata = {}
+	const metadata: ExtractedMetadata = {}
 
 	const selectors = [
 		'//dummy:author',

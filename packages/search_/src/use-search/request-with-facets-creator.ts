@@ -1,6 +1,6 @@
-import { SortBy, SortDirection, FacetedSearchContext } from '@docere/common'
+import { SortBy, SortDirection, FacetedSearchProps } from '@docere/common'
 
-import { isBooleanFacetData, isListFacetData, isRangeFacetData, isDateFacetData, isHierarchyFacetData, getChildFieldName } from '../utils'
+import { isBooleanFacetData, isListFacetData, isRangeFacetData, isDateFacetData, isHierarchyFacetData, getHierarchyField } from '../utils'
 import ESRequest from './request-creator'
 
 import type { ElasticSearchRequestOptions, ListFacetData, BooleanFacetData, HierarchyFacetData, RangeFacetData, DateFacetData } from '@docere/common'
@@ -26,7 +26,7 @@ export default class ESRequestWithFacets extends ESRequest {
 	post_filter: Record<string, any>
 	query: Record<string, any>
 
-	constructor(options: ElasticSearchRequestOptions, context: FacetedSearchContext) {
+	constructor(options: ElasticSearchRequestOptions, context: FacetedSearchProps) {
 		super(options, context)
 
 		if (options.facetsData == null) return
@@ -40,15 +40,13 @@ export default class ESRequestWithFacets extends ESRequest {
 		function toPostFilter(facet: ListFacetData | BooleanFacetData) {
 			const allFacetFilters = [...facet.filters].map(key => ({ term: { [facet.config.id]: key } }))
 			if (allFacetFilters.length === 1) return allFacetFilters[0]
-			else if (allFacetFilters.length > 1) return { bool: { should: allFacetFilters } }
+			else if (allFacetFilters.length > 1) return { bool: { must: allFacetFilters } }
 			return {}
 		}
 
 		function toHierarchyPostFilter(facetData: HierarchyFacetData) {
 			const allFacetFilters = [...facetData.filters].map((key, index) => {
-				const field = index === 0 ?
-					facetData.config.id :
-					getChildFieldName(facetData.config.id, index)
+				const field = getHierarchyField(facetData.config.id, index)
 				return { term: { [field]: key } }
 			})
 			if (allFacetFilters.length === 1) return allFacetFilters[0]
@@ -141,8 +139,17 @@ export default class ESRequestWithFacets extends ESRequest {
 		return agg
 	}
 
+	private createBooleanAggregation(facet: BooleanFacetData) {
+		const values = {
+			terms: {
+				field: facet.config.id
+			}
+		}
+
+		return this.addFilter(facet.config.id, values)
+	}
+
 	private addHierarchyFilter(key: string, filter: string, values: any): any {
-		// console.log(key, filter)
 		const agg = {
 			[key]: {
 				aggs: { [key]: values },
@@ -158,28 +165,18 @@ export default class ESRequestWithFacets extends ESRequest {
 		return agg
 	}
 
-	private createBooleanAggregation(facet: BooleanFacetData) {
-		const values = {
-			terms: {
-				field: facet.config.id
-			}
-		}
-
-		return this.addFilter(facet.config.id, values)
-	}
-
-	private tmp(facetData: HierarchyFacetData, filters: string[], index: number = 0): Record<string, any> {
-		const field = index === 0 ? facetData.config.id : getChildFieldName(facetData.config.id, index)
+	private getHierarchyAggregation(facetData: HierarchyFacetData, filters: string[], index: number = 0): Record<string, any> {
+		// const field = index === 0 ? facetData.config.id : getChildFieldName(facetData.config.id, index)
+		const field = getHierarchyField(facetData.config.id, index)
 		const terms: ListAggregationTerms = {
 			field,
 			size: facetData.size,
 		}
 
 		const [currentFilter, ...nextFilters] = filters
-		// console.log(currentFilter, nextFilters)
 
 		const aggs = filters.length > 0 ?
-			this.tmp(facetData, nextFilters, ++index) :
+			this.getHierarchyAggregation(facetData, nextFilters, ++index) :
 			{}
 
 		return this.addHierarchyFilter(field, currentFilter, { terms, aggs })
@@ -187,19 +184,20 @@ export default class ESRequestWithFacets extends ESRequest {
 
 	private createHierarchyAggregation(facetData: HierarchyFacetData) {
 		const filters = Array.from(facetData.filters)
-		const aggs = this.tmp(facetData, filters)
+		const aggs = this.getHierarchyAggregation(facetData, filters)
 
 		/*
 		 * The top level filter is the starting point for the reduce, because
 		 * the top level count aggegration always has to be run. If filters
 		 * has values, the reduce will add the underlying levels
 		 */
-		const topLevelFilter = this.addFilter(`${facetData.config.id}-count`, {
-			cardinality: { field: facetData.config.id }
+		const topLevelFieldName = getHierarchyField(facetData.config.id)
+		const topLevelFilter = this.addFilter(`${topLevelFieldName}-count`, {
+			cardinality: { field: topLevelFieldName }
 		})
 
 		const countFilters = filters.reduce((prev, _curr, index) => {
-			const field = getChildFieldName(facetData.config.id, ++index)
+			const field = getHierarchyField(facetData.config.id, ++index)
 			prev = {
 				...prev,
 				...this.addFilter(`${field}-count`, {

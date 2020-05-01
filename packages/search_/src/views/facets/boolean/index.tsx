@@ -4,11 +4,10 @@ import Facet from '../facet'
 import ListFacetValueView from '../list/value'
 import { FacetValuesList } from '../list/values'
 
-import type { BooleanFacetData, FacetsDataReducerAction, BooleanFacetValues } from '@docere/common'
+import type { BooleanFacetData, BooleanFacetValues } from '@docere/common'
 
 interface BooleanFacetProps {
 	facetData: BooleanFacetData
-	facetsDataDispatch: React.Dispatch<FacetsDataReducerAction>
 	values: BooleanFacetValues
 }
 function BooleanFacet(props: BooleanFacetProps) {
@@ -25,7 +24,6 @@ function BooleanFacet(props: BooleanFacetProps) {
 							<ListFacetValueView
 								active={props.facetData.filters.has(value.key)}
 								facetId={props.facetData.config.id}
-								facetsDataDispatch={props.facetsDataDispatch}
 								key={value.key}
 								// TODO remove labels and use props.keyFormatter
 								// keyFormatter={() => props.facetData.labels.true}

@@ -1,24 +1,40 @@
-import type { FacetedSearchContext } from '.'
+import type { FacetsConfig } from '.'
 import type { RangeFacetFilter } from './facets'
 import { SortBy, SortDirection } from '../../enum'
 
 // TODO move back from common to search_?
 
-interface FacetsDataReducerActionClear {
-	type: 'clear'
-	activeFilters: FacetedSearchContext['activeFilters']
-	fields: FacetedSearchContext['facetsConfig']
+interface SetConfig {
+	type: 'SET_CONFIG'
+	facetsConfig: FacetsConfig
 }
 
+// interface FacetsDataReducerActionClear {
+// 	type: 'clear'
+// 	activeFilters: FacetedSearchContext['activeFilters']
+// 	fields: FacetedSearchContext['facetsConfig']
+// }
+
 interface FacetsDataReducerActionAddFilter {
-	type: 'add_filter'
+	type: 'ADD_SEARCH_FILTER'
+	facetId: string
+	value: string
+}
+
+interface SetSearchFilter {
+	type: 'SET_SEARCH_FILTER'
 	facetId: string
 	value: string
 }
 
 interface FacetsDataReducerActionRemoveFilter {
-	type: 'remove_filter'
+	type: 'REMOVE_SEARCH_FILTER'
 	facetId: string
+	value: string
+}
+
+interface SetQuery {
+	type: 'SET_QUERY',
 	value: string
 }
 
@@ -51,8 +67,16 @@ type FacetsDataReducerActionSetRange = RangeFacetFilter & {
 	type: 'set_range'
 }
 
+interface Reset {
+	type: 'RESET'
+}
+
 export type FacetsDataReducerAction =
-	FacetsDataReducerActionClear |
+	Reset |
+	SetConfig |
+	SetSearchFilter |
+	SetQuery |
+	// FacetsDataReducerActionClear |
 	FacetsDataReducerActionAddFilter |
 	FacetsDataReducerActionRemoveFilter |
 	FacetsDataReducerActionSetSort |

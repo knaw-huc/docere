@@ -7,7 +7,7 @@ export type FacetData = ListFacetData | BooleanFacetData | HierarchyFacetData | 
 export type FacetsData = Map<string, FacetData>
 
 /*
- * FacetConfigBase is defined in @docere/common because it is also the
+ * BaseConfig is defined in @docere/common because it is also the
  * base for metadata and entities config
 */
 export interface FacetConfigBase extends BaseConfig {
@@ -60,6 +60,7 @@ export interface DateFacetData {
 export interface HierarchyFacetConfig extends FacetConfigBase {
 	readonly datatype: EsDataType.Hierarchy
 	readonly size?: number
+	readonly levels: number
 }
 
 export interface HierarchyFacetData {

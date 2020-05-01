@@ -6,7 +6,8 @@ import { Button } from '../page-number'
 import useFilters from './use-filters'
 import Details from './details'
 
-import type { FacetsDataReducerAction, FacetsData } from '@docere/common'
+// import type { FacetsDataReducerAction, FacetsData } from '@docere/common'
+import SearchContext from '../../../facets-context'
 
 const Wrapper = styled.div`
 	grid-column: 1 / span 2;
@@ -36,17 +37,16 @@ const Wrapper = styled.div`
 	}
 `
 
-interface Props {
-	clearActiveFilters: () => void
-	clearFullTextInput: () => void
-	dispatch: React.Dispatch<FacetsDataReducerAction>
-	facetsData: FacetsData
-	query: string
-}
-function ActiveFilters(props: Props) {
+function ActiveFilters() {
 	const context = React.useContext(FacetedSearchContext)
-	const filters = useFilters(props.facetsData)
-	if (!props.query.length && !filters.length) return null
+	const { state, dispatch } = React.useContext(SearchContext) 
+	const filters = useFilters(state.facets)
+
+	const reset = React.useCallback(() => {
+		dispatch({ type: 'RESET' })
+	}, [])
+
+	if (!state.query.length && !filters.length) return null
 
 	return (
 		<Wrapper
@@ -54,13 +54,12 @@ function ActiveFilters(props: Props) {
 		>
 			filters:
 			<Details
-				clearFullTextInput={props.clearFullTextInput}
-				dispatch={props.dispatch}
+				dispatch={dispatch}
 				filters={filters}
-				query={props.query}
+				query={state.query}
 			/>
 			<Button
-				onClick={props.clearActiveFilters}
+				onClick={reset}
 				spotColor={context.style.spotColor}
 			>
 				clear
@@ -69,7 +68,7 @@ function ActiveFilters(props: Props) {
 	)
 }
 
-export default React.memo(ActiveFilters)
+export default ActiveFilters
 
 				{/* <ul ref={wrapperRef}>
 					{

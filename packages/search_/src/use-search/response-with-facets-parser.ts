@@ -1,4 +1,4 @@
-import { isListFacetData, isBooleanFacetData, isRangeFacetData, isDateFacetData, isHierarchyFacetData, getChildFieldName } from '../utils'
+import { isListFacetData, isBooleanFacetData, isRangeFacetData, isDateFacetData, isHierarchyFacetData, getHierarchyField, getHierarchyChildField } from '../utils'
 import ESResponseParser from './response-parser'
 
 import type { HierarchyKeyCount, HierarchyFacetValues, FacetsData, FSResponse, FacetValues, RangeFacetValues } from '@docere/common'
@@ -16,7 +16,7 @@ function getBuckets(response: any, field: string, useValues = false): Bucket[] {
 
 function addHierarchyBucket(parentField: string, response: any): (bucket: Bucket) => HierarchyKeyCount {
 	return function(bucket: Bucket) {
-		const childField = getChildFieldName(parentField)
+		const childField = getHierarchyChildField(parentField)
 		let child: HierarchyFacetValues = null
 		if (bucket.hasOwnProperty(childField)) {
 			const buckets: Bucket[] = bucket[childField][childField].buckets
@@ -41,7 +41,8 @@ export default function ESResponseWithFacetsParser(response: any, facets: Facets
 	const facetValues: Record<string, FacetValues> = {}
 
 	facets.forEach(facet => {
-		const buckets = getBuckets(response, facet.config.id)
+		const field = isHierarchyFacetData(facet) ? getHierarchyField(facet.config.id) : facet.config.id
+		const buckets = getBuckets(response, field)
 
 		if (isListFacetData(facet)) {
 			facetValues[facet.config.id] = {
@@ -51,8 +52,8 @@ export default function ESResponseWithFacetsParser(response: any, facets: Facets
 		}
 		if (isHierarchyFacetData(facet)) {
 			const values: HierarchyFacetValues = {
-				total: response.aggregations[`${facet.config.id}-count`][`${facet.config.id}-count`].value,
-				values: buckets.map(addHierarchyBucket(facet.config.id, response))
+				total: response.aggregations[`${field}-count`][`${field}-count`].value,
+				values: buckets.map(addHierarchyBucket(field, response))
 			}
 
 			facetValues[facet.config.id] = values

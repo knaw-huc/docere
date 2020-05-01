@@ -5,11 +5,7 @@ import ActiveFilters from './active-filters'
 import Pagination from './pagination'
 import ResultCount from './result-count'
 
-import type { FacetsDataReducerAction, FacetsData, FSResponse, SetSortOrder, SortOrder } from '@docere/common'
-// import type { AppProps } from '../..'
-// import type { FacetsData } from '../../types/facets'
-// import type { FSResponse, SetSortOrder, SortOrder } from '../../types'
-// import type { FacetsDataReducerAction } from '../../reducers/facets-data.action'
+import type { FSResponse, SetSortOrder, SortOrder } from '@docere/common'
 
 const Wrapper = styled.header`
 	align-items: center;
@@ -26,12 +22,7 @@ const Wrapper = styled.header`
 `
 
 interface Props {
-	clearActiveFilters: () => void
-	clearFullTextInput: () => void
 	currentPage: number
-	dispatch: React.Dispatch<FacetsDataReducerAction>
-	facetsData: FacetsData
-	query: string
 	searchResult: FSResponse
 	setCurrentPage: (pageNumber: number) => void
 	setSortOrder: SetSortOrder
@@ -40,16 +31,9 @@ interface Props {
 function Header(props: Props) {
 	return (
 		<Wrapper id="huc-fs-header">
-			<ActiveFilters
-				clearActiveFilters={props.clearActiveFilters}
-				clearFullTextInput={props.clearFullTextInput}
-				dispatch={props.dispatch}
-				facetsData={props.facetsData}
-				query={props.query}
-			/>
+			<ActiveFilters />
 			<ResultCount
 				currentPage={props.currentPage}
-				facetsData={props.facetsData}
 				searchResult={props.searchResult}
 				setSortOrder={props.setSortOrder}
 				sortOrder={props.sortOrder}

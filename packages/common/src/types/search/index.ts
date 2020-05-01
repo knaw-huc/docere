@@ -6,14 +6,14 @@ export * from './facets-data.action'
 export * from './facets'
 
 export interface FacetedSearchProps {
-	activeFilters?: Record<string, FacetFilter>
+	// activeFilters?: Filters
 	autoSuggest?: (query: string) => Promise<string[]>
 	className?: string /* className prop is used by StyledComponents */
 	disableDefaultStyle?: boolean
 	excludeResultFields?: string[]
-	facetsConfig: FacetConfig[]
+	// facetsConfig?: FacetConfig[]
 	onClickResult: (result: any, ev: React.MouseEvent<HTMLLIElement>) => void
-	onFiltersChange?: (filters: FacetedSearchProps['activeFilters']) => void
+	// onFiltersChange?: (filters: FacetedSearchProps['activeFilters']) => void
 	resultFields?: string[]
 	ResultBodyComponent: React.FC<ResultBodyProps>
 	resultBodyProps?: Record<string, any>
@@ -25,9 +25,11 @@ export interface FacetedSearchProps {
 	url: string
 }
 
-export type FacetedSearchContext = Omit<FacetedSearchProps, 'facetsConfig'> & { facetsConfig: Record<string, FacetConfig> }
+// export type FacetedSearchContext = Omit<FacetedSearchProps, 'facetsConfig'> & { facetsConfig: Record<string, FacetConfig> }
 
 // type Filters = Map<string, Set<string>>
+export type Filters = Record<string, FacetFilter>
+export type FacetsConfig = Record<string, FacetConfig>
 
 export type SortOrder = Map<string, SortDirection>
 export type SetSortOrder = (sortOrder: SortOrder) => void

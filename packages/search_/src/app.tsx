@@ -11,11 +11,11 @@ import { isBooleanFacetData, isListFacetData, isRangeFacetData, isDateFacetData,
 import Header from './views/header'
 import SearchResult from './views/search-result'
 import FullTextSearch from './views/full-text-search'
-import useFacetsDataReducer from './reducers/facets-data'
 import useSearch from './use-search'
 import Context from './context'
 
-import type { FacetedSearchContext, ListFacetValues, BooleanFacetValues, HierarchyFacetValues, RangeFacetValues } from '@docere/common'
+import type { ListFacetValues, BooleanFacetValues, HierarchyFacetValues, RangeFacetValues } from '@docere/common'
+import SearchContext from './facets-context'
 
 const Wrapper = styled.div`
 	margin-bottom: 10vh;
@@ -57,44 +57,43 @@ const Wrapper = styled.div`
 
 export default function FacetedSearch() {
 	const context = React.useContext(Context)
-	const [query, setQuery] = React.useState('')
+	const searchContext = React.useContext(SearchContext)
 	const [currentPage, setCurrentPage] = React.useState(1)
 	const [sortOrder, setSortOrder] = React.useState<SortOrder>(new Map())
-	const [facetsData, facetsDataDispatch] = useFacetsDataReducer(context.facetsConfig, context.activeFilters)
 	const [searchResult, facetValues] = useSearch({
 		currentPage,
-		facetsData,
-		query,
+		facetsData: searchContext.state.facets,
+		query: searchContext.state.query,
 		sortOrder,
 	})
 
-	const clearActiveFilters = React.useCallback(() => {
-		setQuery('')
-		setSortOrder(new Map())
-		facetsDataDispatch({ type: 'clear', fields: context.facetsConfig, activeFilters: {} })
-	}, [context.facetsConfig])
+	// const clearActiveFilters = React.useCallback(() => {
+	// 	setQuery('')
+	// 	setSortOrder(new Map())
+	// 	facetsDataDispatch({ type: 'clear', fields: context.facetsConfig, activeFilters: {} })
+	// }, [context.facetsConfig])
 
-	const clearFullTextInput = React.useCallback(() => {
-		setQuery('')
-	}, [])
+	// const clearFullTextInput = React.useCallback(() => {
+	// 	setQuery('')
+	// }, [])
 
-	React.useEffect(() => {
-		if (facetsData == null || !facetsData.size) return
-		const activeFilters = Array.from(facetsData.values()).reduce((prev, curr) => {
-			if (curr.filters != null) prev[curr.config.id] = curr.filters
-			return prev	
-		}, {} as FacetedSearchContext['activeFilters'])
+	// React.useEffect(() => {
+	// 	if (facetsData == null || !facetsData.size) return
+	// 	const activeFilters = Array.from(facetsData.values()).reduce((prev, curr) => {
+	// 		if (curr.filters != null) prev[curr.config.id] = curr.filters
+	// 		return prev	
+	// 	}, {} as FacetedSearchContext['activeFilters'])
 
-		context.onFiltersChange(activeFilters)
-	}, [facetsData])
+	// 	context.onFiltersChange(activeFilters)
+	// }, [facetsData])
 
-	React.useEffect(() => {
-		setQuery('')
-		setSortOrder(new Map())
-		facetsDataDispatch({ type: 'clear', fields: context.facetsConfig, activeFilters: context.activeFilters })
-	}, [context.activeFilters])
+	// React.useEffect(() => {
+	// 	setQuery('')
+	// 	setSortOrder(new Map())
+	// 	facetsDataDispatch({ type: 'clear', fields: context.facetsConfig, activeFilters: context.activeFilters })
+	// }, [context.activeFilters])
 
-	if (facetsData == null) return null
+	// if (facetsData == null) return null
 
 	return (
 		<Wrapper
@@ -102,25 +101,19 @@ export default function FacetedSearch() {
 			disableDefaultStyle={context.disableDefaultStyle}
 			id="huc-fs"
 		>
-			<FullTextSearch
-				setQuery={setQuery}
-				query={query}
-			/>
+			<FullTextSearch />
 			<Header
-				clearActiveFilters={clearActiveFilters}
-				clearFullTextInput={clearFullTextInput}
+				// clearActiveFilters={clearActiveFilters}
+				// clearFullTextInput={clearFullTextInput}
 				currentPage={currentPage}
-				dispatch={facetsDataDispatch}
-				facetsData={facetsData}
 				searchResult={searchResult}
-				query={query}
 				setCurrentPage={setCurrentPage}
 				setSortOrder={setSortOrder}
 				sortOrder={sortOrder}
 			/>
 			<div id="huc-fs-facets">
 				{
-					Array.from(facetsData.values())
+					Array.from(searchContext.state.facets.values())
 						.map(facetData => {
 							const values = facetValues[facetData.config.id]
 
@@ -128,7 +121,6 @@ export default function FacetedSearch() {
 								return (
 									<ListFacet
 										facetData={facetData}
-										facetsDataDispatch={facetsDataDispatch}
 										key={facetData.config.id}
 										values={values as ListFacetValues}
 									/>
@@ -138,7 +130,6 @@ export default function FacetedSearch() {
 								return (
 									<BooleanFacet
 										facetData={facetData}
-										facetsDataDispatch={facetsDataDispatch}
 										key={facetData.config.id}
 										values={values as BooleanFacetValues}
 									/>
@@ -148,7 +139,6 @@ export default function FacetedSearch() {
 								return (
 									<HierarchyFacet
 										facetData={facetData}
-										facetsDataDispatch={facetsDataDispatch}
 										key={facetData.config.id}
 										values={values as HierarchyFacetValues}
 									/>
@@ -158,7 +148,6 @@ export default function FacetedSearch() {
 								return (
 									<DateFacet
 										facetData={facetData}
-										facetsDataDispatch={facetsDataDispatch}
 										key={facetData.config.id}
 										values={values as RangeFacetValues}
 									/>
@@ -168,7 +157,6 @@ export default function FacetedSearch() {
 								return (
 									<RangeFacet
 										facetData={facetData}
-										facetsDataDispatch={facetsDataDispatch}
 										key={facetData.config.id}
 										values={values as RangeFacetValues}
 									/>

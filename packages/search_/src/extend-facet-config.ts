@@ -2,7 +2,7 @@ import { SortBy, SortDirection, EsDataType } from '@docere/common'
 
 import { isListFacetConfig, isBooleanFacetConfig, isHierarchyFacetConfig, isRangeFacetConfig, isDateFacetConfig } from './utils'
 
-import type { FacetedSearchProps, BooleanFacetConfig, HierarchyFacetConfig, ListFacetConfig, FacetConfig, FacetedSearchContext } from '@docere/common'
+import type { BooleanFacetConfig, HierarchyFacetConfig, ListFacetConfig, FacetConfig, FacetsConfig } from '@docere/common'
 
 function extendBooleanFacet(config: BooleanFacetConfig): BooleanFacetConfig {
 	return {
@@ -42,16 +42,17 @@ function initFacet(facetConfig: FacetConfig): FacetConfig {
 	console.error(`Facet config with datatype: '${facetConfig.datatype}' not found!`)
 }
 
-export default function extendFacetConfig(facetsConfig: FacetedSearchProps['facetsConfig']) {
+export default function extendFacetConfig(facetsConfig: FacetsConfig) {
+	for (const facetId of Object.keys(facetsConfig)) {
+		const facetConfig = facetsConfig[facetId]
+		const extendedFacetConfig = initFacet(facetConfig)
+
+		if (extendedFacetConfig.title == null) {
+			extendedFacetConfig.title = extendedFacetConfig.id.charAt(0).toUpperCase() + extendedFacetConfig.id.slice(1)
+		}
+
+		facetsConfig[facetId] = extendedFacetConfig
+	}
+
 	return facetsConfig
-		.reduce((prev, facetConfig) => {
-			const extendedFacetConfig = initFacet(facetConfig)
-
-			if (extendedFacetConfig.title == null) {
-				extendedFacetConfig.title = extendedFacetConfig.id.charAt(0).toUpperCase() + extendedFacetConfig.id.slice(1)
-			}
-
-			prev[extendedFacetConfig.id] = extendedFacetConfig
-			return prev
-		}, {} as FacetedSearchContext['facetsConfig'])
 }

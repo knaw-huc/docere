@@ -1,13 +1,12 @@
 import React from "react"
 import { Colors } from '@docere/common'
 
-import type { FacetedSearchContext } from '@docere/common'
+import type { FacetedSearchProps } from '@docere/common'
 
-export const defaultFacetedSearchProps: FacetedSearchContext = {
-	activeFilters: {},
+export const defaultFacetedSearchProps: FacetedSearchProps = {
 	ResultBodyComponent: () => null,
 	excludeResultFields: [],
-	facetsConfig: {},
+	// facetsConfig: {},
 	onClickResult: () => {},
 	resultFields: [],
 	resultsPerPage: 10,
@@ -17,4 +16,4 @@ export const defaultFacetedSearchProps: FacetedSearchContext = {
 	url: null
 }
 
-export default React.createContext<FacetedSearchContext>(null)
+export default React.createContext<FacetedSearchProps>(null)

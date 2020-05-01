@@ -1,6 +1,7 @@
 import React from 'react'
 
 import type { ComponentTree } from './types'
+import type { DocereTextViewProps } from '.'
 
 function wrap(node: Text, index: number, found: string) {
 	const textRange = document.createRange()
@@ -14,15 +15,17 @@ function wrap(node: Text, index: number, found: string) {
 export default function useHighlight(
 	ref: React.RefObject<HTMLDivElement>,
 	componentTree: ComponentTree,
-	highlight: string[],
+	highlight: DocereTextViewProps['highlight'],
 	setHighlightAreas: (areas: number[]) => void
 ) {
 	React.useEffect(() => {
-		if (ref.current == null || highlight== null || highlight.length === 0) return
+		if (ref.current == null || highlight == null || highlight.length === 0) return
 
 		const treeWalker = document.createTreeWalker(ref.current, NodeFilter.SHOW_TEXT)
 		const map = new Map()
-		const re = new RegExp(highlight.join('|'), 'gui')
+
+		if (Array.isArray(highlight)) highlight = highlight.join('|')
+		const re = new RegExp(highlight, 'gui')
 
 		const toppers: number[] = []
 

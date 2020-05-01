@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { SPOT_COLOR } from '@docere/common'
 import { SearchContext } from '@docere/search_'
 
-import type { Metadata } from '@docere/common'
+import type { MetadataItem } from '@docere/common'
 
 const ValueWrapper = styled.span`
 	display: grid;
@@ -109,7 +109,7 @@ function Value(props: any) {
 
 interface Props {
 	facetId: string
-	value: Metadata[keyof Metadata]
+	value: MetadataItem[keyof MetadataItem]
 }
 export default function MetadataValue(props: Props) {
 	const searchContext = React.useContext(SearchContext)

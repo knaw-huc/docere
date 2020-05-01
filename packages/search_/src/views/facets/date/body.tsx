@@ -42,7 +42,6 @@ function DateFacetBody(props: DateFacetProps) {
 		<>
 			<Histogram
 				facetData={props.facetData}
-				facetsDataDispatch={props.facetsDataDispatch}
 				values={props.values}
 			/>
 			{/* <Slider

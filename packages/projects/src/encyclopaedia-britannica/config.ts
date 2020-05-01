@@ -13,19 +13,20 @@ const config: DocereConfig = {
 	],
 	metadata: [
 		{
-			id: 'access_level0',
+			id: 'access',
+			levels: 3,
 			order: 10,
 			title: 'Editions',
 			datatype: EsDataType.Hierarchy
 		},
-		{
-			id: 'access_level1',
-			showAsFacet: false,
-		},
-		{
-			id: 'access_level2',
-			showAsFacet: false,
-		},
+		// {
+		// 	id: 'access_level1',
+		// 	showAsFacet: false,
+		// },
+		// {
+		// 	id: 'access_level2',
+		// 	showAsFacet: false,
+		// },
 		{
 			id: 'setId',
 			showAsFacet: false,

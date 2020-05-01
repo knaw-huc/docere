@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import ListFacetValue from './value'
 import MoreLessButton from './more-less-buttons'
 
-import type { ListFacetData, HierarchyFacetData, FacetsDataReducerAction, ListFacetValues } from '@docere/common'
+import type { ListFacetData, HierarchyFacetData, ListFacetValues } from '@docere/common'
 import { isHierarchyFacetData } from '../../../utils'
 
 // const DURATION = 500
@@ -43,7 +43,6 @@ export const FacetValuesList = styled('ul')`
 // type Props = Pick<ListFacetProps, 'facetsDataDispatch' | 'values'>
 export interface Props {
 	facetData: ListFacetData | HierarchyFacetData
-	facetsDataDispatch: React.Dispatch<FacetsDataReducerAction>
 	values: ListFacetValues
 }
 function ListFacetValuesView(props: Props) {
@@ -67,7 +66,6 @@ function ListFacetValuesView(props: Props) {
 							<ListFacetValue
 								active={props.facetData.filters.has(value.key.toString())}
 								facetId={props.facetData.config.id}
-								facetsDataDispatch={props.facetsDataDispatch}
 								key={value.key}
 								value={value}
 							/>
@@ -83,7 +81,6 @@ function ListFacetValuesView(props: Props) {
 				) && 
 				<MoreLessButton
 					facetData={props.facetData}
-					facetsDataDispatch={props.facetsDataDispatch}
 					values={props.values}
 				/>
 			}

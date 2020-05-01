@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import FacetedSearchContext from '../../../context'
 import SortBy from './order-by'
 
-import type { FSResponse, FacetsData, SetSortOrder, SortOrder } from '@docere/common'
+import type { FSResponse, SetSortOrder, SortOrder } from '@docere/common'
 
 const Wrapper = styled.div`
 	grid-column: 1;
@@ -16,7 +16,6 @@ const Wrapper = styled.div`
 
 interface Props {
 	currentPage: number
-	facetsData: FacetsData
 	searchResult: FSResponse
 	setSortOrder: SetSortOrder
 	sortOrder: SortOrder
@@ -39,7 +38,6 @@ export default function ResultCount(props: Props) {
 		<Wrapper>
 			{fromTo[0]}-{fromTo[1]} of {props.searchResult.total} result{props.searchResult.total === 1 ? '' : 's'},&nbsp;
 			<SortBy
-				facetsData={props.facetsData}
 				setSortOrder={props.setSortOrder}
 				sortOrder={props.sortOrder}
 			/>
