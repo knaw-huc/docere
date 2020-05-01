@@ -15,7 +15,12 @@ export interface EntryState {
 	settings: DocereConfig['entrySettings']
 }
 
-interface ESA_Entry_Changed extends Pick<EntryState, 'activeFacsimile' | 'entry' | 'layers' | 'settings'> {
+interface ProjectChanged {
+	type: 'PROJECT_CHANGED',
+	settings: DocereConfig['entrySettings'],
+}
+
+interface EntryChanged extends Pick<EntryState, 'activeFacsimile' | 'entry' | 'layers'> {
 	type: "ENTRY_CHANGED",
 }
 
@@ -58,7 +63,8 @@ interface ESA_Toggle_Settings_Property {
 }
 
 export type EntryStateAction = 
-	ESA_Entry_Changed |
+	ProjectChanged |
+	EntryChanged |
 	ESA_Set_Active_Facsimile |
 	ESA_Set_Entity_Id |
 	ESA_Set_Active_Facsimile_Areas |

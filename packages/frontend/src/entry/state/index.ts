@@ -20,9 +20,16 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 
 	const { type, ...payload } = action
 	switch (action.type) {
+		case 'PROJECT_CHANGED': {
+			return {
+				...entryState,
+				settings: action.settings
+			}
+		}
+
 		case 'ENTRY_CHANGED': {
 			return {
-				...initialEntryState,
+				...entryState,
 				...payload,
 			}
 		}
@@ -151,23 +158,23 @@ export default function useEntryState(entry: Entry) {
 	React.useEffect(() => {
 		if (entry == null) return
 
-		const [entryState, entryDispatch] = x
-
-		// Extend settings defined in the config with the current settings, to keep
-		// the settings between entry change. If current settings is equal to the default,
-		// use an empty object to not override the config settings
-		const currentSettings = entryState.settings === defaultEntrySettings ? {} : entryState.settings
-		const settings = { ...config.entrySettings, ...currentSettings }
-
 		// x[1] = dispatch
-		entryDispatch({
+		x[1]({
 			activeFacsimile: entry.facsimiles?.length ? entry.facsimiles[0] : null,
 			entry,
 			layers: entry.layers,
-			settings,
 			type: 'ENTRY_CHANGED',
 		})
 	}, [entry])
+
+	React.useEffect(() => {
+		// x[1] = dispatch
+		x[1]({
+			settings: config.entrySettings,
+			type: 'PROJECT_CHANGED',
+		})
+		
+	}, [config.slug])
 
 	return x
 }
