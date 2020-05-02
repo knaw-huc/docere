@@ -79,6 +79,17 @@ export default function ESResponseWithFacetsParser(response: any, facets: Facets
 			facet.interval = response.aggregations[facet.config.id][facet.config.id].interval
 		}
 		else if (isRangeFacetData(facet)) {
+			// console.log(buckets)
+
+			if (facet.min == null) facet.min = buckets[buckets.length - 1].doc_count
+			// else facet.set_min = buckets[buckets.length - 1].doc_count
+
+			if (facet.max == null) facet.max = buckets[0].doc_count
+			// else facet.set_max = buckets[0].doc_count
+
+			// console.log(facet)
+
+
 			facetValues[facet.config.id] = buckets.map(hv => ({
 				key: hv.key,
 				count: hv.doc_count,

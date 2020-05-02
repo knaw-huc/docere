@@ -1,10 +1,12 @@
 import React from 'react'
 import { MetadataItem, DEFAULT_SPACING } from '@docere/common'
 import styled from 'styled-components'
-import { isListFacetConfig, isHierarchyFacetConfig } from '@docere/search_'
+import { isListFacetConfig, isHierarchyFacetConfig, isBooleanFacetConfig, isRangeFacetConfig, isDateFacetConfig } from '@docere/search_'
 
 import ListFacetValue from './list-value'
 import HierarchyFacetValue from './hierarchy-value'
+import BooleanFacetValue from './boolean-value'
+import RangeFacetValue from './range-value'
 
 const Wrapper = styled.li`
 	margin-bottom: ${DEFAULT_SPACING}px;
@@ -34,6 +36,18 @@ export default function MetadataItem(props: Props) {
 			{
 				isHierarchyFacetConfig(props.metadataItem) &&
 				<HierarchyFacetValue
+					metadataItem={props.metadataItem}
+				/>
+			}
+			{
+				isBooleanFacetConfig(props.metadataItem) &&
+				<BooleanFacetValue
+					metadataItem={props.metadataItem}
+				/>
+			}
+			{
+				isRangeFacetConfig(props.metadataItem) &&
+				<RangeFacetValue
 					metadataItem={props.metadataItem}
 				/>
 			}

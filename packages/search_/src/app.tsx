@@ -67,34 +67,6 @@ export default function FacetedSearch() {
 		sortOrder,
 	})
 
-	// const clearActiveFilters = React.useCallback(() => {
-	// 	setQuery('')
-	// 	setSortOrder(new Map())
-	// 	facetsDataDispatch({ type: 'clear', fields: context.facetsConfig, activeFilters: {} })
-	// }, [context.facetsConfig])
-
-	// const clearFullTextInput = React.useCallback(() => {
-	// 	setQuery('')
-	// }, [])
-
-	// React.useEffect(() => {
-	// 	if (facetsData == null || !facetsData.size) return
-	// 	const activeFilters = Array.from(facetsData.values()).reduce((prev, curr) => {
-	// 		if (curr.filters != null) prev[curr.config.id] = curr.filters
-	// 		return prev	
-	// 	}, {} as FacetedSearchContext['activeFilters'])
-
-	// 	context.onFiltersChange(activeFilters)
-	// }, [facetsData])
-
-	// React.useEffect(() => {
-	// 	setQuery('')
-	// 	setSortOrder(new Map())
-	// 	facetsDataDispatch({ type: 'clear', fields: context.facetsConfig, activeFilters: context.activeFilters })
-	// }, [context.activeFilters])
-
-	// if (facetsData == null) return null
-
 	return (
 		<Wrapper
 			className={context.className}
@@ -103,8 +75,6 @@ export default function FacetedSearch() {
 		>
 			<FullTextSearch />
 			<Header
-				// clearActiveFilters={clearActiveFilters}
-				// clearFullTextInput={clearFullTextInput}
 				currentPage={currentPage}
 				searchResult={searchResult}
 				setCurrentPage={setCurrentPage}
