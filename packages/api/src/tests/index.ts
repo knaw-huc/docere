@@ -11,9 +11,9 @@ import { logError } from '../utils'
 
 const baseUrl = 'http://localhost:3000/'
 
-async function checkGet(
+async function testGet(
 	url: string,
-	test: (response: any) => boolean
+	testFunction: (payload: any) => boolean
 ) {
 	let response: any
 	try {
@@ -30,25 +30,26 @@ async function checkGet(
 	}
 
 	const json = await response.json()
+	logTestResult(testFunction(json), JSON.stringify(json))
+}
 
-	if (test(json))
-		console.log(chalk.green('Pass'))
-	else
-		console.log(chalk.red('Fail'), JSON.stringify(json));
+function logTestResult(success: boolean, errorMessage: string = '') {
+	if (success)	console.log(chalk.green('Pass'))
+	else			console.log(chalk.red('Fail'), errorMessage);
 }
 
 async function main() {
-	checkGet(
+	testGet(
 		`${baseUrl}projects`,
 		projects => projects.length > 0
 	) 
 
-	checkGet(
+	testGet(
 		`${baseUrl}projects/gheys/config`,
 		config => config.hasOwnProperty('config')
 	)
 
-	checkGet(
+	testGet(
 		`${baseUrl}projects/gheys/documents/${encodeURIComponent('NHA_1617/1780/NL-HlmNHA_1617_1780_0001')}`,
 		fields =>
 			fields.hasOwnProperty('facsimiles') &&
@@ -59,7 +60,7 @@ async function main() {
 			!fields.hasOwnProperty('text_suggest')
 	)
 
-	checkGet(
+	testGet(
 		`${baseUrl}projects/gheys/documents/${encodeURIComponent('NHA_1617/1780/NL-HlmNHA_1617_1780_0001')}/fields`,
 		fields =>
 			fields.hasOwnProperty('facsimiles') &&
@@ -70,7 +71,7 @@ async function main() {
 			!fields.hasOwnProperty('entities')
 	)
 
-	checkGet(
+	testGet(
 		`${baseUrl}projects/gheys/mapping`,
 		mapping =>
 			mapping.hasOwnProperty('mappings') && mapping.mappings.hasOwnProperty('properties') &&

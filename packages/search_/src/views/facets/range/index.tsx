@@ -3,11 +3,11 @@ import React from 'react'
 import Facet from '../facet'
 import RangeFacetBody from './body'
 
-import type { RangeFacetData, RangeFacetValues } from '@docere/common'
+import type { RangeFacetData, RangeFacetValue, DateFacetData } from '@docere/common'
 
 export interface RangeFacetProps {
-	facetData: RangeFacetData
-	values: RangeFacetValues
+	facetData: RangeFacetData | DateFacetData
+	values: RangeFacetValue[]
 }
 function RangeFacetView(props: RangeFacetProps) {
 	return (

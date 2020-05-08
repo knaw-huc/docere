@@ -1,12 +1,16 @@
 import type { DocereConfigData, ExtractedMetadata } from '@docere/common';
 
-function normaliseDate(date: string | number) {
-	date = date.toString();
+function normaliseDate(date: string) {
+	date = date.toString()
 	if (date === '') return null
-	if (/^\d\d-\d\d-\d\d\d\d$/.test(date)) return `${date.slice(-4)}-${date.slice(3, 5)}-${date.slice(0, 2)}`
-	if (/^\d\d-\d\d\d\d$/.test(date)) return `${date.slice(-4)}-${date.slice(0, 2)}-01`
-	if (/^\d\d\d\d$/.test(date)) return `${date}-01-01`
-	return null
+
+	if (/^\d\d-\d\d-\d\d\d\d$/.test(date)) date = `${date.slice(-4)}-${date.slice(3, 5)}-${date.slice(0, 2)}`
+	if (/^\d\d-\d\d\d\d$/.test(date)) date = `${date.slice(-4)}-${date.slice(0, 2)}-01`
+	if (/^\d\d\d\d$/.test(date)) date = `${date}-01-01`
+
+	const d = new Date(date)
+
+	return isNaN(d.getTime()) ? null : d.getTime()
 }
 const extractMetadata: DocereConfigData['extractMetadata'] = function extractMetadata(doc, _config, id) {
 	const metadata: ExtractedMetadata = {}
@@ -15,6 +19,7 @@ const extractMetadata: DocereConfigData['extractMetadata'] = function extractMet
 	metadata.blocks = doc.querySelectorAll('block').length
 	metadata.chars = doc.documentElement.textContent.length
 	metadata.keywords = doc.querySelector('meta[key="keywords"]').getAttribute('value').split(' ')
+		.filter(x => x.length)
 
 	metadata.normalised_dates = doc.querySelector('meta[key="date"]').getAttribute('value').split(' ')
 		.map(normaliseDate)

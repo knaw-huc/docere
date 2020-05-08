@@ -1,7 +1,6 @@
 import React from 'react'
 
 import { isListFacetData, isBooleanFacetData, isRangeFacetData, isDateFacetData, isHierarchyFacetData } from '../../../utils'
-import { formatDate } from '../../facets/date/utils'
 
 import type { FacetData, FacetsData, ActiveFilter } from '@docere/common'
 
@@ -12,7 +11,8 @@ function hasFilter(facetData: FacetData) {
 		return facetData.filters.size > 0
 	}
 	else if (isRangeFacetData(facetData) || isDateFacetData(facetData)) {
-		return facetData.filters.hasOwnProperty('from') && facetData.filters.from != null
+		return Array.isArray(facetData.filters) && facetData.filters.length > 0
+		// return facetData.filters.hasOwnProperty('from') && facetData.filters.from != null
 	}
 
 	return false
@@ -24,11 +24,9 @@ function getFilterValue(facetData: FacetData): string[] {
 	if (isListFacetData(facetData) || isBooleanFacetData(facetData) || isHierarchyFacetData(facetData)) {
 		return Array.from(facetData.filters)
 	}
-	else if (isRangeFacetData(facetData)) {
-		return [`${facetData.filters.from} - ${facetData.filters.to}`]
-	}
-	else if (isDateFacetData(facetData)) {
-		return [`${formatDate(facetData.filters.from, facetData.interval)} - ${formatDate(facetData.filters.to, facetData.interval)}`]
+	else if (isRangeFacetData(facetData) || isDateFacetData(facetData)) {
+		const lastFilter = facetData.filters[facetData.filters.length - 1]
+		return [`${lastFilter.fromLabel} - ${lastFilter.toLabel}`]
 	}
 
 	return []

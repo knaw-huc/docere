@@ -1,7 +1,10 @@
 import { isListFacetData, isBooleanFacetData, isRangeFacetData, isDateFacetData, isHierarchyFacetData, getHierarchyField, getHierarchyChildField } from '../utils'
-import ESResponseParser from './response-parser'
 
-import type { HierarchyKeyCount, HierarchyFacetValues, FacetsData, FSResponse, FacetValues, RangeFacetValues } from '@docere/common'
+import ESResponseParser from './response-parser'
+import createBuckets, { createRangeBuckets } from './get-buckets'
+
+import type { HierarchyKeyCount, HierarchyFacetValues, FacetsData, FSResponse, FacetValues, RangeFacetValue } from '@docere/common'
+import { getTo } from '../date.utils'
 
 interface Bucket {
 	key: string | number
@@ -42,7 +45,7 @@ export default function ESResponseWithFacetsParser(response: any, facets: Facets
 
 	facets.forEach(facet => {
 		const field = isHierarchyFacetData(facet) ? getHierarchyField(facet.config.id) : facet.config.id
-		const buckets = getBuckets(response, field)
+		let buckets = getBuckets(response, field)
 
 		if (isListFacetData(facet)) {
 			facetValues[facet.config.id] = {
@@ -70,31 +73,93 @@ export default function ESResponseWithFacetsParser(response: any, facets: Facets
 			]
 		}
 		else if (isDateFacetData(facet)) {
-			// TODO set values to from and to, so we have to calculate less in the views
-			facetValues[facet.config.id] = buckets.map(hv => ({
-				key: hv.key,
-				count: hv.doc_count,
-			})) as RangeFacetValues
+			const lastFilter = facet.filters[facet.filters.length - 1]
+			if (lastFilter != null) {
+				buckets = buckets.filter(b => {
+					return b.key >= lastFilter.from && b.key <= lastFilter.to
+				})
+			}
 
-			facet.interval = response.aggregations[facet.config.id][facet.config.id].interval
+			let firstBucketKey, lastBucketKey
+			if (lastFilter != null) {
+				firstBucketKey = lastFilter.from
+				lastBucketKey = lastFilter.to
+			} else if (buckets.length > 1) {
+				firstBucketKey = buckets[0].key
+				lastBucketKey = buckets[buckets.length - 1].key
+			} else if (buckets.length === 1) {
+				firstBucketKey = buckets[0].key
+				lastBucketKey = getTo(new Date(buckets[0].key), 1, facet.interval).getTime()
+			} else {
+				firstBucketKey = facet.value.from
+				lastBucketKey = facet.value.to
+			}
+
+			const [values, granularity] = createBuckets(new Date(firstBucketKey), new Date(lastBucketKey))
+			facet.interval = granularity
+
+			buckets.forEach(b => {
+				const ratio = (b.key as number - values[0].from) / (values[values.length - 1].to - values[0].from)
+				const index = Math.floor(ratio * values.length)
+				values[index].count += b.doc_count
+			})
+
+			if (facet.value == null || !facet.filters.length) {
+				const min = values[0]
+				const max = values[values.length - 1]
+
+				facet.value = {
+					from: min.from,
+					to: max.to,
+					fromLabel: min.fromLabel,
+					toLabel: max.toLabel,
+					count: 0
+				}
+			}
+			
+			facetValues[facet.config.id] = values
 		}
 		else if (isRangeFacetData(facet)) {
-			// console.log(buckets)
+			// Set the base of the range facet when
+			// 1) it's the first time the facet is loaded (facet.value == null)
+			// 2) the facet is updated, but not from it's own filter  (!facet.filters.length)
+			if ((facet.value == null || !facet.filters.length) && buckets.length) {
+				const min = buckets[0].key as number
+				const max = buckets[buckets.length - 1].key as number + facet.interval
 
-			if (facet.min == null) facet.min = buckets[buckets.length - 1].doc_count
-			// else facet.set_min = buckets[buckets.length - 1].doc_count
+				facet.value = {
+					from: min,
+					to: max,
+					fromLabel: Math.floor(min).toString(),
+					toLabel: Math.ceil(max).toString(),
+					count: 0
+				}
+			}
 
-			if (facet.max == null) facet.max = buckets[0].doc_count
-			// else facet.set_max = buckets[0].doc_count
+			let values: RangeFacetValue[]
+			if (facet.filters.length) {
+				values = createRangeBuckets(facet)
 
-			// console.log(facet)
+				buckets.forEach(b => {
+					const ratio = (b.key as number - values[0].from) / (values[values.length - 1].to - values[0].from)
+					const index = Math.floor(ratio * values.length)
+					values[index].count += b.doc_count
+				})
+			} else {
+				values = buckets.map(hv => {
+					let to = hv.key as number + facet.interval
+					const rangeFacetValue: RangeFacetValue = {
+						from: hv.key as number,
+						to,
+						fromLabel: Math.floor(hv.key as number).toString(),
+						toLabel: Math.ceil(to).toString(),
+						count: hv.doc_count,
+					}
+					return rangeFacetValue
+				})
+			}
 
-
-			facetValues[facet.config.id] = buckets.map(hv => ({
-				key: hv.key,
-				count: hv.doc_count,
-			})) as RangeFacetValues
-		}
+			facetValues[facet.config.id] = values		}
 	})
 
 

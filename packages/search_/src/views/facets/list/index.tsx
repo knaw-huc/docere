@@ -8,7 +8,6 @@ import type { ListFacetData, ListFacetValues } from '@docere/common'
 
 export interface ListFacetProps {
 	facetData: ListFacetData
-	// facetsDataDispatch: React.Dispatch<FacetsDataReducerAction>
 	values: ListFacetValues
 }
 function ListFacet(props: ListFacetProps) {
@@ -19,7 +18,6 @@ function ListFacet(props: ListFacetProps) {
 		>
 			<ListFacetValuesView
 				facetData={props.facetData}
-				// facetsDataDispatch={props.facetsDataDispatch}
 				values={props.values}
 			/>
 		</Facet>

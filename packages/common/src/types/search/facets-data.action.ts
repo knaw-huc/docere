@@ -1,5 +1,5 @@
 import type { FacetsConfig } from '.'
-import type { RangeFacetFilter } from './facets'
+import type { RangeFacetValue } from './facets'
 import { SortBy, SortDirection } from '../../enum'
 
 // TODO move back from common to search_?
@@ -62,9 +62,15 @@ interface FacetsDataReducerActionViewMore {
 	total: number
 }
 
-type FacetsDataReducerActionSetRange = RangeFacetFilter & {
+type SetRange = {
 	facetId: string
-	type: 'set_range'
+	type: 'SET_RANGE'
+	value: RangeFacetValue
+}
+
+type ResetRange = {
+	facetId: string
+	type: 'RESET_RANGE'
 }
 
 interface Reset {
@@ -83,4 +89,5 @@ export type FacetsDataReducerAction =
 	FacetsDataReducerActionSetQuery |
 	FacetsDataReducerActionViewLess |
 	FacetsDataReducerActionViewMore |
-	FacetsDataReducerActionSetRange
+	SetRange |
+	ResetRange

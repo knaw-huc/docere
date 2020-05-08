@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { small } from '../../index.components'
 
 import type { EntryStateAction, Entity } from '@docere/common'
-import ListFacetValue from '../metadata/list-value'
+import ListFacetValue from '../metadata/list-facet'
 
 const Li = styled.li`
 	align-content: center;

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { SearchContext } from '@docere/search_'
 
-import Value from './value'
+import Value from './list-facet/value'
 
 import type { BooleanMetadata, BooleanFacetData } from '@docere/common'
 
@@ -9,7 +9,7 @@ import type { BooleanMetadata, BooleanFacetData } from '@docere/common'
 interface Props {
 	metadataItem: BooleanMetadata
 }
-export default function ListFacetValue(props: Props) {
+export default function BooleanFacetValue(props: Props) {
 	const searchContext = React.useContext(SearchContext)
 	const { facets } = searchContext.state
 
@@ -37,7 +37,7 @@ export default function ListFacetValue(props: Props) {
 			id={id}
 			onClick={handleSetSearchFilter}
 		>
-			{facet?.config.labels[value]}
+			{facet?.config.labels[value.toString() as 'true' | 'false']}
 		</Value>
 	)
 }

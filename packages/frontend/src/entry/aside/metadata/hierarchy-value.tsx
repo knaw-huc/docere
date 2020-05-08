@@ -2,7 +2,7 @@ import * as React from 'react'
 import styled from 'styled-components'
 import { SearchContext } from '@docere/search_'
 
-import Value from './value'
+import Value from './list-facet/value'
 
 import type { HierarchyMetadata, FacetsData, HierarchyFacetData } from '@docere/common'
 

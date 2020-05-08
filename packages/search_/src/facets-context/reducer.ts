@@ -7,6 +7,7 @@ import { initialSearchContextState } from './index'
 
 import type { FacetsConfig, FacetsDataReducerAction } from '@docere/common'
 import type { FacetsState } from './index'
+import { getRangeBucketSize } from '../use-search/get-buckets'
 
 export default function useFacetsDataReducer(facetsConfig: FacetsConfig) {
 	const x = React.useReducer(facetsDataReducer, initialSearchContextState)
@@ -109,9 +110,15 @@ function facetsDataReducer(state: FacetsState, action: FacetsDataReducerAction):
 
 	if (isRangeFacetData(facet) || isDateFacetData(facet)) {
 		switch(action.type) {
-			case 'set_range': {
-				const { type, facetId, ...filter } = action
-				facet.filters = filter
+			case 'SET_RANGE': {
+				const index = facet.filters.findIndex(f => f.from === action.value.from && f.to === action.value.to)
+				if (index !== -1) facet.filters = facet.filters.slice(0, index + 1)
+				else facet.filters = facet.filters.concat(action.value)
+
+				if (isRangeFacetData(facet)) {
+					console.log(index, action, facet.filters)
+					facet.interval = getRangeBucketSize(action.value.to - action.value.from)
+				}
 
 				return {
 					...state,
@@ -119,9 +126,9 @@ function facetsDataReducer(state: FacetsState, action: FacetsDataReducerAction):
 				}
 			}
 
-			case 'REMOVE_SEARCH_FILTER': {
-				// const { type, ...filter } = action
-				facet.filters = null
+			case 'RESET_RANGE': {
+				facet.filters = []
+				if (isRangeFacetData(facet)) facet.interval = getRangeBucketSize(facet.config.range)
 
 				return {
 					...state,

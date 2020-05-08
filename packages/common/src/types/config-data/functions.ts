@@ -32,7 +32,7 @@ export interface Note extends TextData {
 }
 
 // EXTRACT METADATA
-export type ExtractedMetadata = Record<string, number | boolean | string | string[]>
+export type ExtractedMetadata = Record<string, number | number[] | boolean | string | string[]>
 
 // EXTRACT LAYERS
 export interface TextLayerConfig extends LayerConfig {

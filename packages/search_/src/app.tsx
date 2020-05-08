@@ -4,7 +4,6 @@ import { SortOrder } from '@docere/common'
 
 import BooleanFacet from './views/facets/boolean'
 import HierarchyFacet from './views/facets/hierarchy'
-import DateFacet from './views/facets/date'
 import ListFacet from './views/facets/list'
 import RangeFacet from './views/facets/range'
 import { isBooleanFacetData, isListFacetData, isRangeFacetData, isDateFacetData, isHierarchyFacetData } from './utils'
@@ -14,7 +13,7 @@ import FullTextSearch from './views/full-text-search'
 import useSearch from './use-search'
 import Context from './context'
 
-import type { ListFacetValues, BooleanFacetValues, HierarchyFacetValues, RangeFacetValues } from '@docere/common'
+import type { ListFacetValues, BooleanFacetValues, HierarchyFacetValues, RangeFacetValue } from '@docere/common'
 import SearchContext from './facets-context'
 
 const Wrapper = styled.div`
@@ -114,24 +113,24 @@ export default function FacetedSearch() {
 									/>
 								)
 							}
-							else if (isDateFacetData(facetData)) {
-								return (
-									<DateFacet
-										facetData={facetData}
-										key={facetData.config.id}
-										values={values as RangeFacetValues}
-									/>
-								)
-							}
-							else if (isRangeFacetData(facetData)) {
+							else if (isRangeFacetData(facetData) || isDateFacetData(facetData)) {
 								return (
 									<RangeFacet
 										facetData={facetData}
 										key={facetData.config.id}
-										values={values as RangeFacetValues}
+										values={values as RangeFacetValue[]}
 									/>
 								)
 							}
+							// else if (isRangeFacetData(facetData)) {
+							// 	return (
+							// 		<RangeFacet
+							// 			facetData={facetData}
+							// 			key={facetData.config.id}
+							// 			values={values as RangeFacetValue[]}
+							// 		/>
+							// 	)
+							// }
 							else {
 								return null
 							}

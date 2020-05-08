@@ -3,10 +3,11 @@ import { MetadataItem, DEFAULT_SPACING } from '@docere/common'
 import styled from 'styled-components'
 import { isListFacetConfig, isHierarchyFacetConfig, isBooleanFacetConfig, isRangeFacetConfig, isDateFacetConfig } from '@docere/search_'
 
-import ListFacetValue from './list-value'
+import ListFacetValue from './list-facet'
 import HierarchyFacetValue from './hierarchy-value'
 import BooleanFacetValue from './boolean-value'
-import RangeFacetValue from './range-value'
+// import RangeFacetValue from './range-value'
+import DateFacetValue from './date-facet'
 
 const Wrapper = styled.li`
 	margin-bottom: ${DEFAULT_SPACING}px;
@@ -23,7 +24,7 @@ const Title = styled.div`
 interface Props {
 	metadataItem: MetadataItem
 }
-export default function MetadataItem(props: Props) {
+export default function MetadataItemComp(props: Props) {
 	return (
 		<Wrapper>
 			<Title>{props.metadataItem.title}</Title>
@@ -47,7 +48,13 @@ export default function MetadataItem(props: Props) {
 			}
 			{
 				isRangeFacetConfig(props.metadataItem) &&
-				<RangeFacetValue
+				<DateFacetValue
+					metadataItem={props.metadataItem}
+				/>
+			}
+			{
+				isDateFacetConfig(props.metadataItem) &&
+				<DateFacetValue
 					metadataItem={props.metadataItem}
 				/>
 			}

@@ -54,7 +54,7 @@ function Histogram(props: Props) {
 		const to = getEndDate(value.key, props.facetData.interval)
 
 		searchContext.dispatch({
-			type: 'set_range',
+			type: 'SET_RANGE',
 			facetId: props.facetData.config.id,
 			from,
 			to,

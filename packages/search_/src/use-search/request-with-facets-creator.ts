@@ -66,27 +66,33 @@ export default class ESRequestWithFacets extends ESRequest {
 
 		const DatePostFilters = facetsData
 			.filter(isDateFacetData)
-			.filter(facetData => facetData.filters != null)
-			.map(facet => ({
-				range: {
-					[facet.config.id]: {
-						gte: new Date(facet.filters.from).toISOString(),
-						lte: facet.filters.to != null ? new Date(facet.filters.to).toISOString() : null
+			.filter(facetData => facetData.filters.length > 0)
+			.map(facet => {
+				const lastFilter = facet.filters[facet.filters.length - 1]
+				return {
+					range: {
+						[facet.config.id]: {
+							gte: new Date(lastFilter.from).toISOString(),
+							lt: lastFilter.to != null ? new Date(lastFilter.to).toISOString() : null
+						}
 					}
 				}
-			}))
+			})
 
 		const RangePostFilters = facetsData
 			.filter(isRangeFacetData)
-			.filter((facetData: RangeFacetData) => facetData.filters != null)
-			.map((facet: RangeFacetData) => ({
-				range: {
-					[facet.config.id]: {
-						gte: facet.filters.from,
-						lte: facet.filters.to != null ? facet.filters.to : null
+			.filter(facetData => facetData.filters.length > 0)
+			.map((facet: RangeFacetData) => {
+				const lastFilter = facet.filters[facet.filters.length - 1]
+				return {
+					range: {
+						[facet.config.id]: {
+							gte: lastFilter.from,
+							lt: lastFilter.to != null ? lastFilter.to : null
+						}
 					}
 				}
-			}))
+			})
 
 
 		const post_filters = BooleanAndListPostFilters
@@ -243,7 +249,7 @@ export default class ESRequestWithFacets extends ESRequest {
 		const values = {
 			histogram: {
 				field: facet.config.id,
-				interval: facet.config.interval,
+				interval: facet.interval,
 			}
 		}
 
@@ -252,8 +258,10 @@ export default class ESRequestWithFacets extends ESRequest {
 
 	private createDateHistogramAggregation(facet: DateFacetData): Record<string, any> {
 		const values = {
-			auto_date_histogram: {
+			date_histogram: {
 				field: facet.config.id,
+				calendar_interval: `1${facet.interval}`,
+				min_doc_count: 1
 			}
 		}
 

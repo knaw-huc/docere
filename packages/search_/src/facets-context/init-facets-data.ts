@@ -1,18 +1,12 @@
 import { isListFacetConfig, isBooleanFacetConfig, isHierarchyFacetConfig, isRangeFacetConfig, isDateFacetConfig } from '../utils'
 
 import type { FacetConfig, FacetsConfig, BooleanFacetConfig, BooleanFacetData, DateFacetConfig, DateFacetData, HierarchyFacetConfig, HierarchyFacetData, ListFacetConfig, ListFacetData, RangeFacetConfig, RangeFacetData, FacetData, FacetsData } from '@docere/common'
+import { getRangeBucketSize } from '../use-search/get-buckets'
 
 function initBooleanFacet(config: BooleanFacetConfig): BooleanFacetData {
 	return {
 		config,
 		filters: new Set(),
-	}
-}
-
-function initDateFacet(config: DateFacetConfig): DateFacetData {
-	return {
-		config,
-		filters: null,
 	}
 }
 
@@ -34,12 +28,23 @@ function initListFacet(config: ListFacetConfig): ListFacetData {
 	}
 }
 
+function initDateFacet(config: DateFacetConfig): DateFacetData {
+	return {
+		collapseFilters: config.collapseFilters,
+		config,
+		filters: [],
+		interval: config.interval,
+		value: null,
+	}
+}
+
 function initRangeFacet(config: RangeFacetConfig): RangeFacetData {
 	return {
+		collapseFilters: config.collapseFilters,
 		config,
-		filters: null,
-		max: null,
-		min: null,
+		filters: [],
+		interval: getRangeBucketSize(config.range),
+		value: null,
 	}
 }
 

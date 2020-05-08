@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { SearchContext } from '@docere/search_'
 
-import Value from './value'
+import Value from './list-facet/value'
 
-import type { RangeMetadata, RangeFacetData } from '@docere/common'
+import type { RangeMetadata, /* RangeFacetData */ } from '@docere/common'
 
 
 interface Props {
@@ -11,7 +11,6 @@ interface Props {
 }
 export default function RangeFacetValue(props: Props) {
 	const searchContext = React.useContext(SearchContext)
-	// const { facets } = searchContext.state
 
 	const handleSetSearchFilter = React.useCallback(ev => {
 		ev.stopPropagation()
@@ -27,9 +26,6 @@ export default function RangeFacetValue(props: Props) {
 	}, [])
 
 	const { id, value } = props.metadataItem
-
-	// const facet = facets.get(id) as RangeFacetData
-	// const filters = facet?.filters
 
 	return (
 		<Value

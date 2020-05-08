@@ -2,7 +2,7 @@ import React from 'react'
 import { EsDataType, SortBy, SortDirection } from '@docere/common'
 
 import SearchContext from './facets-context'
-import useSearchReducer from './facets-context/facets-data'
+import useSearchReducer from './facets-context/reducer'
 
 import Context, { defaultFacetedSearchProps } from './context'
 import App from './app'
@@ -10,6 +10,7 @@ import App from './app'
 import type { FacetedSearchProps, ResultBodyProps } from '@docere/common'
 
 export * from './utils'
+export * from './date.utils'
 export { EsDataType, SearchContext, useSearchReducer, SortBy, SortDirection }
 
 export type {

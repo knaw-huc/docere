@@ -1,7 +1,7 @@
 import { EsDataType, SortBy, SortDirection } from "../../enum"
 import { BaseConfig } from '../config-data/config'
 
-export type FacetValues = ListFacetValues | BooleanFacetValues | RangeFacetValues
+export type FacetValues = ListFacetValues | BooleanFacetValues | RangeFacetValue[]
 
 export type FacetData = ListFacetData | BooleanFacetData | HierarchyFacetData | RangeFacetData | DateFacetData
 export type FacetsData = Map<string, FacetData>
@@ -23,16 +23,13 @@ export type FacetConfig = BooleanFacetConfig | DateFacetConfig | HierarchyFacetC
 
 // FACET FILTERS
 export type ListFacetFilter = Set<string>
-export interface RangeFacetFilter {
-	from: number
-	to?: number
-}
-export type FacetFilter = ListFacetFilter | RangeFacetFilter
+
+export type FacetFilter = ListFacetFilter | RangeFacetValue[]
 
 // BOOLEAN FACET
 export interface BooleanFacetConfig extends FacetConfigBase {
 	readonly datatype: EsDataType.Boolean
-	readonly labels?: { false: string, true: string }
+	readonly labels?: { 'false': string, 'true': string }
 }
 
 export interface BooleanFacetData {
@@ -44,17 +41,6 @@ export type BooleanFacetValues = [
 	{ key: 'true', count: number},
 	{ key: 'false', count: number}
 ]
-
-// DATE FACET
-export interface DateFacetConfig extends FacetConfigBase {
-	readonly datatype: EsDataType.Date
-}
-
-export interface DateFacetData {
-	config: DateFacetConfig
-	filters: RangeFacetFilter,
-	interval?: 'year' | 'month' | 'day'
-} 
 
 // HIERARCHY FACET
 export interface HierarchyFacetConfig extends FacetConfigBase {
@@ -108,21 +94,47 @@ export interface ListFacetValues {
 	values: KeyCount[]
 }
 
-// RANGE FACET
-export interface RangeFacetConfig extends FacetConfigBase {
-	readonly datatype: EsDataType.Integer
-	readonly interval: number,
+// DATE & RANGE FACET
+interface DateAndRangeFacetConfig extends FacetConfigBase {
+	readonly collapseFilters?: boolean
 }
 
-interface RangeKeyCount {
-	key: number,
+interface DateAndRangeFacetData {
+	collapseFilters: boolean
+	filters: RangeFacetValue[],
+	value: RangeFacetValue
+} 
+
+// DATE FACET
+export interface DateFacetConfig extends DateAndRangeFacetConfig {
+	readonly datatype: EsDataType.Date
+	readonly interval: DateInterval
+}
+
+export type DateInterval = 'y' | 'q' | 'M' | 'd' | 'h' | 'm'
+
+export interface DateFacetData extends DateAndRangeFacetData {
+	config: DateFacetConfig
+	interval: DateInterval
+} 
+
+// RANGE FACET
+export interface RangeFacetConfig extends DateAndRangeFacetConfig {
+	readonly datatype: EsDataType.Integer
+	readonly range: number,
+}
+
+export interface RangeFacetValue {
+	from: number
+	to: number
+	fromLabel: string
+	toLabel: string
 	count: number
 }
-export type RangeFacetValues = RangeKeyCount[]
+// export type RangeFacetValues = RangeFacetValue[]
 
-export interface RangeFacetData {
+export interface RangeFacetData extends DateAndRangeFacetData {
+	interval: number
 	config: RangeFacetConfig
-	filters: RangeFacetFilter,
-	min: number,
-	max: number
+	// interval: number
 } 

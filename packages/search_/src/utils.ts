@@ -51,3 +51,4 @@ export function getHierarchyChildField(parentField: string) {
 	const childNumber = parseInt(number, 10) + 1
 	return `${facetId}${splitter}${childNumber}`
 }
+
