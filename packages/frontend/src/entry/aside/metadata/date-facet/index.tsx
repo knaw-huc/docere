@@ -89,9 +89,9 @@ export default function DateFacetValue(props: Props) {
 					.map((num, i) => {
 						const ratio = (num - facet.value.from) / (facet.value.to - facet.value.from)
 
-						// 0 => -1, 1 => 1, 2 => -2, 3 => 2, 4 => -3, 5 => 3
-						const index = i % 2 === 0 ? (i / -2) - 1 : (i / 2) + .5
-						console.log(i, index, num, new Date(num))
+						const cutoff = Math.floor(value.length / 2)
+						let index = (i + 1) <= cutoff ? i - cutoff : i - cutoff + 1
+						if (value.length === 1) index = -1
 						
 						return (
 							<ValueWrapper
