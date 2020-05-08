@@ -8,9 +8,16 @@ import styled from 'styled-components'
 
 interface TProps { count: number }
 const Timeline = styled.div`
-	border-top: 1px solid ${Colors.Orange}80;
+	display: grid;
+	grid-template-columns: fit-content(25%) auto fit-content(25%);
 	height: ${(props: TProps) => `${props.count + 1}em`};
-	margin-top: 1.3em;
+`
+
+const Values = styled.div`
+	align-self: end;
+	border-top: 1px solid ${Colors.Orange}80;
+	height: 49%;
+	margin: 0 .5em;
 	position: relative;
 `
 
@@ -18,9 +25,18 @@ interface VWProps { index: number, ratio: number }
 const ValueWrapper = styled.div`
 	font-size: .8em;
 	padding-right: .4em;
-	padding-top: ${(props: VWProps) => `${(props.index * 1.4) + .2}em`};
+	${(props: VWProps) => {
+		// console.log(props.index, ((Math.abs(props.index) - 1) * 1.4) + .2)
+		// console.log(props.index, ((Math.abs(props.index) - 1) * 1.4) + .2)
+		return props.index > 0 ?
+			`padding-top: ${((Math.abs(props.index) - 1) * 1.3) + .2}em;` :
+			`padding-bottom: ${((Math.abs(props.index) - 1) * 1.3) + .2}em;
+			top: ${(Math.abs(props.index) * -1.3) - .2}em;
+			`
+	}}
 	position: absolute;
 	white-space: nowrap;
+	z-index: ${props => 1000 - Math.abs(props.index)};
 
 	${props => 
 		props.ratio > .5 ?
@@ -40,17 +56,14 @@ const ValueWrapper = styled.div`
 	}
 `
 
-const MinDate = styled.div`
-	position: absolute;
+const Min = styled.div`
 	color: ${Colors.Orange};
-	left: 0;
 	font-size: .66rem;
-	top: -1.4em;
+	align-self: center;
 `
 
-const MaxDate = styled(MinDate)`
+const Max = styled(Min)`
 	left: initial;
-	right: 0;
 `
 
 interface Props {
@@ -68,17 +81,21 @@ export default function DateFacetValue(props: Props) {
 
 	return (
 		<Timeline count={value.length}>
-			<MinDate>{facet.value.fromLabel}</MinDate>
-			<MaxDate>{facet.value.toLabel}</MaxDate>
+			<Min>{facet.value.fromLabel}</Min>
+			<Values>
 			{
 				value
-					.sort((a, b) => b - a)
+					.sort((a, b) => a - b)
 					.map((num, i) => {
 						const ratio = (num - facet.value.from) / (facet.value.to - facet.value.from)
+
+						// 0 => -1, 1 => 1, 2 => -2, 3 => 2, 4 => -3, 5 => 3
+						const index = i % 2 === 0 ? (i / -2) - 1 : (i / 2) + .5
+						console.log(i, index, num, new Date(num))
 						
 						return (
 							<ValueWrapper
-								index={value.length - 1 - i}
+								index={index}
 								key={i}
 								ratio={ratio}
 							>
@@ -100,6 +117,8 @@ export default function DateFacetValue(props: Props) {
 						)
 					})
 			}
+			</Values>
+			<Max>{facet.value.toLabel}</Max>
 		</Timeline>
 	)
 }
