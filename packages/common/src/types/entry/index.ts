@@ -8,9 +8,9 @@ export * from './state'
 export type ListMetadata = ListFacetConfig & { value: string | string[] }
 export type HierarchyMetadata = HierarchyFacetConfig & { value: string[] }
 export type BooleanMetadata = BooleanFacetConfig & { value: boolean } 
-export type RangeMetadata = RangeFacetConfig & { value: number } 
-export type DateMetadata = DateFacetConfig & { value: number[] } 
-export type MetadataItem = ListMetadata | HierarchyMetadata | BooleanMetadata | RangeMetadata
+export type RangeMetadata = RangeFacetConfig & { value: number | number[] } 
+export type DateMetadata = DateFacetConfig & { value: number | number[] } 
+export type MetadataItem = ListMetadata | HierarchyMetadata | BooleanMetadata | RangeMetadata | DateMetadata
 
 export interface Entry {
 	doc: XMLDocument

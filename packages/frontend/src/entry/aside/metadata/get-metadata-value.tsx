@@ -47,13 +47,7 @@ export default function MetadataItemComp(props: Props) {
 				/>
 			}
 			{
-				isRangeFacetConfig(props.metadataItem) &&
-				<DateFacetValue
-					metadataItem={props.metadataItem}
-				/>
-			}
-			{
-				isDateFacetConfig(props.metadataItem) &&
+				(isRangeFacetConfig(props.metadataItem) || isDateFacetConfig(props.metadataItem)) &&
 				<DateFacetValue
 					metadataItem={props.metadataItem}
 				/>

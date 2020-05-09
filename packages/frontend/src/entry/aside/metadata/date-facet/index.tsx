@@ -3,7 +3,7 @@ import { formatDate, SearchContext, isDateFacetConfig } from '@docere/search_'
 
 import MetadataValue from '../value'
 
-import { DateMetadata, RangeFacetData, Colors, /* RangeFacetData */ } from '@docere/common'
+import { RangeFacetData, Colors, RangeMetadata, DateMetadata, /* RangeFacetData */ } from '@docere/common'
 import styled from 'styled-components'
 
 interface TProps { count: number }
@@ -67,14 +67,13 @@ const Max = styled(Min)`
 `
 
 interface Props {
-	metadataItem: DateMetadata
+	metadataItem: DateMetadata | RangeMetadata
 }
 export default function DateFacetValue(props: Props) {
 	const searchContext = React.useContext(SearchContext)
 
-	let { value } = props.metadataItem
-	if (!Array.isArray(value)) value = [value]
-	if (!value.length) return '-'
+	const value = Array.isArray(props.metadataItem.value) ? props.metadataItem.value : [props.metadataItem.value]
+	if (!value.length) return <>-</>
 
 	const facet = (searchContext.state.facets?.get(props.metadataItem.id) as RangeFacetData)
 	if (facet?.value == null) return null
