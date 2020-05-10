@@ -1,24 +1,29 @@
 import React from 'react'
 import styled from 'styled-components'
-import { DEFAULT_SPACING } from '@docere/common'
+import { DEFAULT_SPACING, PANEL_HEADER_HEIGHT, Colors } from '@docere/common'
 import type { EntryStateAction, Layer } from '@docere/common'
 
 const Header = styled.header`
-	background: #EEE;
+	background: ${Colors.Grey};
 	box-shadow: 0 1px 4px #888;
-	color: #444;
 	font-size: .8rem;
-	height: ${DEFAULT_SPACING}px;
-	line-height: ${DEFAULT_SPACING}px;
+	height: ${PANEL_HEADER_HEIGHT}px;
+	line-height: ${PANEL_HEADER_HEIGHT}px;
 	padding-left: ${DEFAULT_SPACING}px;
 	position: relative;
-	text-transform: uppercase;
 `
 
-const Title = styled.div``
+const Title = styled.div`
+	color: #EEE;
+
+	small {
+		color: #888;
+		margin-right: .33rem;
+	}
+`
 
 const Close = styled.div`
-	background: #DDD;
+	color: #888;
 	cursor: pointer;
 	position: absolute;
 	right: ${DEFAULT_SPACING}px;
@@ -27,7 +32,7 @@ const Close = styled.div`
 	width: ${DEFAULT_SPACING}px;
 
 	&:hover {
-		font-weight: bold;
+		color: #EEE;
 	}
 `
 
@@ -43,8 +48,11 @@ export default function PanelHeader(props: Props) {
 
 	return (
 		<Header>
-			<Title>{props.children}</Title>
-			<Close onClick={togglePanel}>x</Close>
+			<Title>
+				<small>panel</small>
+				{props.children}
+			</Title>
+			<Close onClick={togglePanel}>✖</Close>
 		</Header>
 	)
 }

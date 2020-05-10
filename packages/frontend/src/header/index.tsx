@@ -1,30 +1,22 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { MAINHEADER_HEIGHT, TOP_OFFSET, DEFAULT_SPACING, TOPMENU_HEIGHT, Viewport } from '@docere/common'
+import { TOP_OFFSET, DEFAULT_SPACING, Viewport, Colors } from '@docere/common'
 import type { AppStateAction } from '@docere/common'
 import PagesMenu from './pages'
 import ProjectContext from '../app/context'
 
 const Wrapper = styled.header`
-	background: linear-gradient(to right, #988258, #c7aa71);
+	background: ${Colors.GreyLight};
 	box-sizing: border-box;
-	display: grid;
-	grid-template-rows: ${MAINHEADER_HEIGHT}px ${TOPMENU_HEIGHT}px;
 	height: ${TOP_OFFSET}px;
 	position: sticky;
 	top: 0;
 	z-index: 9999;
-
-    background-image: url(/static/images/bg.jpg);
-    background-position: bottom;
-	background-size: 100% auto;
-	box-shadow: 0 2px 3px black;
 `
 
 const TopMenu = styled.div`
 	display: grid;
 	grid-template-columns: 50% 50%;
-	height: ${DEFAULT_SPACING}px;
 	padding: 0 ${DEFAULT_SPACING}px;
 
 	& > div {
@@ -35,11 +27,10 @@ const TopMenu = styled.div`
 
 const H1 = styled('h1')`
 	cursor: pointer;
-	font-size: 1.25em;
+	font-size: .9rem;
 	margin: 0;
 	text-transform: uppercase;
 	align-self: center;
-    font-style: italic;
     color: white;
     text-shadow: 1px 1px 5px #404040;
 	letter-spacing: .075em;
@@ -48,6 +39,14 @@ const H1 = styled('h1')`
 	a:hover, a:link, a:active, a:visited {
 		color: inherit;
 		text-decoration: none;
+	}
+
+	small {
+		font-weight: normal;
+		font-size: 0.8rem;
+		text-transform: none;
+		margin-right: 0.66rem;
+		color: #aaa;
 	}
 `
 
@@ -67,6 +66,7 @@ export default React.memo(function Header(props: Props) {
 				<H1
 					onClick={setSearchTab}
 				>
+					<small>Docere</small>
 					{config.title}
 				</H1>
 				<PagesMenu

@@ -9,6 +9,7 @@ const config: DocereConfig = {
 		{
 			datatype: EsDataType.Date,
 			id: 'date',
+			interval: 'y',
 			order: 0,
 		},
 		{
