@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import HucFacetedSearch  from '@docere/search_'
-import { DEFAULT_SPACING, TOP_OFFSET, RESULT_ASIDE_WIDTH, UIComponentType, SearchTab } from '@docere/common'
+import { TOP_OFFSET, UIComponentType, SearchTab } from '@docere/common'
 
 import ProjectContext, { useUIComponent } from '../app/context'
 import { FileExplorerProps } from './wrap-as-file-explorer'
@@ -17,52 +17,51 @@ const FS = styled(HucFacetedSearch)`
 	height: calc(100vh - ${TOP_OFFSET}px);
 	overflow-y: auto;
 	overflow-x: hidden;
-	width: 100vw;
-
-	${props => {
-		if (props.disableDefaultStyle) {
-			return `
-				display: grid;
-				grid-template-columns: calc(100vw - ${RESULT_ASIDE_WIDTH}px) ${RESULT_ASIDE_WIDTH}px;
-
-				& > aside {
-					max-height: 0;
-					overflow: hidden;
-				}
-
-				#huc-fs-active-filters {
-					display: none;
-				}
-
-				#huc-fs-header {
-					grid-template-columns: 0 1fr;
-					grid-template-rows: 0 48px;
-					padding-top: 0;
-					top: 0;
-
-					.right {
-						display: none;
-					}
-
-					.pagination {
-						margin-left: 32px;
-						width: 80px;
-
-						.pagenumbers {
-							& > div:not(.active) {
-								display: none;
-							}
-						}
-					}
-				}
-
-				#huc-fs-search-results {
-					padding: 0 ${DEFAULT_SPACING}px ${DEFAULT_SPACING * 2}px ${DEFAULT_SPACING}px;
-				}
-			`
-		}
-	}}
 `
+
+	// ${props => {
+	// 	if (props.disableDefaultStyle) {
+	// 		return `
+	// 			display: grid;
+	// 			grid-template-columns: calc(100vw - ${SEARCH_RESULT_ASIDE_WIDTH}px) ${SEARCH_RESULT_ASIDE_WIDTH}px;
+
+	// 			& > aside {
+	// 				max-height: 0;
+	// 				overflow: hidden;
+	// 			}
+
+	// 			#huc-fs-active-filters {
+	// 				display: none;
+	// 			}
+
+	// 			#huc-fs-header {
+	// 				grid-template-columns: 0 1fr;
+	// 				grid-template-rows: 0 48px;
+	// 				padding-top: 0;
+	// 				top: 0;
+
+	// 				.right {
+	// 					display: none;
+	// 				}
+
+	// 				.pagination {
+	// 					margin-left: ${DEFAULT_SPACING}px;
+	// 					width: 80px;
+
+	// 					.pagenumbers {
+	// 						& > div:not(.active) {
+	// 							display: none;
+	// 						}
+	// 					}
+	// 				}
+	// 			}
+
+	// 			#huc-fs-search-results {
+	// 				padding: 0 ${DEFAULT_SPACING}px ${DEFAULT_SPACING * 2}px ${DEFAULT_SPACING}px;
+	// 			}
+	// 		`
+	// 	}
+	// }}
 
 const excludeResultFields = ['text', 'text_suggest']
 
@@ -91,20 +90,19 @@ function Search(props: FileExplorerProps) {
 	return (
 		<FS
 			autoSuggest={autoSuggest}
-			disableDefaultStyle={props.searchTab === SearchTab.Results}
 			excludeResultFields={excludeResultFields}
-			// facetsConfig={facetsConfig}
 			ResultBodyComponent={ResultBodyComponent}
-			// onFiltersChange={handleFiltersChange}
 			onClickResult={onClickResult}
 			resultBodyProps={{
 				activeId: props.entry == null ? null : props.entry.id,
 				searchTab: props.searchTab,
 			}}
 			resultsPerPage={config.searchResultCount}
+			small={props.searchTab === SearchTab.Results}
 			url={`${searchBaseUrl}${config.slug}/_search`}
 		/>
 	)
 }
+			// disableDefaultStyle={props.searchTab === SearchTab.Results}
 
 export default React.memo(Search)

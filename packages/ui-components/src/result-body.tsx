@@ -16,7 +16,7 @@ const Wrapper = styled.div`
 	font-size: ${(props: WProps) => props.small ? '.8em' : '1em'};
 	grid-column-gap: ${(props: WProps) => props.small ? 32 / 2 : 32}px;
 	grid-template-columns: ${(props: WProps) => props.hasFacsimile ?
-		`${props.small ? '64px 0' : '64px auto'}` :
+		'64px auto' :
 		'auto'
 	};
 	padding: 1.5em 0;

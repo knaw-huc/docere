@@ -9,7 +9,6 @@ import type { FSResponse, SetSortOrder, SortOrder } from '@docere/common'
 const Wrapper = styled.div`
 	grid-column: 1;
 	grid-row: 2;
-	padding-left: 32px;
 	height: 48px;
 	line-height: 46px;
 `

@@ -6,18 +6,15 @@ export * from './facets-data.action'
 export * from './facets'
 
 export interface FacetedSearchProps {
-	// activeFilters?: Filters
 	autoSuggest?: (query: string) => Promise<string[]>
 	className?: string /* className prop is used by StyledComponents */
-	disableDefaultStyle?: boolean
 	excludeResultFields?: string[]
-	// facetsConfig?: FacetConfig[]
 	onClickResult: (result: any, ev: React.MouseEvent<HTMLLIElement>) => void
-	// onFiltersChange?: (filters: FacetedSearchProps['activeFilters']) => void
 	resultFields?: string[]
 	ResultBodyComponent: React.FC<ResultBodyProps>
 	resultBodyProps?: Record<string, any>
 	resultsPerPage?: number
+	small?: boolean
 	track_total_hits?: number
 	style?: {
 		spotColor: string
