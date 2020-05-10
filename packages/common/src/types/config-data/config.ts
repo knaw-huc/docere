@@ -65,6 +65,7 @@ export interface PageConfig extends BaseConfig {
 
 export interface LayerConfig extends BaseConfig {
 	active?: boolean
+	pinned?: boolean
 	type?: LayerType
 }
 

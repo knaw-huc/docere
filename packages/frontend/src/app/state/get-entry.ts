@@ -27,6 +27,7 @@ function extendFacsimile(facsimile: Facsimile) {
 
 const defaultLayerConfig: LayerConfig = {
 	active: true,
+	pinned: false,
 	id: null,
 }
 
@@ -36,7 +37,7 @@ const defaultTextLayerConfig: TextLayerConfig = {
 }
 
 function extendLayer(extractedLayer: Layer, layersConfig: LayerConfig[]): Layer {
-	let layerConfig: LayerConfig = layersConfig.find(tlc => tlc.id === extractedLayer.id) || { id: null }
+	let layerConfig: LayerConfig = layersConfig.find(tlc => tlc.id === extractedLayer.id) || defaultLayerConfig
 	const dlc = layerConfig.type === LayerType.Text || layerConfig.type == null ? defaultTextLayerConfig : defaultLayerConfig
 	return { title: extractedLayer.id, ...dlc, ...layerConfig, ...extractedLayer }
 }

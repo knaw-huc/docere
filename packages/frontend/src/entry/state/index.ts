@@ -125,7 +125,21 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 			return {
 				...entryState,
 				layers: entryState.layers.map(l => {
-					if (l.id === action.id) l.active = !l.active
+					if (l.id === action.id) {
+						l.active = !l.active
+						if (!l.active) l.pinned = false
+					}
+					return l
+				})
+			}
+		}
+
+		case 'PIN_PANEL': {
+			return {
+				...entryState,
+				layers: entryState.layers.map(l => {
+					if (l.id === action.id) l.pinned = !l.pinned
+					else l.pinned = false
 					return l
 				})
 			}
@@ -158,11 +172,21 @@ export default function useEntryState(entry: Entry) {
 	React.useEffect(() => {
 		if (entry == null) return
 
+		// Copy current state of active and pinned layers to keep interface consistent between entry changes
+		const layers = entry.layers.map(layer => {
+			// x[0] = entryState
+			const stateLayer = x[0].layers.find(l => l.id === layer.id)
+			if (!stateLayer) return layer
+			layer.active = stateLayer.active 
+			layer.pinned = stateLayer.pinned
+			return layer
+		})
+
 		// x[1] = dispatch
 		x[1]({
 			activeFacsimile: entry.facsimiles?.length ? entry.facsimiles[0] : null,
 			entry,
-			layers: entry.layers,
+			layers,
 			type: 'ENTRY_CHANGED',
 		})
 	}, [entry])

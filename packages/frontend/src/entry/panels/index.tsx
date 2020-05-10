@@ -1,13 +1,50 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import FacsimilePanel from './facsimile'
-import TextPanel from './text'
-// import WitnessAnimationPanel from './witness-animation'
-import XmlPanel from './xml'
-import { isTextLayer, isXmlLayer } from '../../utils'
-import { DEFAULT_SPACING, LayerType, getTextPanelWidth } from '@docere/common'
+import { DEFAULT_SPACING, getTextPanelWidth, Colors } from '@docere/common'
+
+import { isTextLayer } from '../../utils'
+import Panel from './panel'
+
 import type { DocereConfig, Entity, Layer, Note, EntryState, EntryStateAction } from '@docere/common'
 import type { EntryProps } from '..'
+
+interface WProps {
+	activeEntity: Entity
+	activeNote: Note
+	pinnedLayers: Layer[]
+	settings: DocereConfig['entrySettings']
+}
+const Wrapper = styled.div`
+	background: ${Colors.GreyLight};
+	display: grid;
+	${(p: WProps) => {
+		// Set panel width in entry reducer?
+		const tpw = getTextPanelWidth(p.settings, p.activeNote, p.activeEntity)
+
+		let columns = p.pinnedLayers
+			.map(layer => {
+				return isTextLayer(layer) ?
+					`${tpw}px` :
+					`minmax(${DEFAULT_SPACING * 10}px, auto)`
+			})
+			.join(' ')
+
+		return `
+			grid-template-columns: auto ${columns};
+		`
+	}}
+	grid-column-gap: ${DEFAULT_SPACING / 2}px;
+	height: 100%;
+	width: 100%;
+`
+
+const PanelsCommon = styled.div`
+	background: white;
+	display: grid;
+	grid-template-rows: 100% auto;
+	height: 100%;
+	overflow-x: auto; 
+`
 
 interface PWProps {
 	activeEntity: Entity
@@ -15,10 +52,9 @@ interface PWProps {
 	activeNote: Note
 	settings: DocereConfig['entrySettings']
 }
-const Wrapper = styled.div`
-	display: grid;
-	height: 100%;
+const ActivePanels = styled(PanelsCommon)`
 	${(p: PWProps) => {
+		// Set panel width in entry reducer?
 		const tpw = getTextPanelWidth(p.settings, p.activeNote, p.activeEntity)
 
 		let columns = p.activeLayers
@@ -31,11 +67,8 @@ const Wrapper = styled.div`
 
 		return `
 			grid-template-columns: ${columns};
-			grid-template-rows: 100% auto;
 		`
 	}}
-	overflow-x: auto; 
-	width: 100%;
 
 	& > header {
 		height: ${DEFAULT_SPACING}px;
@@ -50,78 +83,57 @@ const Wrapper = styled.div`
 	}
 `
 
+const PinnedPanels = styled(PanelsCommon)`
+`
+
 export type PanelsProps = EntryProps & EntryState & {
 	entryDispatch: React.Dispatch<EntryStateAction>
 }
 
 function Panels(props: PanelsProps) {
-	const activeLayers = props.layers.filter(ap => ap.active)
+	const activeLayers = props.layers.filter(layer => layer.active && !layer.pinned)
+	const pinnedLayers = props.layers.filter(layer => layer.pinned)
 
 	return (
 		<Wrapper
-			activeLayers={activeLayers}
 			activeEntity={props.activeEntity}
 			activeNote={props.activeNote}
-			className="panels"
+			id="panels"
+			pinnedLayers={pinnedLayers}
 			settings={props.settings}
 		>
+			<ActivePanels
+				activeLayers={activeLayers}
+				activeEntity={props.activeEntity}
+				activeNote={props.activeNote}
+				id="active-panels"
+				settings={props.settings}
+			>
+				{
+					activeLayers
+						.map(layer =>
+							<Panel
+								{...props}
+								layer={layer}
+							/>
+						)
+				}
+			</ActivePanels>
 			{
-				activeLayers.map(layer => {
-					if (layer.type === LayerType.Facsimile) {
-						return (
-							<FacsimilePanel
-								activeFacsimile={props.activeFacsimile}
-								activeFacsimileAreas={props.activeFacsimileAreas}
-								entryDispatch={props.entryDispatch}
-								key={layer.id}
-								layer={layer}
-								settings={props.settings}
-							/>
-						)
+				pinnedLayers.length > 0 &&
+				<PinnedPanels
+					id="pinned-panels"
+				>
+					{
+						pinnedLayers
+							.map(layer =>
+								<Panel
+									{...props}
+									layer={layer}
+								/>
+							)
 					}
-
-					if (isTextLayer(layer)) {
-						return (
-							<TextPanel
-								activeFacsimileAreas={props.activeFacsimileAreas}
-								activeFacsimile={props.activeFacsimile}
-								activeEntity={props.activeEntity}
-								activeNote={props.activeNote}
-								appDispatch={props.appDispatch}
-								entryDispatch={props.entryDispatch}
-								entry={props.entry}
-								key={layer.id}
-								settings={props.settings}
-								layer={layer}
-							/>
-						)
-					}
-
-					if (isXmlLayer(layer)) {
-						return (
-							<XmlPanel
-								key={layer.id}
-								doc={props.entry.doc}
-							/>
-						)
-					}
-
-					// if (ap.type === LayerType.WitnessAnimation) {
-					// 	return (
-					// 		<WitnessAnimationPanel
-					// 			activeFacsimileAreas={props.activeFacsimileAreas}
-					// 			activeFacsimilePath={props.activeFacsimilePath}
-					// 			activeEntity={props.activeEntity}
-					// 			activeNote={props.activeNote}
-					// 			configData={props.configData}
-					// 			dispatch={props.dispatch}
-					// 			entry={props.entry}
-					// 			key={ap.id}
-					// 			textLayerConfig={ap}
-					// 		/>
-					// 	)
-					// }
-				})
+				</PinnedPanels>
 			}
 		</Wrapper>
 	)

@@ -29,6 +29,11 @@ interface ESA_Toggle_Layer {
 	id: string
 }
 
+interface PinPanel {
+	type: 'PIN_PANEL',
+	id: string
+}
+
 interface ESA_Toggle_Aside_Tab extends Pick<EntryState, 'asideTab'> {
 	type: 'TOGGLE_ASIDE_TAB'
 }
@@ -63,6 +68,7 @@ interface ESA_Toggle_Settings_Property {
 }
 
 export type EntryStateAction = 
+	PinPanel |
 	ProjectChanged |
 	EntryChanged |
 	ESA_Set_Active_Facsimile |
