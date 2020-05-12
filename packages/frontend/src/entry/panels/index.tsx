@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { DEFAULT_SPACING, getTextPanelWidth, Colors } from '@docere/common'
+import { DEFAULT_SPACING, getTextPanelWidth, Colors, LayerType } from '@docere/common'
 
 import { isTextLayer } from '../../utils'
 import Panel from './panel'
@@ -56,11 +56,12 @@ const ActivePanels = styled(PanelsCommon)`
 	${(p: PWProps) => {
 		// Set panel width in entry reducer?
 		const tpw = getTextPanelWidth(p.settings, p.activeNote, p.activeEntity)
+		const hasFacsimile = p.activeLayers.some(l => l.type === LayerType.Facsimile)
 
 		let columns = p.activeLayers
 			.map(layer => {
 				return isTextLayer(layer) ?
-					`${tpw}px` :
+					hasFacsimile ? `${tpw}px` : `minmax(${tpw}px, 1fr)` :
 					`minmax(${DEFAULT_SPACING * 10}px, auto)`
 			})
 			.join(' ')

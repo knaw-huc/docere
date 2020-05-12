@@ -1,15 +1,16 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import ActiveArea, { activeAreaRGB } from './active-area'
-import { TEXT_PANEL_MINIMAP_WIDTH, DEFAULT_SPACING, TEXT_PANEL_GUTTER_WIDTH, TEXT_PANEL_TEXT_WIDTH } from '@docere/common'
+import { TEXT_PANEL_MINIMAP_WIDTH, DEFAULT_SPACING, PANEL_HEADER_HEIGHT } from '@docere/common'
 
 const Wrapper = styled.div`
 	bottom: 0;
 	box-sizing: border-box;
-	left: calc(${TEXT_PANEL_GUTTER_WIDTH + TEXT_PANEL_TEXT_WIDTH + DEFAULT_SPACING}px);
 	overflow: auto;
-	padding-top: ${(props: { hasHeader: boolean }) => props.hasHeader ? 2 * DEFAULT_SPACING : DEFAULT_SPACING}px;
+	padding-top: ${DEFAULT_SPACING}px;
+	margin-top: ${(props: { hasHeader: boolean }) => props.hasHeader ? PANEL_HEADER_HEIGHT : 0}px;
 	position: absolute;
+	right: ${DEFAULT_SPACING}px;
 	scrollbar-width: none;
 	top: 0;
 	width: ${TEXT_PANEL_MINIMAP_WIDTH}px;

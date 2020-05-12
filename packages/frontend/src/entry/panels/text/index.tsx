@@ -18,10 +18,11 @@ const Wrapper = styled.div`
 interface WProps { activeEntity: Entity, activeNote: Note, settings: DocereConfig['entrySettings'] }
 const TextWrapper = styled.div`
 	box-sizing: border-box;
+	display: grid;
+	grid-template-columns: auto ${(props: WProps) => getTextPanelWidth(props.settings, props.activeNote, props.activeEntity)}px auto;
 	height: ${props => props.settings['panels.showHeaders'] ? `calc(100% - ${PANEL_HEADER_HEIGHT}px)` : '100%'};
 	overflow-y: auto;
 	position: relative;
-	width: ${(props: WProps) => getTextPanelWidth(props.settings, props.activeNote, props.activeEntity)}px;
 	will-change: transform;
 	z-index: 2;
 
