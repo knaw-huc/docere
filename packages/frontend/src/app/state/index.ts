@@ -14,7 +14,7 @@ const initialAppState: AppState = {
 	pageId: null,
 	page: null,
 	searchTab: null,
-	viewport: null
+	viewport: Viewport.EntrySelector
 }
 
 function appStateReducer(appState: AppState, action: AppStateAction): AppState {
@@ -114,7 +114,6 @@ function appStateReducer(appState: AppState, action: AppStateAction): AppState {
 
 	return appState
 }
-
 
 let historyNavigator: HistoryNavigator
 export default function useAppState(configData: DocereConfigData) {

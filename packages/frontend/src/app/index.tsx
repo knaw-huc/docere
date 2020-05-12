@@ -7,8 +7,6 @@ import Entry from '../entry'
 import PageView from '../page'
 import useAppState from './state'
 
-// import SearchFilterContext, { searchFilterReducer, initialSearchFilterState } from './search-filter-context'
-
 import type { DocereConfigData } from '@docere/common'
 import useFacetsConfig from '../entry-selector/use-fields'
 
@@ -18,7 +16,6 @@ interface AppProps {
 }
 function App(props: AppProps) {
 	const [appState, appDispatch] = useAppState(props.configData)
-	// const [state, dispatch] = React.useReducer(searchFilterReducer, initialSearchFilterState)
 
 	const facetsConfig = useFacetsConfig(props.configData.config)
 	const [state, dispatch] = useSearchReducer(facetsConfig)
