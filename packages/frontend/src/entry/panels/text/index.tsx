@@ -5,7 +5,7 @@ import debounce from 'lodash.debounce'
 import ProjectContext, { useComponents } from '../../../app/context'
 import Minimap from './minimap'
 import { isTextLayer } from '../../../utils'
-import { DEFAULT_SPACING, TEXT_PANEL_TEXT_WIDTH, DocereComponentContainer, getTextPanelWidth, getTextPanelLeftSpacing } from '@docere/common'
+import { DEFAULT_SPACING, TEXT_PANEL_TEXT_WIDTH, DocereComponentContainer, getTextPanelWidth, getTextPanelLeftSpacing, getTextPanelRightSpacing, PANEL_HEADER_HEIGHT } from '@docere/common'
 import PanelHeader from '../header'
 import type { DocereComponentProps, Entity, Note, DocereConfig, TextLayer } from '@docere/common'
 import type { PanelsProps } from '..'
@@ -18,7 +18,7 @@ const TopWrapper = styled.div`
 interface WProps { activeEntity: Entity, activeNote: Note, settings: DocereConfig['entrySettings'] }
 const Wrapper = styled.div`
 	box-sizing: border-box;
-	height: ${props => props.settings['panels.showHeaders'] ? `calc(100% - ${DEFAULT_SPACING}px)` : '100%'};
+	height: ${props => props.settings['panels.showHeaders'] ? `calc(100% - ${PANEL_HEADER_HEIGHT}px)` : '100%'};
 	overflow-y: auto;
 	width: ${(props: WProps) => getTextPanelWidth(props.settings, props.activeNote, props.activeEntity)}px;
 	will-change: transform;

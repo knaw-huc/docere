@@ -14,16 +14,18 @@ export function getTextPanelLeftSpacing(settings: DocereConfig['entrySettings'])
 }
 
 export function getTextPanelRightSpacing(settings: DocereConfig['entrySettings'], activeNote: Note, activeEntity: Entity) {
-	let width = 2 * DEFAULT_SPACING
+	let width = DEFAULT_SPACING
 
 	const asideActive = (
 		!settings['panels.text.openPopupAsTooltip'] &&
 		(activeNote != null || activeEntity != null)
 	)
 
-	if (asideActive) width += TEXT_PANEL_ASIDE_WIDTH
-	if (settings['panels.text.showMinimap']) width += TEXT_PANEL_MINIMAP_WIDTH + DEFAULT_SPACING
-	if (asideActive && settings['panels.text.showMinimap']) width -= DEFAULT_SPACING
+	// Add extra width if the aside is active
+	if (asideActive) width += TEXT_PANEL_ASIDE_WIDTH + DEFAULT_SPACING
+	// if the aside is not active, but the minimap is, we need to add some space for the minimap.
+	// if the aside is active, there is already enought space for the minimap
+	else if (settings['panels.text.showMinimap']) width += TEXT_PANEL_MINIMAP_WIDTH + DEFAULT_SPACING
 
 	return width
 }
