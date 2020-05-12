@@ -10,7 +10,11 @@ const LiWrapper = styled.li`
 	white-space: nowrap;
     display: inline-block;
     height: 100%;
-    width: 100px;
+	width: 100px;
+	
+	&:hover {
+		color: #AAA;
+	}
 	
 	& > div:first-of-type {
 		align-content: center;
@@ -40,6 +44,7 @@ const LiWrapper = styled.li`
 		height: 30%;
 		justify-content: center;
 		align-content: center;
+		font-size: .85rem;
 	}
 `
 

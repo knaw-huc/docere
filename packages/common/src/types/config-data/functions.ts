@@ -1,4 +1,4 @@
-import type { DocereConfig, LayerConfig } from "./config"
+import type { DocereConfig, LayerConfig, TextLayerConfig } from "./config"
 import { LayerType, AsideTab } from '../../enum'
 
 
@@ -35,20 +35,23 @@ export interface Note extends TextData {
 export type ExtractedMetadata = Record<string, number | number[] | boolean | string | string[]>
 
 // EXTRACT LAYERS
-export interface TextLayerConfig extends LayerConfig {
-	type: LayerType.Text
+interface BaseLayer extends LayerConfig {
+	columnWidth?: string /* Width of the grid column, ie minmax(480px, 1fr) */
+	pinnable?: boolean /* Can the layer be pinned, ie made sticky? */
+	width?: number /* Width of the layer content */
 }
 
-export interface TextLayer extends TextLayerConfig {
+export interface TextLayer extends TextLayerConfig, BaseLayer {
+	type: LayerType.Text
 	element: Element | XMLDocument
 }
 
-export interface XmlLayer extends LayerConfig {
+export interface XmlLayer extends BaseLayer {
 	element: Element | XMLDocument
 	type: LayerType.XML
 }
 
-export type Layer = TextLayer | XmlLayer | LayerConfig
+export type Layer = TextLayer | XmlLayer | BaseLayer
 export type ExtractedLayer = Pick<Layer, 'id'> & Partial<Layer>
 
 // EXTRACT FACSIMILES

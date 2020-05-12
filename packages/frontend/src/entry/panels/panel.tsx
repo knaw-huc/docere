@@ -45,8 +45,8 @@ export default function Panel(props: PanelsProps & { layer: Layer }) {
 	if (isXmlLayer(props.layer)) {
 		return (
 			<XmlPanel
-				key={props.layer.id}
 				doc={props.entry.doc}
+				key={props.layer.id}
 			/>
 		)
 	}

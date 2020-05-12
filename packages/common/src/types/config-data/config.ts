@@ -69,6 +69,10 @@ export interface LayerConfig extends BaseConfig {
 	type?: LayerType
 }
 
+export interface TextLayerConfig extends LayerConfig {
+	type: LayerType.Text
+}
+
 export interface NotesConfig extends BaseConfig {
 
 }

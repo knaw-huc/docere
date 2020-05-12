@@ -1,8 +1,8 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { DEFAULT_SPACING, getTextPanelWidth, Colors, LayerType } from '@docere/common'
+import { DEFAULT_SPACING, Colors, FooterTab } from '@docere/common'
 
-import { isTextLayer } from '../../utils'
+import LayersFooterTab from '../footer/layers'
 import Panel from './panel'
 
 import type { DocereConfig, Entity, Layer, Note, EntryState, EntryStateAction } from '@docere/common'
@@ -18,19 +18,12 @@ const Wrapper = styled.div`
 	background: ${Colors.GreyLight};
 	display: grid;
 	${(p: WProps) => {
-		// Set panel width in entry reducer?
-		const tpw = getTextPanelWidth(p.settings, p.activeNote, p.activeEntity)
-
 		let columns = p.pinnedLayers
-			.map(layer => {
-				return isTextLayer(layer) ?
-					`${tpw}px` :
-					`minmax(${DEFAULT_SPACING * 10}px, auto)`
-			})
+			.map(layer => layer.columnWidth)
 			.join(' ')
 
 		return `
-			grid-template-columns: auto ${columns};
+			grid-template-columns: ${columns} auto;
 		`
 	}}
 	grid-column-gap: ${DEFAULT_SPACING / 2}px;
@@ -54,16 +47,8 @@ interface PWProps {
 }
 const ActivePanels = styled(PanelsCommon)`
 	${(p: PWProps) => {
-		// Set panel width in entry reducer?
-		const tpw = getTextPanelWidth(p.settings, p.activeNote, p.activeEntity)
-		const hasFacsimile = p.activeLayers.some(l => l.type === LayerType.Facsimile)
-
 		let columns = p.activeLayers
-			.map(layer => {
-				return isTextLayer(layer) ?
-					hasFacsimile ? `${tpw}px` : `minmax(${tpw}px, 1fr)` :
-					`minmax(${DEFAULT_SPACING * 10}px, auto)`
-			})
+			.map(layer => layer.columnWidth)
 			.join(' ')
 
 		return `
@@ -87,6 +72,27 @@ const ActivePanels = styled(PanelsCommon)`
 const PinnedPanels = styled(PanelsCommon)`
 `
 
+const SelectLayer = styled.div`
+	align-self: center;
+	background: ${Colors.Grey};
+
+	& > span {
+		color: #888;
+		font-size: 2em;
+		font-weight: bold;
+		left: calc(50% - 250px);
+		margin-top: -2em;
+		position: absolute;
+		text-align: center;
+		width: 500px;
+	}
+
+	& > div {
+		height: 128px;
+		position: static;
+	}
+`
+
 export type PanelsProps = EntryProps & EntryState & {
 	entryDispatch: React.Dispatch<EntryStateAction>
 }
@@ -103,24 +109,6 @@ function Panels(props: PanelsProps) {
 			pinnedLayers={pinnedLayers}
 			settings={props.settings}
 		>
-			<ActivePanels
-				activeLayers={activeLayers}
-				activeEntity={props.activeEntity}
-				activeNote={props.activeNote}
-				id="active-panels"
-				settings={props.settings}
-			>
-				{
-					activeLayers
-						.map(layer =>
-							<Panel
-								{...props}
-								key={layer.id}
-								layer={layer}
-							/>
-						)
-				}
-			</ActivePanels>
 			{
 				pinnedLayers.length > 0 &&
 				<PinnedPanels
@@ -137,6 +125,43 @@ function Panels(props: PanelsProps) {
 							)
 					}
 				</PinnedPanels>
+			}
+			{
+				activeLayers.length > 0 &&
+				<ActivePanels
+					activeLayers={activeLayers}
+					activeEntity={props.activeEntity}
+					activeNote={props.activeNote}
+					id="active-panels"
+					settings={props.settings}
+				>
+					{
+						activeLayers
+							.map(layer =>
+								<Panel
+									{...props}
+									key={layer.id}
+									layer={layer}
+								/>
+							)
+					}
+				</ActivePanels>
+			}
+			{
+				!activeLayers.length &&
+				!pinnedLayers.length &&
+				<SelectLayer>
+					<span>Select a panel</span>
+					{
+						props.footerTab !== FooterTab.Layers &&
+						<LayersFooterTab
+							active={true}
+							activeFacsimile={props.activeFacsimile}
+							dispatch={props.entryDispatch}
+							layers={props.layers}
+						/>
+					}
+				</SelectLayer>
 			}
 		</Wrapper>
 	)

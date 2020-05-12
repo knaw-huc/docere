@@ -5,9 +5,9 @@ import debounce from 'lodash.debounce'
 import ProjectContext, { useComponents } from '../../../app/context'
 import Minimap from './minimap'
 import { isTextLayer } from '../../../utils'
-import { DEFAULT_SPACING, TEXT_PANEL_TEXT_WIDTH, DocereComponentContainer, getTextPanelWidth, getTextPanelLeftSpacing, PANEL_HEADER_HEIGHT } from '@docere/common'
+import { DEFAULT_SPACING, TEXT_PANEL_TEXT_WIDTH, DocereComponentContainer, getTextPanelLeftSpacing, PANEL_HEADER_HEIGHT } from '@docere/common'
 import PanelHeader from '../header'
-import type { DocereComponentProps, Entity, Note, DocereConfig, TextLayer } from '@docere/common'
+import type { DocereComponentProps, DocereConfig, TextLayer } from '@docere/common'
 import type { PanelsProps } from '..'
 import { SearchContext } from '@docere/search_'
 
@@ -15,13 +15,16 @@ const Wrapper = styled.div`
 	position: relative;
 `
 
-interface WProps { activeEntity: Entity, activeNote: Note, settings: DocereConfig['entrySettings'] }
+	// grid-template-columns: auto ${(props: WProps) => getTextPanelWidth(props.settings, props.activeNote, props.activeEntity)}px auto;
+// interface WProps { layer: TextLayer, settings:  }
+type TWProps = Pick<TextPanelProps, 'layer' | 'settings'>
 const TextWrapper = styled.div`
 	box-sizing: border-box;
 	display: grid;
-	grid-template-columns: auto ${(props: WProps) => getTextPanelWidth(props.settings, props.activeNote, props.activeEntity)}px auto;
+	grid-template-columns: auto ${(props: TWProps) => props.layer.width}px auto;
 	height: ${props => props.settings['panels.showHeaders'] ? `calc(100% - ${PANEL_HEADER_HEIGHT}px)` : '100%'};
 	overflow-y: auto;
+	overflow-x: hidden; ${/* Hide overflow because a vertical scrollbar could add a horizontal scrollbar */''}
 	position: relative;
 	will-change: transform;
 	z-index: 2;
@@ -113,8 +116,7 @@ function TextPanel(props: TextPanelProps) {
 				</PanelHeader>
 			}
 			<TextWrapper
-				activeEntity={props.activeEntity}
-				activeNote={props.activeNote}
+				layer={props.layer}
 				onScroll={handleScroll}
 				ref={textWrapperRef}
 				settings={props.settings}

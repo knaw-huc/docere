@@ -1,7 +1,8 @@
 import * as React from 'react'
-import { AsideTab, FooterTab, defaultEntrySettings } from '@docere/common'
+import { AsideTab, FooterTab, defaultEntrySettings, getTextPanelWidth, LayerType, DEFAULT_SPACING } from '@docere/common'
 import type { EntryState, EntryStateAction, FacsimileArea, Entry } from '@docere/common'
 import ProjectContext from '../../app/context'
+import { isTextLayer } from '../../utils'
 
 const initialEntryState: EntryState = {
 	activeEntity: null,
@@ -59,6 +60,7 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 				...entryState,
 				activeEntity,
 				activeFacsimileAreas,
+				layers: updatePanels(entryState.layers, { activeEntity, activeNote: entryState.activeNote, settings: entryState.settings })
 			}
 		}
 
@@ -68,6 +70,7 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 			return {
 				...entryState,
 				activeNote,
+				layers: updatePanels(entryState.layers, { activeEntity: entryState.activeEntity, activeNote, settings: entryState.settings })
 			}
 		}
 
@@ -122,38 +125,43 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 		}
 
 		case 'TOGGLE_LAYER': {
+			const nextLayers = entryState.layers.map(l => {
+				if (l.id === action.id) {
+					l.active = !l.active
+					if (!l.active) l.pinned = false
+				}
+				return l
+			})
+
 			return {
 				...entryState,
-				layers: entryState.layers.map(l => {
-					if (l.id === action.id) {
-						l.active = !l.active
-						if (!l.active) l.pinned = false
-					}
-					return l
-				})
+				layers: updatePanels(nextLayers, entryState)
 			}
 		}
 
 		case 'PIN_PANEL': {
+			const nextLayers = entryState.layers.map(l => {
+				if (l.id === action.id) l.pinned = !l.pinned
+				else l.pinned = false
+				return l
+			})
+
 			return {
 				...entryState,
-				layers: entryState.layers.map(l => {
-					if (l.id === action.id) l.pinned = !l.pinned
-					else l.pinned = false
-					return l
-				})
+				layers: updatePanels(nextLayers, entryState)
 			}
 		}
 
 		case 'TOGGLE_SETTINGS_PROPERTY': {
-			const nextSettings = {
+			const settings = {
 				...entryState.settings,
 				[action.property]: !entryState.settings[action.property]
 			}
 			
 			return {
 				...entryState,
-				settings: nextSettings
+				settings,
+				layers: updatePanels(entryState.layers, { activeEntity: entryState.activeEntity, activeNote: entryState.activeNote, settings })
 			}
 		}
 
@@ -173,7 +181,7 @@ export default function useEntryState(entry: Entry) {
 		if (entry == null) return
 
 		// Copy current state of active and pinned layers to keep interface consistent between entry changes
-		const layers = entry.layers.map(layer => {
+		const nextLayers = entry.layers.map(layer => {
 			// x[0] = entryState
 			const stateLayer = x[0].layers.find(l => l.id === layer.id)
 			if (!stateLayer) return layer
@@ -186,7 +194,7 @@ export default function useEntryState(entry: Entry) {
 		x[1]({
 			activeFacsimile: entry.facsimiles?.length ? entry.facsimiles[0] : null,
 			entry,
-			layers,
+			layers: updatePanels(nextLayers, x[0]),
 			type: 'ENTRY_CHANGED',
 		})
 	}, [entry])
@@ -201,4 +209,35 @@ export default function useEntryState(entry: Entry) {
 	}, [config.slug])
 
 	return x
+}
+
+function updatePanels(layers: EntryState['layers'], { activeEntity, activeNote, settings }: Pick<EntryState, 'activeEntity' | 'activeNote' | 'settings'>) {
+	const tpw = getTextPanelWidth(settings, activeNote, activeEntity)
+	const activeLayers = layers.filter(l => l.active)
+	const hasFacsimile = activeLayers.some(l => l.type === LayerType.Facsimile && !l.pinnable)
+
+	return layers
+		.map(layer => {
+			if (!layer.active) return layer
+
+			const width = isTextLayer(layer) ? tpw : DEFAULT_SPACING * 10
+
+			const columnWidth = isTextLayer(layer) ?
+				(hasFacsimile || layer.pinned) ? `${width}px` : `minmax(${width}px, 1fr)` :
+				`minmax(${width}px, auto)`
+
+			const pinnable = activeLayers.length > 2 || layer.pinned
+
+			// If column width or pinnable change, create a new layer object
+			if (layer.columnWidth !== columnWidth || layer.pinnable !== pinnable) {
+				return {
+					...layer,
+					columnWidth,
+					pinnable,
+					width
+				}
+			}
+
+			return layer
+		})
 }
