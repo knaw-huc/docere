@@ -43,10 +43,6 @@ export const Text = styled.div`
 	line-height: 2rem;
 	padding: ${DEFAULT_SPACING}px 0 200px ${(props: TextProps) => getTextPanelLeftSpacing(props.settings)}px;
 	position: relative;
-
-	& > div {
-		border-right: 1px solid #EEE;
-	}
 `
 
 type TextPanelBaseProps = Pick<PanelsProps, 'activeEntity' | 'activeNote' | 'activeFacsimile' | 'activeFacsimileAreas' | 'appDispatch' | 'entryDispatch' | 'entry' | 'settings'>

@@ -5,6 +5,7 @@ export const activeAreaRGB = '200, 200, 200'
 
 const Wrapper = styled.div`
 	background: rgba(${activeAreaRGB}, 0);
+	border-left: 1px solid rgba(${activeAreaRGB}, .5);
 	cursor: pointer;
 	position: absolute;
 	transition: background 400ms;
@@ -12,7 +13,8 @@ const Wrapper = styled.div`
 	z-index: 2;
 
 	&:hover, &.active {
-		background: rgba(${activeAreaRGB}, .5);
+		background: rgba(${activeAreaRGB}, .25);
+		border-left: 1px solid rgba(${activeAreaRGB}, 1);
 	}
 `
 
