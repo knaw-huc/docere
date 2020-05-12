@@ -2,8 +2,6 @@ import * as React from 'react'
 import styled from 'styled-components'
 import { SearchTab, Colors } from '@docere/common'
 import type { DocereResultBodyProps } from '@docere/common'
-// import { DEFAULT_SPACING, MAINHEADER_HEIGHT } from '../constants'
-// import Tooltip from './tooltip'
 
 interface WProps {
 	active: boolean
@@ -11,7 +9,8 @@ interface WProps {
 	small: boolean
 }
 const Wrapper = styled.div`
-	border-bottom: 1px solid #EEE;
+	border: 2px solid white;
+	border-bottom: 2px solid #EEE;
 	display: grid;
 	font-size: ${(props: WProps) => props.small ? '.8em' : '1em'};
 	grid-column-gap: ${(props: WProps) => props.small ? 32 / 2 : 32}px;
@@ -20,32 +19,21 @@ const Wrapper = styled.div`
 		'auto'
 	};
 	padding: 1.5em 0;
-
-	&:before {
-		content: '';
-		position: absolute;
-		width: 6px;
-		top: 0;
-		bottom: 0;
-		background: rgba(199, 170, 113, 0);
-		left: -18px;
-	}
+	transition: all 350ms;
 
 	${(props: WProps) => {
 		if (props.active) {
 			return `
-				cursor: default;
-
-				&:before {
-					background: ${Colors.BrownLight};
-				}
+				border: 2px solid ${Colors.Orange};
+				padding: 1.5em;
 			`
 		} else {
 			return `
-				&:hover:before {
-					background: rgba(199, 170, 113, .33);
+				&:hover {
+					background: #EEE4;
+					border-bottom: 2px solid #CCC;
 				}
-			 `
+			`
 		}
 	}}
 `
@@ -99,52 +87,20 @@ function FacsimileThumbs(props: { facsimiles: string[], small: boolean }) {
 		</FacsimileThumbList>
 }
 
-// TODO there are two implementations of ResultBodyProps
-// interface State {
-// 	// active: boolean
-// 	tooltipTop: number
-// }
-
 function ResultBody(props: DocereResultBodyProps) {
-	// const [active, setActive] = React.useState(false)
-	// const [tooltipTop, setTooltipTop] = React.useState(0)
 	const small = props.searchTab === SearchTab.Results
 
 	return (
 		<Wrapper
 			active={props.result.id === props.activeId}
 			hasFacsimile={props.result.hasOwnProperty('facsimiles') && props.result.facsimiles.length > 0}
-			// onMouseEnter={(ev) => {
-				// const top = ev.currentTarget.getBoundingClientRect().top - MAINHEADER_HEIGHT - 32
-				// setActive(true)
-				// setTooltipTop(top)
-			// }}
-			// onMouseLeave={() => setActive(false)}
 			small={small}
 		>
 			<FacsimileThumbs
 				facsimiles={props.result.facsimiles}
 				small={small}
 			/>
-			{
-				// small ?
-				// 	<Tooltip
-				// 		orientation="right"
-				// 		style={{
-				// 			width: '360px',
-				// 			display: active ? 'block' : 'none',
-				// 			top: `${tooltipTop}px`,
-				// 		}}
-				// 		bodyStyle={{ 
-				// 			backgroundColor: '#212830',
-				// 			color: '#EEE',
-				// 		}}
-				// 		shift={.15}
-				// 	>
-				// 		{props.children}
-				// 	</Tooltip> :
-					<div>{props.children}</div>
-			}
+			<div>{props.children}</div>
 			{
 				props.result.snippets.length > 0 &&
 				<Snippets>
