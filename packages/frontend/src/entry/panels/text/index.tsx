@@ -5,23 +5,25 @@ import debounce from 'lodash.debounce'
 import ProjectContext, { useComponents } from '../../../app/context'
 import Minimap from './minimap'
 import { isTextLayer } from '../../../utils'
-import { DEFAULT_SPACING, TEXT_PANEL_TEXT_WIDTH, DocereComponentContainer, getTextPanelWidth, getTextPanelLeftSpacing, getTextPanelRightSpacing, PANEL_HEADER_HEIGHT } from '@docere/common'
+import { DEFAULT_SPACING, TEXT_PANEL_TEXT_WIDTH, DocereComponentContainer, getTextPanelWidth, getTextPanelLeftSpacing, PANEL_HEADER_HEIGHT } from '@docere/common'
 import PanelHeader from '../header'
 import type { DocereComponentProps, Entity, Note, DocereConfig, TextLayer } from '@docere/common'
 import type { PanelsProps } from '..'
 import { SearchContext } from '@docere/search_'
 
-const TopWrapper = styled.div`
+const Wrapper = styled.div`
 	position: relative;
 `
 
 interface WProps { activeEntity: Entity, activeNote: Note, settings: DocereConfig['entrySettings'] }
-const Wrapper = styled.div`
+const TextWrapper = styled.div`
 	box-sizing: border-box;
 	height: ${props => props.settings['panels.showHeaders'] ? `calc(100% - ${PANEL_HEADER_HEIGHT}px)` : '100%'};
 	overflow-y: auto;
+	position: relative;
 	width: ${(props: WProps) => getTextPanelWidth(props.settings, props.activeNote, props.activeEntity)}px;
 	will-change: transform;
+	z-index: 2;
 
 	& > div:first-of-type {
 		grid-column: 2;
@@ -103,7 +105,7 @@ function TextPanel(props: TextPanelProps) {
 	if (components == null) return null
 
 	return (
-		<TopWrapper className="text-panel">
+		<Wrapper className="text-panel">
 			{
 				props.settings['panels.showHeaders'] &&
 				<PanelHeader
@@ -113,7 +115,7 @@ function TextPanel(props: TextPanelProps) {
 					{props.layer.title}
 				</PanelHeader>
 			}
-			<Wrapper
+			<TextWrapper
 				activeEntity={props.activeEntity}
 				activeNote={props.activeNote}
 				onScroll={handleScroll}
@@ -132,7 +134,7 @@ function TextPanel(props: TextPanelProps) {
 						setHighlightAreas={setHighlightAreas}
 					/>
 				</Text>
-			</Wrapper>
+			</TextWrapper>
 			{
 				props.settings['panels.text.showMinimap'] &&
 				<Minimap
@@ -143,7 +145,7 @@ function TextPanel(props: TextPanelProps) {
 					textWrapperRef={textWrapperRef}
 				/>
 			}
-		</TopWrapper>
+		</Wrapper>
 	)
 }
 

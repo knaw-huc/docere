@@ -13,7 +13,7 @@ const Wrapper = styled.div`
 	scrollbar-width: none;
 	top: 0;
 	width: ${TEXT_PANEL_MINIMAP_WIDTH}px;
-	z-index: -1;
+	z-index: 1;
 
 	&::-webkit-scrollbar {
 		display: none;
