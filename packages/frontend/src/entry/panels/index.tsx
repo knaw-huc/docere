@@ -114,6 +114,7 @@ function Panels(props: PanelsProps) {
 						.map(layer =>
 							<Panel
 								{...props}
+								key={layer.id}
 								layer={layer}
 							/>
 						)
@@ -129,6 +130,7 @@ function Panels(props: PanelsProps) {
 							.map(layer =>
 								<Panel
 									{...props}
+									key={layer.id}
 									layer={layer}
 								/>
 							)
