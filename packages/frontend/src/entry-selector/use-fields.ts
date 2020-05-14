@@ -2,7 +2,6 @@ import * as React from 'react'
 import { EsDataType, defaultMetadata } from '@docere/common'
 
 import { fetchJson } from '../utils'
-import { searchBaseUrl } from './search'
 
 import type { DocereConfig, FacetsConfig, MetadataConfig, EntityConfig } from '@docere/common'
 
@@ -50,7 +49,8 @@ export default function useFacetsConfig(config: DocereConfig) {
 	const [fields, setFields] = React.useState<FacetsConfig>({})
 
 	React.useEffect(() => {
-		fetchJson(`${searchBaseUrl}${config.slug}/_mapping`)
+		// TODO extract url from projectContext.searchUrl
+		fetchJson(`/search/${config.slug}/_mapping`)
 			.then(json => {
 				const { properties } = json[config.slug].mappings
 

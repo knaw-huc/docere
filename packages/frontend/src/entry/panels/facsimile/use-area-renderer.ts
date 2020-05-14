@@ -132,7 +132,6 @@ export class AreaRenderer {
 		})
 		this.trackers.push(track)
 
-
 		y = y * this.aspectRatio
 		h = h * this.aspectRatio
 

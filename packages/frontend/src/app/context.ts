@@ -31,6 +31,7 @@ interface ProjectContext {
 	config: DocereConfig
 	getComponents: GetComponents
 	getUIComponent: GetUIComponent
+	searchUrl: string
 }
 const ProjectContext = React.createContext<ProjectContext>(null)
 

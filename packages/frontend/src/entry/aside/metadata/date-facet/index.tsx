@@ -26,8 +26,6 @@ const ValueWrapper = styled.div`
 	font-size: .8em;
 	padding-right: .4em;
 	${(props: VWProps) => {
-		// console.log(props.index, ((Math.abs(props.index) - 1) * 1.4) + .2)
-		// console.log(props.index, ((Math.abs(props.index) - 1) * 1.4) + .2)
 		return props.index > 0 ?
 			`padding-top: ${((Math.abs(props.index) - 1) * 1.3) + .2}em;` :
 			`padding-bottom: ${((Math.abs(props.index) - 1) * 1.3) + .2}em;

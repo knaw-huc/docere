@@ -1,7 +1,4 @@
-import { searchBaseUrl } from './search'
-
-export default function useAutoSuggest(projectId: string) {
-	const url = `${searchBaseUrl}${projectId}/_search`
+export default function useAutoSuggest(url: string) {
 	return async function autoSuggest(query: string) {
 		const r = await fetch(url, {
 			method: 'POST',

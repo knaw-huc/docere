@@ -4,6 +4,7 @@ import { DEFAULT_SPACING, Colors, FooterTab } from '@docere/common'
 
 import LayersFooterTab from '../footer/layers'
 import Panel from './panel'
+import CollectionNavigator from './collection-navigator'
 
 import type { DocereConfig, Entity, Layer, Note, EntryState, EntryStateAction } from '@docere/common'
 import type { EntryProps } from '..'
@@ -26,6 +27,7 @@ const Wrapper = styled.div`
 			grid-template-columns: ${columns} auto;
 		`
 	}}
+	grid-template-rows: auto 96px;
 	grid-column-gap: ${DEFAULT_SPACING / 2}px;
 	height: 100%;
 	width: 100%;
@@ -147,6 +149,10 @@ function Panels(props: PanelsProps) {
 					}
 				</ActivePanels>
 			}
+			<CollectionNavigator
+				appDispatch={props.appDispatch}
+				entry={props.entry}
+			/>
 			{
 				!activeLayers.length &&
 				!pinnedLayers.length &&

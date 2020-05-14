@@ -3,6 +3,10 @@ import { DocereConfig } from '@docere/common'
 import sets from './data/sets.json'
 
 const config: DocereConfig = {
+	collection: {
+		metadataId: 'access',
+		sortBy: null
+	},
 	data: { sets },
 	slug: 'encyclopaedia-britannica',
 	title: 'Encyclopaedia Britannica',

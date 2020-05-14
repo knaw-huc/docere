@@ -4,6 +4,10 @@ import type { DocereConfig } from '@docere/common'
 const config: DocereConfig = {
 	slug: 'gheys',
 	title: 'Gheborcht Ys',
+	collection: {
+		metadataId: 'toegang',
+		sortBy: 'n'
+	},
 	// customSettings: [
 	// 	{
 	// 		id: 'showSuggestions',

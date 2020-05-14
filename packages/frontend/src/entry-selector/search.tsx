@@ -9,8 +9,6 @@ import useAutoSuggest from './use-auto-suggest'
 
 import type { Hit } from '@docere/common'
 
-export const searchBaseUrl = '/search/'
-
 const FS = styled(HucFacetedSearch)`
 	background: white;
 	box-sizing: border-box;
@@ -66,8 +64,8 @@ const FS = styled(HucFacetedSearch)`
 const excludeResultFields = ['text', 'text_suggest']
 
 function Search(props: FileExplorerProps) {
-	const { config } = React.useContext(ProjectContext)
-	const autoSuggest = useAutoSuggest(config.slug)
+	const { config, searchUrl } = React.useContext(ProjectContext)
+	const autoSuggest = useAutoSuggest(searchUrl)
 	const ResultBodyComponent = useUIComponent(UIComponentType.SearchResult)
 
 	const onClickResult = React.useCallback((result: Hit) => {
@@ -99,7 +97,7 @@ function Search(props: FileExplorerProps) {
 			}}
 			resultsPerPage={config.searchResultCount}
 			small={props.searchTab === SearchTab.Results}
-			url={`${searchBaseUrl}${config.slug}/_search`}
+			url={searchUrl}
 		/>
 	)
 }

@@ -2,6 +2,7 @@ import { LayerType, TextDataExtractionType, RsType } from '../../enum'
 import type { FacetConfig } from '../search/facets'
 
 export interface DocereConfig {
+	collection?: boolean | { metadataId: string, sortBy: string } /* true if whole project is one collection, MetadataConfig.id if project consists of multiple collections */
 	data?: Record<string, any>
 	metadata?: MetadataConfig[]
 	notes?: NotesConfig[]

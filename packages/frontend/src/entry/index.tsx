@@ -20,6 +20,7 @@ function Entry(props: EntryProps) {
 			<Panels
 				{...props}
 				{...entryState}
+				entry={props.entry}
 				entryDispatch={entryDispatch}
 			/>
 			<Aside

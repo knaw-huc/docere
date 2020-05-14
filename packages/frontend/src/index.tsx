@@ -16,7 +16,8 @@ document.addEventListener('DOMContentLoaded', async function() {
 	const contextValue: ProjectContext = {
 		config: configData.config,
 		getComponents: configData.getComponents(configData.config),
-		getUIComponent: configData.getUIComponent(configData.config)
+		getUIComponent: configData.getUIComponent(configData.config),
+		searchUrl: `/search/${configData.config.slug}/_search`,
 	}
 
 	ReactDOM.render(
