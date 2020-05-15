@@ -6,6 +6,10 @@ const config: DocereConfig = {
 	data: {
 		pages
 	},
+	entrySettings: {
+		"panels.text.showLineBeginnings": false,
+		"panels.text.showPageBeginnings": false
+	},
 	slug: 'utrechtpsalter',
 	title: 'Utrecht Psalter',
 	layers: [
