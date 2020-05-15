@@ -12,6 +12,7 @@ import type { PanelsProps } from '..'
 import { SearchContext } from '@docere/search_'
 
 const Wrapper = styled.div`
+	background: white;
 	position: relative;
 `
 

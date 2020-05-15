@@ -5,7 +5,6 @@ import type { EntryStateAction, Layer } from '@docere/common'
 
 const Header = styled.header`
 	background: ${Colors.Grey};
-	box-shadow: 0 1px 4px #888;
 	font-size: .8rem;
 	height: ${PANEL_HEADER_HEIGHT}px;
 	line-height: ${PANEL_HEADER_HEIGHT}px;
@@ -13,12 +12,13 @@ const Header = styled.header`
 	position: relative;
 `
 
+	// fill: #888;
 const Svg = styled.svg`
 	cursor: pointer;
-	fill: #888;
+	fill: ${(props: { layer: Layer }) => props.layer.pinned ? Colors.Orange : '#888'};
 	height: ${PANEL_HEADER_HEIGHT}px;
 	position: absolute;
-	right: ${DEFAULT_SPACING * 2}px;
+	right: ${DEFAULT_SPACING}px;
 	${(props: { layer: Layer }) => props.layer.pinned ? 'transform: rotateZ(45deg);' : ''}
 	top: 0;
 	width: 12px;
@@ -42,7 +42,7 @@ const Close = styled.div`
 	cursor: pointer;
 	font-size: 1.2em;
 	position: absolute;
-	right: ${DEFAULT_SPACING}px;
+	right: 0;
 	text-align: center;
 	top: 0;
 	width: ${DEFAULT_SPACING}px;

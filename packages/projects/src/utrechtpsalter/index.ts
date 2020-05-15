@@ -5,8 +5,6 @@ import getComponents from './components'
 import extractFacsimiles from './facsimiles'
 import prepareDocument from './prepare'
 
-
-
 export default extendConfigData({
 	config,
 	extractFacsimiles,

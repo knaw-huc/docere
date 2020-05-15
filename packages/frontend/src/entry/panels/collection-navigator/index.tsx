@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Entry, DocereConfig } from '@docere/common'
+import { Entry, DocereConfig, Colors } from '@docere/common'
 import { PanelsProps } from '..'
 import ProjectContext from '../../../app/context'
 
@@ -46,6 +46,8 @@ function useEntry(controller: CollectionNavigatorController, entry: Entry) {
 }
 
 const Container = styled.div`
+	background: ${Colors.Grey};
+	grid-column: 1 / -1;
 	height: 64px;
 `
 

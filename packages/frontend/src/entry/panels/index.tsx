@@ -17,6 +17,7 @@ interface WProps {
 }
 const Wrapper = styled.div`
 	background: ${Colors.GreyLight};
+	box-sizing: border-box;
 	display: grid;
 	${(p: WProps) => {
 		let columns = p.pinnedLayers
@@ -28,15 +29,18 @@ const Wrapper = styled.div`
 		`
 	}}
 	grid-template-rows: auto 96px;
-	grid-column-gap: ${DEFAULT_SPACING / 2}px;
+	grid-column-gap: 8px;
+	grid-row-gap: 8px;
 	height: 100%;
+	padding: 0 8px;
 	width: 100%;
 `
 
 const PanelsCommon = styled.div`
-	background: white;
+	background: ${Colors.GreyLight};
 	display: grid;
 	grid-template-rows: 100% auto;
+	grid-column-gap: 8px;
 	height: 100%;
 	overflow-x: auto; 
 `
