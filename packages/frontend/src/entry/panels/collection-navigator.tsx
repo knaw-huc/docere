@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { fetchPost } from '../../utils'
-import { Entry, HierarchyMetadata, Hit, DocereConfig } from '@docere/common'
+import { Entry, Hit, DocereConfig } from '@docere/common'
 import type OpenSeadragon from 'openseadragon'
 import { PanelsProps } from '.'
 import ProjectContext from '../../app/context'
@@ -40,23 +40,39 @@ function canvasClickHandler(event: OpenSeadragon.ViewerEvent) {
 	}
 }
 
+function arrange(viewer: OpenSeadragon.Viewer) {
+	const count = viewer.world.getItemCount();
+	let x = 0
+	for (let i = 0; i < count; i++) {
+		const tiledImage = viewer.world.getItemAt(i);
+		const bounds = tiledImage.getBounds()
+		bounds.x = x + (i * .1)
+		tiledImage.fitBounds(bounds)
+		x = x + bounds.width
+	}
+}
+
+// function ff(viewer: OpenSeadragon.Viewer) {
+
+// }
+
 function useOpenSeadragon() {
 	const [osd, setOsd] = React.useState<any>(null)
 
 	React.useEffect(() => {
-		import('openseadragon' as any)
+		import('openseadragon')
 			.then(OpenSeadragon => {
 				const viewer = OpenSeadragon.default({
 					gestureSettingsMouse: {
 						clickToZoom: false,
+						scrollToZoom: false,
 					},
 					id: "osd_collection_navigator",
 					prefixUrl: "/static/images/osd/",
 					panVertical: false,
-					maxZoomImageRatio: .1,
+					showHomeControl: false,
+					showZoomControl: false,
 				})
-
-				console.log('setting OSD')
 
 				setOsd(viewer)
 			})
@@ -81,12 +97,12 @@ function useTileSources(
 		fetchPost(searchUrl, collectionPayload)
 			.then(data => {
 				const hits: Hit[] = data.hits.hits
-				const tileSources = hits.reduce((prev, curr, index) => {
+				const tileSources = hits.reduce((prev, curr /*, index */) => {
 					curr._source.facsimiles.forEach((f: string) => {
 						prev.push({
 							tileSource: f,
-							x: index + (.1 * index),
-							height: 1,
+							// x: index + (.1 * index),
+							// height: 1,
 							userData: curr._source,
 						})
 					})
@@ -97,6 +113,7 @@ function useTileSources(
 				function addItemHandler() {
 					count += 1
 					if (count === tileSources.length) {
+						arrange(viewer)
 						setActiveFacsimiles(activeFacsimilePaths, tileSources, viewer)
 						viewer.world.removeHandler('add-item', addItemHandler)
 						viewer.removeHandler('add-item-failed', addItemHandler)
@@ -110,8 +127,16 @@ function useTileSources(
 
 				viewer.removeHandler('canvas-click', canvasClickHandler)
 				viewer.addHandler('canvas-click', canvasClickHandler, { appDispatch, tileSources, viewer })
+
+				viewer.addHandler('full-screen', () => {
+					// fff(viewer)
+					// console.log('VIEWER FULL SCREEN')
+					viewer.gestureSettingsMouse.scrollToZoom = true
+					viewer.panVertical = true
+					setActiveFacsimiles(activeFacsimilePaths, tileSources, viewer)
+				})
 			})
-	}, [activeFacsimilePaths, collectionPayload, viewer])
+	}, [collectionPayload, viewer])
 
 	return tileSources
 }
@@ -134,7 +159,8 @@ function setActiveFacsimiles(
 
 	viewer.clearOverlays()
 	const element = document.createElement("div")
-	element.style.border = '2px solid orange'
+	element.style.border = '3px solid orange'
+	element.style.boxSizing = 'border-box'
 	viewer.addOverlay({
 		checkResize: false,
 		element,
