@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { DEFAULT_SPACING, Colors, FooterTab } from '@docere/common'
+import { DEFAULT_SPACING, Colors, FooterTab, FOOTER_HANDLE_HEIGHT } from '@docere/common'
 
 import LayersFooterTab from '../footer/layers'
 import Panel from './panel'
@@ -8,12 +8,11 @@ import CollectionNavigator from './collection-navigator'
 
 import type { DocereConfig, Entity, Layer, Note, EntryState, EntryStateAction } from '@docere/common'
 import type { EntryProps } from '..'
+import ProjectContext from '../../app/context'
 
 interface WProps {
-	activeEntity: Entity
-	activeNote: Note
+	hasCollection: boolean
 	pinnedLayers: Layer[]
-	settings: DocereConfig['entrySettings']
 }
 const Wrapper = styled.div`
 	background: ${Colors.GreyLight};
@@ -28,10 +27,10 @@ const Wrapper = styled.div`
 			grid-template-columns: ${columns} auto;
 		`
 	}}
-	grid-template-rows: auto 96px;
+	grid-template-rows: ${props => props.hasCollection ? 'auto 70px' : 'auto'};
 	grid-column-gap: 8px;
 	grid-row-gap: 8px;
-	height: 100%;
+	height: calc(100% - ${FOOTER_HANDLE_HEIGHT}px);
 	padding: 0 8px;
 	width: 100%;
 `
@@ -104,16 +103,16 @@ export type PanelsProps = EntryProps & EntryState & {
 }
 
 function Panels(props: PanelsProps) {
+	const context = React.useContext(ProjectContext)
+
 	const activeLayers = props.layers.filter(layer => layer.active && !layer.pinned)
 	const pinnedLayers = props.layers.filter(layer => layer.pinned)
 
 	return (
 		<Wrapper
-			activeEntity={props.activeEntity}
-			activeNote={props.activeNote}
+			hasCollection={context.config.collection != null}
 			id="panels"
 			pinnedLayers={pinnedLayers}
-			settings={props.settings}
 		>
 			{
 				pinnedLayers.length > 0 &&
@@ -153,10 +152,15 @@ function Panels(props: PanelsProps) {
 					}
 				</ActivePanels>
 			}
-			<CollectionNavigator
-				appDispatch={props.appDispatch}
-				entry={props.entry}
-			/>
+			{
+				(context.config.collection != null) &&
+				<CollectionNavigator
+					appDispatch={props.appDispatch}
+					config={context.config.collection}
+					entry={props.entry}
+					searchUrl={context.searchUrl}
+				/>
+			}
 			{
 				!activeLayers.length &&
 				!pinnedLayers.length &&

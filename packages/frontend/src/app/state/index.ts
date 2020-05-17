@@ -11,6 +11,7 @@ import type { AppState, AppStateAction, DocereConfigData } from '@docere/common'
 const initialAppState: AppState = {
 	entryId: null,
 	entry: null,
+	footerTab: null,
 	pageId: null,
 	page: null,
 	searchTab: null,
@@ -78,20 +79,47 @@ function appStateReducer(appState: AppState, action: AppStateAction): AppState {
 			}
 		}
 
-		case 'SET_SEARCH_TAB': {
-			// if searchTab is Search, viewport has to be EntrySelector
-			// and if searchTab is Results, viewport has to be Entry
-			const viewport = action.tab === SearchTab.Search ?
-				Viewport.EntrySelector :
-				Viewport.Entry
+		// case 'SET_SEARCH_TAB': {
+		// 	// if searchTab is Search, viewport has to be EntrySelector
+		// 	// and if searchTab is Results, viewport has to be Entry
+		// 	const viewport = action.tab === SearchTab.Search ?
+		// 		Viewport.EntrySelector :
+		// 		Viewport.Entry
 
-			const searchTab = appState.searchTab === action.tab ? null : action.tab
+		// 	const searchTab = appState.searchTab === action.tab ? null : action.tab
 
-			return {
-				...appState,
-				searchTab,
-				viewport
+		// 	return {
+		// 		...appState,
+		// 		searchTab,
+		// 		viewport
+		// 	}
+		// }
+
+		case 'TOGGLE_TAB': {
+			if (action.tabType === 'search') {
+				// if searchTab is Search, viewport has to be EntrySelector
+				// and if searchTab is Results, viewport has to be Entry
+				const viewport = action.tab === SearchTab.Search ?
+					Viewport.EntrySelector :
+					Viewport.Entry
+
+				const searchTab = appState.searchTab === action.tab ? null : action.tab
+
+				return {
+					...appState,
+					searchTab,
+					viewport
+				}
+			} else if (action.tabType === 'footer') {
+				const footerTab = (appState.footerTab === action.tab) ? null : action.tab
+				console.log(footerTab)
+				return {
+					...appState,
+					footerTab,
+					viewport: Viewport.Entry
+				}
 			}
+
 		}
 
 		case 'SET_VIEWPORT': {

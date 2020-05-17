@@ -73,11 +73,14 @@ function Tooltip(props: Props) {
 	React.useEffect(() => {
 		let offset = 0
 
+		const textPanelRect = wrapperRef.current.closest('.text-panel').getBoundingClientRect()
 		const tooltipRect = wrapperRef.current.getBoundingClientRect()
-		const textPanelLeft = wrapperRef.current.closest('.text-panel').getBoundingClientRect().left
+
+		const textPanelLeft = textPanelRect.left + 32
 		if (tooltipRect.left < textPanelLeft) offset = textPanelLeft - tooltipRect.left
 
-		const textPanelRight = textPanelLeft + getTextPanelWidth(props.settings, props.activeNote, props.activeEntity) - 64
+		const textPanelMiddle = textPanelRect.left + (textPanelRect.width / 2)
+		const textPanelRight = textPanelMiddle + (getTextPanelWidth(props.settings, props.activeNote, props.activeEntity) / 2) - 32
 		if (tooltipRect.right > textPanelRight) offset = textPanelRight - tooltipRect.right
 
 		setOffset(offset)

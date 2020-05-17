@@ -53,15 +53,14 @@ const Container = styled.div`
 
 interface Props {
 	appDispatch: PanelsProps['appDispatch']
+	config: ProjectContext['config']['collection']
 	entry: Entry
+	searchUrl: ProjectContext['searchUrl']
 }
 function CollectionNavigator(props: Props) {
-	const context = React.useContext(ProjectContext)
-	if (context.config.collection == null) return null
-
 	const controller = useOpenSeadragonController(
-		context.config.collection,
-		context.searchUrl,
+		props.config,
+		props.searchUrl,
 		props.appDispatch
 	)
 	useEntry(controller, props.entry)

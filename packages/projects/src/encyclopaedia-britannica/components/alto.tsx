@@ -66,13 +66,29 @@ function TextLine(props: DocereComponentProps) {
 	)
 }
 
-// const pb = getPb(props => props.attributes.path)
+const EntityThumb = styled.img`
+	box-sizing: border-box;
+	padding: 1rem;
+`
+
+function EntityPopupBody(props: DocereComponentProps) {
+	const { HPOS, VPOS, WIDTH, HEIGHT } = props.attributes
+	const rect = `${HPOS},${VPOS},${WIDTH},${HEIGHT}`
+
+	return (
+		<EntityThumb
+			src={props.activeFacsimile.versions[0].path.replace('info.json', `${rect}/240,/0/default.jpg`)}
+			width="100%"
+		/>
+	)
+}
 
 function String(props: DocereComponentProps) {
 	return (
 		<Entity
 			customProps={props}
 			id={props.attributes.ID}
+			PopupBody={EntityPopupBody}
 			revealOnHover
 		>
 			{props.attributes.CONTENT}
@@ -80,13 +96,12 @@ function String(props: DocereComponentProps) {
 	)
 }
 
-function SP() { return ' ' }
+function SP() { return <> </> }
 
 const components: DocereComponents = {
 	Description: () => null,
 	// pb,
 	String,
-	// @ts-ignore /* React.FC does not except a string as return type, but it is perfectly valid */
 	SP,
 	TextLine,
 }

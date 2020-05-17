@@ -4,7 +4,7 @@ import { TOP_OFFSET, ASIDE_WIDTH, SEARCH_RESULT_ASIDE_WIDTH, FOOTER_HEIGHT, Sear
 import type { EntryState, AppState } from '@docere/common'
 
 // interface MainProps { asideTab: AsideTab, footerTab: FooterTab, searchTab: SearchTab }
-type MainProps = Pick<EntryState, 'asideTab' | 'footerTab'> & Pick<AppState, 'searchTab'>
+type MainProps = Pick<EntryState, 'asideTab'> & Pick<AppState, 'searchTab' | 'footerTab'>
 export const Main = styled.div`
 	bottom: ${(props: MainProps) => props.footerTab != null ? `${FOOTER_HEIGHT}px` : 0};
 	left: ${props => props.searchTab === SearchTab.Results ? `${SEARCH_RESULT_ASIDE_WIDTH}px` : 0};

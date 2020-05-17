@@ -1,10 +1,11 @@
-import { SearchTab, Viewport } from '../../enum'
+import { SearchTab, Viewport, FooterTab } from '../../enum'
 import type { PageConfig } from '../config-data/config'
 import type { Entry } from '../entry'
 
 export interface AppState {
 	entry: Entry
 	entryId: string
+	footerTab: FooterTab
 	page: Page
 	pageId: string
 	searchTab: SearchTab
@@ -43,10 +44,19 @@ interface ASA_Unset_Page {
 	type: 'UNSET_PAGE'
 }
 
-interface ASA_Set_Search_Tab {
-	type: 'SET_SEARCH_TAB'
-	tab: SearchTab
+interface ToggleFooterTab {
+	type: 'TOGGLE_TAB',
+	tabType: 'footer'
+	tab: AppState['footerTab']
 }
+
+interface ToggleSearchTab {
+	type: 'TOGGLE_TAB',
+	tabType: 'search'
+	tab: AppState['searchTab']
+}
+
+type ToggleTab = ToggleFooterTab | ToggleSearchTab
 
 interface ASA_Set_Viewport {
 	type: 'SET_VIEWPORT'
@@ -54,11 +64,11 @@ interface ASA_Set_Viewport {
 }
 
 export type AppStateAction = 
+	ToggleTab |
 	ASA_Project_Changed |
 	ASA_Set_Entry |
 	ASA_Set_Entry_Id |
 	ASA_Set_Page |
 	ASA_Set_Page_Id |
-	ASA_Set_Search_Tab |
 	ASA_Set_Viewport |
 	ASA_Unset_Page

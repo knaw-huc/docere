@@ -1,8 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components';
-import { ASIDE_HANDLE_WIDTH, ASIDE_WIDTH, TOP_OFFSET, AsideTab, Colors } from '@docere/common'
+import { ASIDE_WIDTH, AsideTab, Colors, FOOTER_HANDLE_HEIGHT } from '@docere/common'
 
-import Tabs from '../../ui/tabs';
 import MetadataAside from './metadata/index'
 import NotesAside from './notes'
 import TextDataAside from './text-data'
@@ -11,15 +10,12 @@ import type { EntryState, EntryStateAction } from '@docere/common'
 import type { EntryProps } from '..';
 
 const Wrapper = styled.aside`
-	bottom: 0;
-	display: grid;
-	grid-template-columns: ${ASIDE_HANDLE_WIDTH}px auto;
-	height: calc(100vh - ${TOP_OFFSET}px);
+	bottom: ${FOOTER_HANDLE_HEIGHT}px;
 	pointer-events: none;
 	position: absolute;
-	top: 0;
 	right: -${ASIDE_WIDTH}px;
-	width: ${ASIDE_WIDTH + ASIDE_HANDLE_WIDTH}px;
+	top: 0;
+	width: ${ASIDE_WIDTH}px;
 	z-index: 6000;
 
 	& > * {
@@ -31,6 +27,7 @@ const Body = styled.div`
 	background-color: ${Colors.Grey};
 	box-sizing: border-box;
 	color: #EEE;
+	height: 100%;
 	position: relative;
 `
 
@@ -60,11 +57,11 @@ function Aside(props: EntryAsideProps) {
 
 	return (
 		<Wrapper>
-			<Tabs
+			{/* <Tabs
 				onClick={(tab: AsideTab) => props.entryDispatch({ type: 'TOGGLE_ASIDE_TAB', asideTab: tab })}
 				tab={props.asideTab}
 				tabs={tabs}
-			/>
+			/> */}
 			<Body>
 				{
 					hasMetadata &&

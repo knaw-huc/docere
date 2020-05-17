@@ -6,7 +6,7 @@ import Footer from './footer'
 import useEntryState from './state'
 import { AppState, AppStateAction } from '@docere/common'
 
-export type EntryProps = Pick<AppState, 'entry' | 'searchTab'> & { appDispatch: React.Dispatch<AppStateAction> }
+export type EntryProps = Pick<AppState, 'entry' | 'footerTab' | 'searchTab'> & { appDispatch: React.Dispatch<AppStateAction> }
 function Entry(props: EntryProps) {
 	if (props.entry == null) return null
 	const [entryState, entryDispatch] = useEntryState(props.entry)
@@ -14,7 +14,7 @@ function Entry(props: EntryProps) {
 	return (
 		<Main
 			asideTab={entryState.asideTab}
-			footerTab={entryState.footerTab}
+			footerTab={props.footerTab}
 			searchTab={props.searchTab}
 		>
 			<Panels
@@ -37,11 +37,14 @@ function Entry(props: EntryProps) {
 			/>
 			<Footer
 				activeFacsimile={entryState.activeFacsimile}
+				appDispatch={props.appDispatch}
+				asideTab={entryState.asideTab}
 				entryDispatch={entryDispatch}
 				entry={props.entry}
 				entrySettings={entryState.settings}
-				footerTab={entryState.footerTab}
+				footerTab={props.footerTab}
 				layers={entryState.layers}
+				searchTab={props.searchTab}
 			/>
 		</Main>
 	)

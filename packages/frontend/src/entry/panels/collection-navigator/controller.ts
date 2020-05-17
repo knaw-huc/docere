@@ -1,6 +1,6 @@
 import { PanelsProps } from '..';
 import { DocereConfig, Entry, Hit } from '@docere/common'
-import { isHierarchyFacetConfig } from '@docere/search_'
+import { isHierarchyFacetConfig, isListFacetConfig } from '@docere/search_'
 import { fetchPost } from '../../../utils';
 import ProjectContext from '../../../app/context';
 
@@ -52,10 +52,14 @@ export default class CollectionNavigatorController {
 
 	private fullScreenHandler = (event: OpenSeadragon.ViewerEvent) => {
 		if (event.fullScreen) {
+			// @ts-ignore
 			this.viewer.gestureSettingsMouse.scrollToZoom = true
+			// @ts-ignore
 			this.viewer.panVertical = true
 		} else {
+			// @ts-ignore
 			this.viewer.gestureSettingsMouse.scrollToZoom = false
+			// @ts-ignore
 			this.viewer.panVertical = false
 		}
 
@@ -107,8 +111,9 @@ export default class CollectionNavigatorController {
 		}
 
 		const metadata = this.entry.metadata.find(md => md.id === this.config.metadataId)
+		if (metadata == null) return
 
-		if (metadata != null && isHierarchyFacetConfig(metadata)) {
+		if (isHierarchyFacetConfig(metadata)) {
 			const term = metadata.value.reduce((prev, curr, index) => {
 				prev.push({ term: { [`${this.config.metadataId}_level${index}`]: curr }})
 				return prev
@@ -123,6 +128,20 @@ export default class CollectionNavigatorController {
 				},
 				"sort": this.config.sortBy,
 			})
+		} else if (isListFacetConfig(metadata)) {
+			const payload = {
+				"size": 10000,
+				"query": {
+					"term": {
+						[metadata.id]: metadata.value
+					}
+				},
+			}
+
+			// @ts-ignore
+			if (this.config.sortBy != null) payload.sortBy = this.config.sortBy
+
+			return JSON.stringify(payload)
 		} else {
 			console.error('NOT IMPLEMENTED')
 		}

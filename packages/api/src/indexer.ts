@@ -6,7 +6,7 @@ const puppenv = new Puppenv()
 const esClient = new es.Client({ node: 'http://localhost:9200' })
 
 async function handleProject(projectId: string) {
-	const filePaths = await getXmlFiles(projectId, 20)
+	const filePaths = await getXmlFiles(projectId, 100)
 
 	// Get the ElasticSearch mapping for the project
 	const mapping = await puppenv.getMapping(projectId, filePaths)

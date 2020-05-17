@@ -32,12 +32,14 @@ function App(props: AppProps) {
 			<props.EntrySelector
 				appDispatch={appDispatch}
 				entry={appState.entry}
+				footerTab={appState.footerTab}
 				searchTab={appState.searchTab}
 				viewport={appState.viewport}
 			/>
 			<Entry 
 				appDispatch={appDispatch}
 				entry={appState.entry}
+				footerTab={appState.footerTab}
 				searchTab={appState.searchTab}
 			/>
 		</SearchContext.Provider>

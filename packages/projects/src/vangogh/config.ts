@@ -49,32 +49,32 @@ const config: DocereConfig = {
 			type: LayerType.Text,
 			// selector: 'div[type="original"]',
 		},
-		{
-			active: false,
-			id: 'original-tei',
-			title: 'Original TEI',
-			type: LayerType.XML,
-			// selector: 'div[type="original"]',
-		},
+		// {
+		// 	active: false,
+		// 	id: 'original-tei',
+		// 	title: 'Original TEI',
+		// 	type: LayerType.XML,
+		// 	// selector: 'div[type="original"]',
+		// },
 		{
 			active: true,
 			id: 'translation',
 			type: LayerType.Text,
 			// selector: 'div[type="translation"]',
 		},
-		{
-			active: false,
-			id: 'translation-tei',
-			title: 'Translation TEI',
-			type: LayerType.XML,
-			// selector: 'div[type="translation"]',
-		},
-		{
-			active: false,
-			id: 'tei',
-			title: 'Full TEI',
-			type: LayerType.XML,
-		},
+		// {
+		// 	active: false,
+		// 	id: 'translation-tei',
+		// 	title: 'Translation TEI',
+		// 	type: LayerType.XML,
+		// 	// selector: 'div[type="translation"]',
+		// },
+		// {
+		// 	active: false,
+		// 	id: 'tei',
+		// 	title: 'Full TEI',
+		// 	type: LayerType.XML,
+		// },
 	]
 }
 

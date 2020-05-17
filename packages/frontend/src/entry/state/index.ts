@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { AsideTab, FooterTab, defaultEntrySettings, getTextPanelWidth, LayerType, DEFAULT_SPACING } from '@docere/common'
+import { AsideTab, defaultEntrySettings, getTextPanelWidth, LayerType, DEFAULT_SPACING } from '@docere/common'
 import type { EntryState, EntryStateAction, FacsimileArea, Entry } from '@docere/common'
 import ProjectContext from '../../app/context'
 import { isTextLayer } from '../../utils'
@@ -11,7 +11,6 @@ const initialEntryState: EntryState = {
 	activeNote: null,
 	asideTab: null,
 	entry: null,
-	footerTab: null,
 	layers: [],
 	settings: defaultEntrySettings,
 }
@@ -74,19 +73,11 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 			}
 		}
 
-		case 'TOGGLE_ASIDE_TAB': {
-			const asideTab: AsideTab = (entryState.asideTab === action.asideTab) ? null : action.asideTab
+		case 'TOGGLE_TAB': {
+			const asideTab: AsideTab = (entryState.asideTab === action.tab) ? null : action.tab
 			return {
 				...entryState,
 				asideTab,
-			}
-		}
-
-		case 'TOGGLE_FOOTER_TAB': {
-			const footerTab: FooterTab = (entryState.footerTab === action.footerTab) ? null : action.footerTab
-			return {
-				...entryState,
-				footerTab,
 			}
 		}
 

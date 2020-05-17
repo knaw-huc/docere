@@ -4,16 +4,16 @@ import sets from './data/sets.json'
 
 const config: DocereConfig = {
 	collection: {
-		metadataId: 'access',
+		metadataId: 'setId',
 		sortBy: null
 	},
 	data: { sets },
 	slug: 'encyclopaedia-britannica',
 	title: 'Encyclopaedia Britannica',
 	layers: [
-		{ id: 'scan', type: LayerType.Facsimile },
-		{ id: 'prepared' },
-		{ id: 'alto', active: false },
+		{ id: 'scan', type: LayerType.Facsimile, active: false },
+		{ id: 'prepared', active: false },
+		{ id: 'alto' },
 	],
 	metadata: [
 		{
@@ -21,7 +21,7 @@ const config: DocereConfig = {
 			levels: 3,
 			order: 10,
 			title: 'Editions',
-			datatype: EsDataType.Hierarchy
+			datatype: EsDataType.Hierarchy,
 		},
 		// {
 		// 	id: 'access_level1',

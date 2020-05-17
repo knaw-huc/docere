@@ -42,10 +42,9 @@ export const Text = styled.div`
 	color: #222;
 	counter-reset: linenumber notenumber;
 	font-family: serif;
-	font-size: 1.25rem;
 	display: grid;
 	grid-template-columns: ${TEXT_PANEL_TEXT_WIDTH}px auto;
-	line-height: 2rem;
+	line-height: 1.5rem;
 	padding: ${DEFAULT_SPACING}px 0 200px ${(props: TextProps) => getTextPanelLeftSpacing(props.settings)}px;
 	position: relative;
 `

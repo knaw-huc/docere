@@ -97,20 +97,37 @@ const pb = getPb(props => props.attributes.path)
 const EntityBodyWrapper = styled.div`
 	padding: 1rem;
 
-	& > label {
-		font-size: .8rem;
-	}
+	.suggestion {
+		label {
+			font-size: .8rem;
+		}
 
-	& > div {
-		color: #222;
+		div {
+			color: #222;
+		}
 	}
 `
 
 function EntityBody(props: DocereComponentProps) {
+	const rect = props.attributes.area?.split('_').join(',')
+
+
 	return (
 		<EntityBodyWrapper>
-			<label>suggestion</label>
-			<div>{props.attributes.suggestion}</div>
+			{
+				rect != null &&
+				<img
+					src={props.activeFacsimile.versions[0].path.replace('info.json', `${rect}/240,/0/default.jpg`)}
+					width="100%"
+				/>
+			}
+			{
+				props.attributes.suggestion != null && 
+				<div className="suggestion">
+					<label>suggestion</label>
+					<div>{props.attributes.suggestion}</div>
+				</div>
+			}
 		</EntityBodyWrapper>
 	)
 }
@@ -127,7 +144,7 @@ function entity(config: DocereConfig) {
 				entitiesConfig={config.entities}
 				id={isEntity ? props.attributes.ref : props.attributes.id}
 				configId={isEntity ? type : 'string'}
-				PopupBody={hasSuggestion ? EntityBody : null}
+				PopupBody={EntityBody}
 				revealOnHover={isEntity || hasSuggestion ? false : true}
 			>
 				{props.children}

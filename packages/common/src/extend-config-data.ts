@@ -15,7 +15,7 @@ export const defaultEntrySettings: DocereConfig['entrySettings'] = {
 }
 
 const defaultConfig: DocereConfig = {
-	collection: false,
+	collection: null,
 	entities: [],
 	entrySettings: {},
 	layers: [],

@@ -73,9 +73,10 @@ function extractMetadata(doc: XMLDocument, configData: DocereConfigData, entryId
 		.map(id => {
 			const config = configData.config.metadata.find(md => md.id === id)
 			return (config == null) ?
-				{ ...defaultMetadata, title: id } :
+				{ ...defaultMetadata, id, title: id, value: extractedMetadata[id] } :
 				config
 		})
+
 
 		// Remove metadata which are configured to not be shown in the aside
 		.filter(config => config.showInAside)

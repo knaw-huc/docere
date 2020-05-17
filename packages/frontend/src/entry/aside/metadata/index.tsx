@@ -13,7 +13,7 @@ const Wrapper = styled.ul`
 	overflow-y: auto;
 	padding: ${DEFAULT_SPACING}px;
 	position: absolute;
-	z-index: ${(p: WProps) => p.active ? 1 : -1}
+	z-index: ${(p: WProps) => p.active ? 1 : -1};
 	top: 0;
 	bottom: 0;
 	right: 0;

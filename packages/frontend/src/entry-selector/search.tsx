@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import HucFacetedSearch  from '@docere/search_'
-import { TOP_OFFSET, UIComponentType, SearchTab } from '@docere/common'
+import { UIComponentType, Viewport } from '@docere/common'
 
 import ProjectContext, { useUIComponent } from '../app/context'
 import { FileExplorerProps } from './wrap-as-file-explorer'
@@ -12,54 +12,10 @@ import type { Hit } from '@docere/common'
 const FS = styled(HucFacetedSearch)`
 	background: white;
 	box-sizing: border-box;
-	height: calc(100vh - ${TOP_OFFSET}px);
+	height: 100%;
 	overflow-y: auto;
 	overflow-x: hidden;
 `
-
-	// ${props => {
-	// 	if (props.disableDefaultStyle) {
-	// 		return `
-	// 			display: grid;
-	// 			grid-template-columns: calc(100vw - ${SEARCH_RESULT_ASIDE_WIDTH}px) ${SEARCH_RESULT_ASIDE_WIDTH}px;
-
-	// 			& > aside {
-	// 				max-height: 0;
-	// 				overflow: hidden;
-	// 			}
-
-	// 			#huc-fs-active-filters {
-	// 				display: none;
-	// 			}
-
-	// 			#huc-fs-header {
-	// 				grid-template-columns: 0 1fr;
-	// 				grid-template-rows: 0 48px;
-	// 				padding-top: 0;
-	// 				top: 0;
-
-	// 				.right {
-	// 					display: none;
-	// 				}
-
-	// 				.pagination {
-	// 					margin-left: ${DEFAULT_SPACING}px;
-	// 					width: 80px;
-
-	// 					.pagenumbers {
-	// 						& > div:not(.active) {
-	// 							display: none;
-	// 						}
-	// 					}
-	// 				}
-	// 			}
-
-	// 			#huc-fs-search-results {
-	// 				padding: 0 ${DEFAULT_SPACING}px ${DEFAULT_SPACING * 2}px ${DEFAULT_SPACING}px;
-	// 			}
-	// 		`
-	// 	}
-	// }}
 
 const excludeResultFields = ['text', 'text_suggest']
 
@@ -96,11 +52,10 @@ function Search(props: FileExplorerProps) {
 				searchTab: props.searchTab,
 			}}
 			resultsPerPage={config.searchResultCount}
-			small={props.searchTab === SearchTab.Results}
+			small={props.viewport !== Viewport.EntrySelector}
 			url={searchUrl}
 		/>
 	)
 }
-			// disableDefaultStyle={props.searchTab === SearchTab.Results}
 
 export default React.memo(Search)
