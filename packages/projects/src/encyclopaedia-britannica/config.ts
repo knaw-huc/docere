@@ -23,14 +23,6 @@ const config: DocereConfig = {
 			title: 'Editions',
 			datatype: EsDataType.Hierarchy,
 		},
-		// {
-		// 	id: 'access_level1',
-		// 	showAsFacet: false,
-		// },
-		// {
-		// 	id: 'access_level2',
-		// 	showAsFacet: false,
-		// },
 		{
 			id: 'setId',
 			showAsFacet: false,
