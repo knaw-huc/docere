@@ -9,7 +9,13 @@ import type { AppState, AppStateAction } from '@docere/common'
 
 type WProps = Pick<FileExplorerProps, 'footerTab' | 'searchTab' | 'viewport'>
 const Wrapper = styled.div`
-	bottom: ${(props => props.footerTab != null ? FOOTER_HEIGHT + FOOTER_HANDLE_HEIGHT : FOOTER_HANDLE_HEIGHT)}px;
+	bottom: ${(props => 
+		props.viewport === Viewport.EntrySelector ?
+			0 : // When on search, stretch to the bottom
+			props.footerTab != null ?
+				FOOTER_HEIGHT + FOOTER_HANDLE_HEIGHT :
+				FOOTER_HANDLE_HEIGHT)
+	}px;
 	pointer-events: none;
 	position: fixed;
 	top: ${TOP_OFFSET}px;
@@ -44,12 +50,6 @@ export default function wrapAsFileExplorer(FileExplorer: React.FC<FileExplorerPr
 					viewport={props.viewport}
 				>
 					<FileExplorer {...props} />
-					{/* <Tabs
-						onClick={(tab: SearchTab) => props.appDispatch({ type: 'SET_SEARCH_TAB', tab })}
-						position={TabPosition.Left}
-						tab={props.searchTab}
-						tabs={[SearchTab.Search, SearchTab.Results]}
-					/> */}
 				</Wrapper>
 			</Delayed>
 		)

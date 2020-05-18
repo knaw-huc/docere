@@ -97,13 +97,13 @@ function appStateReducer(appState: AppState, action: AppStateAction): AppState {
 
 		case 'TOGGLE_TAB': {
 			if (action.tabType === 'search') {
+				const searchTab = appState.searchTab === action.tab ? null : action.tab
+
 				// if searchTab is Search, viewport has to be EntrySelector
 				// and if searchTab is Results, viewport has to be Entry
-				const viewport = action.tab === SearchTab.Search ?
+				const viewport = searchTab === SearchTab.Search ?
 					Viewport.EntrySelector :
 					Viewport.Entry
-
-				const searchTab = appState.searchTab === action.tab ? null : action.tab
 
 				return {
 					...appState,
@@ -112,10 +112,10 @@ function appStateReducer(appState: AppState, action: AppStateAction): AppState {
 				}
 			} else if (action.tabType === 'footer') {
 				const footerTab = (appState.footerTab === action.tab) ? null : action.tab
-				console.log(footerTab)
 				return {
 					...appState,
 					footerTab,
+					searchTab: appState.searchTab === SearchTab.Search ? null : appState.searchTab,
 					viewport: Viewport.Entry
 				}
 			}

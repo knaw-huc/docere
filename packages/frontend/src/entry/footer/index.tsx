@@ -47,7 +47,7 @@ const Button = styled.div`
 	padding: 0 .33rem;
 
 	&:hover {
-		color: #EEE;
+		color: ${(props: BProps) => props.active ? Colors.Orange : '#EEE'};
 	}
 `
 
@@ -56,6 +56,13 @@ const Body = styled.div`
 	color: white;
 	position: relative;
 `
+
+function isEmpty(obj: Object | Array<any>) {
+	if (obj == null) return true
+	if (Array.isArray(obj)) return obj.length === 0
+	return Object.keys(obj).length === 0
+}
+
 
 interface Props {
 	activeFacsimile: Facsimile
@@ -77,6 +84,7 @@ function Footer(props: Props) {
 			props.appDispatch({ type: 'TOGGLE_TAB', tabType: type, tab })
 		}
 	}, [])
+
 
 	return (
 		<Wrapper>
@@ -121,27 +129,36 @@ function Footer(props: Props) {
 					</Button>
 				</div>
 				<div className="aside-tabs">
-					<Button
-						active={props.asideTab === AsideTab.Metadata}
-						data-tab={AsideTab.Metadata}
-						data-type="aside"
-					>
-						Metadata
-					</Button>
-					<Button
-						active={props.asideTab === AsideTab.TextData}
-						data-tab={AsideTab.TextData}
-						data-type="aside"
-					>
-						Entities
-					</Button>
-					<Button
-						active={props.asideTab === AsideTab.Notes}
-						data-tab={AsideTab.Notes}
-						data-type="aside"
-					>
-						Notes
-					</Button>
+					{
+						!isEmpty(props.entry.metadata) &&
+						<Button
+							active={props.asideTab === AsideTab.Metadata}
+							data-tab={AsideTab.Metadata}
+							data-type="aside"
+						>
+							Metadata
+						</Button>
+					}
+					{
+						!isEmpty(props.entry.entities) &&
+						<Button
+							active={props.asideTab === AsideTab.TextData}
+							data-tab={AsideTab.TextData}
+							data-type="aside"
+						>
+							Entities
+						</Button>
+					}
+					{
+						!isEmpty(props.entry.notes) &&
+						<Button
+							active={props.asideTab === AsideTab.Notes}
+							data-tab={AsideTab.Notes}
+							data-type="aside"
+						>
+							Notes
+						</Button>
+					}
 				</div>
 			</MenuItems>
 			<Body>
