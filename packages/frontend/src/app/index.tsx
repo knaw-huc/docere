@@ -2,7 +2,7 @@ import * as React from 'react'
 import { SearchContext, useSearchReducer } from '@docere/search_'
 
 import EntrySelector from '../entry-selector'
-import Header from '../header'
+import { ProjectHeader } from '../header'
 import Entry from '../entry'
 import PageView from '../page'
 import useAppState from './state'
@@ -22,7 +22,7 @@ function App(props: AppProps) {
 
 	return (
 		<SearchContext.Provider value={{ state, dispatch }}>
-			<Header
+			<ProjectHeader
 				appDispatch={appDispatch}
 			/>
 			<PageView

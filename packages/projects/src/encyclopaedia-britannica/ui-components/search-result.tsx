@@ -1,5 +1,5 @@
 import * as React from 'react'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import { ResultBody } from '@docere/ui-components'
 import type { DocereResultBodyProps } from '@docere/common'
 

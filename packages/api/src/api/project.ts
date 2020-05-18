@@ -4,7 +4,6 @@ import { getXmlFiles, send } from '../utils'
 import type { Mapping, DocereApiError } from '../types'
 
 export default function handleProjectApi(app: Express, puppenv: Puppenv) {
-
 	app.get('/projects/:projectId/config', async (req, res) => {
 		const configData = await puppenv.getConfigData(req.params.projectId)
 

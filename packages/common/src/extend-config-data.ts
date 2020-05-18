@@ -22,6 +22,7 @@ const defaultConfig: DocereConfig = {
 	metadata: [],
 	notes: [],
 	pages: [],
+	private: false,
 	searchResultCount: 20,
 	slug: 'unknown-project',
 	title: 'Unknown project',

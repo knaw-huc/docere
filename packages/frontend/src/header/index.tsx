@@ -51,28 +51,51 @@ const H1 = styled('h1')`
 `
 
 
-interface Props {
+interface HeaderProps {
+	children: React.ReactNode
+}
+const Header = React.memo(function Header(props: HeaderProps) {
+	return (
+		<Wrapper>
+			<TopMenu>
+				{props.children}
+			</TopMenu>
+		</Wrapper>
+	)
+})
+
+interface ProjectHeaderProps {
 	appDispatch: React.Dispatch<AppStateAction>
 }
-export default React.memo(function Header(props: Props) {
+export function ProjectHeader(props: ProjectHeaderProps) {
 	const { config } = React.useContext(ProjectContext)
 	const setSearchTab = React.useCallback(() =>
 		props.appDispatch({ type: 'SET_VIEWPORT', viewport: Viewport.EntrySelector }),
 	[])
 
 	return (
-		<Wrapper>
-			<TopMenu>
-				<H1
-					onClick={setSearchTab}
-				>
-					<small>Docere</small>
-					{config.title}
-				</H1>
-				<PagesMenu
-					appDispatch={props.appDispatch}
-				/>
-			</TopMenu>
-		</Wrapper>
+		<Header>
+			<H1>
+				<small onClick={() => window.location.href = '/'}>Docere</small>
+				<span onClick={setSearchTab}>
+				{config.title}
+				</span>
+			</H1>
+			<PagesMenu
+				appDispatch={props.appDispatch}
+			/>
+		</Header>
 	)
-})
+}
+
+interface HomeHeaderProps {
+}
+export function HomeHeader(_props: HomeHeaderProps) {
+	return (
+		<Header>
+			<H1>
+				<small>Docere</small>
+			</H1>
+		</Header>
+	)
+}

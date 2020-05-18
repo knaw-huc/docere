@@ -6,9 +6,18 @@ import EntrySelector from './entry-selector'
 import configDatas from '@docere/projects'
 import { analyzeWindowLocation } from './utils'
 import ProjectContext from './app/context'
+import Home from './home'
 
 document.addEventListener('DOMContentLoaded', async function() {
 	const { projectId } = analyzeWindowLocation()
+
+	if (!projectId.length) {
+		ReactDOM.render(
+			<Home />,
+			document.getElementById('container')
+		)
+		return
+	}
 
 	// TODO redirect to 404 if projectSlug does not exist
 	const { default: configData } = await configDatas[projectId]()

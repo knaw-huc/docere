@@ -4,14 +4,15 @@ import type { FacetConfig } from '../search/facets'
 export interface DocereConfig {
 	collection?: { metadataId: string, sortBy: string } /* true if whole project is one collection, MetadataConfig.id if project consists of multiple collections */
 	data?: Record<string, any>
+	entities?: EntityConfig[]
+	entrySettings?: EntrySettings
+	layers?: LayerConfig[]
 	metadata?: MetadataConfig[]
 	notes?: NotesConfig[]
 	pages?: PageConfig[]
+	private?: boolean
 	searchResultCount?: number
-	entrySettings?: EntrySettings
 	slug: string
-	entities?: EntityConfig[]
-	layers?: LayerConfig[]
 	title: string
 }
 
