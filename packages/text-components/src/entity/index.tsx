@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import Popup from '../popup'
 import { useConfig, useChildren } from './hooks'
 import type { DocereComponentProps, DocereConfig } from '@docere/common'
+import IconsByType from './icons'
 
 interface NWProps { openToAside: boolean }
 const NoWrap = styled.span`
@@ -46,7 +47,7 @@ function Entity(props: RsProps) {
 	const active = props.customProps.activeEntity?.id === props.id
 	const openToAside = active && !props.customProps.entrySettings['panels.text.openPopupAsTooltip']
 	const config = useConfig(props.configId, props.entitiesConfig)
-	const [children, firstWord, restOfFirstChild, Icon] = useChildren(props.children, config)
+	const [children, firstWord, restOfFirstChild] = useChildren(props.children, config)
 
 	// The entity can be active, but without the need to show the tooltip.
 	// In case there are several entities with the same ID, we only want to 
@@ -74,6 +75,7 @@ function Entity(props: RsProps) {
 	}, [config])
 
 	if (config == null) return null
+	const Icon = IconsByType[config.type]
 
 	return (
 		<EntityWrapper
