@@ -19,7 +19,7 @@ const Wrapper = styled.div`
 			`-${SEARCH_RESULT_ASIDE_WIDTH}px`
 
 	});
-	transition: transform 300ms;
+	transition: all 300ms;
 	width: ${(props: WProps) => (props.searchTab === SearchTab.Results || props.viewport !== Viewport.EntrySelector) ?
 		`${SEARCH_RESULT_ASIDE_WIDTH}px` :
 		'100vw'
