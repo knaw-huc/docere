@@ -5,7 +5,7 @@ import { fetchPost } from '../../../utils';
 import ProjectContext from '../../../app/context';
 
 export default class CollectionNavigatorController {
-	private activeFacsimilePaths: string[] = []
+	private activeBounds: OpenSeadragon.Rect
 	private entry: Entry
 	private payload: string
 	private tiledImageOptions: { tileSource: string, userData: any }[]
@@ -27,7 +27,6 @@ export default class CollectionNavigatorController {
 
 	setEntry(entry: Entry) {
 		this.entry = entry
-		this.setActiveFacsimilePaths()
 
 		const nextPayload = this.getPayload()
 		if (nextPayload !== this.payload) {
@@ -63,21 +62,14 @@ export default class CollectionNavigatorController {
 			this.viewer.panVertical = false
 		}
 
-		this.highlightActiveTiledImages()
+		setTimeout(() => this.viewer.viewport.fitBounds(this.activeBounds), 0)
 	}
 
 
 	private highlightActiveTiledImages() {
 		this.viewer.clearOverlays()
 
-		const unionBounds = this.activeFacsimilePaths
-			.map(path => this.tiledImageOptions.findIndex(option => option.tileSource === path))
-			.reduce((prev, curr) => {
-				const item = this.viewer.world.getItemAt(curr)
-				const bounds = item.getBounds()
-				return prev == null ? bounds : prev.union(bounds)
-			}, null as any)
-
+		this.setActiveBounds()
 
 		const element = document.createElement("div")
 		element.style.border = '3px solid orange'
@@ -86,17 +78,26 @@ export default class CollectionNavigatorController {
 		this.viewer.addOverlay({
 			checkResize: false,
 			element,
-			location: unionBounds,
+			location: this.activeBounds,
 		})
 
-		this.viewer.viewport.fitBounds(unionBounds)
+		this.viewer.viewport.fitBounds(this.activeBounds)
 	}
 
-	private setActiveFacsimilePaths() {
-		this.activeFacsimilePaths = this.entry.facsimiles.reduce((prev, curr) => {
+	private setActiveBounds() {
+		const activeFacsimilePaths = this.entry.facsimiles.reduce((prev, curr) => {
 			const ps = curr.versions.map(v => v.path)
 			return prev.concat(ps)
 		}, [] as string[])
+
+		this.activeBounds = activeFacsimilePaths
+			.map(path => this.tiledImageOptions.findIndex(option => option.tileSource === path))
+			.reduce((prev, curr) => {
+				const item = this.viewer.world.getItemAt(curr)
+				const bounds = item.getBounds()
+				return prev == null ? bounds : prev.union(bounds)
+			}, null as any)
+
 	}
 
 	private getPayload() {

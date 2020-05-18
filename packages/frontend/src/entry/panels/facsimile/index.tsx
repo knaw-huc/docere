@@ -83,10 +83,10 @@ function useOpenSeadragon(): [any, any] {
 					prefixUrl: "/static/images/osd/",
 					sequenceMode: true,
 					showHomeControl: false,
+					showNavigator: true,
 					showReferenceStrip: true,
 					showRotationControl: true,
 					showZoomControl: false,
-					showNavigator: true,
 					visibilityRatio: 1.0,
 				})
 				setOpenSeadragon([osdInstance, OpenSeadragon])

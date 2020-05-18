@@ -24,6 +24,7 @@ function useOpenSeadragonController(
 					id: "osd_collection_navigator",
 					prefixUrl: "/static/images/osd/",
 					panVertical: false,
+					preserveImageSizeOnResize: true,
 					showHomeControl: false,
 					showZoomControl: false,
 				})

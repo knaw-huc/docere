@@ -77,7 +77,6 @@ function Footer(props: Props) {
 			props.appDispatch({ type: 'TOGGLE_TAB', tabType: type, tab })
 		}
 	}, [])
-	console.log('nu', props.footerTab)
 
 	return (
 		<Wrapper>
