@@ -46,7 +46,7 @@ export function useChildren(propsChildren: React.ReactNode, config: EntityConfig
 		setFirstWord(firstWord)
 		setIcon(Icon)
 		setRestOfFirstChild(restOfFirstChild)
-	}, [])
+	}, [propsChildren, config])
 
 	return [children, firstWord, restOfFirstChild, Icon]
 }

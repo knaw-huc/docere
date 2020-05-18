@@ -109,9 +109,8 @@ function Entity(props: RsProps) {
 	)
 }
 
-const defaultProps = {
+Entity.defaultProps = {
 	revealOnHover: false,
 }
-Entity.defaultProps = defaultProps
 
-export default React.memo(Entity)
+export default Entity
