@@ -29,7 +29,6 @@ function initListFacet(config: ListFacetConfig): ListFacetData {
 }
 
 function initDateFacet(config: DateFacetConfig): DateFacetData {
-	console.log('c', config)
 	return {
 		collapseFilters: config.collapseFilters,
 		config,

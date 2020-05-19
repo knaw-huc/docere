@@ -58,7 +58,6 @@ function ActiveFiltersDetails(props: Props) {
 		props.dispatch({ type: 'REMOVE_FILTER', facetId, value })
 	}, [])
 
-	console.log(props.filters)
 	return (
 		<ActiveFiltersDropDown
 			label={`active (${props.filters.reduce((p, c) => p + c.values.length, !props.query.length ? 0 : 1)})`}

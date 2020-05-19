@@ -78,7 +78,7 @@ export default function Value(props: Props) {
 					props.active ?
 					<span
 						data-facet-id={props.id}
-						data-type="REMOVE_SEARCH_FILTER"
+						data-type="REMOVE_FILTER"
 						data-value={props.children}
 						onClick={props.onClick}
 						title={`Remove '${props.children}' from currently active search filters and trigger a new search.`}
@@ -92,7 +92,7 @@ export default function Value(props: Props) {
 					<span className="buttons">
 						<span
 							data-facet-id={props.id}
-							data-type="ADD_SEARCH_FILTER"
+							data-type="ADD_FILTER"
 							data-value={props.children}
 							onClick={props.onClick}
 							title={`Add '${props.children}' to currently active search filters and trigger a new search.`}
@@ -101,7 +101,7 @@ export default function Value(props: Props) {
 						</span>
 						<span
 							data-facet-id={props.id}
-							data-type="SET_SEARCH_FILTER"
+							data-type="SET_FILTER"
 							data-value={props.children}
 							onClick={props.onClick}
 							title={`Set '${props.children}' as the only active search filter and trigger a new search.`}
