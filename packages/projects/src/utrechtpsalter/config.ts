@@ -3,6 +3,10 @@ import { LayerType } from '@docere/common'
 import type { DocereConfig } from '@docere/common'
 
 const config: DocereConfig = {
+	collection: {
+		metadataId: null,
+		sortBy: 'id'
+	},
 	data: {
 		pages
 	},
