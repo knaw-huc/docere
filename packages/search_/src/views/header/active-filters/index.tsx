@@ -6,13 +6,11 @@ import { Button } from '../page-number'
 import useFilters from './use-filters'
 import Details from './details'
 
-// import type { FacetsDataReducerAction, FacetsData } from '@docere/common'
 import SearchContext from '../../../facets-context'
 
 const Wrapper = styled.div`
 	grid-column: 1 / span 2;
 	line-height: 24px;
-	padding-left: 32px;
 
 	& > * {
 		display: inline-block;
