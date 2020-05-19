@@ -24,7 +24,6 @@ const config: DocereConfig = {
 			title: '"Toegang"',
 		},
 		{
-			collapseFilters: false,
 			datatype: EsDataType.Date,
 			id: 'normalised_dates',
 			interval: 'y',
@@ -43,8 +42,8 @@ const config: DocereConfig = {
 			order: 50,
 		},
 		{
-			// order: 1000,
-			order: 0,
+			order: 1000,
+			// order 0,
 			id: 'blocks',
 			title: 'Block count',
 			datatype: EsDataType.Integer,
@@ -62,13 +61,13 @@ const config: DocereConfig = {
 			// showAsFacet: false
 		},
 		{
-			order: 1030,
-			id: 'n',
-			title: 'Order number',
-			datatype: EsDataType.Integer,
 			// interval: 200,
-			range: 4000,
 			// showAsFacet: false
+			datatype: EsDataType.Integer,
+			id: 'n',
+			order: 1030,
+			range: 4000,
+			title: 'Order number',
 		}
 	],
 	entities: [

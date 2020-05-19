@@ -85,12 +85,18 @@ export default function Bars({ facetData }: Props) {
 	const searchContext = React.useContext(SearchContext)
 
 	const setRange = React.useCallback(() => {
-		const resetFacet = facetData.filters.length < 2
-		searchContext.dispatch({
-			type: resetFacet ? 'RESET_RANGE' : 'SET_RANGE',
-			facetId: facetData.config.id,
-			value: resetFacet ? null : facetData.filters[facetData.filters.length - 2] 
-		})
+		if (facetData.filters.length < 2) {
+			searchContext.dispatch({
+				type: 'REMOVE_FILTER',
+				facetId: facetData.config.id,
+			})
+		} else {
+			searchContext.dispatch({
+				type: 'SET_FILTER',
+				facetId: facetData.config.id,
+				value: facetData.filters[facetData.filters.length - 2] 
+			})
+		}
 	}, [facetData.config.id])
 
 	return (

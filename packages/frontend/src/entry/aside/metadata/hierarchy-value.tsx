@@ -67,10 +67,10 @@ export default function HierarchyFacetValue(props: Props) {
 		ev.stopPropagation()
 
 		const { dataset } = ev.currentTarget
-		const type: 'ADD_SEARCH_FILTER' | 'SET_SEARCH_FILTER' | 'REMOVE_SEARCH_FILTER' = dataset.type
+		const type: 'ADD_FILTER' | 'SET_FILTER' | 'REMOVE_FILTER' = dataset.type
 
 
-		const value = type !== 'REMOVE_SEARCH_FILTER' ?
+		const value = type !== 'REMOVE_FILTER' ?
 			props.metadataItem.value.slice(0, props.metadataItem.value.indexOf(dataset.value) + 1) :
 			dataset.value
 

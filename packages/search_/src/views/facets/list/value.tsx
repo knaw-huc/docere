@@ -42,7 +42,7 @@ interface Props {
 function ListFacetValueView(props: Props) {
 	const searchContext = React.useContext(SearchContext)
 	const handleChange = React.useCallback(() => {
-		const type = props.active ? 'REMOVE_SEARCH_FILTER' : 'ADD_SEARCH_FILTER'
+		const type = props.active ? 'REMOVE_FILTER' : 'ADD_FILTER'
 		searchContext.dispatch({ type, facetId: props.facetId, value: props.value.key })
 
 	}, [props.active, props.facetId, props.value.key])

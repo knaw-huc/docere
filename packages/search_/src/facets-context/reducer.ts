@@ -5,7 +5,7 @@ import { isListFacetData, isBooleanFacetData, isRangeFacetData, isDateFacetData,
 import initFacetsData from './init-facets-data'
 import { initialSearchContextState } from './index'
 
-import type { FacetsConfig, FacetsDataReducerAction } from '@docere/common'
+import type { FacetsConfig, FacetsDataReducerAction, RangeFacetValue } from '@docere/common'
 import type { FacetsState } from './index'
 import { getRangeBucketSize } from '../use-search/get-buckets'
 
@@ -53,7 +53,7 @@ function facetsDataReducer(state: FacetsState, action: FacetsDataReducerAction):
 
 	if (isHierarchyFacetData(facet)) {
 		switch(action.type) {
-			case 'REMOVE_SEARCH_FILTER': {
+			case 'REMOVE_FILTER': {
 				const filters = Array.from(facet.filters)
 				const nextFilters = filters.slice(0, filters.indexOf(action.value))
 				facet.filters = new Set(nextFilters)
@@ -68,7 +68,7 @@ function facetsDataReducer(state: FacetsState, action: FacetsDataReducerAction):
 
 	if (isListFacetData(facet) || isBooleanFacetData(facet)) {
 		switch(action.type) {
-			case 'REMOVE_SEARCH_FILTER': {
+			case 'REMOVE_FILTER': {
 				facet.filters.delete(action.value)
 				facet.filters = new Set(facet.filters)
 
@@ -82,9 +82,10 @@ function facetsDataReducer(state: FacetsState, action: FacetsDataReducerAction):
 
 	if (isListFacetData(facet) || isBooleanFacetData(facet) || isHierarchyFacetData(facet)) {
 		switch(action.type) {
-			case 'ADD_SEARCH_FILTER': {
+			case 'ADD_FILTER': {
+				const value = action.value as string
 				if (Array.isArray(action.value)) action.value.forEach(v => facet.filters.add(v))
-				else facet.filters.add(action.value)
+				else facet.filters.add(value)
 				facet.filters = new Set(facet.filters)
 
 				return {
@@ -93,10 +94,10 @@ function facetsDataReducer(state: FacetsState, action: FacetsDataReducerAction):
 				}
 			}
 
-			case 'SET_SEARCH_FILTER': {
+			case 'SET_FILTER': {
 				const facets = initFacetsData(state.facetsConfig)
 				const facet = facets.get(action.facetId)
-				const nextFilters = Array.isArray(action.value) ? action.value : [action.value]
+				const nextFilters = Array.isArray(action.value) ? action.value : [action.value] as string[]
 				facet.filters = new Set(nextFilters)
 
 				return {
@@ -110,14 +111,30 @@ function facetsDataReducer(state: FacetsState, action: FacetsDataReducerAction):
 
 	if (isRangeFacetData(facet) || isDateFacetData(facet)) {
 		switch(action.type) {
-			case 'SET_RANGE': {
-				const index = facet.filters.findIndex(f => f.from === action.value.from && f.to === action.value.to)
-				if (index !== -1) facet.filters = facet.filters.slice(0, index + 1)
-				else facet.filters = facet.filters.concat(action.value)
+			case 'SET_FILTER': {
+				// Cast value to RangeFacetValue
+				const value = action.value as RangeFacetValue
 
+				// Find the index to see if the filter is already active
+				const index = facet.filters.findIndex(f => f.from === value.from && f.to === value.to)
+
+				// If the filter is already active remove filters with smaller range
+				if (index !== -1) {
+					facet.filters = facet.filters.slice(0, index + 1)
+				}
+
+				// If filters are to be collapsed, only keep action.value
+				else if (facet.config.collapseFilters) {
+					facet.filters = [value]
+
+				// If filters are not te be collapsed, concat action.value to the existing filters
+				} else {
+ 					facet.filters = facet.filters.concat(value)
+				}
+
+				// Update the interval based on the new range
 				if (isRangeFacetData(facet)) {
-					console.log(index, action, facet.filters)
-					facet.interval = getRangeBucketSize(action.value.to - action.value.from)
+					facet.interval = getRangeBucketSize(value.to - value.from)
 				}
 
 				return {
@@ -126,7 +143,7 @@ function facetsDataReducer(state: FacetsState, action: FacetsDataReducerAction):
 				}
 			}
 
-			case 'RESET_RANGE': {
+			case 'REMOVE_FILTER': {
 				facet.filters = []
 				if (isRangeFacetData(facet)) facet.interval = getRangeBucketSize(facet.config.range)
 

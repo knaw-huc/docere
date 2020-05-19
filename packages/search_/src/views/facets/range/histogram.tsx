@@ -101,7 +101,7 @@ function Histogram(props: Props) {
 	const handleBarClick = React.useCallback(() => {
 		if (!isActiveBar(activeValue, props)) return
 		searchContext.dispatch({
-			type: 'SET_RANGE',
+			type: 'SET_FILTER',
 			facetId: props.facetData.config.id,
 			value: activeValue,
 		})

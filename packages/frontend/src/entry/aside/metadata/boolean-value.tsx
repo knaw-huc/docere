@@ -17,7 +17,7 @@ export default function BooleanFacetValue(props: Props) {
 		ev.stopPropagation()
 
 		const { facetId, value } = ev.currentTarget.dataset
-		const type: 'ADD_SEARCH_FILTER' | 'SET_SEARCH_FILTER' | 'REMOVE_SEARCH_FILTER' = ev.currentTarget.dataset.type
+		const type: 'ADD_FILTER' | 'SET_FILTER' | 'REMOVE_FILTER' = ev.currentTarget.dataset.type
 
 		searchContext.dispatch({
 			type,
