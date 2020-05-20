@@ -19,11 +19,11 @@ function GekaapteBrievenResultBody(props: DocereResultBodyProps) {
 		<ResultBody {...props}>
 			<Bold>
 				{props.result.access_level0}
-				<span>></span>
+				<span>&gt;</span>
 				{props.result.access_level1}
-				<span>></span>
+				<span>&gt;</span>
 				{props.result.access_level2}
-				<span>></span>
+				<span>&gt;</span>
 				{props.result.setId}
 			</Bold>
 		</ResultBody>

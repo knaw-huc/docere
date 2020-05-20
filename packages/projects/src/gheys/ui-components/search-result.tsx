@@ -60,11 +60,11 @@ function GekaapteBrievenResultBody(props: DocereResultBodyProps) {
 		<ResultBody {...props}>
 			<Bold>
 				{props.result.toegang_level0}
-				<span>></span>
+				<span>&gt;</span>
 				{props.result.toegang_level1}
-				<span>></span>
+				<span>&gt;</span>
 				{props.result.toegang_level2}
-				<span>></span>
+				<span>&gt;</span>
 				{props.result.n}
 			</Bold>
 			<Small>{small.map(s => <li key={s}>{s}</li>)}</Small>

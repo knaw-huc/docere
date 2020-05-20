@@ -3,6 +3,7 @@ lerna-debug.log
 build
 dist
 tsconfig.tsbuildinfo
+DEPLOY.md
 
 packages/docker/secrets
 

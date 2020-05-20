@@ -35,7 +35,7 @@ export default function extractFacsimiles(doc: XMLDocument) {
 			id: facsimile.textContent,
 			versions: [{
 				areas: extractFacsimileAreas(doc),
-				path: `http://objects.library.uu.nl/fcgi-bin/iipsrv.fcgi?IIIF=/manifestation/viewer${facsimile.textContent.slice(0, -4)}.jp2/info.json`
+				path: `https://objects.library.uu.nl/fcgi-bin/iipsrv.fcgi?IIIF=/manifestation/viewer${facsimile.textContent.slice(0, -4)}.jp2/info.json`
 			}]
 		})
 	}

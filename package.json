@@ -6,11 +6,12 @@
   "scripts": {
     "build": "lerna run build",
     "dist": "lerna run dist",
-    "test": "lerna run test",
-    "publish": "lerna publish",
-    "install": "./install.sh",
     "indexer": "node packages/api/build/api/src/indexer.js",
-    "start": "./packages/docker/start.sh"
+    "install": "./install.sh",
+    "publish": "lerna publish",
+    "start": "./packages/docker/start.sh",
+    "start:dev": "DEV_ENV=1 ./packages/docker/start.sh",
+    "test": "lerna run test"
   },
   "devDependencies": {
     "@types/lodash.debounce": "^4.0.6",

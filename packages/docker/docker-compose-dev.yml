@@ -21,15 +21,12 @@ services:
     ports:
       - 5004:5004
     restart: always
-    # volumes:
-      # - ./node_modules/docere-projects/src/achterdeschermen/facsimiles:/opt/loris/tests/img/achterdeschermen
-      # - ../projects/src/encyclopaedia-britannica/facsimiles:/opt/loris/tests/img/encyclopaedia-britannica
 
   api:
     build:
       context: ../../
       dockerfile: ./packages/api/Dockerfile
-    command: ["node", "./packages/api"]
+    command: ["npx", "nodemon", "./packages/api"]
     networks:
       - elastic
     ports:

@@ -1,11 +1,11 @@
 import * as path from 'path'
 import express from 'express'
 import Puppenv from './puppenv'
-import { listProjects, isError, getElasticSearchDocument, send } from './utils'
+import { listProjects, getElasticSearchDocument, send } from './utils'
 import handleProjectApi from './api/project'
+import handleDocumentApi from './api/document'
 import handleDtsApi from './api/dts'
 import chalk from 'chalk'
-import type { PrepareAndExtractOutput } from './types'
 
 const copyright = `Docere Copyright (C) 2018 - 2020 Gijsjan Brouwer
 
@@ -56,29 +56,8 @@ async function main() {
 	app.get('/projects', (_req, res) => send(listProjects(), res))
 
 	handleProjectApi(app, puppenv)
+	handleDocumentApi(app, puppenv)
 	handleDtsApi(app)
-
-	app.get('/projects/:projectId/documents/:documentId', async (req, res) => {
-		const documentFields = await puppenv.prepareAndExtractFromFile(req.params.projectId, req.params.documentId)
-		send(documentFields, res)
-	})
-
-	app.get('/projects/:projectId/documents/:documentId/metadata', async (req, res) => {
-		const x = await puppenv.prepareAndExtractFromFile(req.params.projectId, req.params.documentId)
-		if (isError(x)) send(x, res)
-		else send((x as PrepareAndExtractOutput).metadata, res)
-	})
-
-	app.get('/projects/:projectId/documents/:documentId/facsimiles', async (req, res) => {
-		const x = await puppenv.prepareAndExtractFromFile(req.params.projectId, req.params.documentId)
-		if (isError(x)) send(x, res)
-		else send((x as PrepareAndExtractOutput).facsimiles, res)
-	})
-
-	app.get('/projects/:projectId/documents/:documentId/fields', async (req, res) => {
-		const x = await puppenv.prepareAndExtractFromFile(req.params.projectId, req.params.documentId)
-		send(getElasticSearchDocument(x), res)
-	})
 
 	/*
 	 * Usage example:
