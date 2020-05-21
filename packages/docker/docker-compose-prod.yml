@@ -37,6 +37,8 @@ services:
     restart: always
     volumes:
       - ../../:/app
+      - /data/gheys/xml:/app/packages/projects/src/gheys/xml
+      - /data/encyclopaedia-britannica/xml:/app/packages/projects/src/encyclopaedia-britannica/xml
     working_dir: /app
 
   es01:

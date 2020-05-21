@@ -2,9 +2,10 @@ import * as path from 'path'
 import express from 'express'
 import Puppenv from './puppenv'
 import { listProjects, getElasticSearchDocument, send } from './utils'
-import handleProjectApi from './api/project'
-import handleDocumentApi from './api/document'
-import handleDtsApi from './api/dts'
+import projectApi from './api/project'
+import documentApi from './api/document'
+import indexerApi from './api/indexer'
+import dtsApi from './api/dts'
 import chalk from 'chalk'
 
 const copyright = `Docere Copyright (C) 2018 - 2020 Gijsjan Brouwer
@@ -55,9 +56,10 @@ async function main() {
 
 	app.get('/projects', (_req, res) => send(listProjects(), res))
 
-	handleProjectApi(app, puppenv)
-	handleDocumentApi(app, puppenv)
-	handleDtsApi(app)
+	projectApi(app, puppenv)
+	documentApi(app, puppenv)
+	indexerApi(app, puppenv)
+	dtsApi(app)
 
 	/*
 	 * Usage example:

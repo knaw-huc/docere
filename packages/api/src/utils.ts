@@ -88,7 +88,7 @@ function getMainXmlFilePathsFromDir(dir: string, maxPerDir: number = null) {
 	const files: string[] = []
 	const dirents = getDirents(dir)
 	let xmlFiles = dirents.filter(isXmlFile)
-	if (maxPerDir != null) xmlFiles = xmlFiles.slice(0, maxPerDir)
+	if (maxPerDir != null && !isNaN(maxPerDir)) xmlFiles = xmlFiles.slice(0, maxPerDir)
 
 	if (xmlFiles.length) {
 		xmlFiles.forEach(f => files.push(`${dir}/${f.name}`))
@@ -110,7 +110,7 @@ export async function getXmlFiles(projectId: string, maxPerDir: number = null) {
 }
 
 export function isError(payload: any | DocereApiError): payload is DocereApiError {
-	return payload.hasOwnProperty('__error')
+	return payload != null && payload.hasOwnProperty('__error')
 }
 
 export function getElasticSearchDocument(input: PrepareAndExtractOutput | DocereApiError): ElasticSearchDocument | DocereApiError {
@@ -138,6 +138,7 @@ export function getElasticSearchDocument(input: PrepareAndExtractOutput | Docere
 	}
 }
 
+// TODO rename to sendJson?
 export function send(payload: any | DocereApiError, expressResponse: ExpressResponse) {
 	if (isError(payload)) {
 		const code = payload.hasOwnProperty('code') ? payload.code : 400
