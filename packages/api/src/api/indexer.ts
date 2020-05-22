@@ -108,8 +108,9 @@ export default function indexerApi(app: Express, puppenv: Puppenv) {
 	})
 
 	app.get('/indexer/status', async (_req, res) => {
-		if (Array.from(state.values()).some(v => v.status === IndexerStatus.Active)) {
-			send({ __error: 'Server is busy', code: 503 }, res)
+		const activeProject = Array.from(state.values()).find(v => v.status === IndexerStatus.Active)
+		if (activeProject != null) {
+			res.status(503).json(activeProject)
 			return
 		}
 		res.sendStatus(200)
