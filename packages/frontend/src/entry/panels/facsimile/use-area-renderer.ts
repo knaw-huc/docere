@@ -10,7 +10,7 @@ interface Overlay {
 }
 
 export class AreaRenderer {
-	private trackers: any[] = []
+	private trackers: OpenSeadragon.MouseTracker[] = []
 	private aspectRatio: number
 	private imgWidth: number
 	private imgHeight: number
@@ -62,7 +62,7 @@ export class AreaRenderer {
 
 	render(areas: FacsimileArea[]) {
 		this.osd.clearOverlays()
-		this.trackers = this.trackers.map(t => t.destroy()).filter(() => false)
+		this.trackers = this.trackers.map(t => t.destroy()).filter(() => false) as []
 		this.updateBounds()
 		if (areas == null) return
 
