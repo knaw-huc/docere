@@ -192,10 +192,14 @@ export default class TiledImages {
 		const tiledImage = ev.item as OpenSeadragon.TiledImage
 		tiledImage.setHeight(1)
 
+		// console.log(this.startIndex, this.leftIndex, this.rightIndex, this.currentIndex)
+
 		let position: OpenSeadragon.Point
 		// Set position to the left side
 		if (this.currentIndex === this.leftIndex) {
-			const x = this.loadedBounds.x - tiledImage.getBounds().width - .1
+			let x = this.loadedBounds.x - tiledImage.getBounds().width
+			// Add .1 when it's not the first tile
+			if (this.currentIndex !== this.startIndex) x = x - .1 
 			position = new OpenSeadragon.Point(x, 0)
 		}
 		// Set position to the right side
