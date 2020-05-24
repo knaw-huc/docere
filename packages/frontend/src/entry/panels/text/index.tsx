@@ -41,10 +41,12 @@ interface TextProps {
 export const Text = styled.div`
 	color: #222;
 	counter-reset: linenumber notenumber;
-	font-family: serif;
+	font-family: EB Garamond, serif;
+	font-size: 1.5rem;
+	font-weight: 400;
 	display: grid;
 	grid-template-columns: ${TEXT_PANEL_TEXT_WIDTH}px auto;
-	line-height: 1.5rem;
+	line-height: 2rem;
 	padding: ${DEFAULT_SPACING}px 0 200px ${(props: TextProps) => getTextPanelLeftSpacing(props.settings)}px;
 	position: relative;
 `
