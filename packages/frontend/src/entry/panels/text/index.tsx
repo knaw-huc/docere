@@ -42,11 +42,11 @@ export const Text = styled.div`
 	color: #222;
 	counter-reset: linenumber notenumber;
 	font-family: EB Garamond, serif;
-	font-size: 1.5rem;
+	font-size: 1.25rem;
 	font-weight: 400;
 	display: grid;
 	grid-template-columns: ${TEXT_PANEL_TEXT_WIDTH}px auto;
-	line-height: 2rem;
+	line-height: 2.25rem;
 	padding: ${DEFAULT_SPACING}px 0 200px ${(props: TextProps) => getTextPanelLeftSpacing(props.settings)}px;
 	position: relative;
 `
