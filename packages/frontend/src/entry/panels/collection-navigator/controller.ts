@@ -68,51 +68,47 @@ export default class CollectionNavigatorController {
 	}
 
 	private getPayload() {
-		if (this.config.metadataId == null) {
-			return JSON.stringify({
-				size: 10000,
-				query: {
-					match_all: {}
-				},
-				sort: this.config.sortBy
-			})
+		const payload: { size: number, query: any, sort: string, _source: { include: string[] }} = {
+			query: null,
+			size: 10000,
+			sort: this.config.sortBy || 'id',
+			_source: {
+				include: ['id', 'facsimiles']
+			}
 		}
 
-		const metadata = this.entry.metadata.find(md => md.id === this.config.metadataId)
-		if (metadata == null) return
+		if (this.config.metadataId == null) {
+			payload.query = { match_all: {} }
+		} else {
+			const metadata = this.entry.metadata.find(md => md.id === this.config.metadataId)
+			if (metadata == null) return
 
-		if (isHierarchyFacetConfig(metadata)) {
-			const term = metadata.value.reduce((prev, curr, index) => {
-				prev.push({ term: { [`${this.config.metadataId}_level${index}`]: curr }})
-				return prev
-			}, [])
+			if (isHierarchyFacetConfig(metadata)) {
+				const term = metadata.value.reduce((prev, curr, index) => {
+					prev.push({ term: { [`${this.config.metadataId}_level${index}`]: curr }})
+					return prev
+				}, [])
 
-			return JSON.stringify({
-				"size": 10000,
-				"query": {
-					"bool": {
-						"must": term
+				payload.query = {
+					bool: {
+						must: term
 					}
-				},
-				"sort": this.config.sortBy,
-			})
-		} else if (isListFacetConfig(metadata)) {
-			const payload = {
-				"size": 10000,
-				"query": {
-					"term": {
+				}
+			} else if (isListFacetConfig(metadata)) {
+				payload.query = {
+					term: {
 						[metadata.id]: metadata.value
 					}
-				},
+				}
+			} else {
+				console.error('NOT IMPLEMENTED')
+				return
 			}
-
-			// @ts-ignore
-			if (this.config.sortBy != null) payload.sortBy = this.config.sortBy
-
-			return JSON.stringify(payload)
-		} else {
-			console.error('NOT IMPLEMENTED')
 		}
+
+		if (this.config.sortBy != null) payload.sort = this.config.sortBy
+
+		return JSON.stringify(payload)
 	}
 
 	private async fetchCollectionDocuments() {
