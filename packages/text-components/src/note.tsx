@@ -12,7 +12,7 @@ const Wrapper = styled.div`
 	cursor: pointer;
 	display: inline-block;
 	font-family: monospace;
-	font-size: 1rem;
+	font-size: .75rem;
 	font-weight: bold;
 	line-height: 1rem;
 	min-width: 1rem;

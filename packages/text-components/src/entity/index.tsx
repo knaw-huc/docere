@@ -29,6 +29,10 @@ const EntityWrapper = styled.span`
 	cursor: pointer;
 	padding: 0 2px;
 	transition: all 300ms;
+
+	svg {
+		height: 1rem;
+	}
 `
 
 interface RsProps {
