@@ -121,11 +121,11 @@ function Footer(props: Props) {
 							Settings
 					</Button>
 					<Button
-						active={props.footerTab === FooterTab.Downloads}
-						data-tab={FooterTab.Downloads}
+						active={props.footerTab === FooterTab.API}
+						data-tab={FooterTab.API}
 						data-type="footer"
 					>
-						Downloads
+						API
 					</Button>
 				</div>
 				<div className="aside-tabs">
@@ -174,7 +174,7 @@ function Footer(props: Props) {
 					entrySettings={props.entrySettings}
 				/>
 				<Downloads
-					active={props.footerTab === FooterTab.Downloads}
+					active={props.footerTab === FooterTab.API}
 					entry={props.entry}
 				/>
 
