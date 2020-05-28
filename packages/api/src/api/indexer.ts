@@ -2,14 +2,16 @@ import { Express } from 'express'
 import * as es from '@elastic/elasticsearch'
 
 import Puppenv from '../puppenv'
-import { send, listProjects, readFileContents, getEntryIdFromFilePath, getElasticSearchDocument, isError, getXmlFiles } from '../utils'
+import { sendJson, listProjects, readFileContents, getEntryIdFromFilePath, getElasticSearchDocument, isError, getXmlFiles } from '../utils'
 import type { ElasticSearchDocument, DocereApiError } from '../types'
 
 async function indexDocument(filePath: string, projectId: string, puppenv: Puppenv, esClient: es.Client) {
 	const xml = readFileContents(filePath)
 	const documentId = getEntryIdFromFilePath(filePath, projectId)
-	const x = await puppenv.prepareAndExtract(xml, projectId, documentId)
-	const esDocument = getElasticSearchDocument(x)
+	const prepareAndExtractOutput = await puppenv.prepareAndExtract(xml, projectId, documentId)
+	if (isError(prepareAndExtractOutput)) return prepareAndExtractOutput
+	const [extractedEntry] = prepareAndExtractOutput
+	const esDocument = getElasticSearchDocument(extractedEntry)
 	if (isError(esDocument)) return esDocument
 
 	try {
@@ -104,7 +106,7 @@ export default function indexerApi(app: Express, puppenv: Puppenv) {
 
 	app.get('/indexer/:projectId/status', async (req, res) => {
 		if (!state.has(req.params.projectId)) res.sendStatus(404)
-		else send(state.get(req.params.projectId), res)
+		else sendJson(state.get(req.params.projectId), res)
 	})
 
 	app.get('/indexer/status', async (_req, res) => {
@@ -118,7 +120,7 @@ export default function indexerApi(app: Express, puppenv: Puppenv) {
 
 	app.get('/indexer/:projectId?', async (req, res) => {
 		if (Array.from(state.values()).some(v => v.status === IndexerStatus.Active)) {
-			send({ __error: 'Server is busy', code: 503 }, res)
+			sendJson({ __error: 'Server is busy', code: 503 }, res)
 			return
 		}
 
@@ -132,7 +134,7 @@ export default function indexerApi(app: Express, puppenv: Puppenv) {
 
 		// If the project does not exist return a 404
 		if (project != null && project.length && projectDirs.indexOf(project) === -1) {
-			send({
+			sendJson({
 				__error: `Project '${project}' not found`,
 				code: 404
 			}, res)

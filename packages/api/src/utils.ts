@@ -3,8 +3,8 @@ import * as fs from 'fs'
 import { Response as ExpressResponse } from 'express'
 import chalk from 'chalk'
 import { EsDataType } from '../../common/src/enum'
-import type { DocereConfig } from '@docere/common'
-import type { PrepareAndExtractOutput, DocereApiError, ElasticSearchDocument } from './types'
+import type { DocereConfig, ExtractedEntry } from '@docere/common'
+import type { DocereApiError, ElasticSearchDocument } from './types'
 
 export function getProjectsSourceDir() {
 	// The current working dir is api/, the projects/ dir shares the same parent as api/
@@ -113,7 +113,7 @@ export function isError(payload: any | DocereApiError): payload is DocereApiErro
 	return payload != null && payload.hasOwnProperty('__error')
 }
 
-export function getElasticSearchDocument(input: PrepareAndExtractOutput | DocereApiError): ElasticSearchDocument | DocereApiError {
+export function getElasticSearchDocument(input: ExtractedEntry | DocereApiError): ElasticSearchDocument | DocereApiError {
 	if (isError(input)) return input
 
 	const entities = input.entities.reduce((prev, curr) => {
@@ -138,8 +138,7 @@ export function getElasticSearchDocument(input: PrepareAndExtractOutput | Docere
 	}
 }
 
-// TODO rename to sendJson?
-export function send(payload: any | DocereApiError, expressResponse: ExpressResponse) {
+export function sendJson(payload: any | DocereApiError, expressResponse: ExpressResponse) {
 	if (isError(payload)) {
 		const code = payload.hasOwnProperty('code') ? payload.code : 400
 		expressResponse.status(code).send(payload.__error)
@@ -148,6 +147,27 @@ export function send(payload: any | DocereApiError, expressResponse: ExpressResp
 
 	expressResponse.json(payload)
 }
+
+export function sendXml(payload: string | DocereApiError, expressResponse: ExpressResponse) {
+	if (isError(payload)) {
+		const code = payload.hasOwnProperty('code') ? payload.code : 400
+		expressResponse.status(code).send(payload.__error)
+		return
+	}
+
+	expressResponse.type('text/xml').send(payload)
+}
+
+export function sendText(payload: string | DocereApiError, expressResponse: ExpressResponse) {
+	if (isError(payload)) {
+		const code = payload.hasOwnProperty('code') ? payload.code : 400
+		expressResponse.status(code).send(payload.__error)
+		return
+	}
+
+	expressResponse.type('text/plain').send(payload)
+}
+
 // export async function getDocumentFields(projectId: string, documentId: string) {
 // 	const filePath = getXMLPath(projectId, documentId)
 

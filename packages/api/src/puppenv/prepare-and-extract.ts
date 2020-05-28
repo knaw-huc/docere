@@ -83,13 +83,18 @@ export async function prepareAndExtract(xml: string, documentId: string, project
 
 	const text = docereConfigData.extractText(doc, docereConfigData.config)
 
-	return {
-		id: documentId,
-		text,
-		facsimiles,
-		metadata,
-		notes,
-		entities,
-		layers,
-	}
+	return [
+		{
+			entities,
+			facsimiles,
+			id: documentId,
+			layers,
+			metadata,
+			notes,
+			text,
+		}, {
+			original: xml,
+			prepared: new XMLSerializer().serializeToString(doc),
+		}
+	]
 }

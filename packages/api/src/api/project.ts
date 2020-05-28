@@ -1,13 +1,13 @@
 import { Express } from 'express'
 import Puppenv from '../puppenv'
-import { getXmlFiles, send } from '../utils'
+import { getXmlFiles, sendJson } from '../utils'
 import type { Mapping, DocereApiError } from '../types'
 
 export default function handleProjectApi(app: Express, puppenv: Puppenv) {
 	app.get('/projects/:projectId/config', async (req, res) => {
 		const configData = await puppenv.getConfigData(req.params.projectId)
 
-		send(configData, res)
+		sendJson(configData, res)
 	})
 
 	app.get('/projects/:projectId/mapping', async (req, res) => {
@@ -20,6 +20,6 @@ export default function handleProjectApi(app: Express, puppenv: Puppenv) {
 			mapping = { code: 404, __error: err.message }
 		}
 
-		send(mapping, res)
+		sendJson(mapping, res)
 	})
 }

@@ -1,10 +1,7 @@
-import type { Entry, ExtractedLayer, ExtractedMetadata } from '@docere/common'
+import type { ExtractedEntry } from '@docere/common'
 
-export type PrepareAndExtractOutput = Omit<Entry, 'doc' | 'layers' | 'metadata'> & {
-	metadata: ExtractedMetadata
-	text: string
-	layers: ExtractedLayer[]
-}
+export type ExtractedXml = { original: string, prepared: string }
+export type PrepareAndExtractOutput = [ExtractedEntry, ExtractedXml]
 
 /**
  * JSON object which represents a ElasticSearch document

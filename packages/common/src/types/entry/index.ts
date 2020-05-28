@@ -1,4 +1,4 @@
-import type { Entity, Note, Facsimile, Layer } from '../config-data/functions'
+import type { Entity, Note, Facsimile, Layer, ExtractedLayer, ExtractedMetadata } from '../config-data/functions'
 // import type { MetadataConfig } from '../config-data/config'
 // import { EsDataType } from '../../enum'
 import { BooleanFacetConfig, ListFacetConfig, HierarchyFacetConfig, RangeFacetConfig, DateFacetConfig } from '../search'
@@ -20,6 +20,12 @@ export interface Entry {
 	notes: Note[]
 	entities: Entity[]
 	layers: Layer[]
+}
+
+export type ExtractedEntry = Omit<Entry, 'doc' | 'layers' | 'metadata'> & {
+	layers: ExtractedLayer[]
+	metadata: ExtractedMetadata
+	text: string
 }
 
 						

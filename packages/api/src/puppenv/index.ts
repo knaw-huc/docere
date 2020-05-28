@@ -100,10 +100,10 @@ export default class Puppenv {
 		const fieldKeys = new Set<string>()
 		for (const [i, xml] of xmlContents.entries()) {
 			const entryId = getEntryIdFromFilePath(selectedFileNames[i], projectId)
-			const fields = await this.prepareAndExtract(xml, projectId, entryId)
-			if (isError(fields)) return fields
-			const esDocument = getElasticSearchDocument(fields)
-			// console.log(fields)
+			const prepareAndExtractOutput = await this.prepareAndExtract(xml, projectId, entryId)
+			if (isError(prepareAndExtractOutput)) return prepareAndExtractOutput
+			const [extractedEntry] = prepareAndExtractOutput
+			const esDocument = getElasticSearchDocument(extractedEntry)
 			Object.keys(esDocument).forEach(fieldKey => fieldKeys.add(fieldKey))
 		}
 

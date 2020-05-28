@@ -1,7 +1,7 @@
 import * as path from 'path'
 import express from 'express'
 import Puppenv from './puppenv'
-import { listProjects, getElasticSearchDocument, send } from './utils'
+import { listProjects, getElasticSearchDocument, sendJson, isError } from './utils'
 import projectApi from './api/project'
 import documentApi from './api/document'
 import indexerApi from './api/indexer'
@@ -54,7 +54,7 @@ async function main() {
 		res.sendFile(path.resolve('./swagger.yml'))
 	})
 
-	app.get('/projects', (_req, res) => send(listProjects(), res))
+	app.get('/projects', (_req, res) => sendJson(listProjects(), res))
 
 	projectApi(app, puppenv)
 	documentApi(app, puppenv)
@@ -67,14 +67,19 @@ async function main() {
 	 */
 	app.post('/projects/:projectId/documents/:documentId/fields', async (req, res) => {
 		if (req.headers['content-type'] !== 'application/xml' && req.headers['content-type'] !== 'text/xml') {
-			send({ code: 415, __error: 'Missing the HTTP Content-type header for XML' }, res)
+			sendJson({ code: 415, __error: 'Missing the HTTP Content-type header for XML' }, res)
 		}
 		if (req.body == null || !req.body.length) {
-			send({ __error: 'The payload body should be the contents of an XML file.' }, res)
+			sendJson({ __error: 'The payload body should be the contents of an XML file.' }, res)
 		}
 
-		const x = await puppenv.prepareAndExtract(req.body, req.params.projectId, req.params.documentId)
-		send(getElasticSearchDocument(x), res)
+		const prepareAndExtractOutput = await puppenv.prepareAndExtract(req.body, req.params.projectId, req.params.documentId)
+		if (isError(prepareAndExtractOutput)) {
+			sendJson(prepareAndExtractOutput, res)
+			return
+		}
+		const [extractedEntry] = prepareAndExtractOutput
+		sendJson(getElasticSearchDocument(extractedEntry), res)
 	})
 
 	app.listen(port, () => {
