@@ -1,6 +1,5 @@
 import React from 'react'
 
-import type { ComponentTree } from './types'
 import type { DocereTextViewProps } from '.'
 
 function wrap(node: Text, index: number, found: string) {
@@ -14,12 +13,14 @@ function wrap(node: Text, index: number, found: string) {
 
 export default function useHighlight(
 	ref: React.RefObject<HTMLDivElement>,
-	componentTree: ComponentTree,
+	tree: React.ReactNode,
 	highlight: DocereTextViewProps['highlight'],
 	setHighlightAreas: (areas: number[]) => void
 ) {
 	React.useEffect(() => {
 		if (ref.current == null || highlight == null || highlight.length === 0) return
+
+		console.log(ref.current.outerHTML)
 
 		const treeWalker = document.createTreeWalker(ref.current, NodeFilter.SHOW_TEXT)
 		const map = new Map()
@@ -27,7 +28,8 @@ export default function useHighlight(
 		if (Array.isArray(highlight)) highlight = highlight.join('|')
 		const re = new RegExp(highlight, 'gui')
 
-		const toppers: number[] = []
+		// Collection of top offsets from <mark>s
+		const tops: number[] = []
 
 		while (treeWalker.nextNode()) {
 			let result: RegExpMatchArray
@@ -36,19 +38,21 @@ export default function useHighlight(
 			if (indices.length) map.set(treeWalker.currentNode, indices)
 		}
 
+		console.log(map)
+
 		for (const [node, indices] of map.entries()) {
 			let currentNode = node
 			let prevIndex = 0
 			let prevFoundLength = 0
 			for (const result of indices) {
 				const mark = wrap(currentNode, result.index - prevIndex - prevFoundLength, result[0])
-				toppers.push(mark.getBoundingClientRect().top)
+				tops.push(mark.getBoundingClientRect().top)
 				currentNode = currentNode.nextSibling.nextSibling
 				prevIndex = result.index
 				prevFoundLength = result[0].length
 			}
 		}
 
-		setHighlightAreas(toppers.filter((v, i, a) => v > 0 && a.indexOf(v) === i))
-	}, [componentTree, highlight])
+		setHighlightAreas(tops.filter((v, i, a) => v > 0 && a.indexOf(v) === i))
+	}, [tree, highlight])
 }

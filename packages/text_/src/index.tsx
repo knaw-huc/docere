@@ -36,11 +36,12 @@ export interface DocereTextViewProps {
 function DocereTextView(props: DocereTextViewProps) {
 	const wrapperRef = React.useRef()
 	const componentTree = useGetComponentTree(props)
-	useHighlight(wrapperRef, componentTree, props.highlight, props.setHighlightAreas)
 
 	const tree = renderComponentTree(componentTree, props)
 	useComponentDidMount(props, tree)
 	
+	useHighlight(wrapperRef, tree, props.highlight, props.setHighlightAreas)
+
 	return (
 		<div ref={wrapperRef}>
 			{tree}
@@ -72,6 +73,7 @@ export default React.memo(
 			return prevProps.customProps[k] === nextProps.customProps[k]
 		})
 
+		// console.log(equalProps, equalCustomProps, equalProps && equalCustomProps)
 		return equalProps && equalCustomProps
 	}
 )
