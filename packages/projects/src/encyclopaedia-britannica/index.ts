@@ -5,6 +5,7 @@ import extractLayers from './layers'
 import extractMetadata from './metadata'
 import getComponents from './components'
 import getUIComponent from './ui-components'
+import extractText from './text'
 import { extendConfigData } from '@docere/common'
 
 export default extendConfigData({
@@ -14,5 +15,6 @@ export default extendConfigData({
 	extractFacsimiles,
 	extractLayers,
 	extractMetadata,
+	extractText,
 	// prepareDocument
 })
