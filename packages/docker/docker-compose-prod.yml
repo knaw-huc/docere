@@ -15,6 +15,7 @@ services:
       - ../frontend:/var/www/html
       - ../projects:/var/www/html/node_modules/@docere/projects
       - /data/gheys/xml:/var/www/html/node_modules/@docere/projects/src/gheys/xml
+      - /data/henegouwseregisters/xml:/var/www/html/node_modules/@docere/projects/src/henegouwseregisters/xml
       - /data/encyclopaedia-britannica/xml:/var/www/html/node_modules/@docere/projects/src/encyclopaedia-britannica/xml
 
   iiif:
@@ -24,6 +25,8 @@ services:
     ports:
       - 5004:5004
     restart: always
+    volumes:
+      - /data/henegouwseregisters/facsimiles:/opt/loris/tests/img/henegouwseregisters
 
   api:
     build:
@@ -38,6 +41,7 @@ services:
     volumes:
       - ../../:/app
       - /data/gheys/xml:/app/packages/projects/src/gheys/xml
+      - /data/henegouwseregisters/xml:/app/packages/projects/src/henegouwseregisters/xml
       - /data/encyclopaedia-britannica/xml:/app/packages/projects/src/encyclopaedia-britannica/xml
     working_dir: /app
 

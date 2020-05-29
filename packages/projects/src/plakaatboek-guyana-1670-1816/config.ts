@@ -1,6 +1,10 @@
 import { DocereConfig, EsDataType } from '@docere/common'
 
 const config: DocereConfig = {
+	entrySettings: {
+		"panels.text.showLineBeginnings": false,
+		"panels.text.showPageBeginnings": false,
+	},
 	slug: 'plakaatboek-guyana-1670-1816',
 	title: 'Plakaatboek Guyana 1670-1816',
 	searchResultCount: 20,

@@ -86,7 +86,10 @@ interface P {
 }
 const LiFacs = styled(Li)`
 	${(p: P) => {
-		const path = p.activeFacsimile.versions[0].path.replace('info.json', `full/!100,100/0/default.jpg`)
+		const path = p.activeFacsimile != null ?
+			p.activeFacsimile.versions[0].path.replace('info.json', `full/!100,100/0/default.jpg`) :
+			''
+
 		return `& > div:first-of-type {
 			display: block;
 

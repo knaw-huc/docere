@@ -14,7 +14,6 @@ export default function extractMetadata(doc: XMLDocument) {
 	for (let i = 0; i < 3; i++) {
 		const prop = `date${i + 1}`
 		const dateElement = doc.querySelector(prop)
-		console.log(dateElement)
 		const year = dateElement.querySelector('year')?.textContent
 		const month = dateElement.querySelector('month')?.textContent
 		const day = dateElement.querySelector('day')?.textContent

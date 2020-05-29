@@ -21,6 +21,9 @@ services:
     ports:
       - 5004:5004
     restart: always
+    volumes:
+      - ../projects/src/henegouwseregisters/facsimiles:/opt/loris/tests/img/henegouwseregisters
+
 
   api:
     build:
