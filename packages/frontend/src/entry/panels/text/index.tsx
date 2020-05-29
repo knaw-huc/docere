@@ -1,23 +1,23 @@
 import * as React from 'react'
-import DocereTextView from '@docere/text_'
 import styled from 'styled-components'
 import debounce from 'lodash.debounce'
+import { DEFAULT_SPACING, TEXT_PANEL_TEXT_WIDTH, DocereComponentContainer, getTextPanelLeftSpacing, PANEL_HEADER_HEIGHT } from '@docere/common'
+import { SearchContext } from '@docere/search_'
+import DocereTextView from '@docere/text_'
+
 import ProjectContext, { useComponents } from '../../../app/context'
 import Minimap from './minimap'
 import { isTextLayer } from '../../../utils'
-import { DEFAULT_SPACING, TEXT_PANEL_TEXT_WIDTH, DocereComponentContainer, getTextPanelLeftSpacing, PANEL_HEADER_HEIGHT } from '@docere/common'
 import PanelHeader from '../header'
+
 import type { DocereComponentProps, DocereConfig, TextLayer } from '@docere/common'
 import type { PanelsProps } from '..'
-import { SearchContext } from '@docere/search_'
 
 const Wrapper = styled.div`
 	background: white;
 	position: relative;
 `
 
-	// grid-template-columns: auto ${(props: WProps) => getTextPanelWidth(props.settings, props.activeNote, props.activeEntity)}px auto;
-// interface WProps { layer: TextLayer, settings:  }
 type TWProps = Pick<TextPanelProps, 'layer' | 'settings'>
 const TextWrapper = styled.div`
 	box-sizing: border-box;
