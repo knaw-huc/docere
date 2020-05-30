@@ -32,12 +32,17 @@ export default class TiledImages {
 	constructor(private viewer: OpenSeadragon.Viewer, public hits: Hit[], entry: Entry) {
 		// Add event handlers
 		this.viewer.world.addHandler('add-item', this.addItemHandler)
+		this.viewer.addHandler('add-item-failed', this.tileLoadFailedHandler)
 		this.viewer.addHandler('animation-finish', this.animationFinishHandler)
 
 		this.removeTiledImages()
 		this.setOptions(this.hits)
 		this.setEntry(entry)
 		this.init()
+	}
+
+	private tileLoadFailedHandler = () => {
+		this.addTiledImage()
 	}
 
 	// Set the active options from this.entry.facsimiles. Used to calculate this.startIndex and this.highlightActive
@@ -84,6 +89,7 @@ export default class TiledImages {
 
 	removeListeners() {
 		this.viewer.removeHandler('animation-finish', this.animationFinishHandler)
+		this.viewer.addHandler('add-item-failed', this.tileLoadFailedHandler)
 		this.viewer.world.removeHandler('add-item', this.addItemHandler)
 		this.viewer.world.removeHandler('add-item', this.highlightActiveTiles)
 	}
