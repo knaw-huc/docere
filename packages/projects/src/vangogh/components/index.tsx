@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { Note, getPb, Entity, Lb } from '@docere/text-components'
+import { getNote, getPb, Entity, Lb } from '@docere/text-components'
 import type { DocereComponentContainer, DocereComponentProps, EntityConfig, DocereConfig } from '@docere/common'
 
 const Ref = styled.span`border-bottom: 1px solid green;`
@@ -40,13 +40,14 @@ export default function getComponents(config: DocereConfig) {
 		// const personConfig = config.entities.find(td => td.id === 'pers')
 		return {
 			ab: styled.div`margin-bottom: 1rem;`,
-			anchor: (props: DocereComponentProps) =>
-				<Note
-					{...props}
-					id={props.attributes['xml:id']}
-					n={props.attributes.n}
-					title={`Note ${props.attributes.n}`}
-				/>, 
+			anchor: getNote((props => props.attributes['xml:id'])),
+			// anchor: (props: DocereComponentProps) =>
+			// 	<Note
+			// 		{...props}
+			// 		id={props.attributes['xml:id']}
+			// 		n={props.attributes.n}
+			// 		title={`Note ${props.attributes.n}`}
+			// 	/>, 
 			lb: (props: DocereComponentProps) => <Lb showLineBeginnings={props.entrySettings['panels.text.showLineBeginnings']} />,
 			pb: getPb(props => props.attributes.facs.slice(1)),
 			ref,

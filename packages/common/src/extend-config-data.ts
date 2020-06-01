@@ -40,7 +40,7 @@ export const defaultMetadata: MetadataConfig = {
 export const defaultEntityConfig: EntityConfig = {
 	...defaultMetadata,
 	color: Colors.Blue,
-	id: RsType.None,
+	id: RsType.None, // TODO ??? id === RsType ???
 	type: RsType.None,
 }
 

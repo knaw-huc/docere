@@ -4,7 +4,7 @@ import getPb from './pb'
 import Popup from './popup'
 import Entity from './entity'
 import Tooltip, { TooltipBody } from './tooltip'
-import Note from './note'
+import getNote from './note'
 
 const Hi = styled.span`
 	${(props: DocereComponentProps) => {
@@ -41,7 +41,7 @@ export {
 	getPb,
 	Hi,
 	Lb,
-	Note,
+	getNote,
 	Popup,
 	Entity,
 	Tooltip,

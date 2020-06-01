@@ -1,5 +1,4 @@
 import React from 'react'
-import { DEFAULT_POPUP_BG_COLOR } from '@docere/common'
 import type { DocereComponentProps } from '@docere/common'
 import styled from 'styled-components'
 import Popup from './popup'
@@ -23,31 +22,39 @@ const Wrapper = styled.div`
 	vertical-align: super;
 `
 
-export default function Note(props: DocereComponentProps & { id: string, title: string, n: string, color?: string }) {
-	if (!props.entrySettings['panels.text.showNotes']) return <span>{props.children}</span>
+export default function getNote(extractNoteId: (props: DocereComponentProps) => string) {
+	return function Note(props: DocereComponentProps) {
+		if (!props.entrySettings['panels.text.showNotes']) return <span>{props.children}</span>
 
-	const active = props.id === props.activeNote?.id
-	const openToAside = active && !props.entrySettings['panels.text.openPopupAsTooltip']
+		const noteId = extractNoteId(props)
+		const note = props.entry.notes.find(x => x.id === noteId)
+		if (note == null) return null
 
-	return (
-		<Wrapper
-			active={active}
-			color={props.color}
-			onClick={() => {
-				props.entryDispatch({ type: 'SET_NOTE', id: props.id })
-			}}
-			openToAside={openToAside}
-		>
-			{props.n}
-			<Popup
+		const active = note.id === props.activeNote?.id
+
+		const openToAside = active && !props.entrySettings['panels.text.openPopupAsTooltip']
+
+		return (
+			<Wrapper
 				active={active}
-				color={props.color}
-				docereComponentProps={props}
-				node={props.entry.notes?.find(n => n.id === props.id)?.el}
+				className="note"
+				color={note.color}
+				id={note.id}
+				onClick={() => {
+					props.entryDispatch({ type: 'SET_NOTE', id: note.id })
+				}}
 				openToAside={openToAside}
-				title={props.title}
-			/>
-		</Wrapper>
-	)
+			>
+				{note.n}
+				<Popup
+					active={active}
+					color={note.color}
+					docereComponentProps={props}
+					node={note.el}
+					openToAside={openToAside}
+					title={note.title}
+				/>
+			</Wrapper>
+		)
+	}
 }
-Note.defaultProps = { color: DEFAULT_POPUP_BG_COLOR }

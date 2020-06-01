@@ -35,9 +35,7 @@ export default function getPb(extractPbId: (props: DocereComponentProps) => stri
 		if (!Array.isArray(ids)) ids = [ids]
 
 		const facsimiles = ids
-			.map(id => {
-				return props.entry.facsimiles.find(f => f.id === id)
-			})
+			.map(id => props.entry.facsimiles.find(f => f.id === id))
 			.filter(facsimile => facsimile != null)
 
 		return (
@@ -46,7 +44,7 @@ export default function getPb(extractPbId: (props: DocereComponentProps) => stri
 					{
 						facsimiles.map(facsimile => {
 							const src = facsimile.versions[0].path
-							const active = props.activeFacsimile.id === facsimile.id
+							const active = props.activeFacsimile?.id === facsimile.id
 							return (
 								<Img
 									active={active}

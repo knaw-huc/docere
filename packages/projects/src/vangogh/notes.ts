@@ -1,10 +1,14 @@
-import type { Note } from '@docere/common';
+import { Note, Colors } from '@docere/common';
 
 function toExtractedNote(el: Element): Note {
+	// console.log(el.attributes, el.id)
 	return {
+		color: Colors.BlueBright,
 		el,
 		id: el.id,
+		n: el.getAttribute('n'),
 		targetId: el.getAttribute('n'),
+		title: `Note ${el.getAttribute('n')}`,
 		type: null,
 	}
 }

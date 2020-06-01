@@ -42,7 +42,7 @@ function NotesList(props: Props) {
 						components={props.components}
 						entry={props.entry}
 						entryDispatch={props.entryDispatch}
-						item={note}
+						note={note}
 						key={note.id}
 						listId={props.type}
 						settings={props.settings}

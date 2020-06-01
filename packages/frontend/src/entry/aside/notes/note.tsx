@@ -36,14 +36,16 @@ type Props = Pick<EntryState, 'activeEntity' | 'activeFacsimile' | 'activeFacsim
 	components: DocereComponents
 	entry: Entry
 	entryDispatch: React.Dispatch<EntryStateAction>
-	item: Note
+	note: Note
 	listId: string
 }
+
+// TODO render all notes in main /entry/index.tsx and pass rendered notes as props to popup and aside
 export default function Note(props: Props) {
 	const projectContext = React.useContext(ProjectContext)
 	const handleClick = React.useCallback(() => {
-		props.entryDispatch({ type: 'SET_NOTE', id: props.item.id })
-	}, [props.item, props.listId])
+		props.entryDispatch({ type: 'SET_NOTE', id: props.note.id })
+	}, [props.note, props.listId])
 
 	const customProps: DocereComponentProps = {
 		activeFacsimileAreas: props.activeFacsimileAreas,
@@ -65,13 +67,17 @@ export default function Note(props: Props) {
 			active={props.active}
 			onClick={handleClick}
 		>
-			<div>{props.item.targetId}</div>
+			<div>{props.note.n}</div>
 			<div>
-				<DocereTextView
-					components={props.components}
-					customProps={customProps}
-					node={props.item.el}
-				/>
+				{
+					typeof props.note.el === 'string' ?
+						props.note.el :
+						<DocereTextView
+							components={props.components}
+							customProps={customProps}
+							node={props.note.el}
+						/>
+				}
 			</div>
 			<ActiveIndicator
 				active={props.active}

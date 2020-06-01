@@ -42,7 +42,7 @@ interface Props {
 	docereComponentProps: DocereComponentProps
 	active: boolean
 	color: string
-	node?: Node
+	node?: Node | string
 	openToAside: boolean
 	PopupBody?: React.FC<DocereComponentProps>
 	title: string
@@ -58,22 +58,29 @@ export default function Popup(props: Props) {
 			color={props.color}
 			settings={props.docereComponentProps.entrySettings}
 		>
-			<PopupHeader
-				color={props.color}
-			>
-				<span></span>
-				<span>{props.title}</span>
-				<span></span>
-			</PopupHeader>
+			{
+				props.title != null &&
+				<PopupHeader
+					color={props.color}
+				>
+					<span></span>
+					<span>{props.title}</span>
+					<span></span>
+				</PopupHeader>
+			}
 			{
 				(props.node != null || props.PopupBody != null) ?
 					props.node != null ?
 						<Body>
-							<DocereTextView 
-								customProps={props.docereComponentProps}
-								components={props.docereComponentProps.components}
-								node={props.node}
-							/>
+							{
+								typeof props.node === 'string' ?
+									props.node :
+									<DocereTextView 
+										customProps={props.docereComponentProps}
+										components={props.docereComponentProps.components}
+										node={props.node}
+									/>
+							}
 						</Body> :
 						<props.PopupBody {...props.docereComponentProps} /> :
 					null

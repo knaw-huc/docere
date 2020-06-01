@@ -1,5 +1,5 @@
 import type { DocereConfig, LayerConfig, TextLayerConfig } from "./config"
-import { LayerType, AsideTab } from '../../enum'
+import { LayerType, AsideTab, Colors } from '../../enum'
 
 
 export interface DocereConfigFunctions {
@@ -25,10 +25,14 @@ export interface Entity extends TextData {
 	value: string
 }
 
+// TODO add default color to default note: DEFAULT_POPUP_BG_COLOR
 // EXTRACT NOTES
 export interface Note extends TextData {
-	el: Element
+	color?: Colors,
+	el: Element | string
+	n: string
 	targetId: string | number
+	title?: string
 }
 
 // EXTRACT METADATA
