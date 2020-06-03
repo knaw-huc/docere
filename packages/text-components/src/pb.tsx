@@ -32,6 +32,7 @@ export default function getPb(extractPbId: (props: DocereComponentProps) => stri
 		if (!props.entrySettings['panels.text.showPageBeginnings']) return null
 
 		let ids = extractPbId(props)
+		if (ids == null) return null
 		if (!Array.isArray(ids)) ids = [ids]
 
 		const facsimiles = ids
