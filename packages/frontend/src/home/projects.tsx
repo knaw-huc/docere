@@ -31,12 +31,14 @@ const Wrapper = styled.ul`
 	padding: ${DEFAULT_SPACING}px;
 `
 
+// TODO move to config
 const thumbByProjectId: Record<string, string> = {
 	'encyclopaedia-britannica': 'https://view.nls.uk/iiif/1923/9934/192399340.5/square/200,/0/default.jpg',
 	gheys: 'https://demo.docere.diginfra.net/iiif/gheys//NAN1%2F1.04.02%2F7565%2FNL-HaNA_1.04.02_7565_0007.jpg/200,200,2400,2400/200,200/0/default.jpg',
 	utrechtpsalter: 'https://objects.library.uu.nl/fcgi-bin/iipsrv.fcgi?IIIF=/manifestation/viewer/89/31/57/89315756556586257582682156457459945203.jp2/square/200,200/0/default.jpg',
 	vangogh: 'http://vangoghletters.org/vg/facsimiles/RM15_nf.png',
 	gekaaptebrieven: 'https://images.huygens.knaw.nl/iiif/hca30-223/8/nl-hana_hca30-223_8_0030.tif/1500,1500,2700,2700/200,200/0/default.jpg',
+	henegouwseregisters: 'https://demo.docere.diginfra.net/iiif//henegouwseregisters%2FHenegouwen%2FHE_G_bewerkt%2FHE_G_X001r_001_1.jpg/0,400,2000,2000/200,/0/default.jpg',
 }
 
 const Li = styled.li`
