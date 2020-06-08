@@ -1,43 +1,59 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { DEFAULT_SPACING } from '@docere/common'
+import { DEFAULT_SPACING, MAINHEADER_HEIGHT, Colors } from '@docere/common'
 import type { PageConfig, AppStateAction } from '@docere/common'
 import ProjectContext from '../app/context'
 
 const Wrapper = styled.ul`
-	text-align: right;
 	align-self: center;
+	height: ${MAINHEADER_HEIGHT}px;
+	text-align: right;
 
 	& > li {
-		padding-bottom: .8em;
+		margin-right: ${DEFAULT_SPACING}px;
+
+		&:last-of-type {
+			margin-right: 0;
+		}
 	}
 
 	li {
+		color: #AAA;
 		display: inline-block;
-		margin-right: ${DEFAULT_SPACING}px;
-		color: #444;
 		font-size: .8rem;
+		line-height: ${MAINHEADER_HEIGHT}px;
 		position: relative;
 		text-transform: lowercase;
 
+		& > div:after {
+			content: ' ▾';
+			font-size: 1.25rem;
+			line-height: 1rem;
+			vertical-align: middle;
+		}
+
 		&:hover {
+			color: #EEE;
+
 			ul {
 				display: block;
 			}
 		}
 
 		ul {
-			border-radius: 3px;
+			border-bottom-left-radius: 3px;
+			border-bottom-right-radius: 3px;
 			box-shadow: 1px 1px 2px #666;
-			background-color: #ead6ad;
+			background-color: ${Colors.Grey};
 			display: none;
-			margin-top: .8em;
-			padding-bottom: .5em;
+			margin-top: -1px;
+			padding: .5em 0;
 			position: absolute;
 			right: 0;
 
 			li {
 				display: block;
+				font-size: .9rem;
 				margin-right: 0;
 				white-space: nowrap;
 			}
@@ -48,17 +64,17 @@ const Wrapper = styled.ul`
 const Link = styled.button`
 	background: none;
 	border: none;
-	border-bottom: 1px solid rgba(0, 0, 0, 0);
 	color: inherit;
 	cursor: pointer;
 	font-size: inherit;
+	font-weight: normal;
+	height: 100%;
 	outline: none;
-	padding: .8em 0 .2em 0;
 	margin: 0 1em;
 	text-transform: inherit;
 
 	&:hover {
-		border-bottom: 1px solid #666;
+		color: #EEE;
 	}
 `
 
@@ -87,7 +103,7 @@ export default React.memo(function PagesMenu(props: Props) {
 				config.pages.map(page =>
 					page.hasOwnProperty('children') ?
 						<li key={page.id}>
-							<span>{page.title} ▾</span>
+							<div>{page.title}</div>
 							<ul>
 								{
 									page.children.map(child =>

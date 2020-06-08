@@ -5,12 +5,15 @@ import type { AppStateAction } from '@docere/common'
 import PagesMenu from './pages'
 import ProjectContext from '../app/context'
 
+export const HEADER_DARK_TEXT = '#AAA'
+
 const Wrapper = styled.header`
 	background: ${Colors.GreyLight};
 	box-sizing: border-box;
 	height: ${TOP_OFFSET}px;
 	position: sticky;
 	top: 0;
+	white-space: nowrap;
 	z-index: 9999;
 `
 
@@ -46,7 +49,7 @@ const H1 = styled('h1')`
 		font-size: 0.8rem;
 		text-transform: none;
 		margin-right: 0.66rem;
-		color: #aaa;
+		color: ${HEADER_DARK_TEXT};
 	}
 `
 
