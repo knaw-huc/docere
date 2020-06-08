@@ -18,6 +18,7 @@ const config: DocereConfig = {
 	metadata: [
 		{
 			datatype: EsDataType.Hierarchy,
+			description: 'Beschrijving van een archief',
 			id: 'toegang',
 			levels: 4,
 			order: 10,
@@ -38,6 +39,7 @@ const config: DocereConfig = {
 			title: 'Has date',
 		},
 		{
+			description: 'Gebruik kernwoorden om vergelijkbare documenten te vinden',
 			id: 'keywords',
 			order: 50,
 		},

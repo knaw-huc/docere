@@ -11,6 +11,7 @@ import SearchContext from '../../../facets-context'
 const Wrapper = styled('div')`
 	font-size: .9em;
 	margin-bottom: 2em;
+	grid-column: 1 / -1;
 `
 
 const RadioGroup = styled('div')`
@@ -63,7 +64,6 @@ function Options(props: ListFacetProps) {
 		[]
 	)
 
-	console.log(props.facetData.config.id, props.facetData.sort)
 	return (
 		<Wrapper>
 			<H4>Order</H4>

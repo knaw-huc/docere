@@ -12,6 +12,7 @@ export type FacetsData = Map<string, FacetData>
 */
 export interface FacetConfigBase extends BaseConfig {
 	readonly datatype?: EsDataType
+	readonly description?: string
 	readonly order?: number
 }
 
