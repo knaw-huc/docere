@@ -19,6 +19,6 @@
     "@docere/ui-components": "^1.2.4"
   },
   "devDependencies": {
-    "typescript": "^3.8.3"
+    "typescript": "^3.9.5"
   }
 }

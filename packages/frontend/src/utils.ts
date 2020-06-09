@@ -68,8 +68,9 @@ export function fetchXml(url: string): Promise<XMLDocument> {
 }
 
 export async function fetchJson(url: string) {
-	const result = await fetch(url)
-	return await result.json()
+	const response = await fetch(url)
+	if (!response.ok) return null
+	return await response.json()
 }
 
 export async function fetchPost(url: string, body: any) {

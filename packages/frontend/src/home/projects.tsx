@@ -13,6 +13,7 @@ function useProjectConfigs() {
 					.then((configs: any) => {
 						setProjectConfigs(
 							configs
+								.filter((x: any) => x != null)
 								.map((c: { config: DocereConfig }) => ({ ...c.config }))
 								.filter((c: DocereConfig) => !c.private)
 						)

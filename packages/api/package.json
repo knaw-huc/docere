@@ -12,22 +12,22 @@
   "dependencies": {
     "@docere/common": "^1.2.4",
     "@elastic/elasticsearch": "^7.3.0",
-    "chalk": "^3.0.0",
+    "chalk": "^4.1.0",
     "express": "^4.17.1",
     "node-fetch": "^2.6.0",
-    "puppeteer": "^1.19.0"
+    "puppeteer": "^3.3.0"
   },
   "devDependencies": {
-    "@types/express": "^4.17.1",
+    "@types/express": "^4.17.6",
     "@types/klaw": "^3.0.0",
-    "@types/node-fetch": "^2.5.4",
-    "@types/puppeteer": "^1.19.0",
+    "@types/node-fetch": "^2.5.7",
+    "@types/puppeteer": "^3.0.0",
     "esm": "^3.2.25",
     "klaw": "^3.0.0",
     "nodemon": "^2.0.2",
-    "ts-node": "^8.6.2",
-    "tslib": "^1.11.1",
-    "typescript": "^3.8.3"
+    "ts-node": "^8.10.2",
+    "tslib": "^2.0.0",
+    "typescript": "^3.9.5"
   },
   "author": "Gijsjan Brouwer",
   "license": "GPL-3.0-or-later"

@@ -15,6 +15,6 @@
   "author": "Gijsjan Brouwer",
   "license": "GPL-3.0-or-later",
   "devDependencies": {
-    "typescript": "^3.8.3"
+    "typescript": "^3.9.5"
   }
 }

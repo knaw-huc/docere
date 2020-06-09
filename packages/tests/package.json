@@ -5,15 +5,15 @@
   "private": true,
   "scripts": {},
   "dependencies": {
-    "chalk": "^3.0.0"
+    "chalk": "^4.1.0"
   },
   "devDependencies": {
-    "@types/node": "^13.13.5",
+    "@types/node": "^14.0.12",
     "esm": "^3.2.25",
     "nodemon": "^2.0.2",
-    "ts-node": "^8.6.2",
-    "tslib": "^1.11.1",
-    "typescript": "^3.8.3"
+    "ts-node": "^8.10.2",
+    "tslib": "^2.0.0",
+    "typescript": "^3.9.5"
   },
   "author": "Gijsjan Brouwer",
   "license": "GPL-3.0-or-later"

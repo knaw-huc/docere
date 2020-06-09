@@ -13,8 +13,8 @@
   "author": "",
   "license": "GPL-3.0-or-later",
   "devDependencies": {
-    "@types/elasticsearch": "^5.0.34",
-    "typescript": "^3.8.3"
+    "@types/elasticsearch": "^5.0.36",
+    "typescript": "^3.9.5"
   },
   "dependencies": {
     "@docere/common": "^1.2.4"
