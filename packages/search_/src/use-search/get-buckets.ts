@@ -65,15 +65,7 @@ export default function createBuckets(minDate: Date, maxDate: Date): [RangeFacet
 		const from = date.getTime()
 		const toDate = getTo(date, bucketSize, granularity)
 		const to = toDate.getTime()
-
-		values.push({
-			from,
-			to, 
-			fromLabel: formatDate(from, granularity),
-			toLabel: formatDate(to, granularity),
-			count: 0
-		})
-
+		values.push(dateRangeToFacetValue(from, to, granularity))
 		date = toDate
 	}
 
@@ -87,17 +79,34 @@ export function createRangeBuckets(facet: RangeFacetData): RangeFacetValue[] {
 	let i = lastFilter.from
 	while (i < lastFilter.to) {
 		const to = i + facet.interval
-
-		values.push({
-			from: i,
-			to,
-			fromLabel: i.toString(),
-			toLabel: to.toString(),
-			count: 0
-		})
-
+		values.push(rangeToFacetValue(i, to))
 		i = to
 	}
 
 	return values
+}
+
+export function dateRangeToFacetValue(from: number, to: number, granularity?: DateInterval): RangeFacetValue {
+	if (granularity == null) {
+		const bucketInfo = getBucketInfo(new Date(from), new Date(to))
+		granularity = bucketInfo[1]
+	}
+
+	return {
+		from,
+		to, 
+		fromLabel: formatDate(from, granularity),
+		toLabel: formatDate(to, granularity),
+		count: 0
+	}
+}
+
+export function rangeToFacetValue(from: number, to: number) {
+	return {
+		from,
+		to,
+		fromLabel: from.toString(),
+		toLabel: to.toString(),
+		count: 0
+	}
 }

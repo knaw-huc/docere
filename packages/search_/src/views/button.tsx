@@ -10,6 +10,8 @@ const Button = styled('div')`
 `
 
 export const MoreLessButton = styled(Button)`
+	display: inline-block;
+	font-size: .8rem;
 	font-weight: normal;
 `
 

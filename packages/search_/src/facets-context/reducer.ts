@@ -118,17 +118,39 @@ function facetsDataReducer(state: FacetsState, action: FacetsDataReducerAction):
 				// Find the index to see if the filter is already active
 				const index = facet.filters.findIndex(f => f.from === value.from && f.to === value.to)
 
-				// If the filter is already active remove filters with smaller range
-				if (index !== -1) {
-					facet.filters = facet.filters.slice(0, index + 1)
+				// If the current active range (from the initial range or an active filter)
+				// is equal to the requested filter, nothing has to be done, return the state unchanged
+				if (
+					(!facet.filters.length && facet.value.from === value.from && facet.value.to === value.to) ||
+					(index > -1 && index === facet.filters.length - 1)
+				) {
+					return state
 				}
 
 				// If filters are to be collapsed, only keep action.value
-				else if (facet.config.collapseFilters) {
+				if (facet.config.collapseFilters) {
 					facet.filters = [value]
+				}
+
+				// If there is at least 1 filter active and the requested range is outside
+				// of the currently active range, remove all filters and only keep the new range
+				else if (
+					facet.filters.length &&
+					(
+						value.from < facet.filters[facet.filters.length - 1].from ||
+						value.to > facet.filters[facet.filters.length - 1].to
+					)
+				) {
+					facet.filters = [value]
+				}
+
+				// If the filter is already active remove filters with smaller range
+				else if (index !== -1) {
+					facet.filters = facet.filters.slice(0, index + 1)
+				}
 
 				// If filters are not te be collapsed, concat action.value to the existing filters
-				} else {
+				else {
  					facet.filters = facet.filters.concat(value)
 				}
 

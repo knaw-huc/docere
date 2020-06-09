@@ -139,10 +139,12 @@ export default function ESResponseWithFacetsParser(response: any, facets: Facets
 			let values: RangeFacetValue[]
 			if (facet.filters.length) {
 				values = createRangeBuckets(facet)
+				console.log(values)
 
 				buckets.forEach(b => {
 					const ratio = (b.key as number - values[0].from) / (values[values.length - 1].to - values[0].from)
-					const index = Math.floor(ratio * values.length)
+					let index = Math.floor(ratio * values.length)
+					if (index < 0) index = 0
 					values[index].count += b.doc_count
 				})
 			} else {

@@ -4,6 +4,7 @@ build
 dist
 tsconfig.tsbuildinfo
 DEPLOY.md
+INTERNAL*
 
 packages/docker/secrets
 

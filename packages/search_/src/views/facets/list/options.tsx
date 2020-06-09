@@ -8,17 +8,20 @@ import { Input } from '../../full-text-search'
 import type { ListFacetProps } from '.'
 import SearchContext from '../../../facets-context'
 
-const Wrapper = styled('div')`
+export const OptionsWrapper = styled('div')`
 	font-size: .9em;
 	margin-bottom: 2em;
 	grid-column: 1 / -1;
 `
 
-const RadioGroup = styled('div')`
+export const OptionsGroup = styled.div`
 	border: 1px solid #AAA;
+	padding: 1em;
+`
+
+const RadioGroup = styled(OptionsGroup)`
 	display: grid;
 	grid-template-columns: 1fr 1fr;
-	padding: 1em;
 `
 
 const Div = styled('div')`
@@ -28,7 +31,7 @@ const Div = styled('div')`
 	grid-template-rows: 1fr 1fr;
 `
 
-const H4 = styled('h4')`
+export const OptionsTitle = styled('h4')`
 	color: gray;
 	font-weight: normal;
 	margin: 1em 0 .2em 0;
@@ -42,11 +45,11 @@ const FilterInput = styled(Input)`
 `
 
 function Options(props: ListFacetProps) {
-	const searchContext = React.useContext(SearchContext)
+	const { dispatch } = React.useContext(SearchContext)
 	const [filterInputValue, setFilterInputValue] = React.useState('')
 
 	const handleCheckboxChange = React.useCallback(
-		ev => searchContext.dispatch({
+		ev => dispatch({
 			type: 'set_sort',
 			facetId: props.facetData.config.id,
 			by: ev.target.dataset.by,
@@ -55,7 +58,7 @@ function Options(props: ListFacetProps) {
 		[props.facetData.config.id]
 	)
 
-	const setQuery = debounce((value: string) => searchContext.dispatch({ type: 'set_query', facetId: props.facetData.config.id, value }), 600)
+	const setQuery = debounce((value: string) => dispatch({ type: 'set_query', facetId: props.facetData.config.id, value }), 600)
 	const handleFilterInputChange = React.useCallback(
 		(ev: React.ChangeEvent<HTMLInputElement>) => {
 			setFilterInputValue(ev.target.value)
@@ -65,8 +68,8 @@ function Options(props: ListFacetProps) {
 	)
 
 	return (
-		<Wrapper>
-			<H4>Order</H4>
+		<OptionsWrapper>
+			<OptionsTitle>Order</OptionsTitle>
 			<RadioGroup>
 				<Div>
 					<input
@@ -113,13 +116,13 @@ function Options(props: ListFacetProps) {
 					<label htmlFor="za-radio">Z - A</label>
 				</Div>
 			</RadioGroup>
-			<H4>Filter</H4>
+			<OptionsTitle>Filter</OptionsTitle>
 			<FilterInput
 				onChange={handleFilterInputChange}
 				type="text"
 				value={filterInputValue}
 			/>
-		</Wrapper>
+		</OptionsWrapper>
 	)
 }
 

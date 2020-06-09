@@ -20,4 +20,5 @@ export const defaultFacetedSearchProps: FacetedSearchProps = {
 
 type FacetedSearchContext = Omit<FacetedSearchProps, 'language'> & { i18n: LanguageMap }
 
-export default React.createContext<FacetedSearchContext>(null)
+const FacetedSearchContext =  React.createContext<FacetedSearchContext>(null)
+export default FacetedSearchContext
