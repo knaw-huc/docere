@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import HucFacetedSearch  from '@docere/search_'
-import { UIComponentType, Viewport } from '@docere/common'
+import { UIComponentType, Viewport, Language } from '@docere/common'
 
 import ProjectContext, { useUIComponent } from '../app/context'
 import { FileExplorerProps } from './wrap-as-file-explorer'
@@ -45,8 +45,9 @@ function Search(props: FileExplorerProps) {
 		<FS
 			autoSuggest={autoSuggest}
 			excludeResultFields={excludeResultFields}
-			ResultBodyComponent={ResultBodyComponent}
+			language={Language.NL}
 			onClickResult={onClickResult}
+			ResultBodyComponent={ResultBodyComponent}
 			resultBodyProps={{
 				activeId: props.entry == null ? null : props.entry.id,
 				searchTab: props.searchTab,

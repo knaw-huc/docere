@@ -13,6 +13,11 @@ export enum Colors {
 	Red = '#DB4437'
 }
 
+export enum Language {
+	EN = 'en',
+	NL = 'nl',
+}
+
 export enum EsDataType {
 	Boolean = "boolean",
 	Completion = "completion",

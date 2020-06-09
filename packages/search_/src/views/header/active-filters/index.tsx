@@ -36,7 +36,7 @@ const Wrapper = styled.div`
 `
 
 function ActiveFilters() {
-	const context = React.useContext(FacetedSearchContext)
+	const { i18n, style } = React.useContext(FacetedSearchContext)
 	const { state, dispatch } = React.useContext(SearchContext) 
 	const filters = useFilters(state.facets)
 
@@ -50,7 +50,7 @@ function ActiveFilters() {
 		<Wrapper
 			id="huc-fs-active-filters"
 		>
-			filters:
+			{i18n.filters}:
 			<Details
 				dispatch={dispatch}
 				filters={filters}
@@ -58,9 +58,9 @@ function ActiveFilters() {
 			/>
 			<Button
 				onClick={reset}
-				spotColor={context.style.spotColor}
+				spotColor={style.spotColor}
 			>
-				clear
+				{i18n.clear}
 			</Button>
 		</Wrapper>
 	)

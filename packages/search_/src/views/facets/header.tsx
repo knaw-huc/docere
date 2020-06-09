@@ -21,6 +21,7 @@ const H3 = styled('h3')`
 	font-size: 1rem;
 	margin: 0 .33rem .5rem 0;
 	user-select: none;
+	white-space: nowrap;
 
 	&:before {
 		color: ${props => props.spotColor};

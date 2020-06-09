@@ -107,7 +107,7 @@ function FullTextSearch() {
 					type="text"
 					onChange={handleInputChange}
 					onClick={() => setSuggestActive(false)}
-					placeholder="search documents"
+					placeholder={context.i18n.search_documents}
 					value={inputValue}
 				/>
 			</div>

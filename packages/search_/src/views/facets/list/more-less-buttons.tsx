@@ -12,7 +12,7 @@ const MoreButton = styled(MoreLessButton)`
 `
 
 export default function(props: Props) {
-	const context = React.useContext(FacetedSearchContext)
+	const { i18n, style } = React.useContext(FacetedSearchContext)
 	const searchContext = React.useContext(SearchContext)
 
 	const handleLess = React.useCallback(() => {
@@ -30,18 +30,18 @@ export default function(props: Props) {
 				props.values.total > props.facetData.size &&
 				<MoreButton
 					onClick={handleMore}
-					spotColor={context.style.spotColor}
+					spotColor={style.spotColor}
 				>
-					{`View more (${props.values.total - props.facetData.size})`}
+					{`${i18n.view_more} (${props.values.total - props.facetData.size})`}
 				</MoreButton>
 			}
 			{
-				props.facetData.size < props.facetData.size &&
+				props.facetData.config.size < props.facetData.size &&
 				<MoreLessButton
 					onClick={handleLess}
-					spotColor={context.style.spotColor}
+					spotColor={style.spotColor}
 				>
-					View less
+					{i18n.view_less}
 				</MoreLessButton>
 			}
 		</>

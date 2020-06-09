@@ -1,9 +1,9 @@
 import React from 'react'
 import { EsDataType, SortBy, SortDirection } from '@docere/common'
 
+import languageMaps from './language'
 import SearchContext from './facets-context'
 import useSearchReducer from './facets-context/reducer'
-
 import Context, { defaultFacetedSearchProps } from './context'
 import App from './app'
 
@@ -19,8 +19,9 @@ export type {
 }
 
 export default function FacetedSearch(props: FacetedSearchProps) {
+	const value = { ...defaultFacetedSearchProps, ...props}
 	return (
-		<Context.Provider value={{ ...defaultFacetedSearchProps, ...props }}>
+		<Context.Provider value={{ ...value, i18n: languageMaps[value.language] }}>
 			<App />
 		</Context.Provider>
 	)

@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 import SearchContext from '../../../../facets-context'
+import FacetedSearchContext from '../../../../context'
 import DropDown from '../../../ui/drop-down'
 import OrderOption from './option'
 
@@ -23,10 +24,12 @@ interface Props {
 	sortOrder: SortOrder
 }
 function SortBy(props: Props) {
-	const searchContext = React.useContext(SearchContext)
+	const { state } = React.useContext(SearchContext)
+	const { i18n } = React.useContext(FacetedSearchContext)
 
-	let label = 'sort by'
-	if (props.sortOrder.size > 0) label += ` (${props.sortOrder.size})` 
+	const label = (props.sortOrder.size > 0) ?
+		`${i18n.sort_by} (${props.sortOrder.size})` :
+		i18n.sort_by
 
 	return (
 		<SortByDropDown
@@ -34,7 +37,7 @@ function SortBy(props: Props) {
 			z={998}
 		>
 			{
-				Array.from(searchContext.state.facets.values())
+				Array.from(state.facets.values())
 					.sort((facetData1, facetData2) => {
 						const a = props.sortOrder.has(facetData1.config.id)
 						const b = props.sortOrder.has(facetData2.config.id)

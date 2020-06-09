@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
+import FacetedSearchContext from '../../../context'
 import DropDown from '../../ui/drop-down'
 
 import type { FacetsDataReducerAction, ActiveFilter } from '@docere/common'
@@ -47,6 +48,8 @@ interface Props {
 	query: string
 }
 function ActiveFiltersDetails(props: Props) {
+	const { i18n } = React.useContext(FacetedSearchContext)
+
 	const clearFullTextInput = React.useCallback(ev => {
 		ev.stopPropagation()
 		props.dispatch({ type: 'SET_QUERY', value: '' })
@@ -60,7 +63,7 @@ function ActiveFiltersDetails(props: Props) {
 
 	return (
 		<ActiveFiltersDropDown
-			label={`active (${props.filters.reduce((p, c) => p + c.values.length, !props.query.length ? 0 : 1)})`}
+			label={`${i18n.active} (${props.filters.reduce((p, c) => p + c.values.length, !props.query.length ? 0 : 1)})`}
 			z={1001}
 		>
 			<ul>

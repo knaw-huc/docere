@@ -1,4 +1,4 @@
-import { SortDirection, SearchTab } from '../../enum'
+import { SortDirection, SearchTab, Language } from '../../enum'
 
 import type { FacetsData, FacetConfig, FacetFilter } from './facets'
 
@@ -9,6 +9,7 @@ export interface FacetedSearchProps {
 	autoSuggest?: (query: string) => Promise<string[]>
 	className?: string /* className prop is used by StyledComponents */
 	excludeResultFields?: string[]
+	language?: Language
 	onClickResult: (result: any, ev: React.MouseEvent<HTMLLIElement>) => void
 	resultFields?: string[]
 	ResultBodyComponent: React.FC<ResultBodyProps>

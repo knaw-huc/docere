@@ -53,6 +53,7 @@ function getBucketInfo(minDate: Date, maxDate: Date): [number, DateInterval] {
 	return [1, 'd']
 }
 
+// TODO rename to createDateBuckets
 export default function createBuckets(minDate: Date, maxDate: Date): [RangeFacetValue[], DateInterval] {
 	const [bucketSize, granularity] = getBucketInfo(minDate, maxDate)
 	const firstDate = roundDownDate(minDate, granularity)

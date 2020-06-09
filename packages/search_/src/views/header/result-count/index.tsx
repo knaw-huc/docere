@@ -20,22 +20,22 @@ interface Props {
 	sortOrder: SortOrder
 }
 export default function ResultCount(props: Props) {
-	const context = React.useContext(FacetedSearchContext)
+	const { i18n, resultsPerPage } = React.useContext(FacetedSearchContext)
 	const [fromTo, setFromTo] = React.useState<[number, number]>([null, null])
 
 	React.useEffect(() => {
-		let nextFrom = (props.currentPage - 1) * context.resultsPerPage + 1
+		let nextFrom = (props.currentPage - 1) * resultsPerPage + 1
 		if (nextFrom > props.searchResult.total) nextFrom = props.searchResult.total
 
-		let nextTo = nextFrom + context.resultsPerPage - 1
+		let nextTo = nextFrom + resultsPerPage - 1
 		if (nextTo > props.searchResult.total) nextTo = props.searchResult.total
 
 		setFromTo([nextFrom, nextTo])
-	}, [props.currentPage, context.resultsPerPage, props.searchResult.total])
+	}, [props.currentPage, resultsPerPage, props.searchResult.total])
 
 	return (
 		<Wrapper>
-			{fromTo[0]}-{fromTo[1]} of {props.searchResult.total} result{props.searchResult.total === 1 ? '' : 's'},&nbsp;
+			{fromTo[0]}-{fromTo[1]} {i18n.of} {props.searchResult.total} {props.searchResult.total === 1 ? i18n.result : i18n.results},&nbsp;
 			<SortBy
 				setSortOrder={props.setSortOrder}
 				sortOrder={props.sortOrder}
