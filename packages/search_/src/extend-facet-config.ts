@@ -1,4 +1,4 @@
-import { SortBy, SortDirection, EsDataType, RangeFacetConfig } from '@docere/common'
+import { SortBy, SortDirection, EsDataType, RangeFacetConfig, DateFacetConfig } from '@docere/common'
 
 import { isListFacetConfig, isBooleanFacetConfig, isHierarchyFacetConfig, isRangeFacetConfig, isDateFacetConfig } from './utils'
 
@@ -39,12 +39,19 @@ function extendRangeFacet(config: RangeFacetConfig): RangeFacetConfig {
 	}
 }
 
+function extendDateFacet(config: DateFacetConfig): DateFacetConfig {
+	return {
+		collapseFilters: true,
+		...config,
+	}
+}
+
 function initFacet(facetConfig: FacetConfig): FacetConfig {
 	if		(isListFacetConfig(facetConfig))		return extendListFacet(facetConfig)
 	else if (isBooleanFacetConfig(facetConfig))		return extendBooleanFacet(facetConfig)
 	else if (isHierarchyFacetConfig(facetConfig))	return extendHierarchyFacet(facetConfig)
 	else if (isRangeFacetConfig(facetConfig))		return extendRangeFacet(facetConfig)
-	else if (isDateFacetConfig(facetConfig))		return facetConfig
+	else if (isDateFacetConfig(facetConfig))		return extendDateFacet(facetConfig)
 
 	console.error(`Facet config with datatype: '${facetConfig.datatype}' not found!`)
 }
