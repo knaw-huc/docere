@@ -1,6 +1,6 @@
 {
   "name": "@docere/text-components",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "description": "",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -13,7 +13,7 @@
   "license": "GPL-3.0-or-later",
   "dependencies": {
     "@docere/common": "^1.2.5",
-    "@docere/text": "^1.2.6"
+    "@docere/text": "^1.2.7"
   },
   "devDependencies": {
     "typescript": "^3.9.5"
