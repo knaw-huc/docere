@@ -1,6 +1,6 @@
 {
   "name": "@docere/frontend",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "description": "",
   "private": true,
   "scripts": {
@@ -14,10 +14,10 @@
   "license": "GPL-3.0-or-later",
   "dependencies": {
     "@docere/common": "^1.2.5",
-    "@docere/projects": "^1.2.5",
-    "@docere/search_": "^1.2.5",
-    "@docere/text-components": "^1.2.5",
-    "@docere/text_": "^1.2.5",
+    "@docere/projects": "^1.2.6",
+    "@docere/search_": "^1.2.6",
+    "@docere/text-components": "^1.2.6",
+    "@docere/text_": "^1.2.6",
     "@docere/ui-components": "^1.2.5",
     "openseadragon": "^2.4.2"
   },
