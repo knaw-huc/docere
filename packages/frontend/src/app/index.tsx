@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { SearchContext, useSearchReducer } from '@docere/search_'
+import { SearchContext, useSearchReducer } from '@docere/search'
 
 import EntrySelector from '../entry-selector'
 import { ProjectHeader } from '../header'

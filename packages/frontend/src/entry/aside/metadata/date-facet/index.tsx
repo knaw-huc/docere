@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { formatDate, SearchContext, isDateFacetConfig } from '@docere/search_'
+import { formatDate, SearchContext, isDateFacetConfig } from '@docere/search'
 
 import MetadataValue from '../value'
 

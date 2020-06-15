@@ -1,6 +1,6 @@
 import { PanelsProps } from '..';
 import { DocereConfig, Entry } from '@docere/common'
-import { isHierarchyFacetConfig, isListFacetConfig } from '@docere/search_'
+import { isHierarchyFacetConfig, isListFacetConfig } from '@docere/search'
 import { fetchPost } from '../../../utils';
 import ProjectContext from '../../../app/context';
 import OpenSeadragon from 'openseadragon';

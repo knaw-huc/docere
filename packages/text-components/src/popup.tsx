@@ -1,5 +1,5 @@
 import React from 'react'
-import DocereTextView from '@docere/text_'
+import DocereTextView from '@docere/text'
 import styled from 'styled-components'
 import Tooltip, { TooltipBody } from './tooltip'
 import { TEXT_PANEL_TEXT_WIDTH, DEFAULT_SPACING, getTextPanelLeftSpacing } from '@docere/common'

@@ -1,18 +1,22 @@
 {
   "name": "@docere/text",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "description": "",
-  "main": "dist/bundle.js",
-  "types": "types/index.d.ts",
-  "files": [
-    "dist/",
-    "types/",
-    "!types/tsconfig.tsbuildinfo"
-  ],
-  "author": "Gijsjan Brouwer",
-  "license": "GPL-3.0-or-later",
+  "main": "build/bundle.js",
+  "types": "build/index.d.ts",
+  "scripts": {
+    "build": "webpack",
+    "dist": "webpack --config webpack.config.prod.js",
+    "watch": "webpack -w"
+  },
+  "author": "",
+  "license": "ISC",
   "dependencies": {
     "@docere/common": "^1.2.5"
   },
-  "gitHead": "3744a745572b682ef34f4b0fad66e6ead1cda351"
+  "devDependencies": {
+    "typescript": "^3.9.5",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11"
+  }
 }

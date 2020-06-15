@@ -13,7 +13,7 @@
   "license": "GPL-3.0-or-later",
   "dependencies": {
     "@docere/common": "^1.2.5",
-    "@docere/text_": "^1.2.6"
+    "@docere/text": "^1.2.6"
   },
   "devDependencies": {
     "typescript": "^3.9.5"

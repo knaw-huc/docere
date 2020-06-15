@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import HucFacetedSearch  from '@docere/search_'
+import HucFacetedSearch  from '@docere/search'
 import { UIComponentType, Viewport, Language } from '@docere/common'
 
 import ProjectContext, { useUIComponent } from '../app/context'

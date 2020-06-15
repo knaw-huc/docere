@@ -1,7 +1,7 @@
 import React from 'react'
 import { MetadataItem, DEFAULT_SPACING } from '@docere/common'
 import styled from 'styled-components'
-import { isListFacetConfig, isHierarchyFacetConfig, isBooleanFacetConfig, isRangeFacetConfig, isDateFacetConfig } from '@docere/search_'
+import { isListFacetConfig, isHierarchyFacetConfig, isBooleanFacetConfig, isRangeFacetConfig, isDateFacetConfig } from '@docere/search'
 
 import ListFacetValue from './list-facet'
 import HierarchyFacetValue from './hierarchy-value'

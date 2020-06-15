@@ -8,11 +8,10 @@ module.exports = {
 	output: {
 		filename: "[name].js",
 		globalObject: 'this',
-		library: "DocereSearch",
+		library: "DocereText",
 		libraryTarget: "umd",
 		// path: __dirname + "/dist",
-		path: path.resolve(__dirname, '../search/dist'),
-		// publicPath: "/dist/"
+		path: path.resolve(__dirname, './build')
 	},
 	resolve: {
 		extensions: [".webpack.js", ".web.js", ".ts", ".tsx", ".js"]
@@ -32,12 +31,6 @@ module.exports = {
 			commonjs2: "react",
 			amd: "React",
 			root: "React"
-		},
-		'styled-components': {
-			commonjs: "styled-components",
-			commonjs2: "styled-components",
-			amd: "styled",
-			root: "styled"
 		}
 	}
 };

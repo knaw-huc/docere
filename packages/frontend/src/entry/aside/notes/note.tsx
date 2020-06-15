@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import DocereTextView from '@docere/text_'
+import DocereTextView from '@docere/text'
 import ProjectContext from '../../../app/context'
 import { Colors } from '@docere/common'
 import type { EntryState, AppStateAction, DocereComponents, Entry, EntryStateAction, DocereComponentProps, Note } from '@docere/common'
