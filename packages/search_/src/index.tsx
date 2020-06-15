@@ -7,11 +7,20 @@ import useSearchReducer from './facets-context/reducer'
 import Context, { defaultFacetedSearchProps } from './context'
 import App from './app'
 
-import type { FacetedSearchProps, ResultBodyProps } from '@docere/common'
+import type { FacetsConfig, FacetedSearchProps, ResultBodyProps } from '@docere/common'
 
 export * from './utils'
 export * from './date.utils'
-export { EsDataType, SearchContext, useSearchReducer, SortBy, SortDirection }
+export {
+	EsDataType,
+	SortBy,
+	SortDirection,
+	useSearchReducer,
+}
+export type {
+	FacetsConfig,
+	SearchContext,
+}
 
 export type {
 	FacetedSearchProps,
