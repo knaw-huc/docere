@@ -13,13 +13,13 @@ export * from './utils'
 export * from './date.utils'
 export {
 	EsDataType,
+	SearchContext,
 	SortBy,
 	SortDirection,
 	useSearchReducer,
 }
 export type {
 	FacetsConfig,
-	SearchContext,
 }
 
 export type {
