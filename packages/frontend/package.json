@@ -1,6 +1,6 @@
 {
   "name": "@docere/frontend",
-  "version": "1.2.7",
+  "version": "1.2.8",
   "description": "",
   "private": true,
   "scripts": {
@@ -15,7 +15,7 @@
   "dependencies": {
     "@docere/common": "^1.2.5",
     "@docere/projects": "^1.2.7",
-    "@docere/search": "^1.2.7",
+    "@docere/search": "^1.2.8",
     "@docere/text": "^1.2.7",
     "@docere/text-components": "^1.2.7",
     "@docere/ui-components": "^1.2.5",
