@@ -25,10 +25,13 @@ function App(props: AppProps) {
 			<ProjectHeader
 				appDispatch={appDispatch}
 			/>
-			<PageView
-				appDispatch={appDispatch}
-				page={appState.page}
-			/>
+			{
+				appState.page != null &&
+				<PageView
+					appDispatch={appDispatch}
+					page={appState.page}
+				/>
+			}
 			<props.EntrySelector
 				appDispatch={appDispatch}
 				entry={appState.entry}

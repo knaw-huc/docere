@@ -25,7 +25,6 @@ function appStateReducer(appState: AppState, action: AppStateAction): AppState {
 		case 'PROJECT_CHANGED': {
 			let viewport = appState.viewport
 			if (action.entryId != null) viewport = Viewport.Entry
-			if (action.pageId != null) viewport = Viewport.Page
 
 			return {
 				...appState,
@@ -60,7 +59,6 @@ function appStateReducer(appState: AppState, action: AppStateAction): AppState {
 			return {
 				...appState,
 				pageId: action.id,
-				viewport: Viewport.Page,
 			}
 		}
 
@@ -170,7 +168,15 @@ export default function useAppState(configData: DocereConfigData) {
 	}, [configData, x[0].pageId])
 
 	React.useEffect(() => {
-		if (x[0].viewport === Viewport.EntrySelector) {
+		if (x[0].page != null) {
+			historyNavigator.push(
+				`/${configData.config.slug}/pages/${x[0].pageId}`,
+				`${configData.config.title} - ${x[0].page.title}`,
+				{ viewport: x[0].viewport.toString(), id: x[0].pageId }
+			)
+		}
+
+		else if (x[0].viewport === Viewport.EntrySelector) {
 			historyNavigator.push(
 				`/${configData.config.slug}`,
 				`${configData.config.title} - Search`,
@@ -185,15 +191,7 @@ export default function useAppState(configData: DocereConfigData) {
 				{ viewport: x[0].viewport.toString(), id: x[0].entryId }
 			)
 		}
-
-		else if (x[0].viewport === Viewport.Page) {
-			historyNavigator.push(
-				`/${configData.config.slug}/pages/${x[0].pageId}`,
-				`${configData.config.title} - ${x[0].page.title}`,
-				{ viewport: x[0].viewport.toString(), id: x[0].pageId }
-			)
-		}
-	}, [x[0].viewport, x[0].entryId, x[0].pageId])
+	}, [x[0].viewport, x[0].entryId, x[0].page])
 
 	return x
 }

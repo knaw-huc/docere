@@ -13,11 +13,11 @@ export default class HistoryNavigator {
 		window.addEventListener('popstate', _ev => {
 			this.pop = true
 
-			const { documentId, documentType } = analyzeWindowLocation()
+			const { documentId: id, documentType: type } = analyzeWindowLocation()
 
-			if (documentType == null) appDispatch({ type: 'SET_VIEWPORT', viewport: Viewport.EntrySelector })
-			else if (documentType == 'entries') appDispatch({ type: 'SET_ENTRY_ID', id: documentId })
-			else if (documentType == 'pages') appDispatch({ type: 'SET_PAGE_ID', id: documentId })
+			if (type == null) 			appDispatch({ type: 'SET_VIEWPORT', viewport: Viewport.EntrySelector })
+			else if (type == 'entries') appDispatch({ type: 'SET_ENTRY_ID', id })
+			else if (type == 'pages')	appDispatch({ type: 'SET_PAGE_ID', id })
 		})
 	}
 

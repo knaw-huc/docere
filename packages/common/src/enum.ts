@@ -82,7 +82,6 @@ export enum TabPosition {
 }
 
 export enum Viewport {
-	Page,
 	Entry,
 	EntrySelector
 }

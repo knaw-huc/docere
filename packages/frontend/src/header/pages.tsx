@@ -80,7 +80,10 @@ const Link = styled.button`
 
 type PageMenuItemProps = { pageConfig: PageConfig } & Props
 function PageMenuItem(props: PageMenuItemProps) {
-	const setPage = React.useCallback(() => props.appDispatch({ type: "SET_PAGE_ID", id: props.pageConfig.id }), [props.pageConfig.id])
+	const setPage = React.useCallback(() => {
+		props.appDispatch({ type: "SET_PAGE_ID", id: props.pageConfig.id })
+	}, [props.pageConfig.id])
+
 	return (
 		<li>
 			<Link

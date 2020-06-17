@@ -11,7 +11,7 @@ export default async function getPage(id: string, configData: DocereConfigData):
 
 	const pageConfig = pages.find(p => p.id === id)
 
-	const doc = await fetchXml(getPageXmlPath(this.props.configData.config.slug, pageConfig))
+	const doc = await fetchXml(getPageXmlPath(configData.config.slug, pageConfig))
 
 	return {
 		...pageConfig,

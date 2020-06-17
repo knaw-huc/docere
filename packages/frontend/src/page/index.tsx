@@ -49,7 +49,7 @@ interface Props {
 export default React.memo(function PageView(props: Props) {
 	if (props.page == null) return null
 	const components = useComponents(DocereComponentContainer.Page)
-	const setPage = React.useCallback(() => props.appDispatch({ type: 'UNSET_PAGE' }), [])
+	const handleClose = React.useCallback(() => props.appDispatch({ type: 'UNSET_PAGE' }), [])
 
 	return (
 		<Wrapper>
@@ -57,7 +57,7 @@ export default React.memo(function PageView(props: Props) {
 				components={components}
 				node={props.page.doc}
 			/>
-			<Close onClick={setPage}>✕</Close>
+			<Close onClick={handleClose}>✕</Close>
 		</Wrapper>
 	)
 })
