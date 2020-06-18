@@ -59,7 +59,7 @@ async function main() {
 	projectApi(app, puppenv)
 	documentApi(app, puppenv)
 	indexerApi(app, puppenv)
-	dtsApi(app)
+	dtsApi(app, puppenv)
 
 	/*
 	 * Usage example:
