@@ -27,6 +27,7 @@ services:
     restart: always
     volumes:
       - /data/henegouwseregisters/facsimiles:/opt/loris/tests/img/henegouwseregisters
+      - /data/mondrian/facsimiles:/opt/loris/tests/img/mondrian
 
   api:
     build:

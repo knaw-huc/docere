@@ -24,7 +24,10 @@ const Wrapper = styled.div`
 
 export default function getNote(extractNoteId: (props: DocereComponentProps) => string) {
 	return function Note(props: DocereComponentProps) {
-		if (!props.entrySettings['panels.text.showNotes']) return <span>{props.children}</span>
+		if (
+			!props.entrySettings['panels.text.showNotes'] ||
+			props.entry.notes == null
+		) return <span>{props.children}</span>
 
 		const noteId = extractNoteId(props)
 		const note = props.entry.notes.find(x => x.id === noteId)

@@ -1,4 +1,4 @@
-import { EsDataType, LayerType, defaultMetadata, MetadataItem } from '@docere/common'
+import { EsDataType, LayerType, defaultMetadata, MetadataItem, setTitle } from '@docere/common'
 
 import { fetchEntryXml, isTextLayer, isXmlLayer } from '../../utils'
 
@@ -37,21 +37,21 @@ const defaultTextLayerConfig: TextLayerConfig = {
 }
 
 function extendLayer(extractedLayer: Layer, layersConfig: LayerConfig[]): Layer {
-	let layerConfig: LayerConfig = layersConfig.find(tlc => tlc.id === extractedLayer.id) || defaultLayerConfig
+	const layerConfig: LayerConfig = layersConfig.find(tlc => tlc.id === extractedLayer.id) || defaultLayerConfig
 	const dlc = layerConfig.type === LayerType.Text || layerConfig.type == null ? defaultTextLayerConfig : defaultLayerConfig
-	return { title: extractedLayer.id, ...dlc, ...layerConfig, ...extractedLayer }
+	return setTitle({ ...dlc, ...layerConfig, ...extractedLayer })
 }
 
-async function extractLayers(doc: XMLDocument, configData: DocereConfigData) {
+async function extractLayers(doc: XMLDocument, configData: DocereConfigData, hasFacsimiles: boolean) {
 	// Extract layers with the layers extraction function
-	const layers = configData.extractLayers(doc, configData.config)
-	const extractedLayerIds = layers.map(l => l.id)
+	const extractedLayers = configData.extractLayers(doc, configData.config)
+	const extractedLayerIds = extractedLayers.map(l => l.id)
 
-	return configData.config.layers
+	const layers = configData.config.layers
 		// Keep the layers that are not found by the extraction function, but are defined in the config
 		.filter(tl => extractedLayerIds.indexOf(tl.id) === -1)
 		// Concat the extracted layers with the layers not found by extract layers, but defined in the config
-		.concat(layers)
+		.concat(extractedLayers)
 		// Extend all layers with the defaults
 		.map(tl => extendLayer(tl, configData.config.layers))
 		// Add the whole document as `element` (extracted layers already have the `element` prop defined)
@@ -59,6 +59,16 @@ async function extractLayers(doc: XMLDocument, configData: DocereConfigData) {
 			if ((isTextLayer(layer) || isXmlLayer(layer)) && layer.element == null) layer.element = doc
 			return layer
 		})
+
+	if (hasFacsimiles && !layers.some(l => l.type === LayerType.Facsimile)) {
+		layers.unshift(extendLayer({
+			...defaultLayerConfig,
+			id: 'scan',
+			type: LayerType.Facsimile
+		}, []))
+	}
+
+	return layers
 }
 
 function extractMetadata(doc: XMLDocument, configData: DocereConfigData, entryId: string): Entry['metadata'] {
@@ -118,7 +128,7 @@ export default async function getEntry(id: string, configData: DocereConfigData)
 	// Extract data
 	const entities = configData.extractEntities(doc, configData.config)
 	const facsimiles = configData.extractFacsimiles(doc, configData.config, id).map(extendFacsimile)
-	const layers = await extractLayers(doc, configData)
+	const layers = await extractLayers(doc, configData, facsimiles.length > 0)
 	const notes = configData.extractNotes(doc, configData.config)
 	const metadata = extractMetadata(doc, configData, id)
 

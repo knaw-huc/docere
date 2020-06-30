@@ -6,28 +6,29 @@ import Entity from './entity'
 import Tooltip, { TooltipBody } from './tooltip'
 import getNote from './note'
 
+const has = (rendAttribute: string, rendStyle: string) => rendAttribute.indexOf(rendStyle) > -1
 const Hi = styled.span`
 	${(props: DocereComponentProps) => {
-		if (!props.attributes.hasOwnProperty('rend')) return ''
-		const has = (rendStyle: string) => props.attributes.rend.indexOf(rendStyle) > -1
+		const { rend } = props.attributes
+		if (rend == null) return ''
 		const rules = []
-		if (has('underline')) rules.push('text-decoration: underline;')
-		if (has('super')) rules.push('font-style: italic;')
-		if (has('italic') || has('i')) rules.push('font-style: italic;')
+		if (has(rend, 'underline')) rules.push('text-decoration: underline;')
+		if (has(rend, 'super')) rules.push('font-style: italic;')
+		if (has(rend, 'italic') || has(rend, 'i')) rules.push('font-style: italic;')
+		if (has(rend, 'spaced')) rules.push('letter-spacing: .1rem;')
 		return rules.join('')
 	}}
 `
 
-interface LbProps { showLineBeginnings?: boolean }
 const Lb = styled.span`
-	display: ${(props: LbProps) => props.showLineBeginnings ? 'block' : 'inline' };
+	display: ${(props: DocereComponentProps) => props.entrySettings['panels.text.showLineBeginnings'] ? 'block' : 'inline' };
 
 	&:before {
 		box-sizing: border-box;
 		color: #666;
 		content: counter(linenumber);
 		counter-increment: linenumber;
-		display: ${(props: LbProps) => props.showLineBeginnings ? 'block' : 'none' };
+		display: ${(props) => props.entrySettings['panels.text.showLineBeginnings'] ? 'block' : 'none' };
 		font-size: .8em;
 		position: absolute;
 		text-align: right;
