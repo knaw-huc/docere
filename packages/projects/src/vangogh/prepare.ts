@@ -6,7 +6,7 @@ export default function prepareDocument(doc: XMLDocument, _config: DocereConfig)
 		note.id = generateId()
 	}
 
-	for (const note of doc.querySelectorAll(`div[type="notes"] note`)) {
+	for (const note of doc.querySelectorAll(`div[type="notes"] note[target]`)) {
 		note.id = note.getAttribute('target').slice(1)
 	}
 

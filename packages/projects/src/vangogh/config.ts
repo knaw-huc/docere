@@ -7,17 +7,47 @@ const config: DocereConfig = {
 	metadata: [
 		{
 			id: 'author',
+			order: 100,
 		},
 		{
 			id: 'addressee',
+			order: 200,
+		},
+		{
+			id: 'date',
+			order: 300,
+			showAsFacet: false
 		},
 		{
 			id: 'placelet',
+			title: 'Place',
 		},
 		{
 			id: 'letcontents',
 			datatype: EsDataType.Text,
+			title: 'Summary',
 		},
+		{
+			id: 'has_figure',
+			datatype: EsDataType.Boolean,
+			title: 'Has figure'
+		},
+		{
+			id: 'pers',
+			title: 'Person',
+		},
+		{
+			id: 'datelet',
+			title: 'Date',
+		},
+		{
+			id: 'sourcestatus',
+			title: 'Status',
+		},
+		{
+			id: 'location',
+			title: 'Current location',
+		}
 	],
 	notes: [
 		{ id: 'textual' },

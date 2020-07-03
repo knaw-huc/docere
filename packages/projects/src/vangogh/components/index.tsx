@@ -48,7 +48,8 @@ export default function getComponents(config: DocereConfig) {
 			// 		n={props.attributes.n}
 			// 		title={`Note ${props.attributes.n}`}
 			// 	/>, 
-			lb: (props: DocereComponentProps) => <Lb showLineBeginnings={props.entrySettings['panels.text.showLineBeginnings']} />,
+			// lb: (props: DocereComponentProps) => <Lb showLineBeginnings={props.entrySettings['panels.text.showLineBeginnings']} />,
+			lb: Lb,
 			pb: getPb(props => props.attributes.facs.slice(1)),
 			ref,
 			'rs': person(config.entities),

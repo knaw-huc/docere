@@ -39,6 +39,8 @@ const extractMetadata: DocereConfigData['extractMetadata'] = function extractMet
 		}
 	})
 
+	metadata.has_figure = doc.querySelector('figure') != null
+
 	return metadata
 }
 
