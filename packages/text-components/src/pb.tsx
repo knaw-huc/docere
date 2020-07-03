@@ -29,7 +29,10 @@ const Img = styled.img`
 
 export default function getPb(extractPbId: (props: DocereComponentProps) => string | string[]): React.FC<DocereComponentProps> {
 	return function Pb(props: DocereComponentProps) {
-		if (!props.entrySettings['panels.text.showPageBeginnings']) return null
+		if (
+			!props.entrySettings['panels.text.showPageBeginnings'] ||
+			props.entry.facsimiles == null
+		) return null
 
 		let ids = extractPbId(props)
 		if (ids == null) return null

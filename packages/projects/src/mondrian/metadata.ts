@@ -1,43 +1,13 @@
 import type { DocereConfigData, ExtractedMetadata } from '@docere/common'
 
-const extractMetadata: DocereConfigData['extractMetadata'] = function extractMetadata(doc) {
+const extractMetadata: DocereConfigData['extractMetadata'] = function extractMetadata(doc, _config, id) {
 	const metadata: ExtractedMetadata = {}
 
-	const selectors = [
-		'//dummy:author',
-		'//vg:addressee',
-		'//vg:letContents',
-		'//vg:placeLet',
-		'//vg:dateLet',
-		"//dummy:note[@type='location']",
-		"//dummy:note[@type='sourceStatus']",
-		"//dummy:note[@type='date']",
-	]
-
-	function nsResolver(prefix: string): string {
-		return prefix === 'vg' ?  "http://www.vangoghletters.org/ns/" : "http://www.tei-c.org/ns/1.0"
-	} 
-
-	selectors.forEach(selector => {
-		const metadataRoot = doc.querySelector('sourceDesc')
-		const iterator = doc.evaluate(selector, metadataRoot, nsResolver as any, XPathResult.ANY_TYPE, null)
-		const el = iterator.iterateNext()
-
-		if (el) {
-			let key
-			const re = /\/\/\w+:\w+\[@\w+='(\w+)'\]/
-			if (re.test(selector)) {
-				[,key] = re.exec(selector)
-			} else {
-				const re2 = /\/\/\w+:(\w+)/;
-				[,key] = re2.exec(selector)
-			}
-
-			metadata[key.toLowerCase()] = el.textContent
-		} else {
-			console.log(`Selector not found: ${selector}`)
-		}
-	})
+	metadata.author = doc.querySelector('correspAction[type="sent"] > name')?.textContent
+	metadata.addressee = doc.querySelector('correspAction[type="received"] > name')?.textContent
+	metadata.date = doc.querySelector('correspAction[type="sent"] > date')?.getAttribute('when')
+	metadata.place = doc.querySelector('correspAction[type="sent"] > placeName')?.textContent
+	metadata.type = id.slice(0, 7) === 'brieven' ? 'brief' : 'geschrift'
 
 	return metadata
 }

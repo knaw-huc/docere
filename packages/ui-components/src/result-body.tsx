@@ -65,21 +65,22 @@ const FacsimileThumb = styled.li`
 	}
 `
 
+const THUMB_WIDTH = 64
 function FacsimileThumbs(props: { facsimiles: string[], small: boolean }) {
 	if (props.facsimiles == null || !props.facsimiles.length) return null
-	const thumbWidth = 64
+
 	return props.facsimiles.length === 1 ?
 		<img
-			src={props.facsimiles[0].replace('info.json', `full/${thumbWidth},/0/default.jpg`)}
-			width={`${thumbWidth}px`}
+			src={props.facsimiles[0].replace('info.json', `full/${THUMB_WIDTH},/0/default.jpg`)}
+			width={`${THUMB_WIDTH}px`}
 		/> :
 		<FacsimileThumbList>
 			{
-				props.facsimiles.map(facs => 
-					<FacsimileThumb key={facs}>
+				props.facsimiles.map((facs, index) => 
+					<FacsimileThumb key={index}>
 						<img
-							src={facs.replace('info.json', `full/${(thumbWidth - 8)/2},/0/default.jpg`)} 
-							width={`${(thumbWidth - 8)/2}px`}
+							src={facs.replace('info.json', `full/${(THUMB_WIDTH - 8)/2},/0/default.jpg`)} 
+							width={`${(THUMB_WIDTH - 8)/2}px`}
 						/>
 					</FacsimileThumb>
 				)
@@ -113,4 +114,5 @@ function ResultBody(props: DocereResultBodyProps) {
 	)
 }
 
-export default React.memo(ResultBody)
+export default ResultBody
+// export default React.memo(ResultBody)
