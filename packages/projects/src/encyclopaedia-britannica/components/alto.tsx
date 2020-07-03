@@ -4,6 +4,8 @@ import { Colors } from '@docere/common'
 import type { EntryStateAction, DocereComponentProps, DocereComponents } from '@docere/common'
 import styled from 'styled-components'
 
+// TODO move alto to text-components, see duplication in gheys/htr-layers
+
 function setActiveFacsimileArea(dispatch: React.Dispatch<EntryStateAction>, ids: string[]) {
 	dispatch({
 		type: 'SET_ACTIVE_FACSIMILE_AREAS',
@@ -59,7 +61,7 @@ function TextLine(props: DocereComponentProps) {
 		<TextLineWrapper
 			active={active}
 			onClick={handleClick}
-			showLineBeginnings={props.entrySettings['panels.text.showLineBeginnings']}
+			{...props}
 		>
 			{props.children}
 		</TextLineWrapper>

@@ -4,6 +4,7 @@ import { Colors } from '@docere/common'
 import type { DocereConfig, EntryStateAction, DocereComponentProps } from '@docere/common'
 import { Entity, getPb, Lb } from '@docere/text-components'
 
+type TLWProps = { active: boolean } & DocereComponentProps
 const TextLineWrapper = styled(Lb)`
 	min-height: 2rem;
 	pointer-events: none;
@@ -14,7 +15,7 @@ const TextLineWrapper = styled(Lb)`
 		cursor: pointer;
 		transition: all 450ms;
 
-		${(props: { active: boolean }) => 
+		${(props: TLWProps) => 
 			props.active ?
 				`background: ${Colors.Red};
 				color: white;
@@ -160,7 +161,8 @@ function line(props: DocereComponentProps) {
 		<TextLineWrapper
 			active={active}
 			onClick={handleClick}
-			showLineBeginnings={props.entrySettings['panels.text.showLineBeginnings']}
+			{...props}
+			// entrySettings={props.entrySettings}
 		>
 			{props.children}
 		</TextLineWrapper>
