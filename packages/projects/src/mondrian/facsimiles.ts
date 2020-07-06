@@ -12,7 +12,7 @@ const extractFacsimiles: DocereConfigData['extractFacsimiles'] = function extrac
 			const fileName = graphic.getAttribute('url')
 			if (!fileName.length) return null
 			const imgPath = fileName.slice(0, fileName.indexOf('_')) + '/' + fileName
-			const path = `http://localhost:4000/iiif/mondrian/${imgPath}.jpg/info.json`
+			const path = `/iiif/mondrian/${imgPath}.jpg/info.json`
 			return { id: surfaceId, versions: [{ path }] }
 		})
 		.filter(facs => facs != null)
