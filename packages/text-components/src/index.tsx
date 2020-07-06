@@ -38,6 +38,10 @@ const Lb = styled.span`
 	}
 `
 
+const Paragraph = styled.div`
+	margin-bottom: 2.25rem;
+`
+
 export {
 	getPb,
 	Hi,
@@ -46,5 +50,6 @@ export {
 	Popup,
 	Entity,
 	Tooltip,
-	TooltipBody
+	TooltipBody,
+	Paragraph,
 }

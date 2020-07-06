@@ -1,4 +1,4 @@
-import { getNote, getPb, Lb, Hi } from '@docere/text-components'
+import { getNote, getPb, Lb, Hi, Paragraph } from '@docere/text-components'
 import type { DocereComponentContainer, DocereConfig } from '@docere/common'
 
 export default function getComponents(_config: DocereConfig) {
@@ -7,7 +7,8 @@ export default function getComponents(_config: DocereConfig) {
 			lb: Lb,
 			pb: getPb(props => props.attributes.facs?.slice(1)),
 			ptr: getNote(props => props.attributes.target.slice(1)),
-			hi: Hi
+			hi: Hi,
+			p: Paragraph
 		}
 	}
 }
