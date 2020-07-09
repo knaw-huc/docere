@@ -103,7 +103,6 @@ function Entity(props: RsProps) {
 					active={active && showTooltip}
 					color={config.color}
 					docereComponentProps={props.customProps}
-					node={config.element}
 					openToAside={openToAside}
 					PopupBody={props.PopupBody}
 					title={config.title}
