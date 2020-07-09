@@ -1,0 +1,56 @@
+<?xml-model href="https://xmlschema.huygens.knaw.nl/AF_bio_ODD.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+	<teiHeader>
+		<fileDesc>
+			<titleStmt>
+				<title>De manuscripten van Anne Frank. Locaties</title>
+			</titleStmt>
+			<publicationStmt>
+				<p>Deel van de webeditie</p>
+			</publicationStmt>
+			<sourceDesc>
+				<p>Origineel document</p>
+			</sourceDesc>
+		</fileDesc>
+		<encodingDesc>
+			<classDecl>
+				<taxonomy>
+					<!-- Categorieën naar eigen inzicht in te richten; plaatsen indelen in categorie 
+                                (evt. in meerdere) met verwijzing in ana attribuut op place element -->
+					<category xml:id="catgemeenten">
+						<catDesc>Nederlandse en buitenlandse gemeenten</catDesc>
+					</category>
+					<category xml:id="catwoonhuizen">
+						<catDesc>Plaatsen waar Mondriaan woonachtig was</catDesc>
+					</category>
+					<category xml:id="catgalerieen">
+						<catDesc>Galerieën waar Mondriaan exposeerde</catDesc>
+					</category>
+				</taxonomy>
+			</classDecl>
+		</encodingDesc>
+	</teiHeader>
+	<text>
+        <body>
+            <listPlace>
+        
+            	<!-- Gemeenten -->
+            	
+            	<place xml:id="amersfoort" ana="#catgemeenten">
+            		<placeName>Amersfoort</placeName>
+            	</place>
+            	
+            	<!-- Woonhuizen  -->
+            	
+				<place xml:id="geboortehuis" ana="#catwoonhuizen">
+					<placeName>Kortegracht 11, Amersfoort</placeName>
+					<note>
+						<p>Kortegracht 11 was ....</p>
+						<p>Mondriaan woonde hier tot ...</p>
+					</note>
+				</place>
+
+            </listPlace>
+        </body>
+	</text>
+</TEI>

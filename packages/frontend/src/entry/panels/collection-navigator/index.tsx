@@ -1,8 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Entry, DocereConfig, Colors } from '@docere/common'
+import { ProjectContext, Entry, DocereConfig, Colors } from '@docere/common'
 import { PanelsProps } from '..'
-import ProjectContext from '../../../app/context'
 
 import CollectionNavigatorController from './controller'
 

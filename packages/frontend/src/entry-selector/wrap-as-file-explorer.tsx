@@ -1,8 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { TOP_OFFSET, SEARCH_RESULT_ASIDE_WIDTH, Viewport, SearchTab, FOOTER_HEIGHT, FOOTER_HANDLE_HEIGHT } from '@docere/common'
+import { isSearchPage, TOP_OFFSET, SEARCH_RESULT_ASIDE_WIDTH, Viewport, SearchTab, FOOTER_HEIGHT, FOOTER_HANDLE_HEIGHT } from '@docere/common'
 
-import { isSearchPage } from '../utils';
 import Delayed from './delayed'
 
 import type { AppState, AppStateAction } from '@docere/common'

@@ -1,11 +1,9 @@
 import React from 'react'
 import FacsimilePanel from './facsimile'
 import TextPanel from './text'
-// import WitnessAnimationPanel from './witness-animation'
 import XmlPanel from './xml'
 
-import { isTextLayer, isXmlLayer } from '../../utils'
-import { LayerType } from '@docere/common'
+import { LayerType, isTextLayer, isXmlLayer } from '@docere/common'
 
 import type { Layer } from '@docere/common'
 import type { PanelsProps } from '.'

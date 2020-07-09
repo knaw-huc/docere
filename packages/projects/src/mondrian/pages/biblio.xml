@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_all.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+  <teiHeader>
+      <fileDesc>
+         <titleStmt>
+            <title>Mondriaan. Bibliography</title>
+         </titleStmt>
+         <publicationStmt>
+            <p></p>
+         </publicationStmt>
+         <sourceDesc>
+            <p></p>
+         </sourceDesc>
+      </fileDesc>
+  </teiHeader>
+  <text>
+     
+      <body>
+         <div>
+            
+            <head>Bibliography </head>
+            
+            <!-- if desired: a note giving explanations about the conventions used in the bibliography -->
+            
+            <p>
+               <hi rend="ital">Note to the reader</hi>
+            </p>
+            <p rend="indent">The prefixes of personal names (de, van, van de, ter, etc.) are
+               ignored in the alphabetization. Thus Jean de la Fontaine will be found under <hi
+                  rend="bold">F</hi>.</p>
+          
+            <!--  Some PRELIMINARY
+                     In this sample you will see
+                     &#x2019;  this is the HTML entity for a right single quotation mark
+                     &amp;     this is the XML entity for the ampersand (&)  
+-->
+            
+            <listBibl>   
+               <head>Works by Mondrian</head>
+               
+               <!-- List of bibliographical citation -->
+               
+               <!--  If you want to have separate sections in the Bibliography, 
+                     for exemple Editions, Works on Mondriaan, Works on 20th century art, etc.
+                     you can create for each section a <listBibl>, with a <head> for the 
+                     title of the section and <bibl> for each item.   
+                     <listBibl>
+                        <head>Editions</head>
+                        <bibl>...</bibl>
+                        <bibl>...</bibl>
+                     </listBibl>  
+-->
+               
+               <!--  Each item (bibliographical citation) is encoded in a <bibl>.
+                     Inside the <bibl>, only titles are encoded.
+                     Titles are encoded as <title>. The level attributes has 'a' or 'm' or 'j': article, monography, journal.
+                     -->
+               
+               
+               <!-- a book -->
+               <bibl xml:id="Andersen1861">Andersen, Hans Christian <title level="m">Danish fairy legends and tales</title>.
+                  Translated by Caroline Peachey. 3rd ed. London 1861.</bibl>
+               
+               <!-- a book without an author -->
+               <bibl xml:id="Auct.cat.Paris1886"><title>Tableaux modernes de premier ordre. Collection John Saulnier de
+                     Bordeaux. Vente après décès (Hôtel Drouot).</title> Auct. cat. Paris 1886.</bibl>
+               
+               <!-- an article/chapter in a book -->
+               <bibl xml:id="VanTilborgh2007">Tilborgh, Louis van, <title level="a">Van Gogh in Cormon&#x2019;s
+                  studio: a chronological puzzle</title>, in <title level="m">Current issues in
+                     19th-century art</title>. <title level="s">Van Gogh Studies</title> 1. Zwolle and Amsterdam 2007,
+                  pp. 52-71.</bibl>
+               
+               <!-- an article in a journal -->
+               <!-- multiple authors -->
+               <!-- a title in a title -->
+               <bibl xml:id="VanTilborghetal2013">Tilborgh, Louis van, Teio
+                  Meedendorp and Oda van Maanen, <title level="a">&#x2018;Sunset at Montmajour&#x2019;:
+                  a newly discovered painting by Vincent van Gogh</title>;, in <title level="j">The
+                     Burlington Magazine</title> 155 (2013), pp. 696-705.</bibl>
+               
+               <!-- the title becomes clickable-->
+               <bibl>Leo Jansen, Hans Luijten, Nienke Bakker (eds.) (2009),
+                  <ref target="http://vangoghletters.org"><title level="m">Vincent van Gogh - The Letters</title></ref>.
+                  Version: December 2010. Amsterdam &amp; The Hague: Van Gogh Museum &amp; Huygens ING.</bibl>
+            </listBibl>
+            
+            <!-- REGELS VOOR TITELBESCHRIJVING
+               * voornamen/initialen auteurs: overnemen als in/bij publicatie
+               * academische, adellijke etc. titels van auteurs niet overnemen
+               * namen gehuwden: in verkorte titel volledig overnemen, in xml:id alleen eerste naam (cf. Adrichem-Ammerlaan).
+               * tussenvoegsels zowel in xml:id als in verkorte titel in tekst weglaten (cf. Adrichem-Ammerlaan)
+               * voor verwijzingen naar Biografisch Woordenboek online: zie Faassen 2013.
+               * meerdere namen van auteurs en meerdere plaatsen van tentoonstelling in exh.cats: 'and' gebruiken
+               * verwijzen naar artikelen in exh.cats: verkorte titelbeschrijving van exh.cat. opnemen met ref naar volledige titelbeschrijving, die dus apart wordt opgenomen.
+               * meerdere uitgeefplaatsen van één uitgave: / gebruiken zonder spaties (Zwolle/Alkmaar)
+            -->
+            
+            <listBibl>
+               <head>Works by others</head>
+                  <bibl xml:id="AlgemeenAdresboekAmsterdam"><title level="s">Algemeen adresboek Amsterdam</title>, 
+                     Amsterdam, digitaal raadpleegbaar via het Stadsarchief Amsterdam (inv. ***aanvullen***).</bibl>
+                  <bibl xml:id="Adrichem1993">C.R.M. van Adrichem-Ammerlaan, <title level="m">Aan Hare
+                     Majesteit de Koningin-Regentes der Nederlanden, enz. enz. enz.</title>
+                  Amersfoort 1993.</bibl>
+               <bibl xml:id="Adrichem1994">Corrie van Adrichem-Ammerlaan, <title level="m"
+                     >Mondriaan: het begin van een schilderscarrière. Opleiding, levensonderhoud,
+                     levensovertuiging. Amersfoort 1994.</title></bibl>
+               <bibl xml:id="Adrichem2001">Jan van Adrichem, <title level="m">De ontvangst van de
+                     moderne kunst in Nederland 1910-2000. Picasso als pars pro toto.</title>
+                  Amsterdam 2001. Amersfoort 1994.</bibl>
+               <bibl xml:id="Almering2018">L.M. Almering-Strik, <title level="m">Lodewijk
+                     Schelfhout. Nederlands eerste kubist.</title> Zwolle 2018.</bibl>
+               <bibl xml:id="Balk2006">Hildelies Balk, <title level="m">De kunstpaus H.P. Bremmer
+                     (1871-1956).</title> Bussum 2006</bibl>
+               <bibl xml:id="Bax2006">Marty Bax, <title level="m">Het Web der Schepping. Theosofie
+                     en Kunst in Nederland van Lauweriks tot Mondriaan</title>. Amsterdam
+                  2006.</bibl>
+               <bibl xml:id="Bax1994-1">Marty Bax (m.m.v. Harmen Snel), <title level="a">Mondriaan
+                     en zijn vrienden</title>, in: <title level="m">Mondriaan aan de Amstel,
+                     1892-1912.</title> Ed. Robert Welsh. Exh.cat. Amsterdam (Stadsarchief
+                  Amsterdam) 1994, p. 22-42.</bibl>
+               <bibl xml:id="Bax1994-2">Marty Bax en Robert Welsh, <title level="a">De Amsterdamse
+                     ateliers van Piet Mondriaan</title>, in: <title level="m">Mondriaan aan de
+                     Amstel, 1892-1912.</title> Ed. Robert Welsh. Exh.cat. Amsterdam (Stadsarchief
+                  Amsterdam) 1994, p. 43-54.</bibl>
+               <bibl xml:id="Bloem1996">Marja Bloem, <title level="m">CXXV, 125 jaar jonge
+                     schilderkunst: de Koninklijke Subsidie 1871-1996</title>. Zwolle 1996.</bibl>
+               <bibl xml:id="Blotkamp1994">Carel Blotkamp, <title level="m">Mondriaan. Destructie
+                     als kunst</title>. Zwolle 1994.</bibl>
+               <bibl xml:id="Bosma2008">Marja Bosma, <title level="m">Charley Toorop. Vooral geen
+                     principes!</title> Rotterdam 2008.</bibl>
+               <bibl xml:id="Bremmer1914">H.P. Bremmer, <title level="a">&#x2018;Beeldende kunst
+                     32&#x2019;</title>, in <title level="j">Beeldende Kunst</title> 1 (1913-1914)
+                  4, pp. 46-48.</bibl>
+               <bibl xml:id="VanBurkom2019">Frans van Burkom, <title level="m">Erich Wichman.
+                     Ironische kunst - tragisch leven.</title> Zwolle 2019.</bibl>
+               <bibl xml:id="Coppes2012">Wietse Coppes, <title level="a">Reinier Drektraan. Piet
+                     Mondriaan in zijn atelier, circa 1909</title>, in: Sabine Craft-Giepmans &amp;
+                  Annette de Vries (eds.), <title level="m">Portret in portret in de Nederlandse
+                     kunst 1550-2012</title>, Bussum 2012, p. 264-265.</bibl>
+               <bibl xml:id="Coppes2015">Wietse Coppes, <title level="a">&#x2018;"I'm the Same Just
+                     a Bit More Balanced, If I Don't Deceive Myself". A biographical sketch of Piet
+                     Mondrian in the period 1909-12, based on the letters send to Aletta de
+                     Iongh&#x2019;</title>, in <ref target="Rooij2015">Rooij 2015</ref>, pp.
+                  8-14.</bibl>
+               <bibl xml:id="CoppesJansen2017">Wietse Coppes, Leo Jansen, <title level="a">Cubism As
+                     a Cataclyst: Mondrian's Cautious Quest for the Universal</title>, in <bibl
+                     xml:id="Ex.cat.Amsterdam2017"><title level="m">Exh.cat. The Dutch in Paris
+                        1789-1914.</title> Ed. Mayken Jonkman. Amsterdam (Van Gogh Museum) and Paris
+                     (Petit Palais) 2017-2018. Bussum etc. 2017</bibl>, pp.222-245.</bibl>
+               <bibl xml:id="Coppes2018">Wietse Coppes, <title level="a">Mondrian as
+                     toreador</title>, in <ref target="Bleyerveld2018">Ed. Yvonne Bleyerveld
+                     a.o.</ref>, <title level="m">Treasures of the RKD Netherlands Intitute for Art
+                     History</title>, Haarlem 2018, pp. 124-125.</bibl>
+               <bibl xml:id="LeCoultre2015">Martijn F. Le Coultre, <title level="m">De hut van
+                     Mondriaan. Laren - Blaricum 1914-1919.</title> Naarden 2015.</bibl>
+               <bibl xml:id="CR">Joop M. Joosten and Robert P. Welsh (eds.), <title level="m">Piet
+                     Mondrian. Catalogue Raisonné. Vol I: Catalogue Raisonné of the Naturalistic
+                     Works (until early 1911); Vol. II: Catalogue Raisonné of the Work of 1911-1944;
+                     Vol. III: Appendix.</title> Blaricum (etc.) 1998.</bibl>
+               <bibl xml:id="DakeWichman1915">C.L. Dake (contra) en E. Wichman (pro), <title
+                     level="m">Nieuwe richtingen in de schilderkunst (cubisme, expressionisme,
+                     futurisme etc.)</title>, in: <title level="s">"Pro en Contra". Betreffende
+                     Vraagstukken van Algemeen Belang</title>, Serie IX. No. 1. Baarn 1914</bibl>
+               <bibl xml:id="DenningerSchreuder2003">Carole Denninger-Schreuder, <title level="m"
+                     >Schilders van Laren</title>. Bussum 2003.</bibl>
+               <bibl xml:id="Domselaer1959">M. van Domselaer-Middelkoop, <title level="a"
+                     >Herinneringen aan Piet Mondriaan</title>, in <title level="j">Maatstaf</title>
+                  7 (1959-1960) nr. 5 (augustus 1959), p. 269-293.</bibl>
+               <bibl xml:id="Domselaer1968">M. van Domselaer-Middelkoop, <title level="m">Overzicht
+                     van leven en werken van Jakob van Domselaer.</title> (S.I.) 1968(?).</bibl>
+               <bibl xml:id="Domselaer1971">M. van Domselaer-Middelkoop, <title level="a">Brieven
+                     over Meerhuizen, 1915-1919</title>', in <title level="j">Jaarboek Genootschap
+                     Amstelodamum</title>, nr. 63, 1971.</bibl>
+               <bibl xml:id="DortOuden1999">K.W. van Dort en J.B. den Ouden, <title level="m"
+                     >A-locatie bossen in Zeeland. Kenschets, beoordeling en adviezen met betrekking
+                     to behoud en ontwikkeling van relicten van inheemse bosgemeenschappen in de
+                     provincie Zeeland</title>. Wageningen 1999.</bibl>
+               <bibl xml:id="ExHoek1985">Sjarel Ex en Els Hoek, <title level="m">Vilmos Huszár. 
+                     Schilder en ontwerper 1884-1960. De grote onbekende van De Stijl</title>, Utrecht 1985.</bibl>
+               <bibl xml:id="Exh.cat.Amsterdam1916"><title level="m">Tentoonstelling van schilderijen. 
+                     A. de Winter. Utrecht.</title> Amsterdam (Stedelijk Museum) 1916.</bibl>
+               <bibl xml:id="Exh.cat.Amsterdam1946"><title level="m">Piet Mondriaan
+                     Herdenkingstentoonstelling.</title> Exh.cat. Amsterdam (Stedelijk Museum)
+                     1946.</bibl>
+               <bibl xml:id="Exh.cat.Amsterdam1985"><title level="m">100 Jaar Prix de Rome</title>.
+                  Exh.cat. Amsterdam (Rijksakademie van Beeldende Kunsten) 1985. Ed. Rieke van
+                  Leeuwen. Amsterdam/Utrecht 1985.</bibl>
+               <bibl xml:id="Exh.cat.Amsterdam1994"><title level="m">Mondriaan aan de Amstel
+                     1892-1912.</title> Exh.cat. Amsterdam (Gemeentearchief) 1994.</bibl>
+               <bibl xml:id="Exh.cat.Arnhem2016"><title level="m">Peter Alma. Van De Stijl naar
+                     Communisme.</title> Ed. M. Jooren. Exh.cat. Arnhem (Museum Arnhem)
+                        2016.</bibl>
+              <bibl xml:id="Exh.cat.Bergen2006"><title level="m">De Nieuwe Kring in Bergen (N.H.). 
+                     Filosofen en kunstenaars in Bergen 1916-1919.</title> Exh.cat. Bergen (Museum 
+                     Kranenburgh) 2006.</bibl>
+               <bibl xml:id="Exh.cat.DenHaag2017"><title level="m">Piet Mondriaan &#0233; Bart van
+                     der Leck. De uitvinding van een nieuwe kunst. Laren 1916-1918.</title> Exh.cat.
+                  Den Haag (Gemeentemuseum) 2017.</bibl>
+               <bibl xml:id="Exh.cat.Parijs2009"><title level="m">Kandinsky.</title> Exh.cat. Parijs 
+                     (Centre Pompidou) 2009.</bibl>
+               <bibl xml:id="Exh.cat.Rotterdam2008"><title level="m">Vooral geen principes! Charley
+                     Toorop.</title> Exh.cat. Rotterdam (Museum Boijmans Van Beuningen) 2008-2009.
+                  Red. Marja Bosma. Rotterdam 2008.</bibl>
+               <bibl xml:id="Exh.cat.Tokyo1987"><title level="m">Mondrian from figuration to
+                     abstraction.</title> Exh.cat. Tokyo (Seibu Museum of Art) etc. 1987-1988. Ed.
+                  Herbert Henkels. Tokyo 1987.</bibl>
+               <bibl xml:id="Exh.cat.Zandvoort1981"><title level="m">Lodewijk Schelfhout
+                     1881-1943.</title> Exh.cat. Zandvoort (Cultureel Centrum) 1981-1982.</bibl>
+               <bibl xml:id="Faassen2013">Sjoerd van Faassen, <title level="a">Israël
+                     Querido</title>, in <title level="s">Biografisch Woordenboek van Nederlands:
+                     1880-2000</title> (http://resources.huygens.knaw.nl/bwn1880-2000). z.j.</bibl>
+               <bibl xml:id="Faassen2017">Sjoerd van Faassen en Hans Renders, <title level="a">Theo
+                     van Doesburg en de oprichting van <hi rend="italics">De Stijl</hi></title>, in:
+                     <ref target="biblio.xml#Exh.cat.DenHaag2017">Exh.cat. Den Haag (Gemeentemuseum)
+                     2017</ref>, p. 117-145.</bibl>
+               <bibl xml:id="FoxWeber2018">Nicholas Fox Weber, <title level="m">Piet Mondrian's early
+                     years. The winding path to straight abstraction.</title> Diss. Groningen University 2018.</bibl>
+               <bibl xml:id="Gard2006">Lucien Gard, <title level="m">Conrad Kickert, La Haye 1882 -
+                     Paris 1965. Le Peintre Hollandais de Montparnasse. S.l. 2006.</title></bibl>
+               <bibl xml:id="Ginneken1970-1">Lily van Ginneken, <title level="a">Documentatie:
+                     kunstenaarsbrieven Kees Spoor (1)</title>, in <title level="j"
+                     >Museumjournaal</title> 15 (1970 4 (september), p. 206-208.</bibl>
+               <bibl xml:id="Ginneken1970-2">Lily van Ginneken, <title level="a">Documentatie:
+                     kunstenaarsbrieven Kees Spoor (2)</title>, in <title level="j"
+                     >Museumjournaal</title> 15 (1970 5 (november), p. 261-267.</bibl>
+               <bibl xml:id="Gorter1998">Paul Gorter, i.s.m. Frans van Burkom, <title level="a"
+                     >&#x2018;Mies Maris' vergeten 'Mondriana'&#x2019;</title>, in <title level="j"
+                     >Jong Holland</title> 2 (1998), pp. 22-35.</bibl>
+               <bibl xml:id="Groot2001">Marjan Groot, <title level="a">Phoenixhaantjes, mantissen,
+                     poliepen en aalvissen. Adriaan en Christine van Zeegen</title>, in: <title
+                     level="j">Jong Holland</title> (2001) nr. 4, p. 29-39.</bibl>
+               <bibl xml:id="Hammacher1947">A.M. Hammacher, <title level="a">Piet Mondriaan
+                     1872-1944</title>, in <title level="j">Kroniek van Kunst en Kultuur</title> 8
+                  (1947) nr. 9, p. 233-237.</bibl>
+               <bibl xml:id="Hanssen2015">Léon Hanssen, <title level="m">De schepping van een aards
+                     paradijs. Piet Mondriaan 1919-1933.</title> Amsterdam 2015.</bibl>
+               <bibl xml:id="Henkels1988">H. Henkels, ed, <title level="m">'t Is alles een groote
+                     eenheid, Bert. Piet Mondriaan, Albert van den Briel en hun vriendschap aan de
+                     hand van brieven, documenten en fragmenten.</title> Haarlem 1988.</bibl>
+               <bibl xml:id="Heteren2018">Marjan van Heteren, <title level="m">The Mondrian
+                     Mystery</title>. Zwolle/Alkmaar 2018.</bibl>
+               <bibl xml:id="Heyting1994">Lien Heyting, <title level="m">De wereld in een dorp.
+                     Schilders, schrijvers en wereldverbeteraars in Laren en Blaricum
+                     1880-1920.</title> Amsterdam 1994.</bibl>
+                  <bibl xml:id="Hilhorst2017">Cees Hilhorst, <title level="a">'Chronologie. (Bart van der 
+                     Leck)'</title>, in: (exh.cat.) <title level="m">'De uitvinding van een nieuwe kunst. 
+                     Piet Mondriaan en Bart van der Leck. Laren 1916-1918'</title>, Den Haag (Gemeentemuseum) 2017, p. 13-53.</bibl>
+               <bibl xml:id="Huisman2017">Lotte Huisman, <title level="u"><hi rend="italics">De opkomst van de
+                     Nederlandse Vegetariërsbond. Thesis over de invloed van andere organisaties en
+                     de tijd op de opkomst van de Nederlandse Vegetariërsbond in 1894</hi>.</title>,
+                  Universiteit Leiden, 2017.</bibl>
+               <bibl xml:id="Huygen1992">Frederike Huygen, <title level="m">Het Museum Boymans van
+                     Hannema. Gebouw, geschiedenis, architectuur / The Boymans Museum and director
+                     Hannema. The history of the building</title>. Rotterdam 1992.</bibl>
+               <bibl xml:id="JanssenTabak1999">H. Janssen and A. Tabak, <title level="a">Kunnen niet
+                     eens groote Franschen gevraagd worden? Mondriaan, Hodler en de introductie van
+                     het modernisme in Nederland</title>, in: <title level="j" rend="italics">Jong Holland
+                     15</title> (1999) nr. 1, p. 20-27 (rectificatie Jong Holland 14 (1998), nr. 4,
+                  p. 20-37).</bibl>
+               <bibl xml:id="Janssen2016-1">Hans Janssen, <title level="m">Mondrian and Cubism.
+                     Paris 1912-1914</title>. London/The Hague 2016.</bibl>
+               <bibl xml:id="Janssen2016-2">Hans Janssen, <title level="m">Piet Mondriaan. Een
+                     nieuwe kunst voor een ongekend leven. Een biografie</title>. Amsterdam
+                  2016</bibl>
+               <bibl xml:id="JohnsonSweeney1945">James Johnson Sweeney, <title level="a">Piet Mondrian></title>, in
+                     <title level="j">The Bulletin of the Museum of Modern Art</title>, 12 91945), nr. 4 (lente), p. 2-12.</bibl>
+               <bibl xml:id="Jooren2016">Marieke Jooren, <title level="a">Alma, lotgeval van De
+                     Stijl? Ontmoetingen, raakvlakken, discussies en bewondering</title>, in
+                     <ref target="biblio.xml#Exh.cat.Arnhem2016">Exh.cat. Arnhem 2016</ref>, p. 8-24.</bibl>
+               <bibl xml:id="Joosten1968-1">Joop Joosten, <title level="a">Documentatie over
+                     Mondriaan: 26 brieven van Piet Mondriaan aan Lod. Schelfhout en H.P. Bremmer
+                     1910-1918 (deel 1: 10 brieven 1910-1914)</title>, in: <title level="j" rend="italics"
+                     >Museumjournaal</title> 13 (1968) nr. 4, p. 208-215.</bibl>
+               <bibl xml:id="Joosten1968-2">Joop Joosten, <title level="a">Documentatie over
+                     Mondriaan: 26 brieven van Piet Mondriaan aan Lod. Schelfhout en H.P. Bremmer
+                     1910-1918 (deel 2: 6 brieven 1915-maart 1916)</title>, in: <title level="j" rend="italics"
+                     >Museumjournaal</title> 13 (1968) nr. 5, p. 267-270.</bibl>
+               <bibl xml:id="Joosten1968-3">Joop Joosten, <title level="a">Documentatie over
+                     Mondriaan: 26 brieven van Piet Mondriaan aan Lod. Schelfhout en H.P. Bremmer
+                     1910-1918 (deel 3: 10 brieven 1916-1918)</title>, in: <title level="j" rend="italics"
+                     >Museumjournaal</title> 13 (1968) nr. 6, p. 321-326.</bibl>
+               <bibl xml:id="Joosten1973-1">J.M. Joosten, <title level="a">Documentatie over
+                     Mondriaan (4, deel 1): 17 brieven van Piet Mondriaan aan ds. H. van Assendelft 1914-1919 (deel 1)</title>,
+                     in: <title level="j" rend="italics">Museumjournaal</title> 18 (1973) nr. 4, p. 172-179.</bibl>
+               <bibl xml:id="Joosten1973-2">J.M. Joosten, <title level="a">Documentatie over
+                     Mondriaan (4, deel 2): 17 brieven van Piet Mondriaan aan ds. H. van Assendelft 1914-1919</title>,
+                     in: <title level="j" rend="italics">Museumjournaal</title> 18 (1973) nr. 5, p. 218-223.</bibl>
+               <bibl xml:id="Koning2001">Joseline de Koning, <title level="u" rend="italics">Edle (Alma-) Saxlund:
+                     een coloriste op zoek naar innerlijk evenwich en universele harmonie.</title> 3
+                     vols. MA thesis, unpublished. Leiden 2001.</bibl>
+               <bibl xml:id="Leijerzapf1984">I. Leijerzapf e.a. (eds), <title>Geschiedenis van de
+                     Nederlandse fotografie in monografieën en thema-artikelen</title>. 8 dln.
+                  Alphen aan de Rijn 1984-...</bibl>
+               <bibl xml:id="Loosjes1959">A.B. Loosjes-Terpstra, <title level="m">Moderne Kunst in
+                     Nederland 1900-1914</title>. Utrecht 1959.</bibl>
+               <bibl xml:id="Malietal1994">Anco Mali, Bert Booij, Wim Scholtz, <title level="m"
+                     >Pieter Cornelis Mondriaan senior, 1839-1921. Een gedreven vader</title>.
+                  Amersfoort 1994.</bibl>
+               <bibl xml:id="Osborn2004">William Osborn, <title level="m">Music in Ohio</title>, The
+                  Kent State University Press, Ohio 2004.</bibl>
+               <bibl xml:id="Ottevanger2008">Alied Ottevanger, <title level="m">'De Stijl overal
+                     absolute leiding'. De briefwisseling tussen Theo van Doesburg en Antony
+                     Kok.</title> Bussum 2008.</bibl>
+               <bibl xml:id="RoodenburgSchadd2015">Caroline Roodenburg-Schadd, <title level="a"
+                     >'Nieuwlichters' in Nederland</title>, in <title level="m">Exh.cat. Kleur
+                     ontketend. Moderne kunst in de Lage Landen 1885-1914.</title> Ed. Frouke van Dijke. The
+                     Hague (Gemeentemuseum) and Antwerp (Museum voor Schone Kunsten) 2015. The Hague
+                     2015, pp. 24-69.</bibl>
+               <bibl xml:id="Rooij2015">Willem de Rooij (ed.), <title level="m">Character is Fate:
+                     Piet Mondrian's Horoscope</title>. Rotterdam 2015.</bibl>
+               <bibl xml:id="Scherphuis1994">Ageeth Scherphuis, <title level="a">Vrienden over zijn
+                     vrouwen, zijn smaak, zijn armoede</title>, in: <title level="j" rend="italics">Vrij
+                     Nederland</title> nr. 50, jrg. 55, 17 december 1994.</bibl>
+               <bibl xml:id="Seuphor1956">Michel Seuphor, <title level="m">Piet Mondrian. Life and
+                     Work</title>. Amsterdam 1956.</bibl>
+               <bibl xml:id="Sketchbooks1969">Robert P. Welsh / J.M. Joosten (eds.), <title
+                     level="m">Two Mondrian sketchbooks 1912-1914</title>. Amsterdam 1969.</bibl>
+               <bibl xml:id="Stap2011">Jan Stap, <title level="m">Piet Mondriaan 1872-1944. De mens
+                     achter de schilder</title>. Doetinchem 2011.</bibl>
+               <bibl>...</bibl>
+            </listBibl>
+            
+            
+                        
+            
+         </div>
+      </body>
+  </text>
+</TEI>

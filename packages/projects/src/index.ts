@@ -6,6 +6,7 @@ export default  {
 	gheys: async function() { return await import('./gheys') },
 	gekaaptebrieven: async function() { return await import('./gekaaptebrieven') },
 	henegouwseregisters: async function() { return await import('./henegouwseregisters') },
+	isidore: async function() { return await import('./isidore') },
 	kranten1700: async function() { return await import('./kranten1700') },
 	mondrian: async function() { return await import('./mondrian') },
 	'plakaatboek-guyana-1670-1816': async function() { return await import('./plakaatboek-guyana-1670-1816') },

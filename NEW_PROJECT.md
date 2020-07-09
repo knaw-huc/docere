@@ -12,6 +12,10 @@
 - Edit `index.ts` and `config.ts`
 - Set `private: true` in project config?
 - Add <new-project-id> to `projects/src/index.ts`
+
+## Fill the index
+- $ cd <docere-root>/packages/projects
+- $ npm run dist
 - $ curl localhost/api/indexer/<new-project-id>
 - $ curl localhost/api/indexer/<new-project-id>/status | jq .
 

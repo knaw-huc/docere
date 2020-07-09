@@ -1,7 +1,5 @@
 import * as React from 'react'
-import { EsDataType, defaultMetadata } from '@docere/common'
-
-import { fetchJson } from '../utils'
+import { fetchJson, EsDataType, defaultMetadata } from '@docere/common'
 
 import type { DocereConfig, FacetsConfig, MetadataConfig, EntityConfig } from '@docere/common'
 

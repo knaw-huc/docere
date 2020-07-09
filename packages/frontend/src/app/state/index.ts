@@ -1,9 +1,7 @@
 import * as React from 'react'
-import { SearchTab, Viewport } from '@docere/common'
+import { analyzeWindowLocation, getPage, SearchTab, Viewport } from '@docere/common'
 
-import { analyzeWindowLocation } from '../../utils'
 import getEntry from './get-entry'
-import getPage from './get-page'
 import HistoryNavigator from './history-navigator'
 
 import type { AppState, AppStateAction, DocereConfigData } from '@docere/common'
@@ -164,7 +162,7 @@ export default function useAppState(configData: DocereConfigData) {
 
 	React.useEffect(() => {
 		if (x[0].pageId == null) return
-		getPage(x[0].pageId, configData).then(page => x[1]({ type: 'SET_PAGE', page }))
+		getPage(x[0].pageId, configData.config).then(page => x[1]({ type: 'SET_PAGE', page }))
 	}, [configData, x[0].pageId])
 
 	React.useEffect(() => {

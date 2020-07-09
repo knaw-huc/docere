@@ -1,6 +1,7 @@
-import * as React from 'react'
-import { DocereComponentContainer, UIComponentType, DocereConfig } from '@docere/common'
-import type { DocereComponents, GetComponents, GetUIComponent } from '@docere/common'
+import React from 'react'
+import type { DocereComponents } from './types'
+import { DocereComponentContainer, UIComponentType } from './enum'
+import { ProjectContext } from './context'
 
 export function useComponents(container: DocereComponentContainer, id?: string) {
 	const [components, setComponents] = React.useState<DocereComponents>(null)
@@ -20,19 +21,9 @@ export function useUIComponent(componentType: UIComponentType, id?: string) {
 	React.useEffect(() => {
 		getUIComponent(componentType, id).then(c => {
 			if (c != null) setComponent(c)
-			else import('../project-components/generic-result-body').then(c => setComponent(c.default))
+			// else import('../project-components/generic-result-body').then(c => setComponent(c.default))
 		})
 	}, [componentType, id])
 
 	return component
 }
-
-interface ProjectContext {
-	config: DocereConfig
-	getComponents: GetComponents
-	getUIComponent: GetUIComponent
-	searchUrl: string
-}
-const ProjectContext = React.createContext<ProjectContext>(null)
-
-export default ProjectContext

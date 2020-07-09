@@ -1,8 +1,8 @@
 import * as React from 'react'
 import styled from 'styled-components'
+import { ProjectContext, Entry, Colors } from '@docere/common'
+
 import { BottomTabWrapper } from './layers'
-import ProjectContext from '../../app/context'
-import { Entry, Colors } from '@docere/common'
 
 const Ul = styled.ul`
 	columns: 2;

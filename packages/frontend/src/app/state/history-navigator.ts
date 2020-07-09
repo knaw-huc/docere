@@ -1,5 +1,4 @@
-import { analyzeWindowLocation } from '../../utils'
-import { Viewport } from '@docere/common'
+import { analyzeWindowLocation, Viewport } from '@docere/common'
 import type { AppStateAction } from '@docere/common'
 
 export default class HistoryNavigator {

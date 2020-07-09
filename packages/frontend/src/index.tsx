@@ -1,11 +1,10 @@
-import * as React from 'react'
+import React from 'react'
+import ReactDOM from 'react-dom'
+import configDatas from '@docere/projects'
+import { analyzeWindowLocation, ProjectContext } from '@docere/common'
 
-import * as ReactDOM from 'react-dom'
 import BrowserApp from './app/index'
 import EntrySelector from './entry-selector'
-import configDatas from '@docere/projects'
-import { analyzeWindowLocation } from './utils'
-import ProjectContext from './app/context'
 import Home from './home'
 
 document.addEventListener('DOMContentLoaded', async function() {

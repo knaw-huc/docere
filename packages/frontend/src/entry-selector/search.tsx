@@ -1,9 +1,8 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import HucFacetedSearch  from '@docere/search'
-import { UIComponentType, Viewport, Language } from '@docere/common'
+import { ProjectContext, useUIComponent, UIComponentType, Viewport, Language } from '@docere/common'
 
-import ProjectContext, { useUIComponent } from '../app/context'
 import { FileExplorerProps } from './wrap-as-file-explorer'
 import useAutoSuggest from './use-auto-suggest'
 
@@ -39,7 +38,7 @@ function Search(props: FileExplorerProps) {
 		props.appDispatch({ type: 'SET_ENTRY_ID', id: result.id })
 	}, [])
 
-	if (ResultBodyComponent == null) return null
+	// if (ResultBodyComponent == null) return null
 
 	return (
 		<FS

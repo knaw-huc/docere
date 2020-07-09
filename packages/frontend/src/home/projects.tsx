@@ -1,7 +1,6 @@
 import React from 'react'
-import { DocereConfig, DEFAULT_SPACING } from '@docere/common'
-import { fetchJson } from '../utils'
 import styled from 'styled-components'
+import { fetchJson, DocereConfig, DEFAULT_SPACING } from '@docere/common'
 
 function useProjectConfigs() {
 	const [projectConfigs, setProjectConfigs] = React.useState<DocereConfig[]>([])

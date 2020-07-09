@@ -1,0 +1,196 @@
+﻿<?xml-model href="https://xmlschema.huygens.knaw.nl/AF_bio_ODD.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <title>Mondriaan. Personen</title>
+            </titleStmt>
+            <publicationStmt>
+                <p>Deel van de webeditie</p>
+            </publicationStmt>
+            <sourceDesc>
+                <p>Origineel document</p>
+            </sourceDesc>
+        </fileDesc>
+        <encodingDesc>
+            <classDecl>
+                <taxonomy>
+                    <!-- Categorieën naar eigen inzicht in te richten; personen indelen in categorie 
+                                (evt. in meerdere) met verwijzing in ana attribuut op person element -->
+                    <category xml:id="catfamilie">
+                        <catDesc>Familie</catDesc>
+                    </category>
+                    <category xml:id="catkunstenaar">
+                        <catDesc>Kunstenaars</catDesc>
+                    </category>
+                    <category xml:id="catgaleriehouder">
+                        <catDesc>Galeriehouders</catDesc>
+                    </category>
+                    <category xml:id="catkennissen">
+                        <catDesc>Kennissen, buurt- en klasgenoten</catDesc>
+                    </category>
+                    <category xml:id="catetcetera">
+                        <catDesc>Enzovoorts</catDesc>
+                    </category>
+                </taxonomy>
+            </classDecl>
+        </encodingDesc>
+    </teiHeader>
+    <text>
+        <body>
+            <!-- RICHTLIJN
+                * namen: geen tussenvoegsels in xml:id
+            -->
+            <listPerson>
+                
+                <person xml:id="AllebéAuguste"><persName><forename>Auguste</forename> <surname>Allebé</surname></persName></person>
+                
+                <person xml:id="BaardCWH"></person>
+                
+                <person xml:id="BesantA"></person>
+                
+                <person xml:id="BraetvonUberfeldt"><persName><forename>Jan</forename> <surname>Braet von Uberfeldt</surname></persName></person>
+                
+                <person xml:id="BreejenNootjeden"></person>
+                
+                <person xml:id="BrielAlbertvanden"></person>
+                
+                <person xml:id="BrielBisdom"><persName><forename>Sara</forename> <surname>van den Briel-Bisdom</surname></persName></person>
+                
+                <person xml:id="CalcarReinderPietersvan"></person>
+                   <!-- NB inclusief echtgenote en kinderen --><person xml:id="CalcarDeGavereJacobaCahtharina"></person>
+                
+                <person xml:id="DomselaerJacob"><persName><forename>Jacob</forename> <surname>van Domselaer</surname></persName></person>
+                
+                <person xml:id="EmmaKoninginRegentes"><persona><occupation>Koningin-Regentes</occupation></persona></person>
+                
+                <person xml:id="EloutDrabbeMies"></person>
+                
+                <person xml:id="EsserJFS"></person>
+                
+                <person xml:id="FernhoutHenk"></person>
+                
+                <person xml:id="IonghAlettade"><persName><forename>Aletta</forename> <surname>de Iongh</surname></persName></person>
+                
+                <person xml:id="IonghAnnaMariade"><persName><forename>Anna Maria</forename> <surname>de Iongh</surname></persName></person>
+                
+                <person xml:id="HannaartCatharina"></person>
+                
+                <person xml:id="HeijbroekGretha"></person>
+                
+                <person xml:id="HekkingGérard"></person>
+                
+                <person xml:id="HenkelMax"></person>
+                
+                <person xml:id="HoeckWilhelminavander"></person>
+                
+                <person xml:id="HoraAdamaRemeliusLucius"><persName><forename>Remelius Lucius</forename> <surname>Hora Adama</surname></persName></person>
+                
+                <person xml:id="HoraAdama-SchalijAlide"><persName><forename>Alide Nicolasine</forename> <surname>Hora Adama-Schalij</surname></persName></person>
+                
+                <person xml:id="HulshoffPol"></person>
+                
+                <person xml:id="HuszarVilmos"></person>
+                
+                <person xml:id="KickertAleyda"></person>
+                
+                <person xml:id="KickertConrad"></person>
+                
+                <person xml:id="KickertMary"></person>
+                
+                <person xml:id="KnapGerritWillem"><persName><forename>Gerrit Willem</forename> <surname>Knap</surname></persName></person>
+                
+                <person xml:id="LozinIrma"></person>
+                
+                <person xml:id="MondriaanOuders"></person>
+                
+                <person xml:id="MondriaanPCSenior"></person>
+                
+                <person xml:id="MondriaanKokJCde"></person>
+                
+                <person xml:id="MondriaanCarel"></person>
+                
+                <person xml:id="MondriaanStien"></person>
+                
+                <person xml:id="MondriaanWillemFrederik"></person>
+                
+                <person xml:id="MondriaanLouis"></person>
+                
+                <person xml:id="MondriaanFrits"></person>
+                
+                <person xml:id="PhilipponaEchtpaar"></person>
+                
+                <person xml:id="PhilipponaReinier"><persName><forename>Reinier</forename> <surname>Philippona</surname></persName></person>
+                
+                <person xml:id="PhilipponaCornelissenMien"><persName><forename>Mien</forename> <surname>Philippona-Cornelissen</surname></persName></person>
+                
+                <person xml:id="QueridoIsraël"></person>
+                
+                <person xml:id="RanitzSMSde"></person>
+                
+                <person xml:id="RitsemaVanEckMarinusMatthijs"></person>
+                
+                <person xml:id="SaalbornArnold"></person>
+                
+                <person xml:id="SaalbornLoe"></person>
+                
+                <person xml:id="SchäferDirk"></person>
+                
+                <person xml:id="SluijtersJan"></person>
+                
+                <person xml:id="SpoorKees"></person>
+                
+                <person xml:id="StokvisMej"></person>
+                
+                <person xml:id="TakvanPoortvlietMarie"></person>
+                
+                <person xml:id="TooropCharley"></person>
+                
+                <person xml:id="TooropJan"></person>
+                
+                <person xml:id="VerhoevenJan"></person>
+                
+                <person xml:id="WaldenburgAlfred"></person>
+                
+                <person xml:id="WichmanErich"></person>
+                
+                <person xml:id="WillemIIIKoning"></person>
+                
+                <person xml:id="ZeegenAdriaanvan"></person>
+                
+                
+                <person xml:id="Mondriaan" sex="1">
+                    <persName full="yes"><forename>Pieter Cornelis</forename> <surname>Mondriaan</surname></persName>
+                    <!-- Als je behoefte hebt aan het onderscheid volledige / verkorte naam: -->
+                    <persName full="abb"><forename>Piet</forename><surname>Mondriaan</surname></persName>
+                    <birth when="1872-03-07">
+                        <placeName>
+                            <settlement>Amersfoort</settlement>
+                            <country>Nederland</country>
+                        </placeName>
+                    </birth>
+                    <death when="1944-02-01">
+                        <placeName>
+                            <settlement>Manhattan, New York</settlement>
+                            <country>USA</country>
+                        </placeName>
+                    </death>
+                    <note type="shortdesc">Nederlandse kunstenaar, pionier van de abstracte kunst</note>
+                    <note type="biographic">
+                        <!-- deze beschrijvingen kunnen natuurlijk ook weer noten bevatten, verwijzingen etc. -->
+                        <p>....</p>
+                        <p>....</p>
+                    </note>
+                    <note type="rkd"><ptr target="https://rkd.nl/nl/explore/artists/56854"/></note>
+                </person>
+
+                <person xml:id="doesburg" sex="1" ana="#catkunstenaar">
+                    <!--  -->
+                </person>
+                
+                <!-- etcetera -->
+                
+            </listPerson>
+        </body>
+    </text>
+</TEI>

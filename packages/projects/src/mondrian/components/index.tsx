@@ -1,14 +1,17 @@
-import { getNote, getPb, Lb, Hi, Paragraph } from '@docere/text-components'
-import type { DocereComponentContainer, DocereConfig } from '@docere/common'
+import { DocereComponentContainer } from '@docere/common'
+import entryComponents from './entry'
+import biblioComponents from './pages/biblio'
+import bioComponents from './pages/bio'
 
-export default function getComponents(_config: DocereConfig) {
-	return async function(_container: DocereComponentContainer, _id: string) {
-		return {
-			lb: Lb,
-			pb: getPb(props => props.attributes.facs?.slice(1)),
-			ptr: getNote(props => props.attributes.target.slice(1)),
-			hi: Hi,
-			p: Paragraph
+import type { DocereConfig } from '@docere/common'
+
+export default function getComponents(config: DocereConfig) {
+	return async function(container: DocereComponentContainer, _id: string) {
+		if (container === DocereComponentContainer.Page) {
+			if (_id === 'biblio') return await biblioComponents()
+			if (_id === 'bio') return await bioComponents()
 		}
+
+		return await entryComponents(config)
 	}
 }

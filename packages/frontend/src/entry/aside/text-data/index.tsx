@@ -1,7 +1,7 @@
 import * as React from 'react'
 import EntityList from "./list"
 import { useTextData, Wrapper } from '../list'
-import ProjectContext from '../../../app/context'
+import { ProjectContext } from '@docere/common'
 import type { EntryState, EntryStateAction, Entity, AppStateAction } from '@docere/common'
 
 type Props =

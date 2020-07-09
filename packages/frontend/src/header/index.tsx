@@ -1,9 +1,8 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { TOP_OFFSET, DEFAULT_SPACING, Viewport, Colors } from '@docere/common'
+import { ProjectContext, TOP_OFFSET, DEFAULT_SPACING, Viewport, Colors } from '@docere/common'
 import type { AppStateAction } from '@docere/common'
 import PagesMenu from './pages'
-import ProjectContext from '../app/context'
 
 export const HEADER_DARK_TEXT = '#AAA'
 

@@ -1,8 +1,7 @@
 import * as React from 'react'
-import { AsideTab, defaultEntrySettings, getTextPanelWidth, LayerType, DEFAULT_SPACING } from '@docere/common'
+import { ProjectContext, isTextLayer, AsideTab, defaultEntrySettings, getTextPanelWidth, LayerType, DEFAULT_SPACING } from '@docere/common'
+
 import type { EntryState, EntryStateAction, FacsimileArea, Entry } from '@docere/common'
-import ProjectContext from '../../app/context'
-import { isTextLayer } from '../../utils'
 
 const initialEntryState: EntryState = {
 	activeEntity: null,

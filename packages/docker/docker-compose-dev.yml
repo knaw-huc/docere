@@ -25,6 +25,7 @@ services:
       - ../projects/src/henegouwseregisters/facsimiles:/opt/loris/tests/img/henegouwseregisters
       - ../projects/src/mondrian/facsimiles:/opt/loris/tests/img/mondrian
       - ../projects/src/achterdeschermen/facsimiles:/opt/loris/tests/img/achterdeschermen
+      - ../projects/src/isidore/facsimiles:/opt/loris/tests/img/isidore
 
   api:
     build:

@@ -3,10 +3,11 @@ import { defaultEntityConfig, setTitle } from '@docere/common'
 import type { EntityConfig } from '@docere/common'
 import IconsByType from './icons'
 
+// TODO remove and use ProjectContext?
 // The config is a state of an Entity, because the config can be null,
 // in which case a default config is loaded.
 export function useConfig(configId: string, entitiesConfig: EntityConfig[]) {
-	const [config, setConfig] = React.useState(null)
+	const [config, setConfig] = React.useState<EntityConfig>(null)
 
 	React.useEffect(() => {
 		let config

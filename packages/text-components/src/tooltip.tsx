@@ -31,6 +31,7 @@ const Wrapper = styled.div`
 	position: absolute;
 	text-align: left;
 	width: 320px;
+	white-space: normal; ${/* Tooltip can be a child of a white-space wrapped element */''}
 	z-index: 999;
 `
 

@@ -1,8 +1,8 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { DEFAULT_SPACING, MAINHEADER_HEIGHT, Colors } from '@docere/common'
+import { DEFAULT_SPACING, MAINHEADER_HEIGHT, Colors, ProjectContext } from '@docere/common'
+
 import type { PageConfig, AppStateAction } from '@docere/common'
-import ProjectContext from '../app/context'
 
 const Wrapper = styled.ul`
 	align-self: center;

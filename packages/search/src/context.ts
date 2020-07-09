@@ -1,11 +1,13 @@
 import React from "react"
 import { Colors, Language } from '@docere/common'
+
+import GenericResultBody from './views/search-result/generic-result-body'
 import { LanguageMap } from './language/nl'
 
 import type { FacetedSearchProps } from '@docere/common'
 
 export const defaultFacetedSearchProps: FacetedSearchProps = {
-	ResultBodyComponent: () => null,
+	ResultBodyComponent: GenericResultBody,
 	excludeResultFields: [],
 	language: Language.EN,
 	onClickResult: () => {},

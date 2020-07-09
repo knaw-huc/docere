@@ -1,5 +1,6 @@
 import { LayerType, TextDataExtractionType, RsType } from '../../enum'
 import type { FacetConfig } from '../search/facets'
+import { PageConfig } from '../page'
 
 export interface DocereConfig {
 	collection?: { metadataId: string, sortBy: string } /* true if whole project is one collection, MetadataConfig.id if project consists of multiple collections */
@@ -58,11 +59,6 @@ export type EntityConfig = MetadataConfig & {
 	identifier?: EntityIdentifier
 	textLayers?: string[]
 	type?: RsType | string
-}
-
-export interface PageConfig extends BaseConfig {
-	path?: string
-	children?: PageConfig[]
 }
 
 export interface LayerConfig extends BaseConfig {

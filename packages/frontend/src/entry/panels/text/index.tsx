@@ -1,13 +1,11 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import debounce from 'lodash.debounce'
-import { DEFAULT_SPACING, TEXT_PANEL_TEXT_WIDTH, DocereComponentContainer, getTextPanelLeftSpacing, PANEL_HEADER_HEIGHT } from '@docere/common'
+import { isTextLayer, ProjectContext, useComponents, DEFAULT_SPACING, TEXT_PANEL_TEXT_WIDTH, DocereComponentContainer, getTextPanelLeftSpacing, PANEL_HEADER_HEIGHT } from '@docere/common'
 import { SearchContext } from '@docere/search'
 import DocereTextView from '@docere/text'
 
-import ProjectContext, { useComponents } from '../../../app/context'
 import Minimap from './minimap'
-import { isTextLayer } from '../../../utils'
 import PanelHeader from '../header'
 
 import type { DocereComponentProps, DocereConfig, TextLayer } from '@docere/common'
@@ -42,7 +40,7 @@ export const Text = styled.div`
 	color: #222;
 	counter-reset: linenumber notenumber;
 	font-family: EB Garamond, serif;
-	font-size: 1.25rem;
+	font-size: 1.33rem;
 	font-weight: 400;
 	display: grid;
 	grid-template-columns: ${TEXT_PANEL_TEXT_WIDTH}px auto;

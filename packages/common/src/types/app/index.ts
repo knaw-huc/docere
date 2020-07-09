@@ -1,6 +1,6 @@
 import { SearchTab, Viewport, FooterTab } from '../../enum'
-import type { PageConfig } from '../config-data/config'
 import type { Entry } from '../entry'
+import { Page } from '../page'
 
 export interface AppState {
 	entry: Entry
@@ -11,8 +11,6 @@ export interface AppState {
 	searchTab: SearchTab
 	viewport: Viewport
 }
-
-export type Page = PageConfig & { doc: XMLDocument }
 
 interface ASA_Project_Changed {
 	type: 'PROJECT_CHANGED'

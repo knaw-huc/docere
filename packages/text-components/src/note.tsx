@@ -5,9 +5,7 @@ import Popup from './popup'
 
 interface NAProps { active: boolean, color: string, openToAside: boolean }
 const Wrapper = styled.div`
-	background-color: ${(props: NAProps) => props.active ? props.color : 'white' };
 	border-radius: 0.2em;
-	color: ${props => props.active ? 'white' : props.color };
 	cursor: pointer;
 	display: inline-block;
 	font-family: monospace;
@@ -16,10 +14,14 @@ const Wrapper = styled.div`
 	line-height: 1rem;
 	min-width: 1rem;
 	padding: 0.1em;
-	position: ${props => props.openToAside ? 'static' : 'relative'};
 	text-align: center;
 	transition: all 150ms;
 	vertical-align: super;
+
+	background-color: ${(props: NAProps) => props.active ? props.color : 'white' };
+	color: ${props => props.active ? 'white' : props.color };
+
+	position: ${props => props.openToAside ? 'static' : 'relative'};
 `
 
 export default function getNote(extractNoteId: (props: DocereComponentProps) => string) {
@@ -43,9 +45,7 @@ export default function getNote(extractNoteId: (props: DocereComponentProps) => 
 				className="note"
 				color={note.color}
 				id={note.id}
-				onClick={() => {
-					props.entryDispatch({ type: 'SET_NOTE', id: note.id })
-				}}
+				onClick={() => props.entryDispatch({ type: 'SET_NOTE', id: note.id }) }
 				openToAside={openToAside}
 			>
 				{note.n}

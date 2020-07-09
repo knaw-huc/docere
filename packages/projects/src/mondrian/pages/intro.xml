@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_lite.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+   <teiHeader>
+      <fileDesc>
+         <titleStmt>
+            <title>Mondriaan Introduction.</title>
+         </titleStmt>
+         <publicationStmt>
+            <p>Publication Information</p>
+         </publicationStmt>
+         <sourceDesc>
+            <p>n.a.</p>
+         </sourceDesc>
+      </fileDesc>
+   </teiHeader>
+   <text>
+      
+      <!-- GUIDELINES PART I: THE STRUCTURE -->
+      
+      <!-- 
+     For each section (or subsection) inside the introduction, you can
+     create a <div>. It is possible to nest endless <div> inside a <div>.
+     Each <div> should have inside: 
+     - a title <head>  
+     - one or more paragraph <p> and/or one or more division <div>.
+     Each <div> has an attribut @xml:id and each <head> has an attribute @n.
+     -->
+      
+      <body>
+         <div xml:id="intro">
+            <head n="I">Title of the introduction</head>
+            <p>text ... </p>
+            
+            <div xml:id="intro.1">
+               <head n="1">Title of the first section</head>
+               <p>Text of the first section</p>
+            </div>
+            
+            <div xml:id="intro.2">
+               <head n="2">Title of the second section</head>
+               <p>Text of the second section</p><p>Text of the second section</p>
+            </div>
+            
+            <div xml:id="intro.I.3">
+               <head n="I.3">Title of the third section</head>
+               
+               <div xml:id="intro.3.1">
+                  <head>Title of the first subsection of the third section</head>
+                  <p>Text of the first subsection of the third section</p>
+               </div>
+               <div xml:id="intro.I.3.2">
+                  <head>Title of the second subsection of the third section</head>
+                  <p>Text of the second subsection of the third section</p>
+               </div>
+            </div>
+            
+            
+            <!-- GUIDELINES PART II: MARKUP INSIDE THE TEXT 
+         All the tags that you have been using for the letters can be used here as well,
+         for instance <rs>, <note> etc.
+         
+         For internal references you can use <ref> with the attribute @target.
+         Exemples:
+         - Point to a xml:id in the same file (from section 1 of the Introduction,
+         point to section 3 of the Introduction)
+         <ref target="#intro.3">section 3</ref>
+         - Point to another file  (from one letter to another)
+         <ref target="let112.xml">letter 112</ref>
+         - Point to a xml:id in another file  (from the Glossary, point to the
+         second section of the Introduction)
+         <ref target="Mondrian_intro_sample.xml#intro.I.2">Second section</ref>
+         
+         -->
+            
+            <div xml:id="intro.4">
+               <head n="4">Title of the fourth section</head>
+               <p>The artist used electroetching, a variant of the
+                  traditional <ref target="Mondriaan_glossary_sample.xml#etching">etching</ref> technique.
+                  His first artworks have been discussed in the <ref target="#intro.4">previous section</ref> and his
+                  photographes will be analysed here. 
+                  In the letters <ref target="let10.xml">10</ref> and <ref target="let11.xml">11</ref>,
+                  the artist talks about photography to his friend <rs type="person">Frenk</rs>.
+                  <note n="1">Frenk's favorite book was Andersen's tales
+                     (<ref target="biblio.xml#Andersen1861">Andersen 1861</ref>). For more informations on Frenk,
+                     see <ref target="#intro.2">section 2</ref> of the Introduction.</note></p>
+               <p>Here's an example of including an image:</p>
+               <figure><graphic url="................."></graphic>
+                  <!-- In de url de bestandnaam van de afbeelding invullen -->
+               <head>P. Mondriaan, Composition with red, blue and yellow.</head></figure>
+               
+            </div>
+            
+         </div>
+      </body>
+   </text>
+</TEI>

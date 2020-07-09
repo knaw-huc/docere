@@ -6,7 +6,7 @@ import Entity from './entity'
 import Tooltip, { TooltipBody } from './tooltip'
 import getNote from './note'
 
-const has = (rendAttribute: string, rendStyle: string) => rendAttribute.indexOf(rendStyle) > -1
+const has = (rendAttribute: string, rendStyle: string) => rendAttribute.split(' ').indexOf(rendStyle) > -1
 const Hi = styled.span`
 	${(props: DocereComponentProps) => {
 		const { rend } = props.attributes

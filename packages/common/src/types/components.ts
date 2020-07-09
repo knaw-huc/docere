@@ -11,8 +11,6 @@ export type DocereComponents = Record<string, ReactComponent>
 
 // type GetComponents = (config: DocereConfig) => DocereComponents
 
-
-
 export type DocereComponentProps =
 	Pick<EntryState, 'activeEntity' | 'activeFacsimile' | 'activeFacsimileAreas' | 'activeNote' | 'entry'> &
 	{

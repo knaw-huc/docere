@@ -1,9 +1,10 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import ProjectContext from '../../../app/context'
+import { DEFAULT_SPACING, ProjectContext } from '@docere/common'
+
 import useAreaRenderer, { AreaRenderer } from './use-area-renderer'
 import PanelHeader from '../header'
-import { DEFAULT_SPACING } from '@docere/common'
+
 import type { Layer, FacsimileArea, DocereConfig, EntryState, EntryStateAction } from '@docere/common'
 
 // TODO change facsimile when user scroll past a <pb />

@@ -1,8 +1,8 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import DocereTextView from '@docere/text'
-import { useComponents } from '../app/context'
-import { TOP_OFFSET, DEFAULT_SPACING, DocereComponentContainer } from '@docere/common'
+import { TOP_OFFSET, DEFAULT_SPACING, DocereComponentContainer, useComponents } from '@docere/common'
+
 import type { AppStateAction, Page } from '@docere/common'
 
 const Wrapper = styled.div`
@@ -48,7 +48,7 @@ interface Props {
 }
 export default React.memo(function PageView(props: Props) {
 	if (props.page == null) return null
-	const components = useComponents(DocereComponentContainer.Page)
+	const components = useComponents(DocereComponentContainer.Page, props.page.id)
 	const handleClose = React.useCallback(() => props.appDispatch({ type: 'UNSET_PAGE' }), [])
 
 	return (

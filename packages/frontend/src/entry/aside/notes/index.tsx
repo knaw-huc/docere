@@ -1,8 +1,9 @@
 import * as React from 'react'
+import { ProjectContext, useComponents, DocereComponentContainer } from '@docere/common'
+
 import NoteList from "./list"
 import { useTextData, Wrapper } from '../list'
-import ProjectContext, { useComponents } from '../../../app/context'
-import { DocereComponentContainer } from '@docere/common'
+
 import type { EntryState, AppStateAction, Entry, EntryStateAction } from '@docere/common'
 
 // type Props =

@@ -1,6 +1,4 @@
-import { EsDataType, LayerType, defaultMetadata, MetadataItem, setTitle } from '@docere/common'
-
-import { fetchEntryXml, isTextLayer, isXmlLayer } from '../../utils'
+import { fetchEntryXml, isTextLayer, isXmlLayer, EsDataType, LayerType, defaultMetadata, MetadataItem, setTitle } from '@docere/common'
 
 import type { FacsimileArea, Facsimile, LayerConfig, TextLayerConfig, Layer, DocereConfigData, Entry } from '@docere/common'
 
@@ -54,18 +52,26 @@ async function extractLayers(doc: XMLDocument, configData: DocereConfigData, has
 		.concat(extractedLayers)
 		// Extend all layers with the defaults
 		.map(tl => extendLayer(tl, configData.config.layers))
-		// Add the whole document as `element` (extracted layers already have the `element` prop defined)
-		.map((layer: Layer) => {
-			if ((isTextLayer(layer) || isXmlLayer(layer)) && layer.element == null) layer.element = doc
-			return layer
-		})
 
+	// If facsimiles are extracted, but there is no facsimile layer, add one
 	if (hasFacsimiles && !layers.some(l => l.type === LayerType.Facsimile)) {
 		layers.unshift(extendLayer({
 			...defaultLayerConfig,
 			id: 'scan',
 			type: LayerType.Facsimile
 		}, []))
+	}
+
+	// If no layers are found, add a default text layer with the whole document to visualize
+	if (!layers.length) {
+		return [ { ...defaultTextLayerConfig, element: doc } ]
+	
+	// If there is only 1 layer and it doesn't have an element, add the whole document to visualize
+	} else if (
+		layers.length === 1 &&
+		((isTextLayer(layers[0]) || isXmlLayer(layers[0])) && layers[0].element == null)
+	) {
+		layers[0].element = doc
 	}
 
 	return layers
@@ -120,7 +126,11 @@ function extractMetadata(doc: XMLDocument, configData: DocereConfigData, entryId
 		.sort((config1, config2) => config1.order - config2.order)
 }
 
+const entryCache = new Map<string, Entry>()
+
 export default async function getEntry(id: string, configData: DocereConfigData): Promise<Entry> {
+	if (entryCache.has(id)) return entryCache.get(id)
+
 	// Fetch and prepare XML document
 	let doc = await fetchEntryXml(configData.config.slug, id)
 	doc = configData.prepareDocument(doc, configData.config, id)
@@ -132,7 +142,7 @@ export default async function getEntry(id: string, configData: DocereConfigData)
 	const notes = configData.extractNotes(doc, configData.config)
 	const metadata = extractMetadata(doc, configData, id)
 
-	return {
+	entryCache.set(id, {
 		doc,
 		entities: entities.length ? entities : null,
 		facsimiles: facsimiles.length ? facsimiles : null,
@@ -140,5 +150,7 @@ export default async function getEntry(id: string, configData: DocereConfigData)
 		layers,
 		metadata,
 		notes: notes.length ? notes : null, // Empty array should be null to prevent rerenders
-	}
+	})
+
+	return entryCache.get(id)
 }

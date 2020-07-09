@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { DEFAULT_SPACING, Colors, FooterTab, FOOTER_HANDLE_HEIGHT } from '@docere/common'
+import { DEFAULT_SPACING, Colors, FooterTab, FOOTER_HANDLE_HEIGHT, ProjectContext } from '@docere/common'
 
 import LayersFooterTab from '../footer/layers'
 import Panel from './panel'
@@ -8,7 +8,6 @@ import CollectionNavigator from './collection-navigator'
 
 import type { DocereConfig, Entity, Layer, Note, EntryState, EntryStateAction } from '@docere/common'
 import type { EntryProps } from '..'
-import ProjectContext from '../../app/context'
 
 interface WProps {
 	hasCollection: boolean
