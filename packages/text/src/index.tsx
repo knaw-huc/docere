@@ -27,9 +27,8 @@ export interface DocereTextViewProps {
 	highlight?: string | string[]
 	html?: string
 	ignore?: string[]
-	onLoad?: (isReady: boolean) => void
+	onLoad?: (isReady: boolean, el: Element) => void
 	node?: Node
-	onRootElementChange?: (newRoot: Element) => void
 	rootSelector?: string
 	setHighlightAreas?: (areas: number[]) => void
 	url?: string
@@ -40,7 +39,7 @@ function DocereTextView(props: DocereTextViewProps) {
 	const componentTree = useGetComponentTree(props)
 
 	const tree = renderComponentTree(componentTree, props)
-	useComponentDidMount(props, tree)
+	useComponentDidMount(props, tree, wrapperRef.current)
 	
 	useHighlight(wrapperRef, tree, props.highlight, props.setHighlightAreas)
 
