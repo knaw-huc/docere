@@ -104,13 +104,6 @@ export default async function entryComponents(config: DocereConfig) {
 		'ref[target^="bio.xml#"]': (props: DocereComponentProps) => {
 			const page = usePage(props.config, 'bio')
 
-			// if (props.attributes.target == null) return null
-			// const type = (/^bio\.xml/.test(props.attributes.target)) ? 'person' : null
-			// if (type == null) {
-			// 	console.error(`Not implemented: ref[target="${props.attributes.target}"]`)
-			// 	return null
-			// }
-
 			const bioId = /^bio\.xml#(.*)$/.exec(props.attributes.target)[1]
 
 			if (page == null) return null
