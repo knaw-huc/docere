@@ -14,6 +14,7 @@ function Entry(props: EntryProps) {
 	return (
 		<Main
 			asideTab={entryState.asideTab}
+			id="entry-container"
 			footerTab={props.footerTab}
 			searchTab={props.searchTab}
 		>

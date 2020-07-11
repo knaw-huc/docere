@@ -1,6 +1,8 @@
+import React from 'react'
 import { fetchXml, getPageXmlPath } from './utils'
 
 import type { DocereConfig, Page } from './types'
+import { ProjectContext } from './context'
 
 let pagesConfig: Page[]
 const pageCache = new Map<string, Page>()
@@ -31,4 +33,15 @@ export async function getPage(id: string, config: DocereConfig): Promise<Page> {
 
 	pageCache.set(id, { ...pageConfig, doc, parts })
 	return pageCache.get(id)
+}
+
+export function usePage(pageId: string) {
+	const projectContext = React.useContext(ProjectContext)
+	const [page, setPage] = React.useState<Page>(null)
+
+	React.useEffect(() => {
+		getPage(pageId, projectContext.config).then(setPage)
+	}, [pageId, projectContext.config.slug])
+
+	return page	
 }

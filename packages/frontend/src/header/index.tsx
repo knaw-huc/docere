@@ -83,9 +83,7 @@ export function ProjectHeader(props: ProjectHeaderProps) {
 				{config.title}
 				</span>
 			</H1>
-			<PagesMenu
-				appDispatch={props.appDispatch}
-			/>
+			<PagesMenu />
 		</Header>
 	)
 }

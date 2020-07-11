@@ -1,14 +1,16 @@
 import React from 'react'
 import styled from 'styled-components'
-import { ProjectContext, Entry, DocereConfig, Colors } from '@docere/common'
-import { PanelsProps } from '..'
+import { ProjectContext, Entry, DocereConfig, Colors, DocereComponentProps } from '@docere/common'
+// import { PanelsProps } from '..'
 
 import CollectionNavigatorController from './controller'
+import { useNavigate } from '../../../hooks'
 
 function useOpenSeadragonController(
 	config: DocereConfig['collection'],
 	searchUrl: ProjectContext['searchUrl'],
-	dispatch: PanelsProps['appDispatch']
+	navigate: DocereComponentProps['navigate'],
+	// dispatch: PanelsProps['appDispatch']
 ) {
 	const [controller, setController] = React.useState<any>(null)
 
@@ -28,7 +30,7 @@ function useOpenSeadragonController(
 					showZoomControl: false,
 				})
 
-				const collectionNavigatorController = new CollectionNavigatorController(viewer, config, searchUrl, dispatch)
+				const collectionNavigatorController = new CollectionNavigatorController(viewer, config, searchUrl, navigate)
 
 				if (controller != null) controller.destroy()
 				setController(collectionNavigatorController)
@@ -52,16 +54,17 @@ const Container = styled.div`
 `
 
 interface Props {
-	appDispatch: PanelsProps['appDispatch']
+	// appDispatch: PanelsProps['appDispatch']
 	config: ProjectContext['config']['collection']
 	entry: Entry
 	searchUrl: ProjectContext['searchUrl']
 }
 function CollectionNavigator(props: Props) {
+	const navigate = useNavigate()
 	const controller = useOpenSeadragonController(
 		props.config,
 		props.searchUrl,
-		props.appDispatch
+		navigate,
 	)
 	useEntry(controller, props.entry)
 

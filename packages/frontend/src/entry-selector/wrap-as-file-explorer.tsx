@@ -44,6 +44,7 @@ export default function wrapAsFileExplorer(FileExplorer: React.FC<FileExplorerPr
 		return (
 			<Delayed condition={!isSearchPage()} milliseconds={2000}>
 				<Wrapper
+					id="search-container"
 					footerTab={props.footerTab}
 					searchTab={props.searchTab}
 					viewport={props.viewport}

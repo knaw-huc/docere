@@ -1,15 +1,26 @@
-import * as React from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import { getNote, getPb, Entity, Lb } from '@docere/text-components'
-import type { DocereComponentContainer, DocereComponentProps, EntityConfig, DocereConfig } from '@docere/common'
+import { DocereComponentContainer, DocereComponentProps, EntityConfig, DocereConfig, NavigatePayload, useUIComponent, UIComponentType, ComponentProps, Hit } from '@docere/common'
 
 const Ref = styled.span`border-bottom: 1px solid green;`
 const ref = function(props: DocereComponentProps) {
 	const handleClick = React.useCallback((ev: React.MouseEvent<HTMLSpanElement>) => {
 		ev.stopPropagation()
 		const [entryFilename, noteId] = props.attributes.target.split('#')
-		if (noteId != null && noteId.length) console.log(`[WARNING] Note ID "${noteId}" is not used`)
-		props.appDispatch({ type: 'SET_ENTRY_ID', id: entryFilename.slice(0, -4) })
+		let query: NavigatePayload['query']
+		if (noteId != null && noteId.length) {
+			query = {
+				type: 'note',
+				id: noteId,
+			}
+		}
+	
+		props.navigate({
+			type: 'entry',
+			id: entryFilename.slice(0, -4),
+			query
+		})
 	}, [])
 
 	return (
@@ -17,6 +28,21 @@ const ref = function(props: DocereComponentProps) {
 			{props.children}
 		</Ref>
 	)
+}
+
+
+function useSearchResult() {
+	const [result, setResult] = React.useState<Hit>(null)	
+	React.useEffect(() => {
+		fetch(`/search/vangogh/_source/${id}`)
+			.then((hit: Hit) => setResult(hit))
+	})
+	return result
+}
+
+function RefPopupBody(props: ComponentProps) {
+	const ResultBodyComponent = useUIComponent(UIComponentType.SearchResult)
+	return <ResultBodyComponent {...props} />
 }
 
 function person(entitiesConfig: EntityConfig[]) {
@@ -51,7 +77,27 @@ export default function getComponents(config: DocereConfig) {
 			// lb: (props: DocereComponentProps) => <Lb showLineBeginnings={props.entrySettings['panels.text.showLineBeginnings']} />,
 			lb: Lb,
 			pb: getPb(props => props.attributes.facs.slice(1)),
-			ref,
+			// ref,
+			'ref[target]': (props: DocereComponentProps) => {
+				// const page = usePage('biblio')
+
+				// const biblioId = /^biblio\.xml#(.*)$/.exec(props.attributes.target)[1]
+				const [entryFilename, noteId] = props.attributes.target.split('#')
+				const id = entryFilename.slice(0, -4)
+
+				// if (page == null) return null
+				return (
+					<Entity
+						customProps={props}
+						entitiesConfig={config.entities}
+						id={id}
+						configId={'ref'}
+						PopupBody={RefPopupBody}
+					>
+						{props.children}
+					</Entity>
+				)
+			},
 			'rs': person(config.entities),
 		}
 	}

@@ -1,43 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import configDatas from '@docere/projects'
-import { analyzeWindowLocation, ProjectContext } from '@docere/common'
 
-import BrowserApp from './app/index'
-import EntrySelector from './entry-selector'
-import Home from './home'
+import App from './app'
 
-document.addEventListener('DOMContentLoaded', async function() {
-	const { projectId } = analyzeWindowLocation()
-
-	if (!projectId.length) {
-		ReactDOM.render(
-			<Home />,
-			document.getElementById('container')
-		)
-		return
-	}
-
-	// TODO redirect to 404 if projectSlug does not exist
-	const { default: configData } = await configDatas[projectId]()
-
-	const contextValue: ProjectContext = {
-		config: configData.config,
-		getComponents: configData.getComponents(configData.config),
-		getUIComponent: configData.getUIComponent(configData.config),
-		searchUrl: `/search/${configData.config.slug}/_search`,
-	}
-
-	ReactDOM.render(
-		<ProjectContext.Provider value={contextValue}>
-			<BrowserApp
-				configData={configData}
-				EntrySelector={EntrySelector}
-			/>
-		</ProjectContext.Provider>
-		,
-		document.getElementById('container')
-	)
+document.addEventListener('DOMContentLoaded', function() {
+	ReactDOM.render(<App />, document.getElementById('container'))
 })
 
 // FEATS

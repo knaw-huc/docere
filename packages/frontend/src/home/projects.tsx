@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
-import { fetchJson, DocereConfig, DEFAULT_SPACING } from '@docere/common'
+import { fetchJson, DocereConfig, DEFAULT_SPACING, getSearchPath } from '@docere/common'
+import { Link } from 'react-router-dom'
 
 function useProjectConfigs() {
 	const [projectConfigs, setProjectConfigs] = React.useState<DocereConfig[]>([])
@@ -58,13 +59,14 @@ const Li = styled.li`
 
 interface ProjectProps {
 	config: DocereConfig
-	onClick: () => void
 }
 function Project(props: ProjectProps) {
 	return (
-		<Li onClick={props.onClick}>
-			<img src={thumbByProjectId[props.config.slug]} />
-			{props.config.title}
+		<Li>
+			<Link to={getSearchPath(props.config.slug)}>
+				<img src={thumbByProjectId[props.config.slug]} />
+				{props.config.title}
+			</Link>
 		</Li>
 	)
 }
@@ -78,7 +80,6 @@ export default function Projects() {
 				projectConfigs.map(projectConfig =>
 					<Project
 						config={projectConfig}  key={projectConfig.slug}
-						onClick={() => window.location.href = `/${projectConfig.slug}`}
 					/>
 				)
 			}

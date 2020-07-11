@@ -5,8 +5,9 @@ import { isTextLayer, ProjectContext, useComponents, DEFAULT_SPACING, TEXT_PANEL
 import { SearchContext } from '@docere/search'
 import DocereTextView from '@docere/text'
 
-import Minimap from './minimap'
+import { useNavigate } from '../../../hooks'
 import PanelHeader from '../header'
+import Minimap from './minimap'
 
 import type { DocereComponentProps, DocereConfig, TextLayer } from '@docere/common'
 import type { PanelsProps } from '..'
@@ -60,8 +61,10 @@ function TextPanel(props: TextPanelProps) {
 
 	const textWrapperRef = React.useRef<HTMLDivElement>()
 	const activeAreaRef = React.useRef<HTMLDivElement>()
+
 	const [docereTextViewReady, setDocereTextViewReady] = React.useState(false)
 	const [highlightAreas, setHighlightAreas] = React.useState<number[]>([])
+
 	const layer = props.entry.layers.filter(isTextLayer).find(tl => tl.id === props.layer.id)
 	const components = useComponents(DocereComponentContainer.Layer, layer.id)
 
@@ -99,7 +102,8 @@ function TextPanel(props: TextPanelProps) {
 		entryDispatch: props.entryDispatch,
 		entrySettings: props.settings,
 		insideNote: false,
-		layer: props.layer
+		layer: props.layer,
+		navigate: useNavigate(),
 	}
 
 	if (components == null) return null

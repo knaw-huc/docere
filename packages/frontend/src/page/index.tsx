@@ -1,9 +1,9 @@
 import * as React from 'react'
+import { Link, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import DocereTextView from '@docere/text'
-import { TOP_OFFSET, DEFAULT_SPACING, DocereComponentContainer, useComponents } from '@docere/common'
-
-import type { AppStateAction, Page } from '@docere/common'
+import { TOP_OFFSET, DEFAULT_SPACING, DocereComponentContainer, useComponents, usePage, getSearchPath, PageComponentProps } from '@docere/common'
+import { useNavigate, useQuery } from '../hooks'
 
 const Wrapper = styled.div`
 	background: white;
@@ -25,39 +25,44 @@ const Wrapper = styled.div`
 		grid-column: 2;
 		padding-bottom: 33vh;
 	}
-	& > div:last-of-type {
-		grid-column: 4;
-	}
 `
 
-const Close = styled.div`
+const Close = styled(Link)`
 	align-content: center;
 	color: #666;
 	cursor: pointer;
 	display: grid;
 	font-size: 1.2em;
+	grid-column: 4;
 	height: 1em;
 	justify-content: center;
 	position: sticky;
 	top: ${DEFAULT_SPACING}px;
 `
 
-interface Props {
-	appDispatch: React.Dispatch<AppStateAction>
-	page: Page
-}
-export default React.memo(function PageView(props: Props) {
-	if (props.page == null) return null
-	const components = useComponents(DocereComponentContainer.Page, props.page.id)
-	const handleClose = React.useCallback(() => props.appDispatch({ type: 'UNSET_PAGE' }), [])
+export default function PageView() {
+	const { projectId, pageId } = useParams()
+	const query = useQuery()
+	const navigate = useNavigate()
+	const page = usePage(pageId)
+	const components = useComponents(DocereComponentContainer.Page, pageId)
+
+	if (page == null) return null
+
+	const customProps: PageComponentProps = {
+		activeId: null,
+		...query,
+		navigate,
+	}
 
 	return (
-		<Wrapper>
+		<Wrapper id="page-container">
 			<DocereTextView
+				customProps={customProps}
 				components={components}
-				node={props.page.doc}
+				node={page.doc}
 			/>
-			<Close onClick={handleClose}>✕</Close>
+			<Close to={getSearchPath(projectId)}>✕</Close>
 		</Wrapper>
 	)
-})
+}

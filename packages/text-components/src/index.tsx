@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import type { DocereComponentProps } from '@docere/common'
+import type { DocereComponentProps, ComponentProps } from '@docere/common'
 import getPb from './pb'
 import Popup from './popup'
 import Entity from './entity'
@@ -8,7 +8,7 @@ import getNote from './note'
 
 const has = (rendAttribute: string, rendStyle: string) => rendAttribute.split(' ').indexOf(rendStyle) > -1
 const Hi = styled.span`
-	${(props: DocereComponentProps) => {
+	${(props: ComponentProps) => {
 		const { rend } = props.attributes
 		if (rend == null) return ''
 		const rules = []

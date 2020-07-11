@@ -1,10 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
 import { getNote, getPb, Lb, Hi, Paragraph, Entity } from '@docere/text-components'
-import { getPage, useComponents, DocereComponentContainer, Colors } from '@docere/common'
+import { useComponents, DocereComponentContainer, Colors, usePage, NavigatePayload } from '@docere/common'
 import DocereTextView from '@docere/text'
 
-import type { DocereComponentProps, DocereConfig, Page } from '@docere/common'
+import type { DocereComponentProps, DocereConfig } from '@docere/common'
 
 const Link = styled.button`
 	background: none;
@@ -24,20 +24,23 @@ const Link = styled.button`
 `
 
 interface PageLinkProps {
-	appDispatch: any
-	partId: string
+	children: React.ReactNode
+	navigate: DocereComponentProps['navigate']
 	pageId: string
+	partId: string
 }
 function PageLink(props: PageLinkProps) {
-	const setPage = React.useCallback(() => {
-		props.appDispatch({ type: "SET_PAGE_ID", id: props.pageId })
-	}, [props.pageId])
+	const goToPage = React.useCallback(() => {
+		const payload: NavigatePayload = { type: 'page', id: props.pageId }
+		if (props.partId != null) payload.query = { activeId: props.partId }
+		props.navigate(payload)
+	}, [props.pageId, props.partId])
 
 	return (
 		<Link
-			onClick={setPage}
+			onClick={goToPage}
 		>
-			more
+			{props.children}
 		</Link>
 	)
 }
@@ -53,23 +56,15 @@ function pagePart(pageId: string, partId: string, el: Element) {
 					node={el}
 				/>
 				<PageLink
-					appDispatch={props.appDispatch}
-					partId={partId}
+					navigate={props.navigate}
 					pageId={pageId}
-				/>
+					partId={partId}
+				>
+					more
+				</PageLink>
 			</>
 		)
 	}
-}
-
-function usePage(config: DocereConfig, pageId: string) {
-	const [page, setPage] = React.useState<Page>(null)
-
-	React.useEffect(() => {
-		getPage(pageId, config).then(setPage)
-	}, [pageId, config])
-
-	return page	
 }
 
 function MondrianLb(props: DocereComponentProps) {
@@ -102,7 +97,7 @@ export default async function entryComponents(config: DocereConfig) {
 		hi: Hi,
 		p: Paragraph,
 		'ref[target^="bio.xml#"]': (props: DocereComponentProps) => {
-			const page = usePage(props.config, 'bio')
+			const page = usePage('bio')
 
 			const bioId = /^bio\.xml#(.*)$/.exec(props.attributes.target)[1]
 
@@ -121,7 +116,7 @@ export default async function entryComponents(config: DocereConfig) {
 			)
 		},
 		'ref[target^="biblio.xml#"]': (props: DocereComponentProps) => {
-			const page = usePage(props.config, 'biblio')
+			const page = usePage('biblio')
 
 			const biblioId = /^biblio\.xml#(.*)$/.exec(props.attributes.target)[1]
 

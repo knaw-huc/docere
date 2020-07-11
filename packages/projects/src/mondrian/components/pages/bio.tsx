@@ -1,9 +1,8 @@
-import React from 'react';
-import styled from 'styled-components';
-// import { Paragraph, Hi } from '@docere/text-components';
-import { DocereComponentProps } from '@docere/common';
+import React from 'react'
+import styled from 'styled-components'
+import { PageComponentProps } from '@docere/common'
 
-function BirthDeath(props: DocereComponentProps) {
+function BirthDeath(props: PageComponentProps) {
 	return (
 		<div>
 			{props.attributes.when}
@@ -12,14 +11,36 @@ function BirthDeath(props: DocereComponentProps) {
 	)
 }
 
+const PersonWrapper = styled.li.attrs((props: PageComponentProps) => ({ id: props.attributes['xml:id'] }))`
+	background: ${(props: PageComponentProps) => props.activeId === props.attributes['xml:id'] ? 'green' : 'none'};
+	margin-bottom: 1rem;
+	min-height: 40px;
+`
+
+function useScrollIntoView(elementId: string, activeId: string) {
+	const ref = React.useRef<HTMLLIElement>()
+
+	React.useEffect(() => {
+		if (elementId === activeId) ref.current.scrollIntoView()
+	}, [elementId, activeId])
+
+	return ref
+}
+
+export function Person(props: PageComponentProps) {
+	const ref = useScrollIntoView(props.attributes['xml:id'], props.activeId)
+	return (
+		<PersonWrapper {...props} ref={ref}>
+			{props.children}
+		</PersonWrapper>
+	)
+}
+
 export default async function pageComponents() {
 	return {
 		teiHeader: () => null as null,
 		listPerson: styled.ul``,
-		person: styled.li.attrs((props: DocereComponentProps) => ({ id: props.attributes['xml:id'] }))`
-			margin-bottom: 1rem;
-			min-height: 40px;
-		`,
+		person: Person,
 		'persName[full="yes"]': styled.div`
 			border-bottom: 1px solid #EEE;
 			font-weight: bold;

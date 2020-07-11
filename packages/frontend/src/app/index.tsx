@@ -1,51 +1,24 @@
-import * as React from 'react'
-import { SearchContext, useSearchReducer } from '@docere/search'
+import React from 'react'
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import Home from '../home'
+import Project from '../project'
 
-import EntrySelector from '../entry-selector'
-import { ProjectHeader } from '../header'
-import Entry from '../entry'
-import PageView from '../page'
-import useAppState from './state'
 
-import type { DocereConfigData } from '@docere/common'
-import useFacetsConfig from '../entry-selector/use-fields'
-
-interface AppProps {
-	configData: DocereConfigData
-	EntrySelector: typeof EntrySelector
-}
-function App(props: AppProps) {
-	const [appState, appDispatch] = useAppState(props.configData)
-
-	const facetsConfig = useFacetsConfig(props.configData.config)
-	const [state, dispatch] = useSearchReducer(facetsConfig)
-
+function App() {
 	return (
-		<SearchContext.Provider value={{ state, dispatch }}>
-			<ProjectHeader
-				appDispatch={appDispatch}
-			/>
-			{
-				appState.page != null &&
-				<PageView
-					appDispatch={appDispatch}
-					page={appState.page}
-				/>
-			}
-			<props.EntrySelector
-				appDispatch={appDispatch}
-				entry={appState.entry}
-				footerTab={appState.footerTab}
-				searchTab={appState.searchTab}
-				viewport={appState.viewport}
-			/>
-			<Entry 
-				appDispatch={appDispatch}
-				entry={appState.entry}
-				footerTab={appState.footerTab}
-				searchTab={appState.searchTab}
-			/>
-		</SearchContext.Provider>
+		<Router>
+			<Switch>
+				<Route path={[
+					"/projects/:projectId/entries/:entryId*",
+					"/projects/:projectId",
+				]}>
+					<Project />
+				</Route>
+				<Route path="/">
+					<Home />
+				</Route>
+			</Switch>
+		</Router>
 	)
 }
 

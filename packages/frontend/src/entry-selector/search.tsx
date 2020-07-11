@@ -7,6 +7,7 @@ import { FileExplorerProps } from './wrap-as-file-explorer'
 import useAutoSuggest from './use-auto-suggest'
 
 import type { Hit } from '@docere/common'
+import { useHistory } from 'react-router-dom'
 
 const FS = styled(HucFacetedSearch)`
 	background: white;
@@ -19,26 +20,14 @@ const FS = styled(HucFacetedSearch)`
 const excludeResultFields = ['text', 'text_suggest']
 
 function Search(props: FileExplorerProps) {
+	const history = useHistory()
 	const { config, searchUrl } = React.useContext(ProjectContext)
 	const autoSuggest = useAutoSuggest(searchUrl)
 	const ResultBodyComponent = useUIComponent(UIComponentType.SearchResult)
 
 	const onClickResult = React.useCallback((result: Hit) => {
-		// if (result.snippets.length) {
-		// 	const query = result.snippets.reduce((prev, curr) => {
-		// 		const found = curr.split('<em>')
-		// 			.filter((t: string) => t.indexOf('</em>') > -1)
-		// 			.map((t: string) => t.slice(0, t.indexOf('</em>')))
-		// 		return prev.concat(found)
-
-		// 	}, [])
-
-		// 	searchFilterContext.dispatch({ type: 'SET_SEARCH_QUERY', query })
-		// }
-		props.appDispatch({ type: 'SET_ENTRY_ID', id: result.id })
+		history.push(`/projects/${config.slug}/entries/${result.id}`)
 	}, [])
-
-	// if (ResultBodyComponent == null) return null
 
 	return (
 		<FS

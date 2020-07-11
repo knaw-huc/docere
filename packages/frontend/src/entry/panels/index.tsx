@@ -154,7 +154,7 @@ function Panels(props: PanelsProps) {
 			{
 				(context.config.collection != null) &&
 				<CollectionNavigator
-					appDispatch={props.appDispatch}
+					// appDispatch={props.appDispatch}
 					config={context.config.collection}
 					entry={props.entry}
 					searchUrl={context.searchUrl}

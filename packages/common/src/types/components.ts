@@ -10,13 +10,23 @@ export type ReactComponent = React.FunctionComponent<any>
 export type DocereComponents = Record<string, ReactComponent>
 
 // type GetComponents = (config: DocereConfig) => DocereComponents
+export interface NavigatePayload {
+	type: 'entry' | 'page' | 'search'
+	id: string
+	query?: Record<string, string>
+}
+
+export interface ComponentProps {
+	attributes?: Record<string, string>
+	children?: React.ReactNode
+	navigate: (payload: NavigatePayload) => void
+}
 
 export type DocereComponentProps =
+	ComponentProps &
 	Pick<EntryState, 'activeEntity' | 'activeFacsimile' | 'activeFacsimileAreas' | 'activeNote' | 'entry'> &
 	{
 		appDispatch: React.Dispatch<AppStateAction>
-		attributes?: Record<string, string>
-		children?: React.ReactNode
 		components: DocereComponents
 		config: DocereConfig
 		entryDispatch: React.Dispatch<EntryStateAction>
@@ -24,8 +34,3 @@ export type DocereComponentProps =
 		insideNote: boolean
 		layer: TextLayer
 	}
-
-// interface HiProps extends DocereComponentProps {
-// 	rend: string
-// }
-

@@ -1,8 +1,9 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { DEFAULT_SPACING, MAINHEADER_HEIGHT, Colors, ProjectContext } from '@docere/common'
+import { DEFAULT_SPACING, MAINHEADER_HEIGHT, Colors, ProjectContext, getPagePath } from '@docere/common'
 
-import type { PageConfig, AppStateAction } from '@docere/common'
+import type { PageConfig } from '@docere/common'
+import { Link, useParams } from 'react-router-dom'
 
 const Wrapper = styled.ul`
 	align-self: center;
@@ -61,7 +62,7 @@ const Wrapper = styled.ul`
 	}
 `
 
-const Link = styled.button`
+const PageLink = styled(Link)`
 	background: none;
 	border: none;
 	color: inherit;
@@ -69,8 +70,9 @@ const Link = styled.button`
 	font-size: inherit;
 	font-weight: normal;
 	height: 100%;
-	outline: none;
 	margin: 0 1em;
+	outline: none;
+	text-decoration: none;
 	text-transform: inherit;
 
 	&:hover {
@@ -78,28 +80,24 @@ const Link = styled.button`
 	}
 `
 
-type PageMenuItemProps = { pageConfig: PageConfig } & Props
+type PageMenuItemProps = { pageConfig: PageConfig }
 function PageMenuItem(props: PageMenuItemProps) {
-	const setPage = React.useCallback(() => {
-		props.appDispatch({ type: "SET_PAGE_ID", id: props.pageConfig.id })
-	}, [props.pageConfig.id])
+	const { projectId } = useParams()
 
 	return (
 		<li>
-			<Link
-				onClick={setPage}
+			<PageLink
+				to={getPagePath(projectId, props.pageConfig.id)}
 			>
 				{props.pageConfig.title}
-			</Link>
+			</PageLink>
 		</li>
 	)
 }
 
-interface Props {
-	appDispatch: React.Dispatch<AppStateAction>
-}
-export default React.memo(function PagesMenu(props: Props) {
+export default React.memo(function PagesMenu() {
 	const { config } = React.useContext(ProjectContext)
+
 	return (
 		<Wrapper>
 			{
@@ -111,7 +109,6 @@ export default React.memo(function PagesMenu(props: Props) {
 								{
 									page.children.map(child =>
 										<PageMenuItem
-											appDispatch={props.appDispatch}
 											key={child.id}
 											pageConfig={child}
 										/>
@@ -121,7 +118,6 @@ export default React.memo(function PagesMenu(props: Props) {
 							
 						</li> :
 						<PageMenuItem
-							appDispatch={props.appDispatch}
 							key={page.id}
 							pageConfig={page}
 						/>
