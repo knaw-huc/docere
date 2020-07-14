@@ -30,8 +30,8 @@ const EntityWrapper = styled.span`
 	padding: 0 2px;
 	transition: all 300ms;
 
-	svg {
-		height: 1rem;
+	svg.icon {
+		height: .85em;
 	}
 `
 
@@ -103,7 +103,6 @@ function Entity(props: RsProps) {
 					active={active && showTooltip}
 					color={config.color}
 					docereComponentProps={props.customProps}
-					entityId={props.entityId}
 					openToAside={openToAside}
 					PopupBody={props.PopupBody}
 					title={config.title}

@@ -53,6 +53,8 @@ function RefPopupBody(props: DocereComponentProps) {
 	)
 }
 
+// function DocumentLink
+
 function person(entitiesConfig: EntityConfig[]) {
 	return function Person(props: DocereComponentProps) {
 		return (
@@ -84,7 +86,9 @@ export default function getComponents(config: DocereConfig) {
 			// 	/>, 
 			// lb: (props: DocereComponentProps) => <Lb showLineBeginnings={props.entrySettings['panels.text.showLineBeginnings']} />,
 			lb: Lb,
-			pb: getPb(props => props.attributes.facs.slice(1)),
+			pb: getPb(props => { 
+				console.log('GETTING PB')
+				return props.attributes.facs.slice(1) }),
 			// ref,
 			'ref[target]': (props: DocereComponentProps) => {
 				// const page = usePage('biblio')

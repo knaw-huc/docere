@@ -1,5 +1,5 @@
 import React from 'react'
-import type { DocereComponentProps } from '@docere/common'
+import type { DocereComponentProps, Note } from '@docere/common'
 import styled from 'styled-components'
 import Popup from './popup'
 
@@ -24,19 +24,31 @@ const Wrapper = styled.div`
 	position: ${props => props.openToAside ? 'static' : 'relative'};
 `
 
-export default function getNote(extractNoteId: (props: DocereComponentProps) => string) {
+function useNote(extractNoteId: ExtractNoteId, props: DocereComponentProps) {
+	const [note, setNote] = React.useState<Note>(null)
+
+	React.useEffect(() => {
+		const noteId = extractNoteId(props)
+		const note = props.entry.notes.find(x => x.id === noteId)
+		setNote(note)
+	}, [props.entry.id])
+
+	return note
+}
+
+type ExtractNoteId = (props: DocereComponentProps) => string
+
+export default function getNote(extractNoteId: ExtractNoteId) {
 	return function Note(props: DocereComponentProps) {
 		if (
 			!props.entrySettings['panels.text.showNotes'] ||
 			props.entry.notes == null
 		) return <span>{props.children}</span>
 
-		const noteId = extractNoteId(props)
-		const note = props.entry.notes.find(x => x.id === noteId)
+		const note = useNote(extractNoteId, props)
 		if (note == null) return null
 
 		const active = note.id === props.activeNote?.id
-
 		const openToAside = active && !props.entrySettings['panels.text.openPopupAsTooltip']
 
 		return (

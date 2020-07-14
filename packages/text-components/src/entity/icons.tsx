@@ -8,6 +8,7 @@ export type IconProps = { active: boolean, config: EntityConfig }
 function PersonSvg(props: IconProps) {
 	return (
 		<svg
+			className="icon"
 			viewBox="0 0 64 54"
 		>
 			<path
@@ -23,6 +24,7 @@ function PersonSvg(props: IconProps) {
 function LocationSvg(props: IconProps) {
 	return (
 		<svg
+			className="icon"
 			viewBox="0 0 512 512"
 		>
 			<path
@@ -39,6 +41,7 @@ function DateSvg(props: IconProps) {
 
 	return (
 		<svg
+			className="icon"
 			style={{ width: 18, height: 18, marginRight: '.35em' }}
 			viewBox="0 0 150 150"
 		>

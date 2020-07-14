@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Colors, DEFAULT_SPACING } from '@docere/common'
+import { Colors, DEFAULT_SPACING, Entry } from '@docere/common'
 import type { DocereComponentProps } from '@docere/common'
 import styled from 'styled-components'
 
@@ -27,20 +27,35 @@ const Img = styled.img`
 	}}
 `
 
-export default function getPb(extractPbId: (props: DocereComponentProps) => string | string[]): React.FC<DocereComponentProps> {
+type ExtractPbId = (props: DocereComponentProps) => string | string[]
+
+function useFacsimiles(extractPbId: ExtractPbId, props: DocereComponentProps) {
+	const [facsimiles, setFacsimiles] = React.useState<Entry['facsimiles']>([])
+
+	React.useEffect(() => {
+		let ids = extractPbId(props)
+		if (ids == null) return
+		if (!Array.isArray(ids)) ids = [ids]
+
+		const _facsimiles = ids
+			.map(id => props.entry.facsimiles.find(f => f.id === id))
+			.filter(facsimile => facsimile != null)
+
+		setFacsimiles(_facsimiles)
+	}, [props.entry.id])
+
+	return facsimiles
+}
+
+
+export default function getPb(extractPbId: ExtractPbId): React.FC<DocereComponentProps> {
 	return function Pb(props: DocereComponentProps) {
 		if (
 			!props.entrySettings['panels.text.showPageBeginnings'] ||
 			props.entry.facsimiles == null
 		) return null
 
-		let ids = extractPbId(props)
-		if (ids == null) return null
-		if (!Array.isArray(ids)) ids = [ids]
-
-		const facsimiles = ids
-			.map(id => props.entry.facsimiles.find(f => f.id === id))
-			.filter(facsimile => facsimile != null)
+		const facsimiles = useFacsimiles(extractPbId, props)
 
 		return (
 			<Wrapper>
