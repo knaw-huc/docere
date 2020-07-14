@@ -30,6 +30,30 @@ export default function extractTextData(doc: XMLDocument, _config: DocereConfig)
 				})
 		})
 
+	Array.from(doc.querySelectorAll('ref[target]'))
+		.forEach(currEl => {
+			const [entryFilename, noteId] = currEl.getAttribute('target').split('#')
+			noteId
+			const id = entryFilename.slice(0, -4)
+
+			if (entities.has(id)) {
+				const entity = entities.get(id)
+				entity.count += 1
+				entities.set(id, entity)
+			}
+			else {
+				entities.set(
+					id,
+					{
+						count: 1,
+						id,
+						type: 'entry',
+						value: currEl.textContent,
+					}
+				)
+			}
+		})
+
 	return Array.from(entities.values())
 }
 

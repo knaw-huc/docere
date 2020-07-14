@@ -1,8 +1,7 @@
 import styled from 'styled-components'
 import type { DocereComponentProps, ComponentProps } from '@docere/common'
 import getPb from './pb'
-import Popup from './popup'
-import Entity from './entity'
+import getEntity from './entity'
 import Tooltip, { TooltipBody } from './tooltip'
 import getNote from './note'
 
@@ -42,14 +41,15 @@ const Paragraph = styled.div`
 	margin-bottom: 2.25rem;
 `
 
+export * from './popup'
+
 export {
-	getPb,
 	Hi,
 	Lb,
-	getNote,
-	Popup,
-	Entity,
+	Paragraph,
 	Tooltip,
 	TooltipBody,
-	Paragraph,
+	getEntity,
+	getNote,
+	getPb,
 }

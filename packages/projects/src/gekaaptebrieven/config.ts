@@ -1,4 +1,4 @@
-import { EsDataType, TextDataExtractionType, RsType, LayerType } from '@docere/common'
+import { EsDataType, RsType, LayerType } from '@docere/common'
 import { DocereConfig } from '@docere/common'
 
 const config: DocereConfig = {
@@ -99,44 +99,29 @@ const config: DocereConfig = {
 			color: '#fd7a7a',
 			id: 'per',
 			showInAside: true,
-			identifier: {
-				type: TextDataExtractionType.TextContent,
-			},
 			type: RsType.Person
 		}, {
 			color: '#5fb53f',
 			id: 'org',
 			showInAside: true,
-			identifier: {
-				type: TextDataExtractionType.TextContent,
-			},
 			title: 'Organisation',
 			type: RsType.None
 		}, {
 			color: 'orange',
 			id: 'loc',
 			showInAside: true,
-			identifier: {
-				type: TextDataExtractionType.TextContent,
-			},
 			title: 'Location',
 			type: RsType.Location
 		}, {
 			color: '#8080ff',
 			id: 'misc',
 			showInAside: true,
-			identifier: {
-				type: TextDataExtractionType.TextContent,
-			},
 			title: 'Miscellaneous',
 			type: RsType.None
 		}, {
 			color: '#8080ff',
 			id: 'pro',
 			showInAside: true,
-			identifier: {
-				type: TextDataExtractionType.TextContent,
-			},
 			title: 'Products',
 			type: RsType.None
 		}

@@ -43,6 +43,7 @@ export const defaultEntityConfig: EntityConfig = {
 	...defaultMetadata,
 	color: Colors.Blue,
 	id: RsType.None, // TODO ??? id === RsType ???
+	revealOnHover: false,
 	type: RsType.None,
 }
 

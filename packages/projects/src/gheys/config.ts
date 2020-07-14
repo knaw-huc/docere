@@ -1,4 +1,4 @@
-import { EsDataType, TextDataExtractionType, LayerType, RsType, Colors } from '@docere/common'
+import { EsDataType, LayerType, RsType, Colors } from '@docere/common'
 import type { DocereConfig } from '@docere/common'
 
 const config: DocereConfig = {
@@ -76,10 +76,6 @@ const config: DocereConfig = {
 		{
 			color: Colors.Blue,
 			id: 'person',
-			identifier: {
-				type: TextDataExtractionType.Attribute,
-				attribute: 'ref'
-			},
 			order: 500,
 			title: 'Persons',
 			type: RsType.Person
@@ -87,54 +83,30 @@ const config: DocereConfig = {
 		{
 			color: Colors.Orange,
 			id: 'location',
-			identifier: {
-				type: TextDataExtractionType.Attribute,
-				attribute: 'ref'
-			},
 			order: 510,
 			type: RsType.Location,
 		},
 		{
 			color: Colors.Orange,
 			id: 'loc',
-			identifier: {
-				type: TextDataExtractionType.Attribute,
-				attribute: 'ref'
-			},
 			order: 520,
 			title: 'Location',
 			type: RsType.Location,
 		},
 		{
 			id: 'job',
-			identifier: {
-				type: TextDataExtractionType.Attribute,
-				attribute: 'ref'
-			},
 			order: 530,
 		},
 		{
 			id: 'notary',
-			identifier: {
-				type: TextDataExtractionType.Attribute,
-				attribute: 'ref'
-			},
 			order: 540,
 		},
 		{
 			id: 'ship',
-			identifier: {
-				type: TextDataExtractionType.Attribute,
-				attribute: 'ref'
-			},
 			order: 545,
 		},
 		{
 			id: 'good',
-			identifier: {
-				type: TextDataExtractionType.Attribute,
-				attribute: 'ref'
-			},
 			order: 550,
 		},
 		{

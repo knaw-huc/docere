@@ -17,12 +17,12 @@ const Wrapper = styled.div`
 	position: relative;
 `
 
-type TWProps = Pick<TextPanelProps, 'layer' | 'settings'>
+type TWProps = Pick<TextPanelProps, 'layer' | 'entrySettings'>
 const TextWrapper = styled.div`
 	box-sizing: border-box;
 	display: grid;
 	grid-template-columns: auto ${(props: TWProps) => props.layer.width}px auto;
-	height: ${props => props.settings['panels.showHeaders'] ? `calc(100% - ${PANEL_HEADER_HEIGHT}px)` : '100%'};
+	height: ${props => props.entrySettings['panels.showHeaders'] ? `calc(100% - ${PANEL_HEADER_HEIGHT}px)` : '100%'};
 	overflow-y: auto;
 	overflow-x: hidden; ${/* Hide overflow because a vertical scrollbar could add a horizontal scrollbar */''}
 	position: relative;
@@ -50,7 +50,7 @@ export const Text = styled.div`
 	position: relative;
 `
 
-type TextPanelBaseProps = Pick<PanelsProps, 'activeEntity' | 'activeNote' | 'activeFacsimile' | 'activeFacsimileAreas' | 'appDispatch' | 'entryDispatch' | 'entry' | 'settings'>
+type TextPanelBaseProps = Pick<PanelsProps, 'activeEntity' | 'activeNote' | 'activeFacsimile' | 'activeFacsimileAreas' | 'appDispatch' | 'entryDispatch' | 'entry' | 'entrySettings'>
 interface TextPanelProps extends TextPanelBaseProps {
 	layer: TextLayer
 }
@@ -69,7 +69,7 @@ function TextPanel(props: TextPanelProps) {
 	const components = useComponents(DocereComponentContainer.Layer, layer.id)
 
 	const handleScroll = React.useCallback(() => {
-		if (!props.settings['panels.text.showMinimap']) return
+		if (!props.entrySettings['panels.text.showMinimap']) return
 
 		const resetActiveArea = debounce(() => {
 			activeAreaRef.current.classList.remove('active')
@@ -88,7 +88,7 @@ function TextPanel(props: TextPanelProps) {
 		activeAreaRef.current.style.transform = `translateY(${(scrollTop / 10)}px)`
 
 		resetActiveArea()
-	}, [props.settings['panels.text.showMinimap']])
+	}, [props.entrySettings['panels.text.showMinimap']])
 
 	const customProps: DocereComponentProps = {
 		activeFacsimileAreas: props.activeFacsimileAreas,
@@ -100,7 +100,7 @@ function TextPanel(props: TextPanelProps) {
 		config,
 		entry: props.entry,
 		entryDispatch: props.entryDispatch,
-		entrySettings: props.settings,
+		entrySettings: props.entrySettings,
 		insideNote: false,
 		layer: props.layer,
 		navigate: useNavigate(),
@@ -111,7 +111,7 @@ function TextPanel(props: TextPanelProps) {
 	return (
 		<Wrapper className="text-panel">
 			{
-				props.settings['panels.showHeaders'] &&
+				props.entrySettings['panels.showHeaders'] &&
 				<PanelHeader
 					entryDispatch={props.entryDispatch}
 					layer={props.layer}
@@ -123,10 +123,10 @@ function TextPanel(props: TextPanelProps) {
 				layer={props.layer}
 				onScroll={handleScroll}
 				ref={textWrapperRef}
-				settings={props.settings}
+				entrySettings={props.entrySettings}
 			>
 				<Text 
-					settings={props.settings}
+					settings={props.entrySettings}
 				>
 					<DocereTextView
 						customProps={customProps}
@@ -139,10 +139,10 @@ function TextPanel(props: TextPanelProps) {
 				</Text>
 			</TextWrapper>
 			{
-				props.settings['panels.text.showMinimap'] &&
+				props.entrySettings['panels.text.showMinimap'] &&
 				<Minimap
 					activeAreaRef={activeAreaRef}
-					hasHeader={props.settings['panels.showHeaders']}
+					hasHeader={props.entrySettings['panels.showHeaders']}
 					highlightAreas={highlightAreas}
 					isReady={docereTextViewReady}
 					textWrapperRef={textWrapperRef}

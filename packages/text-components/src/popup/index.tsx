@@ -1,9 +1,14 @@
 import React from 'react'
 import DocereTextView from '@docere/text'
 import styled from 'styled-components'
-import Tooltip, { TooltipBody } from './tooltip'
 import { TEXT_PANEL_TEXT_WIDTH, DEFAULT_SPACING, getTextPanelLeftSpacing } from '@docere/common'
+
+import Tooltip, { TooltipBody } from '../tooltip'
+
 import type { DocereComponentProps, DocereConfig } from '@docere/common'
+
+export * from './page'
+export * from './entry'
 
 interface PAW { settings: DocereConfig['entrySettings'] }
 const PopupAsideWrapper = styled(TooltipBody)`
@@ -27,9 +32,9 @@ const PopupHeader = styled.header`
 	font-size: .8rem;
 	font-weight: bold;
 	grid-template-columns: 1fr 8fr 1fr;
+	height: ${DEFAULT_SPACING}px;
 	justify-items: center;
-	line-height: .8rem;
-	padding: .666rem 1rem;
+	line-height: ${DEFAULT_SPACING}px;
 	text-shadow: 1px 1px 0 #888;
 	text-transform: uppercase;
 `
@@ -47,7 +52,7 @@ interface Props {
 	PopupBody?: React.FC<DocereComponentProps>
 	title: string
 }
-export default function Popup(props: Props) {
+export function Popup(props: Props) {
 	if (!props.active) return null
 	const Wrapper = props.openToAside ?  PopupAsideWrapper : Tooltip
 

@@ -2,7 +2,7 @@ import * as React from 'react'
 import styled from 'styled-components'
 import { Colors } from '@docere/common'
 import type { DocereConfig, EntryStateAction, DocereComponentProps } from '@docere/common'
-import { Entity, getPb, Lb } from '@docere/text-components'
+import { getPb, Lb, getEntity } from '@docere/text-components'
 
 type TLWProps = { active: boolean } & DocereComponentProps
 const TextLineWrapper = styled(Lb)`
@@ -133,26 +133,26 @@ function EntityBody(props: DocereComponentProps) {
 	)
 }
 
-function entity(config: DocereConfig) {
-	return function(props: DocereComponentProps) {
-		const isEntity = props.attributes.hasOwnProperty('type')
-		const hasSuggestion = props.attributes.hasOwnProperty('suggestion')
-		const type = props.attributes.type?.split(' ')[0]
+// function entity(config: DocereConfig) {
+// 	return function(props: DocereComponentProps) {
+// 		const isEntity = props.attributes.hasOwnProperty('type')
+// 		const hasSuggestion = props.attributes.hasOwnProperty('suggestion')
+// 		const type = props.attributes.type?.split(' ')[0]
 
-		return (
-			<Entity
-				customProps={props}
-				entitiesConfig={config.entities}
-				entityId={isEntity ? props.attributes.ref : props.attributes.id}
-				configId={isEntity ? type : 'string'}
-				PopupBody={EntityBody}
-				revealOnHover={isEntity || hasSuggestion ? false : true}
-			>
-				{props.children}
-			</Entity>
-		)
-	}
-}
+// 		return (
+// 			<Entity
+// 				customProps={props}
+// 				entitiesConfig={config.entities}
+// 				entityId={isEntity ? props.attributes.ref : props.attributes.id}
+// 				configId={isEntity ? type : 'string'}
+// 				PopupBody={EntityBody}
+// 				revealOnHover={isEntity || hasSuggestion ? false : true}
+// 			>
+// 				{props.children}
+// 			</Entity>
+// 		)
+// 	}
+// }
 
 function line(props: DocereComponentProps) {
 	const [active, handleClick] = useActive(props)
@@ -170,13 +170,22 @@ function line(props: DocereComponentProps) {
 }
 
 
-export default function (config: DocereConfig) {
-	const string = entity(config)
+export default function (_config: DocereConfig) {
+	// const string = entity(config)
 
 	return {
 		block,
 		pb,
-		string,
+		'string[suggestion]': getEntity({
+			extractType: () => 'suggestion',
+			extractKey: props => props.attributes.id,
+			PopupBody: EntityBody,
+		}),
+		'string[type]': getEntity({
+			extractType: () => 'word',
+			extractKey: props => props.attributes.ref,
+			PopupBody: EntityBody,
+		}),
 		line
 	}
 }

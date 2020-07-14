@@ -1,4 +1,4 @@
-import type { DocereConfig, LayerConfig, TextLayerConfig } from "./config"
+import type { DocereConfig, LayerConfig, TextLayerConfig, EntityConfig } from "./config"
 import { LayerType, AsideTab, Colors } from '../../enum'
 
 
@@ -23,6 +23,10 @@ export interface TextData {
 export interface Entity extends TextData {
 	element?: Element
 	value: string
+}
+
+export interface ActiveEntity extends Entity {
+	config: EntityConfig
 }
 
 // TODO add default color to default note: DEFAULT_POPUP_BG_COLOR

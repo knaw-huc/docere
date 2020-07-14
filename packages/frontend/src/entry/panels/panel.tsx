@@ -18,7 +18,7 @@ export default function Panel(props: PanelsProps & { layer: Layer }) {
 				entryDispatch={props.entryDispatch}
 				key={props.layer.id}
 				layer={props.layer}
-				settings={props.settings}
+				entrySettings={props.entrySettings}
 			/>
 		)
 	}
@@ -34,7 +34,7 @@ export default function Panel(props: PanelsProps & { layer: Layer }) {
 				entryDispatch={props.entryDispatch}
 				entry={props.entry}
 				key={props.layer.id}
-				settings={props.settings}
+				entrySettings={props.entrySettings}
 				layer={props.layer}
 			/>
 		)

@@ -1,4 +1,4 @@
-import { DocereConfig, EsDataType, RsType } from '@docere/common'
+import { DocereConfig, EsDataType, RsType, Colors } from '@docere/common'
 
 const config: DocereConfig = {
 	slug: 'mondrian',
@@ -33,6 +33,16 @@ const config: DocereConfig = {
 		{
 			id: 'person',
 			type: RsType.Person,
+		},
+		{
+			color: Colors.Blue,
+			id: 'biblio',
+			type: RsType.PagePart,
+		},
+		{
+			color: Colors.Green,
+			id: 'bio',
+			type: RsType.PagePart,
 		}
 	]
 }

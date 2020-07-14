@@ -45,9 +45,11 @@ export enum LayerType {
 
 export enum RsType {
 	Date = 'date',
+	Entry = 'entry',
 	Location = 'location',
 	None = 'unknown',
-	Person = 'person'
+	PagePart = 'page_part',
+	Person = 'person',
 }
 
 export enum DocereComponentContainer {

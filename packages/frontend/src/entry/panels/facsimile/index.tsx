@@ -140,7 +140,7 @@ const Container = styled.div`
 `
 
 type Props =
-	Pick<EntryState, 'activeFacsimile' | 'activeFacsimileAreas' | 'settings'> & {
+	Pick<EntryState, 'activeFacsimile' | 'activeFacsimileAreas' | 'entrySettings'> & {
 		entryDispatch: React.Dispatch<EntryStateAction>
 		layer: Layer
 	}
@@ -156,7 +156,7 @@ function FacsimilePanel(props: Props) {
 	return (
 		<Wrapper className="facsimile-panel">
 			{
-				props.settings['panels.showHeaders'] &&
+				props.entrySettings['panels.showHeaders'] &&
 				<PanelHeader
 					entryDispatch={props.entryDispatch}
 					layer={props.layer}
@@ -165,7 +165,7 @@ function FacsimilePanel(props: Props) {
 				</PanelHeader>
 			}
 			<Container
-				hasHeader={props.settings['panels.showHeaders']}
+				hasHeader={props.entrySettings['panels.showHeaders']}
 				id="openseadragon"
 			/>
 		</Wrapper>

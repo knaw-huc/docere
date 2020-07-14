@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import { Colors, DEFAULT_SPACING, Entry } from '@docere/common'
 import type { DocereComponentProps } from '@docere/common'
 import styled from 'styled-components'

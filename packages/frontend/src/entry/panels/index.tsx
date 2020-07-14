@@ -137,7 +137,7 @@ function Panels(props: PanelsProps) {
 					activeEntity={props.activeEntity}
 					activeNote={props.activeNote}
 					id="active-panels"
-					settings={props.settings}
+					settings={props.entrySettings}
 				>
 					{
 						activeLayers

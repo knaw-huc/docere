@@ -1,22 +1,23 @@
 import type { DocereConfig } from '../config-data/config'
-import type { Entity, Note, Facsimile, Layer, FacsimileArea } from '../config-data/functions'
+import type { Note, Facsimile, Layer, FacsimileArea, ActiveEntity } from '../config-data/functions'
 import type { Entry } from '.'
 import { AsideTab } from '../../enum'
 
 export interface EntryState {
-	activeFacsimileAreas: FacsimileArea[]
+	activeEntity: ActiveEntity,
 	activeFacsimile: Facsimile
-	activeEntity: Entity,
+	activeFacsimileAreas: FacsimileArea[]
 	activeNote: Note,
 	asideTab: AsideTab
+	projectConfig: DocereConfig
 	entry: Entry
+	entrySettings: DocereConfig['entrySettings']
 	layers: Layer[]
-	settings: DocereConfig['entrySettings']
 }
 
 interface ProjectChanged {
 	type: 'PROJECT_CHANGED',
-	settings: DocereConfig['entrySettings'],
+	config: DocereConfig,
 }
 
 interface EntryChanged extends Pick<EntryState, 'activeFacsimile' | 'entry' | 'layers'> {

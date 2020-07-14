@@ -2,7 +2,7 @@ import * as React from 'react'
 import styled from 'styled-components'
 import { DocereComponentContainer } from '@docere/common'
 import type { DocereComponentProps, DocereConfig, DocereComponents } from '@docere/common'
-import { Entity } from '@docere/text-components'
+import { getEntity } from '@docere/text-components'
 
 const Dl = styled.dl`
 	line-height: 1rem;
@@ -59,23 +59,23 @@ function RsBody(props: DocereComponentProps) {
 	)
 }
 
-function w(config: DocereConfig) {
-	return function(props: DocereComponentProps) {
-		return (
-			<Entity
-				customProps={props}
-				entitiesConfig={config.entities}
-				entityId={props.attributes.id}
-				PopupBody={RsBody}
-				configId={props.attributes.type}
-			>
-				{props.attributes.value}
-			</Entity>
-		)
-	}
-}
+// function w(config: DocereConfig) {
+// 	return function(props: DocereComponentProps) {
+// 		return (
+// 			<Entity
+// 				customProps={props}
+// 				entitiesConfig={config.entities}
+// 				entityId={props.attributes.id}
+// 				PopupBody={RsBody}
+// 				configId={props.attributes.type}
+// 			>
+// 				{props.attributes.value}
+// 			</Entity>
+// 		)
+// 	}
+// }
 
-export default function(config: DocereConfig) {
+export default function(_config: DocereConfig) {
 	return async function(_container: DocereComponentContainer, _id: string): Promise<DocereComponents> {
 		const components: DocereComponents = {
 			head: styled.h3`
@@ -90,7 +90,13 @@ export default function(config: DocereConfig) {
 				}
 			`,
 			s: styled.div``,
-			w: w(config),
+			// w: w(config),
+			w: getEntity({
+				extractType: () => 'word',
+				extractKey: props => props.attributes.id,
+				extractValue: props => props.attributes.value,
+				PopupBody: RsBody,
+			})
 		}
 		return components
 	}

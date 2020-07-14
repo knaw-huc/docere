@@ -1,8 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
-import Popup from '../popup'
-import { useConfig, useChildren } from './hooks'
-import type { DocereComponentProps, DocereConfig } from '@docere/common'
+import { Popup } from '../popup'
+import { useEntityData, useChildren, ExtractEntityKey, ExtractEntityValue, ExtractEntityType } from './hooks'
+import type { DocereComponentProps, EntityConfig } from '@docere/common'
 import IconsByType from './icons'
 
 interface NWProps { openToAside: boolean }
@@ -13,17 +13,17 @@ const NoWrap = styled.span`
 `
 
 const EntityWrapper = styled.span`
-	background-color: ${(props: Pick<RsProps, 'revealOnHover'> & { active: boolean, color: string }) => {
-		return props.active ? props.color : 'rgba(0, 0, 0, 0)'
+	background-color: ${(props: { config: EntityConfig, active: boolean }) => {
+		return props.active ? props.config.color : 'rgba(0, 0, 0, 0)'
 	}};
 	${props => 
 		props.active ?
-			`border-bottom: 3px solid ${props.color};` :
-			props.revealOnHover ?
+			`border-bottom: 3px solid ${props.config.color};` :
+			props.config.revealOnHover ?
 				`&:hover {
-					border-bottom: 3px solid ${props.color};
+					border-bottom: 3px solid ${props.config.color};
 				}` :
-				`border-bottom: 3px solid ${props.color};`
+				`border-bottom: 3px solid ${props.config.color};`
 	}
 	color: ${props => props.active ? 'white' : 'inherit'};
 	cursor: pointer;
@@ -35,87 +35,88 @@ const EntityWrapper = styled.span`
 	}
 `
 
-interface RsProps {
-	children: React.ReactNode
-	configId?: string
-	customProps: DocereComponentProps
-	entitiesConfig?: DocereConfig['entities']
-	entityId: string
-	onClick?: (ev: any) => void
+const defaultPreProps: Omit<PreProps, 'extractType'> = {
+	extractKey: (props) => props.attributes.key,
+	extractValue: (props) => props.children
+}
+
+interface PreProps {
+	extractType: ExtractEntityType
+	extractKey?: ExtractEntityKey
+	extractValue?: ExtractEntityValue
 	PopupBody?: React.FC<DocereComponentProps>
-	revealOnHover?: boolean
 }
-function Entity(props: RsProps) {
-	if (!props.customProps.entrySettings['panels.text.showEntities']) return <span>{props.children}</span>
 
-	const active = props.customProps.activeEntity?.id === props.entityId
-	const openToAside = active && !props.customProps.entrySettings['panels.text.openPopupAsTooltip']
-	const config = useConfig(props.configId, props.entitiesConfig)
-	const [children, firstWord, restOfFirstChild] = useChildren(props.children, config)
+export default function getEntity(preProps: PreProps) {
+	preProps = {...defaultPreProps, ...preProps}
 
-	// The entity can be active, but without the need to show the tooltip.
-	// In case there are several entities with the same ID, we only want to 
-	// show the tooltip of the entity that was clicked. The others are highlighted,
-	// but only the clicked entity shows its tooltip
-	const [showTooltip, setShowTooltip] = React.useState(false)
+	return function Entity(props: DocereComponentProps) {
+		const entityValue = preProps.extractValue(props)
+		if (!props.entrySettings['panels.text.showEntities']) return <span>{entityValue}</span>
 
-	React.useEffect(() => {
-		if (!active && showTooltip) setShowTooltip(false)
-	}, [active, showTooltip])
 
-	const handleClick = React.useCallback(ev => {
-		ev.stopPropagation()
+		const [entity, config] = useEntityData(preProps.extractType, preProps.extractKey, props)
+		const [children, firstWord, restOfFirstChild] = useChildren(entityValue, config)
 
-		if (props.onClick != null) {
-			props.onClick(ev)
-		} else {
-			props.customProps.entryDispatch({
+		// The entity can be active, but without the need to show the tooltip.
+		// In case there are several entities with the same ID, we only want to 
+		// show the tooltip of the entity that was clicked. The others are highlighted,
+		// but only the clicked entity shows its tooltip
+		const [showTooltip, setShowTooltip] = React.useState(false)
+
+		const active = entity != null && props.activeEntity?.id === entity.id
+
+		React.useEffect(() => {
+			if (!active && showTooltip) setShowTooltip(false)
+		}, [active, showTooltip])
+
+		const handleClick = React.useCallback(ev => {
+			ev.stopPropagation()
+
+			props.entryDispatch({
 				type: 'SET_ENTITY',
-				id: props.entityId,
+				id: entity.id,
 			})
-		}
 
-		setShowTooltip(true)
-	}, [config])
+			setShowTooltip(true)
+		}, [entity?.id])
 
-	if (config == null) return null
-	const Icon = IconsByType[config.type]
+		// Only abort when config does not exist. The entity is not necessary for rendering
+		if (config == null) return null
 
-	return (
-		<EntityWrapper
-			active={active}
-			color={config.color}
-			onClick={handleClick}
-			revealOnHover={props.revealOnHover}
-		>
-			<NoWrap
-				openToAside={openToAside}
+		const Icon = IconsByType[config.type]
+
+		const openToAside = active && !props.entrySettings['panels.text.openPopupAsTooltip']
+
+		return (
+			<EntityWrapper
+				active={active}
+				config={config}
+				onClick={handleClick}
 			>
-				{
-					Icon != null &&
-					<Icon
-						active={active}
-						config={config}
-					/>
-				}
-				{firstWord}
-				<Popup
-					active={active && showTooltip}
-					color={config.color}
-					docereComponentProps={props.customProps}
+				<NoWrap
 					openToAside={openToAside}
-					PopupBody={props.PopupBody}
-					title={config.title}
-				/>
-			</NoWrap>
-			{restOfFirstChild}
-			{children.slice(1)}
-		</EntityWrapper>
-	)
+				>
+					{
+						Icon != null &&
+						<Icon
+							active={active}
+							config={config}
+						/>
+					}
+					{firstWord}
+					<Popup
+						active={active && showTooltip}
+						color={config.color}
+						docereComponentProps={props}
+						openToAside={openToAside}
+						PopupBody={preProps.PopupBody}
+						title={config.title}
+					/>
+				</NoWrap>
+				{restOfFirstChild}
+				{children.slice(1)}
+			</EntityWrapper>
+		)
+	}
 }
-
-Entity.defaultProps = {
-	revealOnHover: false,
-}
-
-export default Entity

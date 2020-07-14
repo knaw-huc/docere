@@ -31,7 +31,7 @@ const ActiveIndicator = styled.div`
 	width: 8px;
 `
 
-type Props = Pick<EntryState, 'activeEntity' | 'activeFacsimile' | 'activeFacsimileAreas' | 'activeNote' | 'settings'> & {
+type Props = Pick<EntryState, 'activeEntity' | 'activeFacsimile' | 'activeFacsimileAreas' | 'activeNote' | 'entrySettings'> & {
 	active: boolean
 	appDispatch: React.Dispatch<AppStateAction>
 	components: DocereComponents
@@ -58,7 +58,7 @@ export default function Note(props: Props) {
 		config: projectContext.config,
 		entry: props.entry,
 		entryDispatch: props.entryDispatch,
-		entrySettings: props.settings,
+		entrySettings: props.entrySettings,
 		insideNote: false,
 		layer: null,
 		navigate: useNavigate()

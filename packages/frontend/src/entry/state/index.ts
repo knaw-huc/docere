@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ProjectContext, isTextLayer, AsideTab, defaultEntrySettings, getTextPanelWidth, LayerType, DEFAULT_SPACING } from '@docere/common'
+import { ProjectContext, isTextLayer, AsideTab, getTextPanelWidth, LayerType, DEFAULT_SPACING, defaultEntrySettings } from '@docere/common'
 
 import type { EntryState, EntryStateAction, FacsimileArea, Entry } from '@docere/common'
 
@@ -9,9 +9,10 @@ const initialEntryState: EntryState = {
 	activeFacsimileAreas: null,
 	activeNote: null,
 	asideTab: null,
+	entrySettings: defaultEntrySettings,
+	projectConfig: null,
 	entry: null,
 	layers: [],
-	settings: defaultEntrySettings,
 }
 
 function entryStateReducer(entryState: EntryState, action: EntryStateAction): EntryState {
@@ -22,7 +23,8 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 		case 'PROJECT_CHANGED': {
 			return {
 				...entryState,
-				settings: action.settings
+				entrySettings: action.config.entrySettings,
+				projectConfig: action.config,
 			}
 		}
 
@@ -46,8 +48,11 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 				return prev
 			}, null as FacsimileArea[])
 
-			let activeEntity = entryState.entry.entities?.find(e => e.id === action.id)
-			if (activeEntity == null) activeEntity = { id: action.id, type: null, value: null }
+			let entity = entryState.entry.entities?.find(e => e.id === action.id)
+			if (entity == null) entity = { id: action.id, type: null, value: null }
+
+			const config = entryState.projectConfig.entities.find(x => x.id === entity.type)
+			let activeEntity = { ...entity, config }
 
 			if (action.id === entryState.activeEntity?.id) {
 				activeEntity = null
@@ -58,7 +63,7 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 				...entryState,
 				activeEntity,
 				activeFacsimileAreas,
-				layers: updatePanels(entryState.layers, { activeEntity, activeNote: entryState.activeNote, settings: entryState.settings })
+				layers: updatePanels(entryState.layers, { activeEntity, activeNote: entryState.activeNote, entrySettings: entryState.entrySettings })
 			}
 		}
 
@@ -68,7 +73,7 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 			return {
 				...entryState,
 				activeNote,
-				layers: updatePanels(entryState.layers, { activeEntity: entryState.activeEntity, activeNote, settings: entryState.settings })
+				layers: updatePanels(entryState.layers, { activeEntity: entryState.activeEntity, activeNote, entrySettings: entryState.entrySettings })
 			}
 		}
 
@@ -143,15 +148,21 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 		}
 
 		case 'TOGGLE_SETTINGS_PROPERTY': {
-			const settings = {
-				...entryState.settings,
-				[action.property]: !entryState.settings[action.property]
+			const entrySettings = {
+				...entryState.entrySettings,
+				[action.property]: !entryState.entrySettings[action.property]
 			}
 			
 			return {
 				...entryState,
-				settings,
-				layers: updatePanels(entryState.layers, { activeEntity: entryState.activeEntity, activeNote: entryState.activeNote, settings })
+				entrySettings,
+				layers: updatePanels(
+					entryState.layers, {
+						activeEntity: entryState.activeEntity,
+						activeNote: entryState.activeNote,
+						entrySettings
+					}
+				)
 			}
 		}
 
@@ -192,7 +203,7 @@ export default function useEntryState(entry: Entry) {
 	React.useEffect(() => {
 		// x[1] = dispatch
 		x[1]({
-			settings: config.entrySettings,
+			config,
 			type: 'PROJECT_CHANGED',
 		})
 		
@@ -201,8 +212,15 @@ export default function useEntryState(entry: Entry) {
 	return x
 }
 
-function updatePanels(layers: EntryState['layers'], { activeEntity, activeNote, settings }: Pick<EntryState, 'activeEntity' | 'activeNote' | 'settings'>) {
-	const tpw = getTextPanelWidth(settings, activeNote, activeEntity)
+function updatePanels(
+	layers: EntryState['layers'],
+	{
+		activeEntity,
+		activeNote,
+		entrySettings
+	}: Pick<EntryState, 'activeEntity' | 'activeNote' | 'entrySettings'>
+) {
+	const tpw = getTextPanelWidth(entrySettings, activeNote, activeEntity)
 	const activeLayers = layers.filter(l => l.active)
 	const hasFacsimile = activeLayers.some(l => l.type === LayerType.Facsimile && !l.pinnable)
 

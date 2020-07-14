@@ -1,7 +1,7 @@
 import React from 'react'
 import type { DocereComponentProps, Note } from '@docere/common'
 import styled from 'styled-components'
-import Popup from './popup'
+import { Popup } from './popup'
 
 interface NAProps { active: boolean, color: string, openToAside: boolean }
 const Wrapper = styled.div`

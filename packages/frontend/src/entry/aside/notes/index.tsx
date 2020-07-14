@@ -9,7 +9,7 @@ import type { EntryState, AppStateAction, Entry, EntryStateAction } from '@docer
 // type Props =
 // 	Pick<EntryState,  'activeNote' | 'layers'> &
 
-type Props = Pick<EntryState, 'activeEntity' | 'activeFacsimile' | 'activeFacsimileAreas' | 'activeNote' | 'settings'> & {
+type Props = Pick<EntryState, 'activeEntity' | 'activeFacsimile' | 'activeFacsimileAreas' | 'activeNote' | 'entrySettings'> & {
 	active: boolean
 	appDispatch: React.Dispatch<AppStateAction>
 	entry: Entry
@@ -44,7 +44,7 @@ function NotesAside(props: Props) {
 						notesByType={notesByType}
 						key={noteType}
 						setActiveType={setActiveType}
-						settings={props.settings}
+						entrySettings={props.entrySettings}
 						type={noteType}
 					/>
 				)

@@ -24,7 +24,7 @@ const Wrapper = styled.aside`
 
 type EntryAsideProps =
 	Pick<EntryProps, 'appDispatch' | 'entry'> &
-	Pick<EntryState, 'activeEntity' | 'activeFacsimile' | 'activeFacsimileAreas' | 'activeNote' | 'asideTab' | 'layers' | 'settings'> &
+	Pick<EntryState, 'activeEntity' | 'activeFacsimile' | 'activeFacsimileAreas' | 'activeNote' | 'asideTab' | 'layers' | 'entrySettings'> &
 	{
 		entryDispatch: React.Dispatch<EntryStateAction>
 	}
@@ -63,7 +63,7 @@ function Aside(props: EntryAsideProps) {
 					appDispatch={props.appDispatch}
 					entry={props.entry}
 					entryDispatch={props.entryDispatch}
-					settings={props.settings}
+					entrySettings={props.entrySettings}
 				/>
 			}
 		</Wrapper>

@@ -34,7 +34,7 @@ function Entry(props: EntryProps) {
 				entryDispatch={entryDispatch}
 				entry={props.entry}
 				layers={entryState.layers}
-				settings={entryState.settings}
+				entrySettings={entryState.entrySettings}
 			/>
 			<Footer
 				activeFacsimile={entryState.activeFacsimile}
@@ -42,7 +42,7 @@ function Entry(props: EntryProps) {
 				asideTab={entryState.asideTab}
 				entryDispatch={entryDispatch}
 				entry={props.entry}
-				entrySettings={entryState.settings}
+				entrySettings={entryState.entrySettings}
 				footerTab={props.footerTab}
 				layers={entryState.layers}
 				searchTab={props.searchTab}

@@ -5,7 +5,7 @@ import type { EntryState, AppStateAction, DocereComponents, Entry, EntryStateAct
 
 // interface Props {
 
-type Props = Pick<EntryState, 'activeEntity' | 'activeFacsimile' | 'activeFacsimileAreas' | 'activeNote' | 'settings'> & {
+type Props = Pick<EntryState, 'activeEntity' | 'activeFacsimile' | 'activeFacsimileAreas' | 'activeNote' | 'entrySettings'> & {
 	active: boolean
 	appDispatch: React.Dispatch<AppStateAction>
 	components: DocereComponents
@@ -45,7 +45,7 @@ function NotesList(props: Props) {
 						note={note}
 						key={note.id}
 						listId={props.type}
-						settings={props.settings}
+						entrySettings={props.entrySettings}
 					/>
 				)
 			}

@@ -1,4 +1,4 @@
-import { LayerType, TextDataExtractionType, RsType } from '../../enum'
+import { LayerType, RsType } from '../../enum'
 import type { FacetConfig } from '../search/facets'
 import { PageConfig } from '../page'
 
@@ -37,29 +37,17 @@ export type MetadataConfig = FacetConfig & {
 	showAsFacet?: boolean /* Show data as a facet? */
 }
 
-interface EntityAttributeIdentifier {
-	type: TextDataExtractionType.Attribute
-	attribute: string
-}
-
-interface EntityMilestoneIdentifier {
-	type: TextDataExtractionType.Milestone
-	idAttribute: string // <start id="some-id" />
-	refAttribute: string // <end ref="some-id" />
-}
-
-interface EntityContentIdentifier {
-	type: TextDataExtractionType.TextContent
-}
-
-type EntityIdentifier = EntityAttributeIdentifier | EntityMilestoneIdentifier | EntityContentIdentifier
-
 export type EntityConfig = MetadataConfig & {
 	color?: string
-	identifier?: EntityIdentifier
+	revealOnHover?: boolean
 	textLayers?: string[]
 	type?: RsType | string
 }
+
+export type NotesConfig = EntityConfig
+// export interface NotesConfig extends BaseConfig {
+
+// }
 
 export interface LayerConfig extends BaseConfig {
 	active?: boolean
@@ -69,8 +57,4 @@ export interface LayerConfig extends BaseConfig {
 
 export interface TextLayerConfig extends LayerConfig {
 	type: LayerType.Text
-}
-
-export interface NotesConfig extends BaseConfig {
-
 }

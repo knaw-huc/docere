@@ -1,9 +1,9 @@
-import * as React from 'react'
+// import * as React from 'react'
 import { DocereComponentContainer } from '@docere/common'
 import type { DocereConfig, DocereComponents } from '@docere/common'
-import { Entity, getPb } from '@docere/text-components'
+import { getPb, getEntity } from '@docere/text-components'
 
-export default function getComponents(config: DocereConfig) {
+export default function getComponents(_config: DocereConfig) {
 	return async function(container: DocereComponentContainer, _id: string): Promise<DocereComponents> {
 		if (container === DocereComponentContainer.Page) return (await import('./pages')).default
 
@@ -14,16 +14,20 @@ export default function getComponents(config: DocereConfig) {
 			// 'ner[type="loc"]': components.rsPlace(placeConfig),
 			// 'ner[type="per"]': components.rsPerson(personConfig),
 			pb: getPb((props) => props.attributes.facs),
-			ner: (props) => (
-				<Entity
-					customProps={props}
-					configId={props.attributes.type}
-					entitiesConfig={config.entities}
-					entityId={(props.children as any)[0]}
-				>
-					{props.children}
-				</Entity>
-			)
+			// ner: (props) => (
+			// 	<Entity
+			// 		customProps={props}
+			// 		configId={props.attributes.type}
+			// 		entitiesConfig={config.entities}
+			// 		entityId={(props.children as any)[0]}
+			// 	>
+			// 		{props.children}
+			// 	</Entity>
+			// )
+			ner: getEntity({
+				extractType: () => 'named_entity',
+				extractKey: props => (props.children as any)[0]
+			})
 
 		}
 

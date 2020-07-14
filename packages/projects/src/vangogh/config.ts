@@ -1,4 +1,4 @@
-import { EsDataType, LayerType, RsType, TextDataExtractionType } from '@docere/common'
+import { EsDataType, LayerType, RsType, Colors } from '@docere/common'
 import type { DocereConfig } from '@docere/common'
 
 const config: DocereConfig = {
@@ -59,12 +59,13 @@ const config: DocereConfig = {
 			color: '#fd7a7a',
 			id: 'pers',
 			showInAside: true,
-			identifier: {
-				type: TextDataExtractionType.Attribute,
-				attribute: 'key'
-			},
 			textLayers: ['translation'],
-			type: RsType.Person
+			type: RsType.Person,
+		},
+		{
+			color: Colors.Orange,
+			id: 'entry',
+			type: RsType.Entry,
 		}
 	],
 	layers: [

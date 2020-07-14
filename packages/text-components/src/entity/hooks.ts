@@ -1,40 +1,54 @@
 import React from 'react'
-import { defaultEntityConfig, setTitle } from '@docere/common'
+import { defaultEntityConfig, setTitle, Entity, DocereComponentProps } from '@docere/common'
 import type { EntityConfig } from '@docere/common'
 import IconsByType from './icons'
 
-// TODO remove and use ProjectContext?
+export type ExtractEntityType = (props: DocereComponentProps) => string
+export type ExtractEntityKey = (props: DocereComponentProps) => string
+export type ExtractEntityValue = (props: DocereComponentProps) => React.ReactNode
+
 // The config is a state of an Entity, because the config can be null,
 // in which case a default config is loaded.
-export function useConfig(configId: string, entitiesConfig: EntityConfig[]) {
-	const [config, setConfig] = React.useState<EntityConfig>(null)
+export function useEntityData(
+	extractEntityType: ExtractEntityType,
+	extractEntityId: ExtractEntityKey,
+	props: DocereComponentProps
+) {
+	const [entityData, setEntityData] = React.useState<[Entity, EntityConfig]>([null, null])
 
 	React.useEffect(() => {
-		let config
-
-		if (configId != null && entitiesConfig != null) {
-			config = entitiesConfig.find(ec => ec.id === configId)
+		const entityId = extractEntityId(props)
+		const entityType = extractEntityType(props)
+		let entity = props.entry.entities?.find(x => x.id === entityId && x.type === entityType)
+		if (entity == null) {
+			console.error(`[useEntityData] Entity '${entityId}' of type '${entityType}' not found`) 
+			entity = {
+				id: entityId,
+				type: entityType,
+				value: null,
+			}
 		}
 
+		let config = props.config.entities.find(ec => ec.id === entity.type)
 		if (config == null) config = setTitle(defaultEntityConfig)
 
-		setConfig(config)
-	}, [entitiesConfig, configId])
+		setEntityData([entity, config])
+	}, [])
 
-	return config
+	return entityData
 }
 
 // To prevent a wrap between the icon and the first word the first word is extracted.
 // The icon and the first word are placed inside a span with white-space: nowrap.
-export function useChildren(propsChildren: React.ReactNode, config: EntityConfig): [React.ReactNode[], React.ReactNode, string] {
-	const [children, setChildren] = React.useState<React.ReactNode[]>(propsChildren as any)
+export function useChildren(entityValue: React.ReactNode, config: EntityConfig): [React.ReactNode[], React.ReactNode, string] {
+	const [children, setChildren] = React.useState<React.ReactNode[]>(entityValue as any)
 	const [firstWord, setFirstWord] = React.useState<React.ReactNode>(null)
 	const [restOfFirstChild, setRestOfFirstChild] = React.useState<string>(null)
 
 	React.useEffect(() => {
 		if (config == null) return
-		const children = React.Children.toArray(propsChildren)
-		let firstWord: React.ReactNode = propsChildren
+		const children = React.Children.toArray(entityValue)
+		let firstWord: React.ReactNode = entityValue
 		let restOfFirstChild: string
 		if (IconsByType.hasOwnProperty(config?.type) && children.length && typeof children[0] === 'string') {
 			const [fw, ...rofc] = children[0].split(/\s/)
@@ -45,7 +59,7 @@ export function useChildren(propsChildren: React.ReactNode, config: EntityConfig
 		setChildren(children)
 		setFirstWord(firstWord)
 		setRestOfFirstChild(restOfFirstChild)
-	}, [propsChildren, config])
+	}, [entityValue, config])
 
 	return [children, firstWord, restOfFirstChild]
 }

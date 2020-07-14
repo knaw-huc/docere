@@ -1,8 +1,9 @@
-import * as React from 'react'
-import { Entity, Lb } from '@docere/text-components'
-import { Colors } from '@docere/common'
-import type { EntryStateAction, DocereComponentProps, DocereComponents } from '@docere/common'
+import React from 'react'
 import styled from 'styled-components'
+import { getEntity, Lb } from '@docere/text-components'
+import { Colors } from '@docere/common'
+
+import type { EntryStateAction, DocereComponentProps, DocereComponents } from '@docere/common'
 
 // TODO move alto to text-components, see duplication in gheys/htr-layers
 
@@ -85,25 +86,16 @@ function EntityPopupBody(props: DocereComponentProps) {
 	)
 }
 
-function String(props: DocereComponentProps) {
-	return (
-		<Entity
-			customProps={props}
-			entityId={props.attributes.ID}
-			PopupBody={EntityPopupBody}
-			revealOnHover
-		>
-			{props.attributes.CONTENT}
-		</Entity>
-	)
-}
-
 function SP() { return <> </> }
 
 const components: DocereComponents = {
 	Description: () => null,
-	// pb,
-	String,
+	String: getEntity({
+		extractType: () => 'word',
+		extractKey: props => props.attributes.ID,
+		extractValue: props => props.attributes.CONTENT,
+		PopupBody: EntityPopupBody,
+	}),
 	SP,
 	TextLine,
 }
