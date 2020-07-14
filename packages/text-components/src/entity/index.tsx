@@ -40,7 +40,7 @@ interface RsProps {
 	configId?: string
 	customProps: DocereComponentProps
 	entitiesConfig?: DocereConfig['entities']
-	id: string
+	entityId: string
 	onClick?: (ev: any) => void
 	PopupBody?: React.FC<DocereComponentProps>
 	revealOnHover?: boolean
@@ -48,7 +48,7 @@ interface RsProps {
 function Entity(props: RsProps) {
 	if (!props.customProps.entrySettings['panels.text.showEntities']) return <span>{props.children}</span>
 
-	const active = props.customProps.activeEntity?.id === props.id
+	const active = props.customProps.activeEntity?.id === props.entityId
 	const openToAside = active && !props.customProps.entrySettings['panels.text.openPopupAsTooltip']
 	const config = useConfig(props.configId, props.entitiesConfig)
 	const [children, firstWord, restOfFirstChild] = useChildren(props.children, config)
@@ -71,7 +71,7 @@ function Entity(props: RsProps) {
 		} else {
 			props.customProps.entryDispatch({
 				type: 'SET_ENTITY',
-				id: props.id,
+				id: props.entityId,
 			})
 		}
 
@@ -103,6 +103,7 @@ function Entity(props: RsProps) {
 					active={active && showTooltip}
 					color={config.color}
 					docereComponentProps={props.customProps}
+					entityId={props.entityId}
 					openToAside={openToAside}
 					PopupBody={props.PopupBody}
 					title={config.title}

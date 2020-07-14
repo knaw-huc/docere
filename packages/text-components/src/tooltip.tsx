@@ -37,17 +37,17 @@ const Wrapper = styled.div`
 
 export const TooltipBody = styled.div`
 	background: white;
-	box-sizing: border-box;
-	font-family: sans-serif;
-	font-weight: 300;
 	border-color: ${(props: { color: string }) => props.color};
 	border-radius: 6px;
 	border-style: solid;
 	border-width: 2px;
+	box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+	box-sizing: border-box;
 	color: #666;
+	font-family: sans-serif;
+	font-weight: 300;
 	height: 100%;
 	line-height: 1.5rem;
-	box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 `
 TooltipBody.defaultProps = { color: DEFAULT_POPUP_BG_COLOR }
 

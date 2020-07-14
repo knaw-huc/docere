@@ -1,48 +1,56 @@
 import React from 'react'
 import styled from 'styled-components'
 import { getNote, getPb, Entity, Lb } from '@docere/text-components'
-import { DocereComponentContainer, DocereComponentProps, EntityConfig, DocereConfig, NavigatePayload, useUIComponent, UIComponentType, ComponentProps, Hit } from '@docere/common'
+import { DocereComponentContainer, DocereComponentProps, EntityConfig, DocereConfig, useUIComponent, UIComponentType, Hit } from '@docere/common'
 
-const Ref = styled.span`border-bottom: 1px solid green;`
-const ref = function(props: DocereComponentProps) {
-	const handleClick = React.useCallback((ev: React.MouseEvent<HTMLSpanElement>) => {
-		ev.stopPropagation()
-		const [entryFilename, noteId] = props.attributes.target.split('#')
-		let query: NavigatePayload['query']
-		if (noteId != null && noteId.length) {
-			query = {
-				type: 'note',
-				id: noteId,
-			}
-		}
+// const Ref = styled.span`border-bottom: 1px solid green;`
+// const ref = function(props: DocereComponentProps) {
+// 	const handleClick = React.useCallback((ev: React.MouseEvent<HTMLSpanElement>) => {
+// 		ev.stopPropagation()
+// 		const [entryFilename, noteId] = props.attributes.target.split('#')
+// 		let query: NavigatePayload['query']
+// 		if (noteId != null && noteId.length) {
+// 			query = {
+// 				type: 'note',
+// 				id: noteId,
+// 			}
+// 		}
 	
-		props.navigate({
-			type: 'entry',
-			id: entryFilename.slice(0, -4),
-			query
-		})
-	}, [])
+// 		props.navigate({
+// 			type: 'entry',
+// 			id: entryFilename.slice(0, -4),
+// 			query
+// 		})
+// 	}, [])
 
-	return (
-		<Ref onClick={handleClick}>
-			{props.children}
-		</Ref>
-	)
-}
+// 	return (
+// 		<Ref onClick={handleClick}>
+// 			{props.children}
+// 		</Ref>
+// 	)
+// }
 
 
-function useSearchResult() {
+function useSearchResult(id: string) {
 	const [result, setResult] = React.useState<Hit>(null)	
 	React.useEffect(() => {
-		fetch(`/search/vangogh/_source/${id}`)
-			.then((hit: Hit) => setResult(hit))
-	})
+		if (id == null) return
+		fetch(`/search/vangogh/_source/${id}?_source_excludes=text,text_suggest`)
+			.then(response => response.json())
+			.then(setResult)
+	}, [id])
 	return result
 }
 
-function RefPopupBody(props: ComponentProps) {
+function RefPopupBody(props: DocereComponentProps) {
+	const result = useSearchResult(props.activeEntity?.id)
 	const ResultBodyComponent = useUIComponent(UIComponentType.SearchResult)
-	return <ResultBodyComponent {...props} />
+	if (ResultBodyComponent == null || result == null) return null
+	return (
+		<div>
+			<ResultBodyComponent {...props} result={result} />
+		</div>
+	)
 }
 
 function person(entitiesConfig: EntityConfig[]) {
@@ -52,7 +60,7 @@ function person(entitiesConfig: EntityConfig[]) {
 				configId={props.attributes.type}
 				customProps={props}
 				entitiesConfig={entitiesConfig}
-				id={props.attributes.key}
+				entityId={props.attributes.key}
 			>
 				{props.children}
 			</Entity>
@@ -83,14 +91,15 @@ export default function getComponents(config: DocereConfig) {
 
 				// const biblioId = /^biblio\.xml#(.*)$/.exec(props.attributes.target)[1]
 				const [entryFilename, noteId] = props.attributes.target.split('#')
-				const id = entryFilename.slice(0, -4)
+				noteId
+				const entityId = entryFilename.slice(0, -4)
 
 				// if (page == null) return null
 				return (
 					<Entity
 						customProps={props}
 						entitiesConfig={config.entities}
-						id={id}
+						entityId={entityId}
 						configId={'ref'}
 						PopupBody={RefPopupBody}
 					>

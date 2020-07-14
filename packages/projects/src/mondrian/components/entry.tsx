@@ -106,7 +106,7 @@ export default async function entryComponents(config: DocereConfig) {
 				<Entity
 					customProps={props}
 					entitiesConfig={config.entities}
-					id={bioId}
+					entityId={bioId}
 					configId={'person'}
 					PopupBody={pagePart('bio', bioId, page.parts.get(bioId))}
 					// revealOnHover={isEntity || hasSuggestion ? false : true}
@@ -125,7 +125,7 @@ export default async function entryComponents(config: DocereConfig) {
 				<Entity
 					customProps={props}
 					entitiesConfig={config.entities}
-					id={biblioId}
+					entityId={biblioId}
 					configId={'bibl'}
 					PopupBody={pagePart('biblio', biblioId, page.parts.get(biblioId))}
 				>

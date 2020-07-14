@@ -103,7 +103,7 @@ function ResultBody(props: DocereResultBodyProps) {
 			/>
 			<div>{props.children}</div>
 			{
-				props.result.snippets.length > 0 &&
+				props.result.snippets?.length > 0 &&
 				<Snippets>
 					{props.result.snippets.map((snippet, index) =>
 						<li dangerouslySetInnerHTML={{ __html: `...${snippet}...` }}  key={index} />

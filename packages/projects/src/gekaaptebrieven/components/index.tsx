@@ -19,7 +19,7 @@ export default function getComponents(config: DocereConfig) {
 					customProps={props}
 					configId={props.attributes.type}
 					entitiesConfig={config.entities}
-					id={(props.children as any)[0]}
+					entityId={(props.children as any)[0]}
 				>
 					{props.children}
 				</Entity>

@@ -143,7 +143,7 @@ function entity(config: DocereConfig) {
 			<Entity
 				customProps={props}
 				entitiesConfig={config.entities}
-				id={isEntity ? props.attributes.ref : props.attributes.id}
+				entityId={isEntity ? props.attributes.ref : props.attributes.id}
 				configId={isEntity ? type : 'string'}
 				PopupBody={EntityBody}
 				revealOnHover={isEntity || hasSuggestion ? false : true}

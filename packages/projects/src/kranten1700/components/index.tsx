@@ -65,7 +65,7 @@ function w(config: DocereConfig) {
 			<Entity
 				customProps={props}
 				entitiesConfig={config.entities}
-				id={props.attributes.id}
+				entityId={props.attributes.id}
 				PopupBody={RsBody}
 				configId={props.attributes.type}
 			>

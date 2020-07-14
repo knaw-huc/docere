@@ -16,6 +16,7 @@ async function indexDocument(filePath: string, projectId: string, puppenv: Puppe
 
 	try {
 		await esClient.index({
+			id: esDocument.id,
 			index: projectId,
 			body: esDocument,
 		})

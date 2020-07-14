@@ -89,7 +89,7 @@ function String(props: DocereComponentProps) {
 	return (
 		<Entity
 			customProps={props}
-			id={props.attributes.ID}
+			entityId={props.attributes.ID}
 			PopupBody={EntityPopupBody}
 			revealOnHover
 		>
