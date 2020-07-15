@@ -54,7 +54,7 @@ export default function getEntity(preProps: PreProps) {
 		const entityValue = preProps.extractValue(props)
 		if (!props.entrySettings['panels.text.showEntities']) return <span>{entityValue}</span>
 
-
+		const navigate = props.useNavigate()
 		const [entity, config] = useEntityData(preProps.extractType, preProps.extractKey, props)
 		const [children, firstWord, restOfFirstChild] = useChildren(entityValue, config)
 
@@ -63,31 +63,28 @@ export default function getEntity(preProps: PreProps) {
 		// show the tooltip of the entity that was clicked. The others are highlighted,
 		// but only the clicked entity shows its tooltip
 		const [showTooltip, setShowTooltip] = React.useState(false)
-
-		const active = entity != null && props.activeEntity?.id === entity.id
+		const [active, setActive] = React.useState(false)
 
 		React.useEffect(() => {
-			if (!active && showTooltip) setShowTooltip(false)
-		}, [active, showTooltip])
+			const nextActive = entity != null && props.activeEntity != null && props.activeEntity.id === entity.id
+			setActive(nextActive)
+			if (!nextActive && showTooltip) setShowTooltip(false)
+		}, [entity, props.activeEntity])
 
 		const handleClick = React.useCallback(ev => {
 			ev.stopPropagation()
 
-			props.entryDispatch({
-				type: 'SET_ENTITY',
-				id: entity.id,
+			navigate({
+				type: 'entry',
+				id: props.entry.id,
+				query: {
+					entityId: entity.id,
+					entityType: entity.type
+				}
 			})
-			// props.navigate({
-			// 	type: 'entry',
-			// 	id: props.entry.id,
-			// 	query: {
-			// 		entityId: entity.id,
-			// 		entityType: entity.type
-			// 	}
-			// })
 
 			setShowTooltip(true)
-		}, [entity?.id])
+		}, [entity?.id, navigate])
 
 		// Only abort when config does not exist. The entity is not necessary for rendering
 		if (config == null) return null

@@ -7,7 +7,7 @@ function getQueryString(query: Record<string, string>) {
 	return Object.keys(query)
 		.reduce((prev, curr) => {
 			prev = prev.length ? `${prev}&` : '?'
-			return `${prev}${curr}=${query[curr]}`
+			return `${prev}${curr}=${encodeURIComponent(query[curr])}`
 		}, '')
 }
 

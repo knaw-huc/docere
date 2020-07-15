@@ -2,6 +2,7 @@ import * as React from 'react'
 import { ProjectContext, isTextLayer, AsideTab, getTextPanelWidth, LayerType, DEFAULT_SPACING, defaultEntrySettings } from '@docere/common'
 
 import type { EntryState, EntryStateAction, FacsimileArea, Entry } from '@docere/common'
+import { useQuery } from '../../hooks'
 
 const initialEntryState: EntryState = {
 	activeEntity: null,
@@ -54,17 +55,21 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 			const config = entryState.projectConfig.entities.find(x => x.id === entity.type)
 			if (config == null) console.error(`[SET_ENTITY] config not found for ${entity.type} with ID: ${entity.id}`)
 			let activeEntity = { ...entity, config }
-
-			if (action.id === entryState.activeEntity?.id) {
-				activeEntity = null
-				activeFacsimileAreas = null
-			}
 			
 			return {
 				...entryState,
 				activeEntity,
 				activeFacsimileAreas,
 				layers: updatePanels(entryState.layers, { activeEntity, activeNote: entryState.activeNote, entrySettings: entryState.entrySettings })
+			}
+		}
+
+		case 'UNSET_ENTITY': {
+			return {
+				...entryState,
+				activeEntity: null,
+				activeFacsimileAreas: null,
+				layers: updatePanels(entryState.layers, { activeEntity: null, activeNote: entryState.activeNote, entrySettings: entryState.entrySettings })
 			}
 		}
 
@@ -167,6 +172,15 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 			}
 		}
 
+		// case 'URL_QUERY_CHANGED': {
+		// 	if (action.query.entityId !== entryState.activeEntity.id || action.query.entityType !== entryState.activeEntity.type) {
+		// 		return {
+		// 			...entryState,
+
+		// 		}	
+		// 	}
+		// }
+
 		default:
 			break
 	}
@@ -177,7 +191,50 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 
 export default function useEntryState(entry: Entry) {
 	const { config } = React.useContext(ProjectContext)
+	const query = useQuery()
 	const x = React.useReducer(entryStateReducer, initialEntryState)
+
+	React.useEffect(() => {
+		if (x[0].entry == null) return
+
+		if (
+			query.entityId != null &&
+			query.entityType != null &&
+			(
+				query.entityId !== x[0].activeEntity?.id ||
+				query.entityType !== x[0].activeEntity?.type
+			)
+		) {
+			x[1]({
+				type: 'SET_ENTITY',
+				id: query.entityId,
+			})
+		}
+
+		if (
+			query.entityId == null &&
+			query.entityType == null &&
+			x[0].activeEntity != null
+		) {
+			x[1]({
+				type: 'UNSET_ENTITY',
+			})
+		}
+
+		if (
+			query.noteId != null &&
+			query.noteType != null &&
+			(
+				query.noteId !== x[0].activeNote?.id ||
+				query.noteType !== x[0].activeNote?.type
+			)
+		) {
+			x[1]({
+				type: 'SET_NOTE',
+				id: query.noteId,
+			})
+		}
+	}, [query])
 
 	React.useEffect(() => {
 		if (entry == null) return

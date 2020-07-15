@@ -16,19 +16,18 @@ function useSearchResult(id: string) {
 interface EntryLinkProps {
 	activeEntity: ActiveEntity
 	children: React.ReactNode
-	navigate: DocereComponentProps['navigate']
+	useNavigate: DocereComponentProps['useNavigate']
 }
 function EntryLink(props: EntryLinkProps) {
+	const navigate = props.useNavigate()
+
 	const goToEntry = React.useCallback((ev: React.MouseEvent) => {
 		ev.stopPropagation()
 
 		const payload: NavigatePayload = { type: 'entry', id: props.activeEntity.id }
-		// if (props.activeEntity.id != null) payload.query = { activeId: props.activeEntity.id }
 
-		props.navigate(payload)
+		navigate(payload)
 	}, [props.activeEntity])
-
-	console.log(props.activeEntity)
 
 	return (
 		<Link
@@ -41,8 +40,10 @@ function EntryLink(props: EntryLinkProps) {
 }
 
 export function EntryPopupBody(props: DocereComponentProps) {
+	if (props.activeEntity == null) return null
 	const result = useSearchResult(props.activeEntity?.id)
 	const ResultBodyComponent = useUIComponent(UIComponentType.SearchResult)
+
 	if (ResultBodyComponent == null || result == null) return null
 
 	return (
@@ -50,7 +51,7 @@ export function EntryPopupBody(props: DocereComponentProps) {
 			<ResultBodyComponent {...props} result={result} />
 			<EntryLink
 				activeEntity={props.activeEntity}
-				navigate={props.navigate}
+				useNavigate={props.useNavigate}
 			>
 				Go to entry
 			</EntryLink>

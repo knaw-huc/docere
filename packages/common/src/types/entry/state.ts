@@ -42,9 +42,13 @@ interface ToggleAsideTab {
 
 type ToggleTab = ToggleAsideTab
 
-interface ESA_Set_Entity_Id {
+interface SetEntity {
 	type: 'SET_ENTITY'
 	id: string
+}
+
+interface UnsetEntity {
+	type: 'UNSET_ENTITY'
 }
 
 interface ESA_Set_Note_Id {
@@ -67,13 +71,20 @@ interface ESA_Toggle_Settings_Property {
 	property: keyof DocereConfig['entrySettings'],
 }
 
+// interface UrlQueryChanged {
+// 	type: 'URL_QUERY_CHANGED',
+// 	query: Record<string, string>
+// }
+
 export type EntryStateAction = 
 	PinPanel |
 	ProjectChanged |
 	EntryChanged |
 	ToggleTab |
+	// UrlQueryChanged |
 	ESA_Set_Active_Facsimile |
-	ESA_Set_Entity_Id |
+	SetEntity |
+	UnsetEntity |
 	ESA_Set_Active_Facsimile_Areas |
 	ESA_Set_Note_Id |
 	ESA_Toggle_Layer | 

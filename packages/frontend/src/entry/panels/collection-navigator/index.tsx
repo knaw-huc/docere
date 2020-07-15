@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { ProjectContext, Entry, DocereConfig, Colors, DocereComponentProps } from '@docere/common'
+import { ProjectContext, Entry, DocereConfig, Colors, Navigate } from '@docere/common'
 // import { PanelsProps } from '..'
 
 import CollectionNavigatorController from './controller'
@@ -9,8 +9,7 @@ import { useNavigate } from '../../../hooks'
 function useOpenSeadragonController(
 	config: DocereConfig['collection'],
 	searchUrl: ProjectContext['searchUrl'],
-	navigate: DocereComponentProps['navigate'],
-	// dispatch: PanelsProps['appDispatch']
+	navigate: Navigate
 ) {
 	const [controller, setController] = React.useState<any>(null)
 

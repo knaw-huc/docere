@@ -43,7 +43,7 @@ const Close = styled(Link)`
 export default function PageView() {
 	const { projectId, pageId } = useParams()
 	const query = useQuery()
-	const navigate = useNavigate()
+	// const navigate = useNavigate()
 	const page = usePage(pageId)
 	const components = useComponents(DocereComponentContainer.Page, pageId)
 
@@ -52,7 +52,7 @@ export default function PageView() {
 	const customProps: PageComponentProps = {
 		activeId: null,
 		...query,
-		navigate,
+		useNavigate,
 	}
 
 	return (

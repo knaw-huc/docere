@@ -61,7 +61,7 @@ export default function Note(props: Props) {
 		entrySettings: props.entrySettings,
 		insideNote: false,
 		layer: null,
-		navigate: useNavigate()
+		useNavigate,
 	}
 
 	return (

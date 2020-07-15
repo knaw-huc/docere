@@ -31,7 +31,7 @@ export const Link = styled.button`
 interface PageLinkProps {
 	activeEntity: ActiveEntity
 	children: React.ReactNode
-	navigate: DocereComponentProps['navigate']
+	navigate: any
 }
 function PageLink(props: PageLinkProps) {
 	const goToPage = React.useCallback((ev: React.MouseEvent) => {
@@ -65,6 +65,7 @@ export const Wrapper = styled.div`
 export function PagePopupBody(props: DocereComponentProps) {
 	const page = usePage(props.activeEntity.type)
 	const components = useComponents(DocereComponentContainer.Page, page?.id)
+	const navigate = props.useNavigate()
 
 	if (page == null) return null
 
@@ -76,7 +77,7 @@ export function PagePopupBody(props: DocereComponentProps) {
 			/>
 			<PageLink
 				activeEntity={props.activeEntity}
-				navigate={props.navigate}
+				navigate={navigate}
 			>
 				Go to {page.title}
 			</PageLink>

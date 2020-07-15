@@ -10,6 +10,8 @@ export type ReactComponent = React.FunctionComponent<any>
 export type DocereComponents = Record<string, ReactComponent>
 
 // type GetComponents = (config: DocereConfig) => DocereComponents
+export type Navigate = (payload: NavigatePayload) => void
+
 export interface NavigatePayload {
 	type: 'entry' | 'page' | 'search'
 	id: string
@@ -19,7 +21,7 @@ export interface NavigatePayload {
 export interface ComponentProps {
 	attributes?: Record<string, string>
 	children?: React.ReactNode
-	navigate: (payload: NavigatePayload) => void
+	useNavigate: () => (payload: NavigatePayload) => void
 }
 
 export type DocereComponentProps =

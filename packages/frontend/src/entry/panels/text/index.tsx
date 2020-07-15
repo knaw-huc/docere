@@ -103,7 +103,7 @@ function TextPanel(props: TextPanelProps) {
 		entrySettings: props.entrySettings,
 		insideNote: false,
 		layer: props.layer,
-		navigate: useNavigate(),
+		useNavigate,
 	}
 
 	if (components == null) return null

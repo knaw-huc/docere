@@ -1,7 +1,9 @@
-import { ProjectContext, fetchPost, DocereConfig, Entry, DocereComponentProps } from '@docere/common'
+import { ProjectContext, fetchPost } from '@docere/common'
 import { isHierarchyFacetConfig, isListFacetConfig } from '@docere/search'
 import OpenSeadragon from 'openseadragon';
 import TiledImages from './tiled-images'
+
+import type { DocereConfig, Entry, Navigate } from '@docere/common'
 
 export default class CollectionNavigatorController {
 	private entry: Entry
@@ -12,7 +14,7 @@ export default class CollectionNavigatorController {
 		private viewer: OpenSeadragon.Viewer,
 		private config: DocereConfig['collection'],
 		private searchUrl: ProjectContext['searchUrl'],
-		private navigate: DocereComponentProps['navigate']
+		private navigate: Navigate
 	) {
 		this.viewer.addHandler('canvas-click', this.canvasClickHandler)
 		this.viewer.addHandler('full-screen', this.fullScreenHandler)

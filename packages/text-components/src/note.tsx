@@ -40,12 +40,26 @@ type ExtractNoteId = (props: DocereComponentProps) => string
 
 export default function getNote(extractNoteId: ExtractNoteId) {
 	return function Note(props: DocereComponentProps) {
+
 		if (
 			!props.entrySettings['panels.text.showNotes'] ||
 			props.entry.notes == null
 		) return <span>{props.children}</span>
 
 		const note = useNote(extractNoteId, props)
+		const navigate = props.useNavigate()
+
+		const handleClick = React.useCallback(() => {
+			navigate({
+				type: 'entry',
+				id: props.entry.id,
+				query: {
+					noteId: note.id,
+					noteType: note.type
+				},
+			})
+		}, [note, navigate])
+
 		if (note == null) return null
 
 		const active = note.id === props.activeNote?.id
@@ -57,7 +71,7 @@ export default function getNote(extractNoteId: ExtractNoteId) {
 				className="note"
 				color={note.color}
 				id={note.id}
-				onClick={() => props.entryDispatch({ type: 'SET_NOTE', id: note.id }) }
+				onClick={handleClick}
 				openToAside={openToAside}
 			>
 				{note.n}
