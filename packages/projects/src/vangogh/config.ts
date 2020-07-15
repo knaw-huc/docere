@@ -66,6 +66,11 @@ const config: DocereConfig = {
 			color: Colors.Orange,
 			id: 'entry',
 			type: RsType.Entry,
+		},
+		{
+			color: Colors.Brown,
+			id: 'note',
+			type: RsType.Note,
 		}
 	],
 	layers: [

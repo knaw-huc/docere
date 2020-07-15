@@ -10,5 +10,11 @@ export default function prepareDocument(doc: XMLDocument, _config: DocereConfig)
 		note.id = note.getAttribute('target').slice(1)
 	}
 
+	for (const ref of doc.querySelectorAll('ref[target]')) {
+		const target = ref.getAttribute('target')
+		const type = target.indexOf('#') > -1 ? 'note' : 'entry'
+		ref.setAttribute('type', type)
+	}
+
 	return doc
 }

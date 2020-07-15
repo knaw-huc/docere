@@ -48,6 +48,7 @@ export enum RsType {
 	Entry = 'entry',
 	Location = 'location',
 	None = 'unknown',
+	Note = 'note',
 	PagePart = 'page_part',
 	Person = 'person',
 }

@@ -77,6 +77,14 @@ export default function getEntity(preProps: PreProps) {
 				type: 'SET_ENTITY',
 				id: entity.id,
 			})
+			// props.navigate({
+			// 	type: 'entry',
+			// 	id: props.entry.id,
+			// 	query: {
+			// 		entityId: entity.id,
+			// 		entityType: entity.type
+			// 	}
+			// })
 
 			setShowTooltip(true)
 		}, [entity?.id])

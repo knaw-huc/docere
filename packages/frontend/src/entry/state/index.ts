@@ -52,6 +52,7 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 			if (entity == null) entity = { id: action.id, type: null, value: null }
 
 			const config = entryState.projectConfig.entities.find(x => x.id === entity.type)
+			if (config == null) console.error(`[SET_ENTITY] config not found for ${entity.type} with ID: ${entity.id}`)
 			let activeEntity = { ...entity, config }
 
 			if (action.id === entryState.activeEntity?.id) {

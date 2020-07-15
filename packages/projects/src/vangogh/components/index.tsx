@@ -19,14 +19,14 @@ export default function getComponents(_config: DocereConfig) {
 			lb: Lb,
 			pb: getPb(props => props.attributes.facs.slice(1)),
 			// ref,
-			'ref[target]': getEntity({
+			'ref[target][type="entry"]': getEntity({
 				extractType: () => 'entry',
-				extractKey: props => {
-					const [entryFilename, noteId] = props.attributes.target.split('#')
-					noteId
-					console.log(noteId)
-					return entryFilename.slice(0, -4)
-				},
+				extractKey: props => props.attributes.target,
+				PopupBody: EntryPopupBody
+			}),
+			'ref[target][type="note"]': getEntity({
+				extractType: () => 'note',
+				extractKey: props => props.attributes.target,
 				PopupBody: EntryPopupBody
 			}),
 			// 'ref[target]': (props: DocereComponentProps) => {
