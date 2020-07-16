@@ -14,11 +14,12 @@ const PAGES = '/pages/'
  */
 
 function getQueryString(query: UrlQuery) {
-	if (query.entity == null && query.note == null) return ''
+	if (query == null) return ''
 
 	return Object.keys(query)
+		.filter((x: 'entity' | 'note') => query[x] != null)
 		.reduce((prev, curr: 'entity' | 'note') => {
-			if (query[curr] == null) return prev
+			// if (query[curr] == null) return prev
 			prev = prev.length ? `${prev}&` : '?'
 			return `${prev}${curr.charAt(0)}i=${encodeURIComponent(query[curr].id)}&${curr.charAt(0)}t=${query[curr].type}`
 		}, '')

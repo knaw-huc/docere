@@ -154,3 +154,13 @@ export default async function getEntry(id: string, configData: DocereConfigData)
 
 	return entryCache.get(id)
 }
+
+// export function useEntry(id: string) {
+// 	const [entry, setEntry] = React.useState<Entry>(null)
+
+// 	React.useEffect(() => {
+// 		getEntry(id, )
+// 	}, [id])
+
+// 	return entry
+// }

@@ -63,6 +63,8 @@ export const Wrapper = styled.div`
 `
 
 export function PagePopupBody(props: DocereComponentProps) {
+	if (props.activeEntity == null) return null
+
 	const page = usePage(props.activeEntity.type)
 	const components = useComponents(DocereComponentContainer.Page, page?.id)
 	const navigate = props.useNavigate()

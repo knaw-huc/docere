@@ -40,6 +40,7 @@ export function usePage(pageId: string) {
 	const [page, setPage] = React.useState<Page>(null)
 
 	React.useEffect(() => {
+		if (pageId == null) return
 		getPage(pageId, projectContext.config).then(setPage)
 	}, [pageId, projectContext.config.slug])
 

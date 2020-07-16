@@ -33,6 +33,5 @@ export default function extractEntities(doc: XMLDocument, _config: DocereConfig)
 	extractPageLinks('biblio', 'ref[target^="biblio.xml#"]', entities, doc)
 	extractPageLinks('bio', 'ref[target^="bio.xml#"]', entities, doc)
 
-	console.log(Array.from(entities.values()))
 	return Array.from(entities.values())
 }
