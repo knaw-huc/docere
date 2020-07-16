@@ -12,10 +12,19 @@ export type DocereComponents = Record<string, ReactComponent>
 // type GetComponents = (config: DocereConfig) => DocereComponents
 export type Navigate = (payload: NavigatePayload) => void
 
+interface UrlQueryEntity {
+	id: string
+	type: string
+}
+
+export interface UrlQuery {
+	entity?: UrlQueryEntity,
+	note?: UrlQueryEntity
+}
 export interface NavigatePayload {
 	type: 'entry' | 'page' | 'search'
 	id: string
-	query?: Record<string, string>
+	query?: UrlQuery
 }
 
 export interface ComponentProps {

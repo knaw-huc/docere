@@ -2,14 +2,16 @@ import React from 'react'
 import { useHistory, useParams, useLocation } from "react-router-dom"
 import { getPath } from '@docere/common'
 
-import type { NavigatePayload } from '@docere/common'
+import type { NavigatePayload, UrlQuery } from '@docere/common'
 
-function getNextQuery(currentQuery: Record<string, string>, payloadQuery: Record<string, string>) {
-	const nextQuery = { ...currentQuery }
-	Object.keys(payloadQuery).forEach(key => {
-		if (nextQuery.hasOwnProperty(key) && nextQuery[key] === payloadQuery[key]) delete nextQuery[key]
-		else nextQuery[key] = payloadQuery[key]
-	})	
+function getNextQuery(currentQuery: UrlQuery, payloadQuery: UrlQuery) {
+	const nextQuery = { ...currentQuery, ...payloadQuery }
+
+	if (payloadQuery.entity?.id === currentQuery.entity?.id) nextQuery.entity = null
+	if (payloadQuery.note?.id === currentQuery.note?.id) nextQuery.note = null
+
+	console.log(nextQuery)
+
 	return nextQuery
 }
 
@@ -25,40 +27,28 @@ export function useNavigate() {
 	return navigate
 }
 
-// function areEqualObjects(obj1: Record<string, string>, obj2: Record<string, string>) {
-// 	if (obj1 == null || obj2 == null) return false
-
-// 	const keys1 = Object.keys(obj1)
-// 	const keys2 = Object.keys(obj2)
-// 	if (keys1.length !== keys2.length) return false
-// 	if (!keys1.every(key1 => keys2.indexOf(key1) > -1)) return false
-
-// 	const values1 = keys1.map(key1 => obj1[key1])
-// 	const values2 = keys2.map(key2 => obj2[key2])
-// 	if (!values1.every(value1 => values2.indexOf(value1) > -1)) return false
-
-// 	return true
-// }
-// interface UrlQueryEntity {
-// 	id: string
-// 	type: string
-// }
-
-// interface UrlQuery {
-// 	entity: UrlQueryEntity,
-// 	note: UrlQueryEntity
-// }
+function defaultUrlQuery(): UrlQuery {
+	return {
+		entity: null,
+		note: null
+	}
+}
 
 export function useQuery() {
 	const location = useLocation()
-	const [query, setQuery] = React.useState<Record<string, string>>(null)
+	const [query, setQuery] = React.useState<UrlQuery>(defaultUrlQuery())
 
 	React.useEffect(() => {
-		const x: Record<string, string> = {}
+		const nextQuery = defaultUrlQuery()
 		for (const [key, value] of new URLSearchParams(location.search)) {
-			x[key] = value
+			if (key.charAt(0) === 'e' && nextQuery.entity == null) nextQuery.entity = { id: null, type: null }
+			if (key.charAt(0) === 'n' && nextQuery.note == null) nextQuery.note = { id: null, type: null }
+			if (key === 'ei') nextQuery.entity.id = value
+			if (key === 'et') nextQuery.entity.type = value
+			if (key === 'ni') nextQuery.note.id = value
+			if (key === 'nt') nextQuery.note.type = value
 		}
-		setQuery(x)
+		setQuery(nextQuery)
 	}, [location.search])
 
 	return query 

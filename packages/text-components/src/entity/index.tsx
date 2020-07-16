@@ -78,8 +78,10 @@ export default function getEntity(preProps: PreProps) {
 				type: 'entry',
 				id: props.entry.id,
 				query: {
-					entityId: entity.id,
-					entityType: entity.type
+					entity: {
+						id: entity.id,
+						type: entity.type
+					}
 				}
 			})
 

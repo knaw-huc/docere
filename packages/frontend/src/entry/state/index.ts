@@ -74,13 +74,22 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 		}
 
 		case 'SET_NOTE': {
-			const activeNote = entryState.activeNote?.id !== action.id ? entryState.entry.notes.find(n => n.id === action.id) : null
+			const activeNote = entryState.entry.notes.find(n => n.id === action.id)
 
 			return {
 				...entryState,
 				activeNote,
 				layers: updatePanels(entryState.layers, { activeEntity: entryState.activeEntity, activeNote, entrySettings: entryState.entrySettings })
 			}
+		}
+
+		case 'UNSET_NOTE': {
+			return {
+				...entryState,
+				activeNote: null,
+				layers: updatePanels(entryState.layers, { activeEntity: entryState.activeEntity, activeNote: null, entrySettings: entryState.entrySettings })
+			}
+
 		}
 
 		case 'TOGGLE_TAB': {
@@ -198,22 +207,20 @@ export default function useEntryState(entry: Entry) {
 		if (x[0].entry == null) return
 
 		if (
-			query.entityId != null &&
-			query.entityType != null &&
+			query.entity != null &&
 			(
-				query.entityId !== x[0].activeEntity?.id ||
-				query.entityType !== x[0].activeEntity?.type
+				query.entity.id !== x[0].activeEntity?.id ||
+				query.entity.type !== x[0].activeEntity?.type
 			)
 		) {
 			x[1]({
 				type: 'SET_ENTITY',
-				id: query.entityId,
+				id: query.entity.id,
 			})
 		}
 
 		if (
-			query.entityId == null &&
-			query.entityType == null &&
+			query.entity == null &&
 			x[0].activeEntity != null
 		) {
 			x[1]({
@@ -222,16 +229,24 @@ export default function useEntryState(entry: Entry) {
 		}
 
 		if (
-			query.noteId != null &&
-			query.noteType != null &&
+			query.note != null &&
 			(
-				query.noteId !== x[0].activeNote?.id ||
-				query.noteType !== x[0].activeNote?.type
+				query.note.id !== x[0].activeNote?.id ||
+				query.note.type !== x[0].activeNote?.type
 			)
 		) {
 			x[1]({
 				type: 'SET_NOTE',
-				id: query.noteId,
+				id: query.note.id,
+			})
+		}
+
+		if (
+			query.note == null &&
+			x[0].activeNote != null
+		) {
+			x[1]({
+				type: 'UNSET_NOTE',
 			})
 		}
 	}, [query])

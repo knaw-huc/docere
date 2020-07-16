@@ -38,7 +38,7 @@ function PageLink(props: PageLinkProps) {
 		ev.stopPropagation()
 
 		const payload: NavigatePayload = { type: 'page', id: props.activeEntity.type }
-		if (props.activeEntity.id != null) payload.query = { activeId: props.activeEntity.id }
+		if (props.activeEntity.id != null) payload.query = { entity: { id: props.activeEntity.id, type: null } }
 
 		props.navigate(payload)
 	}, [props.activeEntity])

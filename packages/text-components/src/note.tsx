@@ -54,8 +54,10 @@ export default function getNote(extractNoteId: ExtractNoteId) {
 				type: 'entry',
 				id: props.entry.id,
 				query: {
-					noteId: note.id,
-					noteType: note.type
+					note: {
+						id: note.id,
+						type: note.type,
+					}
 				},
 			})
 		}, [note, navigate])

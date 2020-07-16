@@ -51,9 +51,13 @@ interface UnsetEntity {
 	type: 'UNSET_ENTITY'
 }
 
-interface ESA_Set_Note_Id {
+interface SetNote {
 	type: 'SET_NOTE'
 	id: string
+}
+
+interface UnsetNote {
+	type: 'UNSET_NOTE'
 }
 
 interface ESA_Set_Active_Facsimile {
@@ -86,6 +90,7 @@ export type EntryStateAction =
 	SetEntity |
 	UnsetEntity |
 	ESA_Set_Active_Facsimile_Areas |
-	ESA_Set_Note_Id |
+	SetNote |
+	UnsetNote |
 	ESA_Toggle_Layer | 
 	ESA_Toggle_Settings_Property
