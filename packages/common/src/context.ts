@@ -1,8 +1,9 @@
 import React from 'react'
-import type { DocereConfig, GetComponents, GetUIComponent } from './types'
+import type { DocereConfig, GetComponents, GetUIComponent, DocereConfigData } from './types'
 
 interface ProjectContext {
 	config: DocereConfig
+	configData: DocereConfigData
 	getComponents: GetComponents
 	getUIComponent: GetUIComponent
 	searchUrl: string

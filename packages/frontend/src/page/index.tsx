@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import DocereTextView from '@docere/text'
 import { TOP_OFFSET, DEFAULT_SPACING, DocereComponentContainer, useComponents, usePage, getSearchPath, PageComponentProps } from '@docere/common'
-import { useNavigate, useQuery } from '../hooks'
+import { useQuery } from '../hooks'
 
 const Wrapper = styled.div`
 	background: white;
@@ -40,10 +40,11 @@ const Close = styled(Link)`
 	top: ${DEFAULT_SPACING}px;
 `
 
+// TODO useQuery is used to pass activeId to Page, but that should not be necessary
+
 export default function PageView() {
 	const { projectId, pageId } = useParams()
 	const query = useQuery()
-	// const navigate = useNavigate()
 	const page = usePage(pageId)
 	const components = useComponents(DocereComponentContainer.Page, pageId)
 
@@ -52,7 +53,6 @@ export default function PageView() {
 	const customProps: PageComponentProps = {
 		activeId: null,
 		...query,
-		useNavigate,
 	}
 
 	return (

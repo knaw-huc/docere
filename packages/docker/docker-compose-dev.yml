@@ -31,7 +31,7 @@ services:
     build:
       context: ../../
       dockerfile: ./packages/api/Dockerfile
-    command: ["npx", "nodemon", "./packages/api"]
+    command: ["npx", "nodemon", "./packages/api", "-w", "./packages/api/build/api"]
     networks:
       - elastic
     ports:

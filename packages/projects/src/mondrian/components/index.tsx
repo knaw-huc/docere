@@ -10,8 +10,8 @@ export default function getComponents(config: DocereConfig) {
 		if (container === DocereComponentContainer.Page) {
 			if (_id === 'biblio') return await biblioComponents()
 			if (_id === 'bio') return await bioComponents()
+		} else if (container === DocereComponentContainer.Layer) {
+			return await entryComponents(config)
 		}
-
-		return await entryComponents(config)
 	}
 }

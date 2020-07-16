@@ -28,6 +28,7 @@ function useProjectData() {
 		configDatas[projectId]().then(({ default: configData }) => {
 			const projectContextValue: ProjectContext = {
 				config: configData.config,
+				configData,
 				getComponents: configData.getComponents(configData.config),
 				getUIComponent: configData.getUIComponent(configData.config),
 				searchUrl: `/search/${configData.config.slug}/_search`,
@@ -45,46 +46,46 @@ export default function Project() {
 	const [projectConfigData, projectContextValue] = useProjectData()
 	if (projectConfigData == null) return null
 
-	return <RealProject
-		projectConfigData={projectConfigData}
-		projectContextValue={projectContextValue}
-	/>
+	return (
+		<ProjectContext.Provider value={projectContextValue}>
+			<RealProject
+				projectConfigData={projectConfigData}
+			/>
+		</ProjectContext.Provider>
+	)
 }
 
 interface Props {
 	projectConfigData: DocereConfigData
-	projectContextValue: ProjectContext
 }
 function RealProject(props: Props) {
 	const match = useRouteMatch()
-	const [appState, appDispatch] = useAppState(props.projectConfigData)
+	const [appState, appDispatch] = useAppState()
 
 	const facetsConfig = useFacetsConfig(props.projectConfigData.config)
 	const [state, dispatch] = useSearchReducer(facetsConfig)
 
 	return (
-		<ProjectContext.Provider value={props.projectContextValue}>
-			<SearchContext.Provider value={{ state, dispatch }}>
-				<ProjectHeader
-					appDispatch={appDispatch}
-				/>
-				<Route path={`${match.path}/pages/:pageId`}>
-					<PageView />
-				</Route>
-				<EntrySelector
-					appDispatch={appDispatch}
-					entry={appState.entry}
-					footerTab={appState.footerTab}
-					searchTab={appState.searchTab}
-					viewport={appState.viewport}
-				/>
-				<Entry 
-					appDispatch={appDispatch}
-					entry={appState.entry}
-					footerTab={appState.footerTab}
-					searchTab={appState.searchTab}
-				/>
-			</SearchContext.Provider>
-		</ProjectContext.Provider>
+		<SearchContext.Provider value={{ state, dispatch }}>
+			<ProjectHeader
+				appDispatch={appDispatch}
+			/>
+			<Route path={`${match.path}/pages/:pageId`}>
+				<PageView />
+			</Route>
+			<EntrySelector
+				appDispatch={appDispatch}
+				entry={appState.entry}
+				footerTab={appState.footerTab}
+				searchTab={appState.searchTab}
+				viewport={appState.viewport}
+			/>
+			<Entry 
+				appDispatch={appDispatch}
+				entry={appState.entry}
+				footerTab={appState.footerTab}
+				searchTab={appState.searchTab}
+			/>
+		</SearchContext.Provider>
 	)
 }

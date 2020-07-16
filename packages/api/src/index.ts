@@ -6,6 +6,7 @@ import projectApi from './api/project'
 import documentApi from './api/document'
 import indexerApi from './api/indexer'
 import dtsApi from './api/dts'
+import otherApi from './api/other'
 import chalk from 'chalk'
 
 const copyright = `Docere Copyright (C) 2018 - 2020 Gijsjan Brouwer
@@ -60,6 +61,7 @@ async function main() {
 	documentApi(app, puppenv)
 	indexerApi(app, puppenv)
 	dtsApi(app, puppenv)
+	otherApi(app)
 
 	/*
 	 * Usage example:

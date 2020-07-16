@@ -44,11 +44,12 @@ export enum LayerType {
 }
 
 export enum RsType {
+	Artwork = 'artwork',
 	Date = 'date',
-	Entry = 'entry',
+	EntryLink = 'entry_link',
 	Location = 'location',
 	None = 'unknown',
-	Note = 'note',
+	NoteLink = 'note_link',
 	PagePart = 'page_part',
 	Person = 'person',
 }

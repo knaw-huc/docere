@@ -7,8 +7,10 @@ import Tooltip, { TooltipBody } from '../tooltip'
 
 import type { DocereComponentProps, DocereConfig } from '@docere/common'
 
+export * from './body'
 export * from './page'
 export * from './entry'
+export * from './note-link'
 
 interface PAW { settings: DocereConfig['entrySettings'] }
 const PopupAsideWrapper = styled(TooltipBody)`

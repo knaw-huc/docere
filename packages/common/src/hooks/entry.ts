@@ -1,7 +1,5 @@
 import React from 'react'
-import { fetchEntryXml, isTextLayer, isXmlLayer, EsDataType, LayerType, defaultMetadata, MetadataItem, setTitle, ProjectContext } from '@docere/common'
-
-import type { FacsimileArea, Facsimile, LayerConfig, TextLayerConfig, Layer, DocereConfigData, Entry } from '@docere/common'
+import { FacsimileArea, Facsimile, LayerConfig, TextLayerConfig, LayerType, Layer, setTitle, DocereConfigData, isTextLayer, isXmlLayer, Entry, defaultMetadata, MetadataItem, EsDataType, fetchEntryXml, ProjectContext } from '..'
 
 const defaultFacsimileArea: Pick<FacsimileArea, 'showOnHover' | 'target' | 'unit'> = {
 	showOnHover: true,

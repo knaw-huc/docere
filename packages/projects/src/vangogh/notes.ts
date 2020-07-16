@@ -5,7 +5,7 @@ function toExtractedNote(el: Element): Note {
 	return {
 		color: Colors.BlueBright,
 		el,
-		id: el.id,
+		id: el.getAttribute('xml:id'),
 		n: el.getAttribute('n'),
 		targetId: el.getAttribute('n'),
 		title: `Note ${el.getAttribute('n')}`,

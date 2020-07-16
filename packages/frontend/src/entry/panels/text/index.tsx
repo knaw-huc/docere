@@ -5,7 +5,6 @@ import { isTextLayer, ProjectContext, useComponents, DEFAULT_SPACING, TEXT_PANEL
 import { SearchContext } from '@docere/search'
 import DocereTextView from '@docere/text'
 
-import { useNavigate } from '../../../hooks'
 import PanelHeader from '../header'
 import Minimap from './minimap'
 
@@ -103,7 +102,6 @@ function TextPanel(props: TextPanelProps) {
 		entrySettings: props.entrySettings,
 		insideNote: false,
 		layer: props.layer,
-		useNavigate,
 	}
 
 	if (components == null) return null

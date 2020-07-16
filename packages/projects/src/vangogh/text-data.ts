@@ -32,12 +32,8 @@ export default function extractTextData(doc: XMLDocument, _config: DocereConfig)
 
 	Array.from(doc.querySelectorAll('ref[target]'))
 		.forEach(currEl => {
-			// const [entryFilename, noteId] = currEl.getAttribute('target').split('#')
-			// const type = noteId == null ? 'entry' : 'note'
-			// const id = type === 'entry' ? entryFilename.slice(0, -4) : currEl.getAttribute('target')
-
 			const id = currEl.getAttribute('target')
-			const type = id.indexOf('#') > -1 ? 'note' : 'entry'
+			const type = id.indexOf('#') > -1 ? 'note-link' : 'entry-link'
 
 			if (entities.has(id)) {
 				const entity = entities.get(id)

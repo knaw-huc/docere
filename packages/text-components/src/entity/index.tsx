@@ -1,8 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
+import { DocereComponentProps, EntityConfig, useNavigate } from '@docere/common'
+
 import { Popup } from '../popup'
 import { useEntityData, useChildren, ExtractEntityKey, ExtractEntityValue, ExtractEntityType } from './hooks'
-import type { DocereComponentProps, EntityConfig } from '@docere/common'
 import IconsByType from './icons'
 
 interface NWProps { openToAside: boolean }
@@ -54,7 +55,7 @@ export default function getEntity(preProps: PreProps) {
 		const entityValue = preProps.extractValue(props)
 		if (!props.entrySettings['panels.text.showEntities']) return <span>{entityValue}</span>
 
-		const navigate = props.useNavigate()
+		const navigate = useNavigate()
 		const [entity, config] = useEntityData(preProps.extractType, preProps.extractKey, props)
 		const [children, firstWord, restOfFirstChild] = useChildren(entityValue, config)
 

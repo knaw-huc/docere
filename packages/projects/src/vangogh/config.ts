@@ -64,14 +64,14 @@ const config: DocereConfig = {
 		},
 		{
 			color: Colors.Orange,
-			id: 'entry',
-			type: RsType.Entry,
+			id: 'entry-link',
+			type: RsType.EntryLink,
 		},
 		{
 			color: Colors.Brown,
-			id: 'note',
-			type: RsType.Note,
-		}
+			id: 'note-link',
+			type: RsType.NoteLink,
+		},
 	],
 	layers: [
 		{

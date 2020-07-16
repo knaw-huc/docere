@@ -45,11 +45,36 @@
                 
                 <person xml:id="AllebéAuguste"><persName><forename>Auguste</forename> <surname>Allebé</surname></persName></person>
                 
+                <person xml:id="AlmaPeter"></person>
+                
                 <person xml:id="BaardCWH"></person>
                 
                 <person xml:id="BesantA"></person>
                 
-                <person xml:id="BraetvonUberfeldt"><persName><forename>Jan</forename> <surname>Braet von Uberfeldt</surname></persName></person>
+                <person xml:id="BraetvonUberfeldt">
+                    <persName><forename>Jan</forename> <surname>Braet von Uberfeldt</surname></persName>                                       
+                    <birth when="1807-03-28">
+                        <placeName>
+                            <settlement>Langerak</settlement>
+                            <country>Nederland</country>
+                        </placeName>
+                    </birth>
+                    <death when="1894-03-28">
+                        <placeName>
+                            <settlement>Doetinchem</settlement>
+                            <country>Nederland</country>
+                        </placeName>
+                    </death>
+                    <note type="shortdesc">Nederlandse kunstschilder, tekenaar en lithograaf. Fungeerde tussen 1888 en 1892 als leermeerster van Mondriaan.</note>
+                    <note type="biographic">
+                        <p>Jan Braet von Uberfeld studeerde tussen 1830 en 1835 aan de Rijksacademie voor Beeldende Kunsten te Amsterdam. Zijn leermeerster was onder meer
+                           Cornelis Kruseman. Op de academie raakte Braet von Uberfeldt bevriend met zijn studiegenoot Valentijn Bing. In 1857 gaven zij samen het boek 
+                           'Nederlandsche Kleederdragten' uit. Braet von Uberfeldt vestigde zich in 1880 in Doetinchem, waar Mondriaan hem in 1888 zou bezoeken. Mondriaan 
+                           werd bij Braet von Uberfeldt geïntroduceerd door zijn oom Frits Mondriaan (<ref target="biblio.xml#Stap2011">Stap 2011</ref>, p. 25).</p>                        
+                    </note>
+                    <note type="rkd"><ptr target="https://rkd.nl/explore/artists/11926"/></note>
+                </person>
+                    
                 
                 <person xml:id="BreejenNootjeden"></person>
                 
@@ -100,6 +125,8 @@
                 
                 <person xml:id="KnapGerritWillem"><persName><forename>Gerrit Willem</forename> <surname>Knap</surname></persName></person>
                 
+                <person xml:id="LeckBartvander"></person>
+                
                 <person xml:id="LozinIrma"></person>
                 
                 <person xml:id="MondriaanOuders"></person>
@@ -136,6 +163,33 @@
                 
                 <person xml:id="SchäferDirk"></person>
                 
+                <person xml:id="SlijperSal">
+                    <persName><forename>Salomon</forename> <surname>Slijper</surname></persName>                                       
+                    <birth when="1884-01-20">
+                        <placeName>
+                            <settlement>Amsterdam</settlement>
+                            <country>Nederland</country>
+                        </placeName>
+                    </birth>
+                    <death when="1971-08-09">
+                        <placeName>
+                            <settlement>Blaricum</settlement>
+                            <country>Nederland</country>
+                        </placeName>
+                    </death>
+                    <note type="shortdesc">Nederlandse makelaar en kunstverzamelaar. Groeide na hun ontmoeting in 1915 uit tot de belangrijkste verzamelaar van het werk van Piet Mondriaan.</note>
+                    <note type="biographic">
+                        <p>Salomon Bernard Slijper werd geboren als zoon van een Amsterdamse diamantair. Hij werd opgeleid aan de Handelsschool en belandde tijdens autorijles in 1914 voor
+                           het eerst in Blaricum. Een jaar later zou hij gedurende de zomer enige tijd doorbrengen in het aangrenzende dorp Laren, waar hij in de eetzaal van het pension van
+                           Katinka Hannaart voor het eerst werd geconfronteerd met een abstract schilderij van Mondriaan. Hoewel hij naar eigen zeggen zes weken nodig had om aan het werk te
+                           wennen, zou hij uitgroeien tot een groot liefhebber van het werk van Mondriaan. In Laren maakte Slijper in de zomer van 1915 ook kennis met Mondriaan zelf. Hieruit
+                           ontstond een vriendschap die was gebaseerd op een gedeelde passie voor mooie kleding, dansen en dames. Pas eind jaren '30 zouden Mondriaan en Slijper elkaar definitief
+                           uit het oog verliezen, vanwege de verhuizing van Mondriaan van Parijs naar Londen en de uitbraak van de tweede wereldoorlog en het dientegevolge gedwongen onderduiken 
+                           van Slijper.</p>                        
+                    </note>
+                    <note type="rkd"><ptr target="https://rkd.nl/explore/artists/11926"/></note>
+                </person>
+                
                 <person xml:id="SluijtersJan"></person>
                 
                 <person xml:id="SpoorKees"></person>
@@ -150,11 +204,39 @@
                 
                 <person xml:id="VerhoevenJan"></person>
                 
-                <person xml:id="WaldenburgAlfred"></person>
+                <person xml:id="WaldenburgAlfred" sex="1">
+                    <persName full="yes"><forename>Alfred</forename> <surname>Waldenburg</surname></persName>                                       
+                    <birth when="1873-10-09">
+                        <placeName>
+                            <settlement>Berlijn</settlement>
+                            <country>Duitsland</country>
+                        </placeName>
+                    </birth>
+                    <death when="1942-02-07">
+                        <placeName>
+                            <settlement>Blaricum</settlement>
+                            <country>Nederland</country>
+                        </placeName>
+                    </death>
+                    <note type="shortdesc">Duitse arts en wetenschapper. Was na 1901 actief in Amsterdam en het Gooi als frenoloog en antropoloog.</note>
+                    <note type="biographic">
+                        <p>De Duitse arts Alfred Waldenburg werd geboren in Berlijn op 9 oktober 1873. Hij promoveerde in 1902 op een studie naar joodse smalschedels bij
+                           geïsoleerd levende gemeenschappen op de Noord Friese waddeneilanden. Tussen 1901 en 1909 vestigde hij zich in Nederland, waar hij onderzoek
+                           deed naar de Sefardisch-joodse bevolking van Amsterdam. In 1913 vestigde hij zich op de heide bij Blaricum, waar hij tot zijn overlijden in 1942 
+                           zou blijven wonen.</p>
+                        <p>Waldenburg was een bekende figuur in Amsterdam en het Gooi. Hij frequenteerde verschillende kunstenaarssociëteiten, waaronder <rs type="org">Het 
+                           Honk</rs> en <rs type="org">De Kring</rs>, en was een trouwe bezoeker van vergaderingen van joodse bestuursorganen. Ondanks zijn omgang met allerhande
+                           schrijvers en beeldend kunstenaars is Waldenburg na zijn overlijden al snel in de vergetelheid geraakt. Cf. <ref target="biblio.xml#Coppes2020-1">Coppes 
+                           2020-1</ref>, passim.</p>
+                    </note>
+                    <note type="rkd"><ptr target="https://rkd.nl/explore/artists/429824"/></note>                    
+                </person>
                 
                 <person xml:id="WichmanErich"></person>
                 
                 <person xml:id="WillemIIIKoning"></person>
+                
+                <person xml:id="WolterHJ"></person>
                 
                 <person xml:id="ZeegenAdriaanvan"></person>
                 

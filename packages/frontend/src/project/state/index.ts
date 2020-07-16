@@ -1,11 +1,12 @@
 import * as React from 'react'
 import { SearchTab, Viewport } from '@docere/common'
 
-import getEntry from './get-entry'
+// import getEntry from './get-entry'
 // import HistoryNavigator from './history-navigator'
 
-import type { AppState, AppStateAction, DocereConfigData } from '@docere/common'
+import type { AppState, AppStateAction } from '@docere/common'
 import { useParams } from 'react-router-dom'
+import useEntry from './get-entry'
 
 const initialAppState: AppState = {
 	entry: null,
@@ -139,14 +140,15 @@ function appStateReducer(appState: AppState, action: AppStateAction): AppState {
 }
 
 // let historyNavigator: HistoryNavigator
-export default function useAppState(configData: DocereConfigData) {
+export default function useAppState() {
 	const x = React.useReducer(appStateReducer, initialAppState)
 	const { entryId } = useParams()
+	const entry = useEntry(entryId)
 
 	React.useEffect(() => {
-		if (entryId == null) return
-		getEntry(entryId, configData).then(entry => x[1]({ type: 'SET_ENTRY', entry }))
-	}, [entryId])
+		if (entry == null) return
+		x[1]({ type: 'SET_ENTRY', entry })
+	}, [entry])
 
 	// React.useEffect(() => {
 	// 	if (x[0].entryId == null) return

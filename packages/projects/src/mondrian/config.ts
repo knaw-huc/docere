@@ -43,6 +43,11 @@ const config: DocereConfig = {
 			color: Colors.Green,
 			id: 'bio',
 			type: RsType.PagePart,
+		},
+		{
+			color: Colors.Green,
+			id: 'rkd-artwork-link',
+			type: RsType.Artwork,
 		}
 	]
 }

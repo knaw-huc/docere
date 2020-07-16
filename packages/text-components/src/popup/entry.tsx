@@ -1,6 +1,6 @@
 import React from 'react'
-import { DocereComponentProps, useUIComponent, UIComponentType, Hit, ActiveEntity, NavigatePayload } from '@docere/common'
-import { Wrapper, Link } from './page'
+import { DocereComponentProps, useUIComponent, UIComponentType, Hit, ActiveEntity, NavigatePayload, useNavigate } from '@docere/common'
+import { PopupBodyWrapper, PopupBodyLink } from './body'
 
 function useSearchResult(id: string) {
 	const [result, setResult] = React.useState<Hit>(null)	
@@ -16,10 +16,9 @@ function useSearchResult(id: string) {
 interface EntryLinkProps {
 	activeEntity: ActiveEntity
 	children: React.ReactNode
-	useNavigate: DocereComponentProps['useNavigate']
 }
 function EntryLink(props: EntryLinkProps) {
-	const navigate = props.useNavigate()
+	const navigate = useNavigate()
 
 	const goToEntry = React.useCallback((ev: React.MouseEvent) => {
 		ev.stopPropagation()
@@ -30,12 +29,12 @@ function EntryLink(props: EntryLinkProps) {
 	}, [props.activeEntity])
 
 	return (
-		<Link
+		<PopupBodyLink
 			entityConfig={props.activeEntity.config}
 			onClick={goToEntry}
 		>
 			{props.children}
-		</Link>
+		</PopupBodyLink>
 	)
 }
 
@@ -47,14 +46,13 @@ export function EntryPopupBody(props: DocereComponentProps) {
 	if (ResultBodyComponent == null || result == null) return null
 
 	return (
-		<Wrapper>
+		<PopupBodyWrapper>
 			<ResultBodyComponent {...props} result={result} />
 			<EntryLink
 				activeEntity={props.activeEntity}
-				useNavigate={props.useNavigate}
 			>
 				Go to entry
 			</EntryLink>
-		</Wrapper>
+		</PopupBodyWrapper>
 	)
 }

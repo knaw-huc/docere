@@ -1,5 +1,5 @@
 import React from 'react'
-import type { DocereComponentProps, Note } from '@docere/common'
+import { DocereComponentProps, Note, useNavigate } from '@docere/common'
 import styled from 'styled-components'
 import { Popup } from './popup'
 
@@ -47,7 +47,7 @@ export default function getNote(extractNoteId: ExtractNoteId) {
 		) return <span>{props.children}</span>
 
 		const note = useNote(extractNoteId, props)
-		const navigate = props.useNavigate()
+		const navigate = useNavigate()
 
 		const handleClick = React.useCallback(() => {
 			navigate({

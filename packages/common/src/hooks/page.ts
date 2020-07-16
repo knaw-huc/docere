@@ -1,13 +1,13 @@
 import React from 'react'
-import { fetchXml, getPageXmlPath } from './utils'
+import { fetchXml, getPageXmlPath } from '../utils'
 
-import type { DocereConfig, Page } from './types'
-import { ProjectContext } from './context'
+import type { DocereConfig, Page } from '../types'
+import { ProjectContext } from '../context'
 
 let pagesConfig: Page[]
 const pageCache = new Map<string, Page>()
 
-export async function getPage(id: string, config: DocereConfig): Promise<Page> {
+async function getPage(id: string, config: DocereConfig): Promise<Page> {
 	if (pageCache.has(id)) return pageCache.get(id)
 
 	// Flatten pages before using .find
@@ -35,7 +35,7 @@ export async function getPage(id: string, config: DocereConfig): Promise<Page> {
 	return pageCache.get(id)
 }
 
-export function usePage(pageId: string) {
+export default function usePage(pageId: string) {
 	const projectContext = React.useContext(ProjectContext)
 	const [page, setPage] = React.useState<Page>(null)
 

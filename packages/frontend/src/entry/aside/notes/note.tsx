@@ -4,7 +4,6 @@ import DocereTextView from '@docere/text'
 import { Colors, ProjectContext } from '@docere/common'
 
 import type { EntryState, AppStateAction, DocereComponents, Entry, EntryStateAction, DocereComponentProps, Note } from '@docere/common'
-import { useNavigate } from '../../../hooks'
 
 const Li = styled.li`
 	color: ${(props: { active: boolean }) => props.active ? '#FFF' : '#BBB' };
@@ -61,7 +60,6 @@ export default function Note(props: Props) {
 		entrySettings: props.entrySettings,
 		insideNote: false,
 		layer: null,
-		useNavigate,
 	}
 
 	return (

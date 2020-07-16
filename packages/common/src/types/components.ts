@@ -30,7 +30,6 @@ export interface NavigatePayload {
 export interface ComponentProps {
 	attributes?: Record<string, string>
 	children?: React.ReactNode
-	useNavigate: () => (payload: NavigatePayload) => void
 }
 
 export type DocereComponentProps =
