@@ -1,8 +1,7 @@
 import * as React from 'react'
-import { ProjectContext, isTextLayer, AsideTab, getTextPanelWidth, LayerType, DEFAULT_SPACING, defaultEntrySettings } from '@docere/common'
+import { ProjectContext, isTextLayer, AsideTab, getTextPanelWidth, LayerType, DEFAULT_SPACING, defaultEntrySettings, useQuery } from '@docere/common'
 
 import type { EntryState, EntryStateAction, FacsimileArea, Entry } from '@docere/common'
-import { useQuery } from '../../hooks'
 
 const initialEntryState: EntryState = {
 	activeEntity: null,
@@ -181,15 +180,6 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 			}
 		}
 
-		// case 'URL_QUERY_CHANGED': {
-		// 	if (action.query.entityId !== entryState.activeEntity.id || action.query.entityType !== entryState.activeEntity.type) {
-		// 		return {
-		// 			...entryState,
-
-		// 		}	
-		// 	}
-		// }
-
 		default:
 			break
 	}
@@ -206,48 +196,31 @@ export default function useEntryState(entry: Entry) {
 	React.useEffect(() => {
 		if (x[0].entry == null) return
 
-		if (
-			query.entity != null &&
-			(
-				query.entity.id !== x[0].activeEntity?.id ||
-				query.entity.type !== x[0].activeEntity?.type
-			)
-		) {
-			x[1]({
-				type: 'SET_ENTITY',
-				id: query.entity.id,
-			})
+		if (query.entityId !== x[0].activeEntity?.id) {
+			if (query.entityId == null) {
+				x[1]({
+					type: 'UNSET_ENTITY',
+				})
+			} else {
+				x[1]({
+					type: 'SET_ENTITY',
+					id: query.entityId,
+				})
+
+			}
 		}
 
-		if (
-			query.entity == null &&
-			x[0].activeEntity != null
-		) {
-			x[1]({
-				type: 'UNSET_ENTITY',
-			})
-		}
-
-		if (
-			query.note != null &&
-			(
-				query.note.id !== x[0].activeNote?.id ||
-				query.note.type !== x[0].activeNote?.type
-			)
-		) {
-			x[1]({
-				type: 'SET_NOTE',
-				id: query.note.id,
-			})
-		}
-
-		if (
-			query.note == null &&
-			x[0].activeNote != null
-		) {
-			x[1]({
-				type: 'UNSET_NOTE',
-			})
+		if (query.noteId !== x[0].activeNote?.id) {
+			if (query.noteId == null) {
+				x[1]({
+					type: 'UNSET_NOTE',
+				})
+			} else {
+				x[1]({
+					type: 'SET_NOTE',
+					id: query.noteId,
+				})
+			}
 		}
 	}, [query])
 

@@ -53,12 +53,7 @@ export default function getNote(extractNoteId: ExtractNoteId) {
 			navigate({
 				type: 'entry',
 				id: props.entry.id,
-				query: {
-					note: {
-						id: note.id,
-						type: note.type,
-					}
-				},
+				query: { noteId: note.id }
 			})
 		}, [note, navigate])
 

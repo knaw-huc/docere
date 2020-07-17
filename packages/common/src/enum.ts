@@ -47,6 +47,7 @@ export enum RsType {
 	Artwork = 'artwork',
 	Date = 'date',
 	EntryLink = 'entry_link',
+	Line = 'line',
 	Location = 'location',
 	None = 'unknown',
 	NoteLink = 'note_link',

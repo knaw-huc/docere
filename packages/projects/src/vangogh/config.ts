@@ -72,6 +72,10 @@ const config: DocereConfig = {
 			id: 'note-link',
 			type: RsType.NoteLink,
 		},
+		// {
+		// 	id: 'lb',
+		// 	type: RsType.Line
+		// }
 	],
 	layers: [
 		{

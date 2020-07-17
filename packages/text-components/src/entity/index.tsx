@@ -78,12 +78,7 @@ export default function getEntity(preProps: PreProps) {
 			navigate({
 				type: 'entry',
 				id: props.entry.id,
-				query: {
-					entity: {
-						id: entity.id,
-						type: entity.type
-					}
-				}
+				query: { entityId: entity.id }
 			})
 
 			setShowTooltip(true)

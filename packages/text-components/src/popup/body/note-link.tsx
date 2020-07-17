@@ -21,12 +21,7 @@ function NoteLink(props: NoteLinkProps) {
 		const payload: NavigatePayload = {
 			type: 'entry',
 			id: props.entryId,
-			query: {
-				note: {
-					id: props.noteId,
-					type: null
-				}
-			}
+			query: { noteId: props.noteId }
 		}
 
 		navigate(payload)

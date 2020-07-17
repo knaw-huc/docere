@@ -7,8 +7,9 @@ import useQuery from './query'
 function getNextQuery(currentQuery: UrlQuery, payloadQuery: UrlQuery) {
 	const nextQuery = { ...currentQuery, ...payloadQuery }
 
-	if (payloadQuery.entity?.id === currentQuery.entity?.id) nextQuery.entity = null
-	if (payloadQuery.note?.id === currentQuery.note?.id) nextQuery.note = null
+	Object.keys(payloadQuery).forEach((pq: keyof UrlQuery) => {
+		if (payloadQuery[pq] === currentQuery[pq]) nextQuery[pq] = null
+	})
 
 	return nextQuery
 }

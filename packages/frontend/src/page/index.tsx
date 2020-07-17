@@ -2,8 +2,7 @@ import * as React from 'react'
 import { Link, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import DocereTextView from '@docere/text'
-import { TOP_OFFSET, DEFAULT_SPACING, DocereComponentContainer, useComponents, usePage, getSearchPath, PageComponentProps } from '@docere/common'
-import { useQuery } from '../hooks'
+import { TOP_OFFSET, DEFAULT_SPACING, DocereComponentContainer, useComponents, usePage, getSearchPath, PageComponentProps, useQuery } from '@docere/common'
 
 const Wrapper = styled.div`
 	background: white;

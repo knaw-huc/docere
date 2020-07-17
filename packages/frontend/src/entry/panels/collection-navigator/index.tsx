@@ -1,10 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
-import { ProjectContext, Entry, DocereConfig, Colors, Navigate } from '@docere/common'
-// import { PanelsProps } from '..'
+import { ProjectContext, Entry, DocereConfig, Colors, Navigate, useNavigate } from '@docere/common'
 
 import CollectionNavigatorController from './controller'
-import { useNavigate } from '../../../hooks'
 
 function useOpenSeadragonController(
 	config: DocereConfig['collection'],
@@ -53,7 +51,6 @@ const Container = styled.div`
 `
 
 interface Props {
-	// appDispatch: PanelsProps['appDispatch']
 	config: ProjectContext['config']['collection']
 	entry: Entry
 	searchUrl: ProjectContext['searchUrl']

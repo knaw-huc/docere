@@ -13,15 +13,16 @@ const PAGES = '/pages/'
  * nt	note type
  */
 
-function getQueryString(query: UrlQuery) {
-	if (query == null) return ''
+function getQueryString(urlQuery: UrlQuery) {
+	if (urlQuery == null) return ''
 
-	return Object.keys(query)
-		.filter((x: 'entity' | 'note') => query[x] != null)
-		.reduce((prev, curr: 'entity' | 'note') => {
-			// if (query[curr] == null) return prev
+	return Object.keys(urlQuery)
+		.filter((x: keyof UrlQuery) => urlQuery[x] != null)
+		.reduce((prev, curr: keyof UrlQuery) => {
 			prev = prev.length ? `${prev}&` : '?'
-			return `${prev}${curr.charAt(0)}i=${encodeURIComponent(query[curr].id)}&${curr.charAt(0)}t=${query[curr].type}`
+			const key = curr.charAt(0) + 'i'
+			const value = encodeURIComponent(urlQuery[curr])
+			return `${prev}${key}=${value}`
 		}, '')
 }
 

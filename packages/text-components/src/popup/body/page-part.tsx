@@ -10,7 +10,6 @@ import type { DocereComponentProps, NavigatePayload, ActiveEntity } from '@docer
 interface PageLinkProps {
 	activeEntity: ActiveEntity
 	children: React.ReactNode
-	// useNavigate: DocereComponentProps['useNavigate']
 }
 function PageLink(props: PageLinkProps) {
 	const navigate = useNavigate()
@@ -19,7 +18,7 @@ function PageLink(props: PageLinkProps) {
 		ev.stopPropagation()
 
 		const payload: NavigatePayload = { type: 'page', id: props.activeEntity.type }
-		if (props.activeEntity.id != null) payload.query = { entity: { id: props.activeEntity.id, type: null } }
+		if (props.activeEntity.id != null) payload.query = { entityId: props.activeEntity.id }
 
 		navigate(payload)
 	}, [props.activeEntity])
@@ -50,7 +49,6 @@ export default function PagePartPopupBody(props: DocereComponentProps) {
 			/>
 			<PageLink
 				activeEntity={props.activeEntity}
-				// useNavigate={props.useNavigate}
 			>
 				Go to {page.title}
 			</PageLink>

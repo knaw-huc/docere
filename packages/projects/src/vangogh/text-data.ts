@@ -1,71 +1,34 @@
-import type { DocereConfig, Entity } from '@docere/common'
+import { EntityController } from '../utils'
+import type { DocereConfig } from '@docere/common'
 
 export default function extractTextData(doc: XMLDocument, _config: DocereConfig) {
-	const selector = 'div[type="translation"] rs[type="pers"]'
-	const entities: Map<string, Entity> = new Map()
+	const entityController = new EntityController()
 
-	Array.from(doc.querySelectorAll(selector))
+	// Persons
+	Array.from(doc.querySelectorAll('div[type="translation"] rs[type="pers"]'))
 		.forEach(currEl => {
 			currEl.getAttribute('type')
 				.split(' ')
 				.forEach(type => {
 					const id = currEl.getAttribute('key')
-
-					if (entities.has(id)) {
-						const entity = entities.get(id)
-						entity.count += 1
-						entities.set(id, entity)
-					}
-					else {
-						entities.set(
-							id,
-							{
-								count: 1,
-								id,
-								type,
-								value: currEl.textContent,
-							}
-						)
-					}
+						
+					entityController.add({
+						id,
+						type,
+						value: currEl.textContent
+					})
 				})
 		})
 
+	// Links to entries and notes
 	Array.from(doc.querySelectorAll('ref[target]'))
 		.forEach(currEl => {
-			const id = currEl.getAttribute('target')
-			const type = id.indexOf('#') > -1 ? 'note-link' : 'entry-link'
-
-			if (entities.has(id)) {
-				const entity = entities.get(id)
-				entity.count += 1
-				entities.set(id, entity)
-			}
-			else {
-				entities.set(
-					id,
-					{
-						count: 1,
-						id,
-						type,
-						value: currEl.textContent,
-					}
-				)
-			}
+			entityController.add({
+				id: currEl.getAttribute('target'),
+				type: currEl.getAttribute('target').indexOf('#') > -1 ? 'note-link' : 'entry-link',
+				value: currEl.textContent
+			})
 		})
 
-	return Array.from(entities.values())
+	return entityController.entities
 }
-
-	// textData: [
-	// 	{
-	// 		color: '#fd7a7a',
-	// 		id: 'person',
-	// 		aside: true,
-	// 		extractor: {
-	// 			selector: 'div[type="translation"] rs[type="pers"]',
-	// 			extractionType: TextDataExtractionType.Attribute,
-	// 			idAttribute: '_key'
-	// 		},
-	// 		textLayers: ['translation'],
-	// 	}
-	// ],
