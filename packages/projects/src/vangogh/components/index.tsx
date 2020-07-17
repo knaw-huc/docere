@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { getNote, getPb, getEntity, Lb, EntryPopupBody, NoteLinkPopupBody } from '@docere/text-components'
+import { getNote, getPb, getEntity, Lb, EntryLinkPopupBody, NoteLinkPopupBody } from '@docere/text-components'
 import { DocereComponentContainer, DocereConfig } from '@docere/common'
 
 export default function getComponents(_config: DocereConfig) {
@@ -25,7 +25,7 @@ export default function getComponents(_config: DocereConfig) {
 			'ref[target][type="entry-link"]': getEntity({
 				extractType: () => 'entry-link',
 				extractKey: props => props.attributes.target,
-				PopupBody: EntryPopupBody
+				PopupBody: EntryLinkPopupBody
 			}),
 			'ref[target][type="note-link"]': getEntity({
 				extractType: () => 'note-link',

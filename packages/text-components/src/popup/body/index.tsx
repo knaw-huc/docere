@@ -3,6 +3,10 @@ import { DEFAULT_SPACING } from '@docere/common'
 
 import type { EntityConfig } from '@docere/common'
 
+export { default as EntryLinkPopupBody } from './entry-link'
+export { default as PagePartPopupBody } from './page-part'
+export { default as NoteLinkPopupBody } from './note-link'
+
 export const PopupBodyWrapper = styled.div`
 	display: grid;
 	grid-template-rows: auto ${DEFAULT_SPACING}px;

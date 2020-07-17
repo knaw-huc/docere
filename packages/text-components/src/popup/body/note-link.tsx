@@ -2,7 +2,7 @@ import React from 'react'
 import { useComponents, DocereComponentContainer, useEntry, ActiveEntity, useNavigate } from '@docere/common'
 import DocereTextView from '@docere/text'
 
-import { PopupBodyLink, PopupBodyWrapper } from './body'
+import { PopupBodyLink, PopupBodyWrapper } from './index'
 
 import type { DocereComponentProps, NavigatePayload } from '@docere/common'
 
@@ -42,7 +42,7 @@ function NoteLink(props: NoteLinkProps) {
 	)
 }
 
-export function NoteLinkPopupBody(props: DocereComponentProps) {
+export default function NoteLinkPopupBody(props: DocereComponentProps) {
 	if (props.activeEntity == null) return null
 
 	const [fileName, noteId] = props.activeEntity.id.split('#')

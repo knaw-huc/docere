@@ -2,7 +2,6 @@ import styled from 'styled-components'
 import type { DocereComponentProps, ComponentProps } from '@docere/common'
 import getPb from './pb'
 import getEntity from './entity'
-import Tooltip, { TooltipBody } from './tooltip'
 import getNote from './note'
 
 const has = (rendAttribute: string, rendStyle: string) => rendAttribute.split(' ').indexOf(rendStyle) > -1
@@ -47,8 +46,6 @@ export {
 	Hi,
 	Lb,
 	Paragraph,
-	Tooltip,
-	TooltipBody,
 	getEntity,
 	getNote,
 	getPb,

@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { getNote, getPb, Lb, Hi, Paragraph, getEntity, PagePopupBody, PopupBodyWrapper, PopupBodyLink } from '@docere/text-components'
+import { getNote, getPb, Lb, Hi, Paragraph, getEntity, PagePartPopupBody, PopupBodyWrapper, PopupBodyLink } from '@docere/text-components'
 import { Colors, DEFAULT_SPACING } from '@docere/common'
 
 import type { DocereComponentProps, DocereConfig } from '@docere/common'
@@ -72,7 +72,7 @@ const Wrapper = styled.div`
 	}
 `
 
-function RkdArtworkLinkPopupBody(props: DocereComponentProps) {
+function RkdArtworkPopupBody(props: DocereComponentProps) {
 	if (props.activeEntity == null) return null
 	const rkdImage = useRkdImage(props.activeEntity.id)
 	if (rkdImage == null) return null
@@ -131,17 +131,17 @@ export default async function entryComponents(_config: DocereConfig) {
 		'ref[target^="bio.xml#"]': getEntity({
 			extractType: () => 'bio',
 			extractKey: props => /^bio\.xml#(.*)$/.exec(props.attributes.target)[1],
-			PopupBody: PagePopupBody
+			PopupBody: PagePartPopupBody
 		}),
 		'ref[target^="biblio.xml#"]': getEntity({
 			extractType: () => 'biblio',
 			extractKey: props => /^biblio\.xml#(.*)$/.exec(props.attributes.target)[1],
-			PopupBody: PagePopupBody
+			PopupBody: PagePartPopupBody
 		}),
 		'rs[type="artwork-m"][key]': getEntity({
 			extractType: () => 'rkd-artwork-link',
 			extractKey: props => props.attributes.key,
-			PopupBody: RkdArtworkLinkPopupBody
+			PopupBody: RkdArtworkPopupBody
 		}),
 	}
 

@@ -1,26 +1,8 @@
 import * as React from "react"
 import styled from "styled-components"
 import { DEFAULT_POPUP_BG_COLOR, getTextPanelWidth } from '@docere/common'
+
 import type { Note, Entity, DocereConfig } from '@docere/common'
-
-// Map of polygons. The key is confusing, it is the orientation
-// of the tooltip. When the orientation of the tooltip is `bottom`
-// the tooltip is located at the top.
-// const tipBackgroundByOrientation = {
-// 	bottom: <polygon points="15,12 0,30 30,30 15,12"/>,
-// 	left: <polygon points="0,0 18,15 0,30 0,0"/>,
-// 	right: <polygon points="30,0 30,30 12,15, 30,0"/>,
-// 	top: <polygon points="0,0 30,0 15,18 0,0"/>
-// };
-
-// function tipBorderByOrientation(strokeColor: string) {
-// 	return {
-// 		bottom: <path d="M0,30 L15,12 L30,30" stroke={strokeColor} strokeWidth="3" />,
-// 		left: <path d="M0,0 L18,15 L0,30" stroke={strokeColor} strokeWidth="3" />,
-// 		right: <path d="M30,0 L12,15 L30,30" stroke={strokeColor} strokeWidth="3" />,
-// 		top: <path d="M0,0 L15,18 L30,0" stroke={strokeColor} strokeWidth="3" />
-// 	}
-// }
 
 interface P { offset: number }
 const Wrapper = styled.div`
@@ -45,6 +27,7 @@ export const TooltipBody = styled.div`
 	box-sizing: border-box;
 	color: #666;
 	font-family: sans-serif;
+	font-size: .85rem; ${/* Set font-size on TooltipBody, because it is also used when note is in the aside */''}
 	font-weight: 300;
 	height: 100%;
 	line-height: 1.5rem;
@@ -56,7 +39,6 @@ const Svg = styled.svg`
 	position: absolute;
 	top: -19px;
 `
-
 
 // type Orientation = "top" | "right" | "bottom" | "left"
 interface Props {

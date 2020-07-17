@@ -2,7 +2,7 @@ import React from 'react'
 import { useNavigate, useComponents, DocereComponentContainer, usePage } from '@docere/common'
 import DocereTextView from '@docere/text'
 
-import { PopupBodyLink, PopupBodyWrapper } from './body'
+import { PopupBodyLink, PopupBodyWrapper } from './index'
 
 import type { DocereComponentProps, NavigatePayload, ActiveEntity } from '@docere/common'
 
@@ -34,7 +34,7 @@ function PageLink(props: PageLinkProps) {
 	)
 }
 
-export function PagePopupBody(props: DocereComponentProps) {
+export default function PagePartPopupBody(props: DocereComponentProps) {
 	if (props.activeEntity == null) return null
 
 	const page = usePage(props.activeEntity.type)

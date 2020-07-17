@@ -1,6 +1,6 @@
 import React from 'react'
 import { DocereComponentProps, useUIComponent, UIComponentType, Hit, ActiveEntity, NavigatePayload, useNavigate } from '@docere/common'
-import { PopupBodyWrapper, PopupBodyLink } from './body'
+import { PopupBodyWrapper, PopupBodyLink } from './index'
 
 function useSearchResult(id: string) {
 	const [result, setResult] = React.useState<Hit>(null)	
@@ -38,7 +38,7 @@ function EntryLink(props: EntryLinkProps) {
 	)
 }
 
-export function EntryPopupBody(props: DocereComponentProps) {
+export default function EntryLinkPopupBody(props: DocereComponentProps) {
 	if (props.activeEntity == null) return null
 	const result = useSearchResult(props.activeEntity?.id)
 	const ResultBodyComponent = useUIComponent(UIComponentType.SearchResult)

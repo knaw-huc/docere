@@ -3,14 +3,11 @@ import DocereTextView from '@docere/text'
 import styled from 'styled-components'
 import { TEXT_PANEL_TEXT_WIDTH, DEFAULT_SPACING, getTextPanelLeftSpacing } from '@docere/common'
 
-import Tooltip, { TooltipBody } from '../tooltip'
+import Tooltip, { TooltipBody } from './tooltip'
 
 import type { DocereComponentProps, DocereConfig } from '@docere/common'
 
 export * from './body'
-export * from './page'
-export * from './entry'
-export * from './note-link'
 
 interface PAW { settings: DocereConfig['entrySettings'] }
 const PopupAsideWrapper = styled(TooltipBody)`
@@ -31,7 +28,6 @@ const PopupHeader = styled.header`
 	background: ${(props: NHProps) => props.color};
 	color: white;
 	display: grid;
-	font-size: .8rem;
 	font-weight: bold;
 	grid-template-columns: 1fr 8fr 1fr;
 	height: ${DEFAULT_SPACING}px;
