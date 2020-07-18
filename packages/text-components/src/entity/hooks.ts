@@ -1,5 +1,5 @@
 import React from 'react'
-import { defaultEntityConfig, setTitle, Entity, DocereComponentProps } from '@docere/common'
+import { Entity, DocereComponentProps } from '@docere/common'
 import type { EntityConfig } from '@docere/common'
 import IconsByType from './icons'
 
@@ -7,35 +7,19 @@ export type ExtractEntityType = (props: DocereComponentProps) => string
 export type ExtractEntityKey = (props: DocereComponentProps) => string
 export type ExtractEntityValue = (props: DocereComponentProps) => React.ReactNode
 
-// The config is a state of an Entity, because the config can be null,
-// in which case a default config is loaded.
-export function useEntityData(
-	extractEntityType: ExtractEntityType,
+export function useEntity(
 	extractEntityId: ExtractEntityKey,
 	props: DocereComponentProps
 ) {
-	const [entityData, setEntityData] = React.useState<[Entity, EntityConfig]>([null, null])
+	const [entity, setEntity] = React.useState<Entity>(null)
 
 	React.useEffect(() => {
 		const entityId = extractEntityId(props)
-		const entityType = extractEntityType(props)
-		let entity = props.entry.entities?.find(x => x.id === entityId && x.type === entityType)
-		if (entity == null) {
-			console.error(`[useEntityData] Entity '${entityId}' of type '${entityType}' not found`) 
-			entity = {
-				id: entityId,
-				type: entityType,
-				value: null,
-			}
-		}
-
-		let config = props.config.entities.find(ec => ec.id === entity.type)
-		if (config == null) config = setTitle(defaultEntityConfig)
-
-		setEntityData([entity, config])
+		const _entity = props.entry.entities?.find(x => x.id === entityId)
+		setEntity(_entity)
 	}, [])
 
-	return entityData
+	return entity
 }
 
 // To prevent a wrap between the icon and the first word the first word is extracted.

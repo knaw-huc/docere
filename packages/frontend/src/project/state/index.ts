@@ -1,12 +1,11 @@
 import * as React from 'react'
-import { SearchTab, Viewport } from '@docere/common'
+import { SearchTab, Viewport, useEntry } from '@docere/common'
 
 // import getEntry from './get-entry'
 // import HistoryNavigator from './history-navigator'
 
 import type { AppState, AppStateAction } from '@docere/common'
 import { useParams } from 'react-router-dom'
-import useEntry from './get-entry'
 
 const initialAppState: AppState = {
 	entry: null,

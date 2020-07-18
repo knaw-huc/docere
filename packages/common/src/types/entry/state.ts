@@ -1,10 +1,11 @@
 import type { DocereConfig } from '../config-data/config'
-import type { Note, Facsimile, Layer, FacsimileArea, ActiveEntity } from '../config-data/functions'
+import type { Note, Facsimile, FacsimileArea, Entity } from '../config-data/functions'
 import type { Entry } from '.'
 import { AsideTab } from '../../enum'
+import { Layer } from '../config-data/layer'
 
 export interface EntryState {
-	activeEntity: ActiveEntity,
+	activeEntity: Entity,
 	activeFacsimile: Facsimile
 	activeFacsimileAreas: FacsimileArea[]
 	activeNote: Note,

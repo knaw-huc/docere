@@ -66,7 +66,7 @@ export default function getNote(extractNoteId: ExtractNoteId) {
 			<Wrapper
 				active={active}
 				className="note"
-				color={note.color}
+				color={note.config.color}
 				id={note.id}
 				onClick={handleClick}
 				openToAside={openToAside}
@@ -74,9 +74,9 @@ export default function getNote(extractNoteId: ExtractNoteId) {
 				{note.n}
 				<Popup
 					active={active}
-					color={note.color}
+					color={note.config.color}
 					docereComponentProps={props}
-					node={note.el}
+					node={note.element}
 					openToAside={openToAside}
 					title={note.title}
 				/>

@@ -1,5 +1,7 @@
 import React from 'react'
-import { FacsimileArea, Facsimile, LayerConfig, TextLayerConfig, LayerType, Layer, setTitle, DocereConfigData, isTextLayer, isXmlLayer, Entry, defaultMetadata, MetadataItem, EsDataType, fetchEntryXml, ProjectContext } from '..'
+import { FacsimileArea, Facsimile, LayerConfig, TextLayerConfig, LayerType, DocereConfigData, Entry, defaultMetadata, MetadataItem, EsDataType, fetchEntryXml, ProjectContext, TextData } from '..'
+import { Note, Layer } from '../types'
+import { isTextLayer } from '../utils'
 
 const defaultFacsimileArea: Pick<FacsimileArea, 'showOnHover' | 'target' | 'unit'> = {
 	showOnHover: true,
@@ -30,51 +32,52 @@ const defaultLayerConfig: LayerConfig = {
 
 const defaultTextLayerConfig: TextLayerConfig = {
 	...defaultLayerConfig,
+	extract: doc => doc,
 	type: LayerType.Text
 }
 
-function extendLayer(extractedLayer: Layer, layersConfig: LayerConfig[]): Layer {
-	const layerConfig: LayerConfig = layersConfig.find(tlc => tlc.id === extractedLayer.id) || defaultLayerConfig
-	const dlc = layerConfig.type === LayerType.Text || layerConfig.type == null ? defaultTextLayerConfig : defaultLayerConfig
-	return setTitle({ ...dlc, ...layerConfig, ...extractedLayer })
-}
+// function extendLayer(extractedLayer: Layer, layersConfig: LayerConfig[]): Layer {
+// 	const layerConfig: LayerConfig = layersConfig.find(tlc => tlc.id === extractedLayer.id) || defaultLayerConfig
+// 	const dlc = layerConfig.type === LayerType.Text || layerConfig.type == null ? defaultTextLayerConfig : defaultLayerConfig
+// 	return setTitle({ ...dlc, ...layerConfig, ...extractedLayer })
+// }
 
-async function extractLayers(doc: XMLDocument, configData: DocereConfigData, hasFacsimiles: boolean) {
-	// Extract layers with the layers extraction function
-	const extractedLayers = configData.extractLayers(doc, configData.config)
-	const extractedLayerIds = extractedLayers.map(l => l.id)
+// async function extractLayers(doc: XMLDocument, configData: DocereConfigData, hasFacsimiles: boolean) {
+// 	// Extract layers with the layers extraction function
+// 	const extractedLayers = configData.extractLayers(doc, configData.config)
+// 	const extractedLayerIds = extractedLayers.map(l => l.id)
 
-	const layers = configData.config.layers
-		// Keep the layers that are not found by the extraction function, but are defined in the config
-		.filter(tl => extractedLayerIds.indexOf(tl.id) === -1)
-		// Concat the extracted layers with the layers not found by extract layers, but defined in the config
-		.concat(extractedLayers)
-		// Extend all layers with the defaults
-		.map(tl => extendLayer(tl, configData.config.layers))
+// 	const layers = configData.config.layers
+// 		// Keep the layers that are not found by the extraction function, but are defined in the config
+// 		.filter(tl => extractedLayerIds.indexOf(tl.id) === -1)
+// 		// Concat the extracted layers with the layers not found by extract layers, but defined in the config
+// 		.concat(extractedLayers)
+// 		// Extend all layers with the defaults
+// 		.map(tl => extendLayer(tl, configData.config.layers))
 
-	// If facsimiles are extracted, but there is no facsimile layer, add one
-	if (hasFacsimiles && !layers.some(l => l.type === LayerType.Facsimile)) {
-		layers.unshift(extendLayer({
-			...defaultLayerConfig,
-			id: 'scan',
-			type: LayerType.Facsimile
-		}, []))
-	}
+// 	// If facsimiles are extracted, but there is no facsimile layer, add one
+// 	if (hasFacsimiles && !layers.some(l => l.type === LayerType.Facsimile)) {
+// 		layers.unshift(extendLayer({
+// 			...defaultLayerConfig,
+// 			id: 'scan',
+// 			type: LayerType.Facsimile
+// 		}, []))
+// 	}
 
-	// If no layers are found, add a default text layer with the whole document to visualize
-	if (!layers.length) {
-		return [ { ...defaultTextLayerConfig, element: doc } ]
+// 	// If no layers are found, add a default text layer with the whole document to visualize
+// 	if (!layers.length) {
+// 		return [ { ...defaultTextLayerConfig, element: doc } ]
 	
-	// If there is only 1 layer and it doesn't have an element, add the whole document to visualize
-	} else if (
-		layers.length === 1 &&
-		((isTextLayer(layers[0]) || isXmlLayer(layers[0])) && layers[0].element == null)
-	) {
-		layers[0].element = doc
-	}
+// 	// If there is only 1 layer and it doesn't have an element, add the whole document to visualize
+// 	} else if (
+// 		layers.length === 1 &&
+// 		((isTextLayer(layers[0]) || isXmlLayer(layers[0])) && layers[0].element == null)
+// 	) {
+// 		layers[0].element = doc
+// 	}
 
-	return layers
-}
+// 	return layers
+// }
 
 function extractMetadata(doc: XMLDocument, configData: DocereConfigData, entryId: string): Entry['metadata'] {
 	const extractedMetadata = configData.extractMetadata(doc, configData.config, entryId)
@@ -125,6 +128,12 @@ function extractMetadata(doc: XMLDocument, configData: DocereConfigData, entryId
 		.sort((config1, config2) => config1.order - config2.order)
 }
 
+function addCount(prev: Map<string, TextData | Note>, curr: TextData) {
+	if (prev.has(curr.id)) prev.get(curr.id).count += 1
+	else prev.set(curr.id, { ...curr, count: 1 })
+	return prev
+}
+
 const entryCache = new Map<string, Entry>()
 
 async function getEntry(id: string, configData: DocereConfigData): Promise<Entry> {
@@ -133,20 +142,57 @@ async function getEntry(id: string, configData: DocereConfigData): Promise<Entry
 	doc = configData.prepareDocument(doc, configData.config, id)
 
 	// Extract data
-	const entities = configData.extractEntities(doc, configData.config)
 	const facsimiles = configData.extractFacsimiles(doc, configData.config, id).map(extendFacsimile)
-	const layers = await extractLayers(doc, configData, facsimiles.length > 0)
-	const notes = configData.extractNotes(doc, configData.config)
+	// const layers = await extractLayers(doc, configData, facsimiles.length > 0)
+
+	const layers: Layer[] = configData.config.layers
+		.map(layer => {
+			let _layer: Layer
+
+			if (isTextLayer(layer)) {
+				_layer = {
+					...defaultTextLayerConfig,
+					...layer,
+					element: layer.extract(doc, configData.config)
+				}	
+			} else {
+				_layer = {
+					...defaultLayerConfig,
+					...layer,
+					type: LayerType.Facsimile
+				}
+			}
+
+			return _layer
+		})
+	// const entities = configData.extractEntities(doc, configData.config)
+
+	const entities: Map<string, TextData> = configData.config.entities
+		.reduce((prev, curr) => {
+			const extracted = curr.extract(doc, layers, configData.config)
+				.map(x => ({ ...x, config: curr }))
+			return prev.concat(extracted)
+		}, [])
+		.reduce(addCount, new Map<string, TextData>())
+
+	const notes: Map<string, Note> = configData.config.notes
+		.reduce((prev, curr) => {
+			const extracted = curr.extract(doc, layers, configData.config)
+				.map(x => ({ ...x, config: curr }))
+			return prev.concat(extracted)
+		}, [])
+		.reduce(addCount, new Map<string, Note>())
+
 	const metadata = extractMetadata(doc, configData, id)
 
 	entryCache.set(id, {
 		doc,
-		entities: entities.length ? entities : null,
+		entities: entities.size ? Array.from(entities.values()) : null,
 		facsimiles: facsimiles.length ? facsimiles : null,
 		id,
 		layers,
 		metadata,
-		notes: notes.length ? notes : null, // Empty array should be null to prevent rerenders
+		notes: notes.size ? Array.from(notes.values()) : null, // Empty array should be null to prevent rerenders
 	})
 
 	return entryCache.get(id)

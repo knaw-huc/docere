@@ -1,9 +1,9 @@
 import React from 'react'
 import FacsimilePanel from './facsimile'
 import TextPanel from './text'
-import XmlPanel from './xml'
+// import XmlPanel from './xml'
 
-import { LayerType, isTextLayer, isXmlLayer } from '@docere/common'
+import { LayerType, isTextLayer } from '@docere/common'
 
 import type { Layer } from '@docere/common'
 import type { PanelsProps } from '.'
@@ -40,14 +40,14 @@ export default function Panel(props: PanelsProps & { layer: Layer }) {
 		)
 	}
 
-	if (isXmlLayer(props.layer)) {
-		return (
-			<XmlPanel
-				doc={props.entry.doc}
-				key={props.layer.id}
-			/>
-		)
-	}
+	// if (isXmlLayer(props.layer)) {
+	// 	return (
+	// 		<XmlPanel
+	// 			doc={props.entry.doc}
+	// 			key={props.layer.id}
+	// 		/>
+	// 	)
+	// }
 }
 
 

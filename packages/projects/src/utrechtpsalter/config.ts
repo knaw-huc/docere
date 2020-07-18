@@ -24,24 +24,28 @@ const config: DocereConfig = {
 		},
 		{
 			active: true,
+			extract: doc => doc.querySelector('transcription[lang="la"]'),
 			id: 'la',
 			title: 'Latin',
 			type: LayerType.Text,
 		},
 		{
 			active: false,
+			extract: doc => doc.querySelector('transcription[lang="nl"]'),
 			id: 'nl',
 			title: 'Dutch',
 			type: LayerType.Text,
 		},
 		{
 			active: false,
+			extract: doc => doc.querySelector('transcription[lang="en"]'),
 			id: 'en',
 			title: 'English',
 			type: LayerType.Text,
 		},
 		{
 			active: false,
+			extract: doc => doc.querySelector('transcription[lang="fr"]'),
 			id: 'fr',
 			title: 'French',
 			type: LayerType.Text,

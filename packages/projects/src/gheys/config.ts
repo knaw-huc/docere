@@ -1,5 +1,15 @@
-import { EsDataType, LayerType, RsType, Colors } from '@docere/common'
-import type { DocereConfig } from '@docere/common'
+import { EsDataType, LayerType, RsType, Colors, ExtractedTextData } from '@docere/common'
+import type { DocereConfig, ExtractTextData } from '@docere/common'
+
+function extractEntity(name: string): ExtractTextData {
+	return function(doc) {
+		return Array.from(doc.querySelectorAll(`entity[type~=${name}]`))
+			.map((element): ExtractedTextData => ({
+				id: element.id,
+				value: element.getAttribute('content'),
+			}))
+	}
+}
 
 const config: DocereConfig = {
 	slug: 'gheys',
@@ -75,6 +85,7 @@ const config: DocereConfig = {
 	entities: [
 		{
 			color: Colors.Blue,
+			extract: extractEntity('person'),
 			id: 'person',
 			order: 500,
 			title: 'Persons',
@@ -82,39 +93,47 @@ const config: DocereConfig = {
 		},
 		{
 			color: Colors.Orange,
+			extract: extractEntity('location'),
 			id: 'location',
 			order: 510,
 			type: RsType.Location,
 		},
 		{
 			color: Colors.Orange,
+			extract: extractEntity('loc'),
 			id: 'loc',
 			order: 520,
 			title: 'Location',
 			type: RsType.Location,
 		},
 		{
+			extract: extractEntity('job'),
 			id: 'job',
 			order: 530,
 		},
 		{
+			extract: extractEntity('notary'),
 			id: 'notary',
 			order: 540,
 		},
 		{
+			extract: extractEntity('ship'),
 			id: 'ship',
 			order: 545,
 		},
 		{
+			extract: extractEntity('good'),
 			id: 'good',
 			order: 550,
 		},
 		{
+			extract: extractEntity('date'),
 			id: 'date',
 			showAsFacet: false
 		},
 		{
 			color: Colors.Red,
+			extract: extractEntity('string'),
 			id: 'string',
 			showAsFacet: false,
 			showInAside: false,
@@ -122,13 +141,12 @@ const config: DocereConfig = {
 	],
 	layers: [
 		{
-			// active: false,
 			id: 'scan',
 			type: LayerType.Facsimile
 		},
 		{
-			// active: false,
 			id: 'text',
+			type: LayerType.Text
 		},
 	]
 }

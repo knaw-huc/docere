@@ -1,4 +1,4 @@
-import { DocereConfig, EsDataType, SortBy, SortDirection, LayerType } from '@docere/common'
+import { DocereConfig, EsDataType, SortBy, SortDirection, LayerType, ExtractedNote, Colors } from '@docere/common'
 
 const config: DocereConfig = {
 	entrySettings: {
@@ -37,6 +37,18 @@ const config: DocereConfig = {
 			order: 20,
 		},
 	],
+	notes: [
+		{
+			color: Colors.BlueBright,
+			id: 'editor',
+			extract: doc => Array.from(doc.querySelectorAll('note'))
+				.map((element, index): ExtractedNote => ({
+					element,
+					id: element.id,
+					n: (index + 1).toString(),
+				}))
+		}
+	],
 	layers: [
 		{
 			active: true,
@@ -44,6 +56,11 @@ const config: DocereConfig = {
 			title: 'Facsimile',
 			type: LayerType.Facsimile
 		},
+		{
+			extract: doc => doc.querySelector('transcriptie'),
+			id: 'transcriptie',
+			type: LayerType.Text,
+		}
 	]
 }
 

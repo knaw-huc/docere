@@ -1,6 +1,5 @@
-import { EsDataType, LayerType, Colors } from '@docere/common'
+import { EsDataType, LayerType, Colors, ExtractedTextData } from '@docere/common'
 import { DocereConfig } from '@docere/common'
-import { RsType } from '@docere/common'
 
 const config: DocereConfig = {
 	slug: 'kranten1700',
@@ -18,36 +17,42 @@ const config: DocereConfig = {
 			title: 'PoS tagging',
 		}
 	],
-	notes: [],
-	pages: [],
+	// notes: [],
+	// pages: [],
 	entities: [
 		{
 			color: Colors.Pink,
+			extract: doc => Array.from(doc.querySelectorAll('w'))
+				.map((el): ExtractedTextData => ({
+					id: el.getAttribute('pos'),
+					value: el.getAttribute('pos'),
+				})),
 			id: 'pos',
 			title: 'Part-of-speech tagging'
 		},
-		{
-			color: Colors.Green,
-			id: 'org',
-		},
-		{
-			color: Colors.Orange,
-			id: 'per',
-			type: RsType.Person,
-		},
-		{
-			color: Colors.Blue,
-			id: 'loc',
-			type: RsType.Location,
-		},
-		{
-			color: Colors.BlueLight,
-			id: 'misc',
-		},
+		// {
+		// 	color: Colors.Green,
+		// 	id: 'org',
+		// },
+		// {
+		// 	color: Colors.Orange,
+		// 	id: 'per',
+		// 	type: RsType.Person,
+		// },
+		// {
+		// 	color: Colors.Blue,
+		// 	id: 'loc',
+		// 	type: RsType.Location,
+		// },
+		// {
+		// 	color: Colors.BlueLight,
+		// 	id: 'misc',
+		// },
 	],
 	layers: [
 		{
 			active: true,
+			extract: doc => doc.querySelector('text'),
 			id: 'Origineel',
 			type: LayerType.Text,
 		},

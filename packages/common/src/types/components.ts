@@ -1,15 +1,11 @@
-// import { AsideTab } from '../enum'
 import type { EntryState, EntryStateAction } from './entry/state'
 import type { AppStateAction } from './app'
 import type { DocereConfig } from './config-data/config'
-import type { TextLayer } from './config-data/functions'
-
-// type SetActiveId = (id: string, listId: string, asideTab: AsideTab) => void
+import { TextLayer } from './config-data/layer'
 
 export type ReactComponent = React.FunctionComponent<any>
 export type DocereComponents = Record<string, ReactComponent>
 
-// type GetComponents = (config: DocereConfig) => DocereComponents
 export type Navigate = (payload: NavigatePayload) => void
 
 export interface UrlQuery {

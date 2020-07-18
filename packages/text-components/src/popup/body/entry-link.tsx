@@ -1,5 +1,5 @@
 import React from 'react'
-import { DocereComponentProps, useUIComponent, UIComponentType, Hit, ActiveEntity, NavigatePayload, useNavigate } from '@docere/common'
+import { DocereComponentProps, useUIComponent, UIComponentType, Hit, Entity, NavigatePayload, useNavigate } from '@docere/common'
 import { PopupBodyWrapper, PopupBodyLink } from './index'
 
 function useSearchResult(id: string) {
@@ -14,7 +14,7 @@ function useSearchResult(id: string) {
 }
 
 interface EntryLinkProps {
-	activeEntity: ActiveEntity
+	activeEntity: Entity
 	children: React.ReactNode
 }
 function EntryLink(props: EntryLinkProps) {

@@ -48,12 +48,15 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 				return prev
 			}, null as FacsimileArea[])
 
-			let entity = entryState.entry.entities?.find(e => e.id === action.id)
-			if (entity == null) entity = { id: action.id, type: null, value: null }
+			const activeEntity = entryState.entry.entities?.find(e => e.id === action.id)
+			// if (entity == null) entity = { id: action.id, type: null, value: null }
 
-			const config = entryState.projectConfig.entities.find(x => x.id === entity.type)
-			if (config == null) console.error(`[SET_ENTITY] config not found for '${entity.type}' with ID: ${entity.id}`)
-			let activeEntity = { ...entity, config }
+			// const config = entryState.projectConfig.entities.find(x => x.id === entity.type)
+			// let activeEntity = { ...entity, config }
+			if (activeEntity == null) {
+				console.error(`[SET_ENTITY] entity not found for '${activeEntity.config.id}' with ID: ${activeEntity.id}`)
+				return entryState
+			}
 			
 			return {
 				...entryState,

@@ -24,8 +24,8 @@ export function useTextData<T extends TextData>(textData: T[], activeTextData: T
 		const tmp = new Map<string, T[]>()
 
 		for (const entity of textData) {
-			const entities = tmp.get(entity.type) || []
-			tmp.set(entity.type, entities.concat(entity))
+			const entities = tmp.get(entity.config.id) || []
+			tmp.set(entity.config.id, entities.concat(entity))
 		}
 		const types = Array.from(tmp.keys())
 
@@ -36,7 +36,7 @@ export function useTextData<T extends TextData>(textData: T[], activeTextData: T
 
 	React.useEffect(() => {
 		if (activeTextData == null) return
-		setActiveType(activeTextData.type)
+		setActiveType(activeTextData.config.id)
 	}, [activeTextData])
 
 	return [textDataByType, types, activeType, setActiveType]

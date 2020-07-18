@@ -1,9 +1,9 @@
 import config from './config'
 import extractMetadata from './metadata'
-import extractNotes from './notes'
+// import extractNotes from './notes'
 import extractFacsimiles from './facsimiles'
-import extractEntities from './text-data'
-import extractLayers from './textlayers'
+// import extractEntities from './text-data'
+// import extractLayers from './textlayers'
 import { extendConfigData } from '@docere/common'
 import getComponents from './components'
 import getUIComponent from './ui-components'
@@ -15,9 +15,9 @@ const docereConfigDataRaw: DocereConfigDataRaw = {
 	config,
 	extractFacsimiles,
 	extractMetadata,
-	extractNotes,
-	extractEntities,
-	extractLayers,
+	// extractNotes,
+	// extractEntities,
+	// extractLayers,
 	getComponents,
 	getUIComponent,
 	prepareDocument,

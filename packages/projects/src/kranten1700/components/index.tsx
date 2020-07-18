@@ -92,8 +92,8 @@ export default function(_config: DocereConfig) {
 			s: styled.div``,
 			// w: w(config),
 			w: getEntity({
-				extractType: () => 'word',
-				extractKey: props => props.attributes.id,
+				// extractType: () => 'word',
+				extractKey: props => props.attributes.pos,
 				extractValue: props => props.attributes.value,
 				PopupBody: RsBody,
 			})

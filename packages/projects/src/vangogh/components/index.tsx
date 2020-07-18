@@ -23,12 +23,12 @@ export default function getComponents(_config: DocereConfig) {
 			pb: getPb(props => props.attributes.facs.slice(1)),
 			// ref,
 			'ref[target][type="entry-link"]': getEntity({
-				extractType: () => 'entry-link',
-				extractKey: props => props.attributes.target,
+				// extractType: () => 'entry-link',
+				extractKey: props => props.attributes.target.replace(/\.xml$/, ''),
 				PopupBody: EntryLinkPopupBody
 			}),
 			'ref[target][type="note-link"]': getEntity({
-				extractType: () => 'note-link',
+				// extractType: () => 'note-link',
 				extractKey: props => props.attributes.target,
 				PopupBody: NoteLinkPopupBody
 			}),
@@ -54,10 +54,11 @@ export default function getComponents(_config: DocereConfig) {
 			// 	)
 			// },
 			// 'rs': person(config.entities),
-			rs: getEntity({
-				extractType: props => props.attributes.type,
+			rs: getEntity()
+				// {
+				// extractType: props => props.attributes.type,
 				// extractKey: props => props.attributes.key
-			})
+			// })
 		}
 	}
 }

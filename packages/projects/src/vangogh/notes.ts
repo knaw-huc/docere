@@ -1,9 +1,8 @@
 import { Note, Colors } from '@docere/common';
 
 function toExtractedNote(el: Element): Note {
-	// console.log(el.attributes, el.id)
 	return {
-		color: Colors.BlueBright,
+		// color: Colors.BlueBright,
 		el,
 		id: el.getAttribute('xml:id'),
 		n: el.getAttribute('n'),

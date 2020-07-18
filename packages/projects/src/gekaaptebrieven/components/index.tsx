@@ -25,7 +25,7 @@ export default function getComponents(_config: DocereConfig) {
 			// 	</Entity>
 			// )
 			ner: getEntity({
-				extractType: () => 'named_entity',
+				// extractType: () => 'named_entity',
 				extractKey: props => (props.children as any)[0]
 			})
 

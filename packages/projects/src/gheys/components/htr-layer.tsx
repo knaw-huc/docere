@@ -4,32 +4,27 @@ import { Colors } from '@docere/common'
 import type { DocereConfig, EntryStateAction, DocereComponentProps } from '@docere/common'
 import { getPb, Lb, getEntity } from '@docere/text-components'
 
-type TLWProps = { active: boolean } & DocereComponentProps
-const TextLineWrapper = styled(Lb)`
-	min-height: 2rem;
-	pointer-events: none;
+function setActiveFacsimileArea(dispatch: React.Dispatch<EntryStateAction>, ids: string[]) {
+	dispatch({
+		type: 'SET_ACTIVE_FACSIMILE_AREAS',
+		ids,
+	})
+}
 
-	& * { pointer-events: all; }
+function useActive(props: DocereComponentProps): [boolean, (ev: any) => void] {
+	const [active, setActive] = React.useState<boolean>(false)
 
-	&:before {
-		cursor: pointer;
-		transition: all 450ms;
+	React.useEffect(() => {
+		setActive(props.activeFacsimileAreas?.some(fa => props.attributes.id === fa.id))
+	}, [props.activeFacsimileAreas])
 
-		${(props: TLWProps) => 
-			props.active ?
-				`background: ${Colors.Red};
-				color: white;
-				font-weight: bold;
-				` :
-				`&:hover {
-					border-bottom: 3px solid ${Colors.Red};
-					color: ${Colors.Red}
-				}`
-		}
-		
-		pointer-events: all;
-	}
-`
+	const handleClick = React.useCallback(ev => {
+		ev.stopPropagation()
+		setActiveFacsimileArea(props.entryDispatch, [props.attributes.id])
+	}, [props.attributes.id, active])
+
+	return [active, handleClick]
+}
 
 const BlockWrapper = styled.div`
 	& > div {
@@ -56,28 +51,6 @@ const BlockWrapper = styled.div`
 		margin: 0 0 2rem 0;
 	}
 `
-
-function setActiveFacsimileArea(dispatch: React.Dispatch<EntryStateAction>, ids: string[]) {
-	dispatch({
-		type: 'SET_ACTIVE_FACSIMILE_AREAS',
-		ids,
-	})
-}
-
-function useActive(props: DocereComponentProps): [boolean, (ev: any) => void] {
-	const [active, setActive] = React.useState<boolean>(false)
-
-	React.useEffect(() => {
-		setActive(props.activeFacsimileAreas?.some(fa => props.attributes.id === fa.id))
-	}, [props.activeFacsimileAreas])
-
-	const handleClick = React.useCallback(ev => {
-		ev.stopPropagation()
-		setActiveFacsimileArea(props.entryDispatch, [props.attributes.id])
-	}, [props.attributes.id, active])
-
-	return [active, handleClick]
-}
 
 function block(props: DocereComponentProps) {
 	const [active, handleClick] = useActive(props)
@@ -154,6 +127,33 @@ function EntityBody(props: DocereComponentProps) {
 // 	}
 // }
 
+type TLWProps = { active: boolean } & DocereComponentProps
+const TextLineWrapper = styled(Lb)`
+	min-height: 2rem;
+	pointer-events: none;
+
+	& * { pointer-events: all; }
+
+	&:before {
+		cursor: pointer;
+		transition: all 450ms;
+
+		${(props: TLWProps) => 
+			props.active ?
+				`background: ${Colors.Red};
+				color: white;
+				font-weight: bold;
+				` :
+				`&:hover {
+					border-bottom: 3px solid ${Colors.Red};
+					color: ${Colors.Red}
+				}`
+		}
+		
+		pointer-events: all;
+	}
+`
+
 function line(props: DocereComponentProps) {
 	const [active, handleClick] = useActive(props)
 
@@ -177,12 +177,12 @@ export default function (_config: DocereConfig) {
 		block,
 		pb,
 		'string[suggestion]': getEntity({
-			extractType: () => 'suggestion',
+			// extractType: () => 'suggestion',
 			extractKey: props => props.attributes.id,
 			PopupBody: EntityBody,
 		}),
 		'string[type]': getEntity({
-			extractType: () => 'word',
+			// extractType: () => 'word',
 			extractKey: props => props.attributes.ref,
 			PopupBody: EntityBody,
 		}),

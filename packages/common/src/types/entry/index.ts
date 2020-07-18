@@ -1,7 +1,6 @@
-import type { Entity, Note, Facsimile, Layer, ExtractedLayer, ExtractedMetadata } from '../config-data/functions'
-// import type { MetadataConfig } from '../config-data/config'
-// import { EsDataType } from '../../enum'
+import type { Entity, Note, Facsimile, ExtractedMetadata } from '../config-data/functions'
 import { BooleanFacetConfig, ListFacetConfig, HierarchyFacetConfig, RangeFacetConfig, DateFacetConfig } from '../search'
+import { Layer, ExtractedLayer } from '../config-data/layer'
 
 export * from './state'
 

@@ -4,11 +4,11 @@ import DocereTextView from '@docere/text'
 
 import { PopupBodyLink, PopupBodyWrapper } from './index'
 
-import type { DocereComponentProps, NavigatePayload, ActiveEntity } from '@docere/common'
+import type { DocereComponentProps, NavigatePayload, Entity } from '@docere/common'
 
 
 interface PageLinkProps {
-	activeEntity: ActiveEntity
+	activeEntity: Entity
 	children: React.ReactNode
 }
 function PageLink(props: PageLinkProps) {
@@ -17,7 +17,7 @@ function PageLink(props: PageLinkProps) {
 	const goToPage = React.useCallback((ev: React.MouseEvent) => {
 		ev.stopPropagation()
 
-		const payload: NavigatePayload = { type: 'page', id: props.activeEntity.type }
+		const payload: NavigatePayload = { type: 'page', id: props.activeEntity.config.id }
 		if (props.activeEntity.id != null) payload.query = { entityId: props.activeEntity.id }
 
 		navigate(payload)
@@ -36,7 +36,7 @@ function PageLink(props: PageLinkProps) {
 export default function PagePartPopupBody(props: DocereComponentProps) {
 	if (props.activeEntity == null) return null
 
-	const page = usePage(props.activeEntity.type)
+	const page = usePage(props.activeEntity.config.id)
 	const components = useComponents(DocereComponentContainer.Page, page?.id)
 
 	if (page == null) return null

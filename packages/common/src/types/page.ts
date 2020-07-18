@@ -4,6 +4,8 @@ import { ComponentProps } from './components';
 export interface PageConfig extends BaseConfig {
 	children?: PageConfig[]
 	path?: string
+
+	// TODO turn into function (function(doc) => PagePart[])
 	split?: {
 		extractId: (el: Element) => string
 		selector: string

@@ -70,12 +70,12 @@ export default function Note(props: Props) {
 			<div>{props.note.n}</div>
 			<div>
 				{
-					typeof props.note.el === 'string' ?
-						props.note.el :
+					props.note.value != null ?
+						props.note.value :
 						<DocereTextView
 							components={props.components}
 							customProps={customProps}
-							node={props.note.el}
+							node={props.note.element}
 						/>
 				}
 			</div>

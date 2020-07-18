@@ -39,24 +39,24 @@ export const defaultMetadata: MetadataConfig = {
 	showInAside: true,
 }
 
-export const defaultEntityConfig: EntityConfig = {
+export const defaultEntityConfig: Omit<EntityConfig, 'extract'> = {
 	...defaultMetadata,
 	color: Colors.Blue,
-	id: RsType.None, // TODO ??? id === RsType ???
 	revealOnHover: false,
 	type: RsType.None,
 }
 
 const defaultDocereFunctions: DocereConfigFunctions = {
 	prepareDocument: function prepareDocument(doc) { return doc },
-	extractEntities: function extractEntities(_doc) { return [] },
+	// extractEntities: function extractEntities(_doc) { return [] },
 	extractFacsimiles: function extractFacsimiles(_doc) { return [] },
 	extractMetadata: function extractMetadata(_doc) { return {} },
-	extractNotes: function extractNotes(_doc) { return [] },
+	// extractNotes: function extractNotes(_doc) { return [] },
 	extractText: function extractText(doc) { return doc.documentElement.textContent },
-	extractLayers: function extractTextLayers(_doc) { return [] }
+	// extractLayers: function extractTextLayers(_doc) { return [] }
 }
 
+// Add a title to a config if the title is not explicitly set in the config
 export function setTitle<T extends FacetConfigBase>(entityConfig: T): T {
 	if (entityConfig.title == null) {
 		entityConfig.title = entityConfig.id.charAt(0).toUpperCase() + entityConfig.id.slice(1)
@@ -69,6 +69,20 @@ function setPath(page: PageConfig) {
 	return page
 }
 
+
+function extendTextData(config: DocereConfig) {
+	return function (td: EntityConfig) {
+		const textDataConfig = {...defaultEntityConfig, ...td } as EntityConfig
+
+		// If not text layers are set on the config, add all text layers
+		if (!Array.isArray(td.textLayers)) {
+			textDataConfig.textLayers = config.layers.map(tl => tl.id)
+		}
+
+		return setTitle(textDataConfig)
+	}
+}
+
 export function extendConfigData(configDataRaw: DocereConfigDataRaw): DocereConfigData {
 	const config = { ...defaultConfig, ...configDataRaw.config }
 	config.entrySettings = { ...defaultEntrySettings, ...config.entrySettings }
@@ -79,15 +93,9 @@ export function extendConfigData(configDataRaw: DocereConfigDataRaw): DocereConf
 		return setTitle(metadataConfig)
 	})
 
-	config.entities = config.entities.map(td => {
-		const textDataConfig = {...defaultEntityConfig, ...td } as EntityConfig
-		if (!Array.isArray(td.textLayers)) {
-			textDataConfig.textLayers = config.layers.map(tl => tl.id)
-		}
-		return setTitle(textDataConfig)
-	})
+	config.entities = config.entities.map(extendTextData(config))
+	config.notes = config.notes.map(extendTextData(config))
 
-	config.notes = config.notes.map(setTitle)
 	config.pages = config.pages.map(page => {
 		if (Array.isArray(page.children)) {
 			page.children = page.children.map(p => setTitle(setPath(p)))

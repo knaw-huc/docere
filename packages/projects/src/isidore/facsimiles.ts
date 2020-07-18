@@ -13,7 +13,7 @@ const extractFacsimiles: DocereConfigData['extractFacsimiles'] = function extrac
 			if (!fileName.length) return null
 			const imgPath = fileName.slice(0, fileName.indexOf('_')) + '/' + fileName
 			const path = `/iiif/isidore/${imgPath}/info.json`
-			console.log(path)
+			// console.log(path)
 			return { id: surfaceId, versions: [{ path }] }
 		})
 		.filter(facs => facs != null)

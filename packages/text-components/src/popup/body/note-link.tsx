@@ -1,5 +1,5 @@
 import React from 'react'
-import { useComponents, DocereComponentContainer, useEntry, ActiveEntity, useNavigate } from '@docere/common'
+import { useComponents, DocereComponentContainer, useEntry, Entity, useNavigate } from '@docere/common'
 import DocereTextView from '@docere/text'
 
 import { PopupBodyLink, PopupBodyWrapper } from './index'
@@ -7,7 +7,7 @@ import { PopupBodyLink, PopupBodyWrapper } from './index'
 import type { DocereComponentProps, NavigatePayload } from '@docere/common'
 
 interface NoteLinkProps {
-	activeEntity: ActiveEntity
+	activeEntity: Entity
 	entryId: string
 	noteId: string
 	children: React.ReactNode
@@ -53,7 +53,7 @@ export default function NoteLinkPopupBody(props: DocereComponentProps) {
 			<DocereTextView
 				customProps={props}
 				components={components}
-				node={note.el as Element}
+				node={note.element}
 			/>
 			<NoteLink
 				activeEntity={props.activeEntity}

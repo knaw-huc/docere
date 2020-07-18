@@ -1,6 +1,7 @@
 import { LayerType, EsDataType } from '@docere/common'
 import { DocereConfig } from '@docere/common'
 import sets from './data/sets.json'
+import extractPreparedLayer from './layers'
 
 const config: DocereConfig = {
 	collection: {
@@ -11,9 +12,21 @@ const config: DocereConfig = {
 	slug: 'encyclopaedia-britannica',
 	title: 'Encyclopaedia Britannica',
 	layers: [
-		{ id: 'scan', type: LayerType.Facsimile, active: false },
-		{ id: 'prepared', active: false },
-		{ id: 'alto' },
+		{
+			id: 'scan',
+			type: LayerType.Facsimile,
+			active: false
+		},
+		{
+			active: false,
+			extract: extractPreparedLayer,
+			id: 'prepared',
+			type: LayerType.Text,
+		},
+		{
+			id: 'alto',
+			type: LayerType.Text,
+		},
 	],
 	metadata: [
 		{

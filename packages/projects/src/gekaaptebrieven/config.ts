@@ -1,5 +1,16 @@
-import { EsDataType, RsType, LayerType } from '@docere/common'
+import { EsDataType, RsType, LayerType, ExtractTextData, ExtractedTextData } from '@docere/common'
 import { DocereConfig } from '@docere/common'
+
+function extractEntity(name: string): ExtractTextData {
+	return function(doc) {
+		return Array.from(doc.querySelectorAll(`ner[type~=${name}]`))
+			.map((element): ExtractedTextData => ({
+				id: element.textContent,
+				value: element.textContent
+			}))
+	}
+}
+
 
 const config: DocereConfig = {
 	slug: 'gekaaptebrieven',
@@ -97,29 +108,34 @@ const config: DocereConfig = {
 	entities: [
 		{
 			color: '#fd7a7a',
+			extract: extractEntity('per'),
 			id: 'per',
 			showInAside: true,
 			type: RsType.Person
 		}, {
 			color: '#5fb53f',
+			extract: extractEntity('org'),
 			id: 'org',
 			showInAside: true,
 			title: 'Organisation',
 			type: RsType.None
 		}, {
 			color: 'orange',
+			extract: extractEntity('loc'),
 			id: 'loc',
 			showInAside: true,
 			title: 'Location',
 			type: RsType.Location
 		}, {
 			color: '#8080ff',
+			extract: extractEntity('misc'),
 			id: 'misc',
 			showInAside: true,
 			title: 'Miscellaneous',
 			type: RsType.None
 		}, {
 			color: '#8080ff',
+			extract: extractEntity('pro'),
 			id: 'pro',
 			showInAside: true,
 			title: 'Products',
@@ -139,12 +155,6 @@ const config: DocereConfig = {
 			title: 'Transcription',
 			type: LayerType.Text,
 		},
-		{
-			active: false,
-			id: 'tei',
-			title: 'TEI',
-			type: LayerType.XML
-		}
 	]
 }
 export default config

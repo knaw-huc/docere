@@ -1,5 +1,5 @@
-import { LayerType } from '@docere/common'
-import type { TextLayer } from '@docere/common'
+// import { LayerType } from '@docere/common'
+// import type { TextLayer } from '@docere/common'
 
 /*
 function updateToPosition(currentPosition: Position, el: Element): Position {
@@ -25,7 +25,7 @@ interface Position {
 	right: number
 }
 */
-export default function extractLayers(doc: XMLDocument) {
+export default function extractPreparedLayer(doc: XMLDocument) {
 	const element = doc.querySelector('Layout')
 
 	const nodeIterator = document.createNodeIterator(
@@ -125,10 +125,10 @@ export default function extractLayers(doc: XMLDocument) {
 	}
 	if (currentArticle != null) fragment.appendChild(currentArticle)
 	
-	const preparedLayer: TextLayer = {
-		element: fragment,
-		id: 'prepared',
-		type: LayerType.Text
-	}
-	return [preparedLayer]
+	// const preparedLayer: TextLayer = {
+	// 	element: fragment,
+	// 	id: 'prepared',
+	// 	type: LayerType.Text
+	// }
+	return fragment
 }

@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { DocereComponentProps, EntityConfig, useNavigate } from '@docere/common'
 
 import { Popup } from '../popup'
-import { useEntityData, useChildren, ExtractEntityKey, ExtractEntityValue, ExtractEntityType } from './hooks'
+import { useEntity, useChildren, ExtractEntityKey, ExtractEntityValue } from './hooks'
 import IconsByType from './icons'
 
 interface NWProps { openToAside: boolean }
@@ -42,13 +42,13 @@ const defaultPreProps: Omit<PreProps, 'extractType'> = {
 }
 
 interface PreProps {
-	extractType: ExtractEntityType
+	// extractType: ExtractEntityType
 	extractKey?: ExtractEntityKey
 	extractValue?: ExtractEntityValue
 	PopupBody?: React.FC<DocereComponentProps>
 }
 
-export default function getEntity(preProps: PreProps) {
+export default function getEntity(preProps?: PreProps) {
 	preProps = {...defaultPreProps, ...preProps}
 
 	return function Entity(props: DocereComponentProps) {
@@ -56,8 +56,8 @@ export default function getEntity(preProps: PreProps) {
 		if (!props.entrySettings['panels.text.showEntities']) return <span>{entityValue}</span>
 
 		const navigate = useNavigate()
-		const [entity, config] = useEntityData(preProps.extractType, preProps.extractKey, props)
-		const [children, firstWord, restOfFirstChild] = useChildren(entityValue, config)
+		const entity = useEntity(preProps.extractKey, props)
+		const [children, firstWord, restOfFirstChild] = useChildren(entityValue, entity?.config)
 
 		// The entity can be active, but without the need to show the tooltip.
 		// In case there are several entities with the same ID, we only want to 
@@ -84,17 +84,16 @@ export default function getEntity(preProps: PreProps) {
 			setShowTooltip(true)
 		}, [entity?.id, navigate])
 
-		// Only abort when config does not exist. The entity is not necessary for rendering
-		if (config == null) return null
+		if (entity == null) return null
 
-		const Icon = IconsByType[config.type]
+		const Icon = IconsByType[entity.config.type]
 
 		const openToAside = active && !props.entrySettings['panels.text.openPopupAsTooltip']
 
 		return (
 			<EntityWrapper
 				active={active}
-				config={config}
+				config={entity.config}
 				onClick={handleClick}
 			>
 				<NoWrap
@@ -104,17 +103,17 @@ export default function getEntity(preProps: PreProps) {
 						Icon != null &&
 						<Icon
 							active={active}
-							config={config}
+							config={entity.config}
 						/>
 					}
 					{firstWord}
 					<Popup
 						active={active && showTooltip}
-						color={config.color}
+						color={entity.config.color}
 						docereComponentProps={props}
 						openToAside={openToAside}
 						PopupBody={preProps.PopupBody}
-						title={config.title}
+						title={entity.config.title}
 					/>
 				</NoWrap>
 				{restOfFirstChild}

@@ -6,6 +6,7 @@ import type { DocereComponents } from '../components'
 
 export * from './functions'
 export * from './config'
+export * from './layer'
 
 export interface DocereConfigData extends DocereConfigFunctions {
 	// getComponents: GetComponents
