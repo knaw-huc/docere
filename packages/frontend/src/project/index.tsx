@@ -14,11 +14,6 @@ import { useParams, Route, useRouteMatch } from 'react-router-dom'
 
 import type { DocereConfigData } from '@docere/common'
 
-// interface AppProps {
-// 	configData: DocereConfigData
-// 	EntrySelector: typeof EntrySelector
-// }
-
 function useProjectData() {
 	const [projectData, setProjectData] = React.useState<[DocereConfigData, ProjectContext]>([null, null])
 	const { projectId } = useParams()
@@ -75,14 +70,12 @@ function RealProject(props: Props) {
 			</Route>
 			<EntrySelector
 				appDispatch={appDispatch}
-				entry={appState.entry}
 				footerTab={appState.footerTab}
 				searchTab={appState.searchTab}
 				viewport={appState.viewport}
 			/>
 			<Entry 
 				appDispatch={appDispatch}
-				entry={appState.entry}
 				footerTab={appState.footerTab}
 				searchTab={appState.searchTab}
 			/>

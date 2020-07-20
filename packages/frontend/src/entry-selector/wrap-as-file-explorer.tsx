@@ -36,7 +36,7 @@ const Wrapper = styled.div`
 	}
 `
 
-export type FileExplorerProps = Pick<AppState, 'entry' | 'footerTab' | 'searchTab' | 'viewport'> & {
+export type FileExplorerProps = Pick<AppState, 'footerTab' | 'searchTab' | 'viewport'> & {
 	appDispatch: React.Dispatch<AppStateAction>
 }
 export default function wrapAsFileExplorer(FileExplorer: React.FC<FileExplorerProps>) {

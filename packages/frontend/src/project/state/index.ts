@@ -1,14 +1,10 @@
 import * as React from 'react'
-import { SearchTab, Viewport, useEntry } from '@docere/common'
-
-// import getEntry from './get-entry'
-// import HistoryNavigator from './history-navigator'
+import { useParams } from 'react-router-dom'
+import { SearchTab, Viewport } from '@docere/common'
 
 import type { AppState, AppStateAction } from '@docere/common'
-import { useParams } from 'react-router-dom'
 
 const initialAppState: AppState = {
-	entry: null,
 	footerTab: null,
 	searchTab: null,
 	viewport: Viewport.EntrySelector
@@ -18,14 +14,6 @@ function appStateReducer(appState: AppState, action: AppStateAction): AppState {
 	if ((window as any).DEBUG) console.log('[AppState]', action)
 
 	switch (action.type) {
-		case 'SET_ENTRY': {
-			return {
-				...appState,
-				entry: action.entry,
-		 		viewport: Viewport.Entry,
-			}
-		}
-
 		case 'TOGGLE_TAB': {
 			if (action.tabType === 'search') {
 				const searchTab = appState.searchTab === action.tab ? null : action.tab
@@ -78,12 +66,12 @@ function appStateReducer(appState: AppState, action: AppStateAction): AppState {
 export default function useAppState() {
 	const x = React.useReducer(appStateReducer, initialAppState)
 	const { entryId } = useParams()
-	const entry = useEntry(entryId)
 
 	React.useEffect(() => {
-		if (entry == null) return
-		x[1]({ type: 'SET_ENTRY', entry })
-	}, [entry])
+		if (entryId != null && x[0].viewport !== Viewport.Entry) {
+			x[1]({ type: 'SET_VIEWPORT', viewport: Viewport.Entry })
+		}
+	}, [entryId])
 
 	return x
 }

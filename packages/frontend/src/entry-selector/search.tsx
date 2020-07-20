@@ -7,7 +7,7 @@ import { FileExplorerProps } from './wrap-as-file-explorer'
 import useAutoSuggest from './use-auto-suggest'
 
 import type { Hit } from '@docere/common'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 
 const FS = styled(HucFacetedSearch)`
 	background: white;
@@ -24,6 +24,7 @@ function Search(props: FileExplorerProps) {
 	const { config, searchUrl } = React.useContext(ProjectContext)
 	const autoSuggest = useAutoSuggest(searchUrl)
 	const ResultBodyComponent = useUIComponent(UIComponentType.SearchResult)
+	const { entryId } = useParams()
 
 	const onClickResult = React.useCallback((result: Hit) => {
 		history.push(`/projects/${config.slug}/entries/${result.id}`)
@@ -37,7 +38,7 @@ function Search(props: FileExplorerProps) {
 			onClickResult={onClickResult}
 			ResultBodyComponent={ResultBodyComponent}
 			resultBodyProps={{
-				activeId: props.entry == null ? null : props.entry.id,
+				activeId: entryId,
 				searchTab: props.searchTab,
 			}}
 			resultsPerPage={config.searchResultCount}

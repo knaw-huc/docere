@@ -76,17 +76,11 @@ interface ESA_Toggle_Settings_Property {
 	property: keyof DocereConfig['entrySettings'],
 }
 
-// interface UrlQueryChanged {
-// 	type: 'URL_QUERY_CHANGED',
-// 	query: Record<string, string>
-// }
-
 export type EntryStateAction = 
 	PinPanel |
 	ProjectChanged |
 	EntryChanged |
 	ToggleTab |
-	// UrlQueryChanged |
 	ESA_Set_Active_Facsimile |
 	SetEntity |
 	UnsetEntity |

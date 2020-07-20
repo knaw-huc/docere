@@ -65,7 +65,6 @@ function TextPanel(props: TextPanelProps) {
 	const [highlightAreas, setHighlightAreas] = React.useState<number[]>([])
 
 	const layer = props.entry.layers.filter(isTextLayer).find(tl => tl.id === props.layer.id)
-	console.log(layer.element)
 	const components = useComponents(DocereComponentContainer.Layer, layer.id)
 
 	const handleScroll = React.useCallback(() => {

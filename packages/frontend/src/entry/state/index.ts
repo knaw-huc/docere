@@ -1,7 +1,8 @@
 import * as React from 'react'
-import { ProjectContext, isTextLayer, AsideTab, getTextPanelWidth, LayerType, DEFAULT_SPACING, defaultEntrySettings, useQuery } from '@docere/common'
+import { ProjectContext, isTextLayer, AsideTab, getTextPanelWidth, LayerType, DEFAULT_SPACING, defaultEntrySettings, useQuery, useEntry } from '@docere/common'
 
-import type { EntryState, EntryStateAction, FacsimileArea, Entry } from '@docere/common'
+import type { EntryState, EntryStateAction, FacsimileArea } from '@docere/common'
+import { useParams } from 'react-router-dom'
 
 const initialEntryState: EntryState = {
 	activeEntity: null,
@@ -191,10 +192,12 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 }
 
 
-export default function useEntryState(entry: Entry) {
+export default function useEntryState() {
 	const { config } = React.useContext(ProjectContext)
 	const query = useQuery()
 	const x = React.useReducer(entryStateReducer, initialEntryState)
+	const { entryId } = useParams()
+	const entry = useEntry(entryId)
 
 	React.useEffect(() => {
 		if (x[0].entry == null) return
