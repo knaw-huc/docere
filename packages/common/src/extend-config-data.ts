@@ -23,6 +23,7 @@ const defaultConfig: DocereConfig = {
 	layers: [],
 	metadata: [],
 	notes: [],
+	parts: null,
 	pages: [],
 	private: false,
 	searchResultCount: 20,
@@ -47,13 +48,10 @@ export const defaultEntityConfig: Omit<EntityConfig, 'extract'> = {
 }
 
 const defaultDocereFunctions: DocereConfigFunctions = {
-	prepareDocument: function prepareDocument(doc) { return doc },
-	// extractEntities: function extractEntities(_doc) { return [] },
-	extractFacsimiles: function extractFacsimiles(_doc) { return [] },
-	extractMetadata: function extractMetadata(_doc) { return {} },
-	// extractNotes: function extractNotes(_doc) { return [] },
-	extractText: function extractText(doc) { return doc.documentElement.textContent },
-	// extractLayers: function extractTextLayers(_doc) { return [] }
+	prepareDocument: function prepareDocument(entry) { return entry.document.documentElement },
+	extractFacsimiles: function extractFacsimiles(_el) { return [] },
+	extractMetadata: function extractMetadata(_el) { return {} },
+	extractText: function extractText(entry) { return entry.element.textContent },
 }
 
 // Add a title to a config if the title is not explicitly set in the config

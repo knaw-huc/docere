@@ -1,4 +1,5 @@
 import { DocereConfig, Colors, ExtractedTextData, LayerType } from '@docere/common'
+import { extractEntryPartElements } from '../utils'
 
 const config: DocereConfig = {
 	slug: 'isidore',
@@ -8,7 +9,7 @@ const config: DocereConfig = {
 		{
 			color: Colors.BlueBright,
 			id: 'gloss',
-			extract: doc => Array.from(doc.querySelectorAll('gloss[corresp]'))
+			extract: entry => Array.from(entry.document.querySelectorAll('gloss[corresp]'))
 				.map((el): ExtractedTextData => ({
 					element: el,
 					id: el.getAttribute('corresp').slice(1),
@@ -19,11 +20,19 @@ const config: DocereConfig = {
 	],
 	layers: [
 		{
-			extract: doc => doc.querySelector('text'),
+			id: 'facsimile',
+			type: LayerType.Facsimile,
+		},
+		{
+			// TODO add this as a default extractor function
+			extract: entry => entry.element,
 			id: 'text',
 			type: LayerType.Text,
 		},
-	]
+	],
+	parts: {
+		extract: extractEntryPartElements('div[type="chapter"][n]', 'n')
+	}
 }
 
 export default config

@@ -1,13 +1,15 @@
-export default function prepareDocument(doc: XMLDocument) {
-	doc.querySelectorAll('ne-start').forEach(el => {
+import { Entry } from '@docere/common'
+
+export default function prepareDocument(entry: Entry) {
+	entry.document.querySelectorAll('ne-start').forEach(el => {
 		const range = new Range()
 		range.setStartAfter(el)
 		range.setEndBefore(el.nextElementSibling)
-		const ner = doc.createElement('ner')
+		const ner = entry.document.createElement('ner')
 		ner.setAttribute('type', el.getAttribute('type'))
 		range.surroundContents(ner)
 		el.parentElement.removeChild(el)
 	})
-	doc.querySelectorAll('ne-end').forEach(el => el.parentElement.removeChild(el))
-	return doc
+	entry.document.querySelectorAll('ne-end').forEach(el => el.parentElement.removeChild(el))
+	return entry.document.documentElement
 }

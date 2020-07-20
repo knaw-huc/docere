@@ -14,10 +14,7 @@ export default function getComponents(_config: DocereConfig) {
 			`,
 			pb: getPb(props => props.attributes.corresp?.slice(1)),
 			'gloss[corresp]': getEntity({
-				extractKey: props => {
-					console.log(props.attributes)
-					return props.attributes.corresp.slice(1)
-				}
+				extractKey: props => props.attributes.corresp.slice(1)
 			})
 		}
 	}

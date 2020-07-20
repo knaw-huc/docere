@@ -2,13 +2,12 @@ import { EsDataType, LayerType, RsType, Colors, ExtractedTextData } from '@docer
 import type { DocereConfig, ExtractTextData } from '@docere/common'
 
 function extractEntity(name: string): ExtractTextData {
-	return function(doc) {
-		return Array.from(doc.querySelectorAll(`entity[type~=${name}]`))
+	return entry => 
+		Array.from(entry.document.querySelectorAll(`entity[type~=${name}]`))
 			.map((element): ExtractedTextData => ({
 				id: element.id,
 				value: element.getAttribute('content'),
 			}))
-	}
 }
 
 const config: DocereConfig = {

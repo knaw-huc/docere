@@ -1,7 +1,7 @@
-import type { DocereConfigData } from '@docere/common'
+import { Entry } from '@docere/common'
 
-const extractFacsimiles: DocereConfigData['extractFacsimiles'] = function extractFacsimiles(doc) {
-	return Array.from(doc.querySelectorAll('facsimile zone'))
+export default function extractFacsimiles(entry: Entry) {
+	return Array.from(entry.document.querySelectorAll('facsimile zone'))
 		.map(zone => {
 			const id = zone.getAttribute('xml:id')
 			const graphic = zone.querySelector('graphic[rend="facstab"]')
@@ -15,4 +15,3 @@ const extractFacsimiles: DocereConfigData['extractFacsimiles'] = function extrac
 		})
 		.filter(facs => facs != null)
 }
-export default extractFacsimiles

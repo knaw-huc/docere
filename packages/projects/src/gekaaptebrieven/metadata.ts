@@ -1,8 +1,8 @@
-import type { ExtractedMetadata } from '@docere/common'
+import type { ExtractedMetadata, Entry } from '@docere/common'
 
-export default function extractMetadata(doc: XMLDocument) {
+export default function extractMetadata(entry: Entry) {
 	const selector = "meta"
-	let els = doc.querySelectorAll(selector)
+	let els = entry.document.querySelectorAll(selector)
 	const metadata: ExtractedMetadata = {}
 	Array.from(els).forEach(el => {
 		metadata[el.getAttribute('type')] = el.getAttribute('value')

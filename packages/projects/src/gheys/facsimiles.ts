@@ -1,4 +1,4 @@
-import { AsideTab } from '@docere/common'
+import { AsideTab, Entry } from '@docere/common'
 import type { FacsimileArea, DocereConfig, Facsimile } from '@docere/common'
 
 function parseArea(id: string)  {
@@ -34,7 +34,6 @@ function extractFacsimileAreas(doc: XMLDocument, config: DocereConfig) {
 				listId: type,
 				asideTab: AsideTab.TextData,
 			}
-
 		}
 
 		areas.push(area)
@@ -55,14 +54,14 @@ function extractFacsimileAreas(doc: XMLDocument, config: DocereConfig) {
 	return areas
 }
 
-export default function extractFacsimiles(doc: XMLDocument, config: DocereConfig) {
+export default function extractFacsimiles(entry: Entry, config: DocereConfig) {
 	const facsimiles: Facsimile[] = []
-	const pb = doc.querySelector('pb')
+	const pb = entry.document.querySelector('pb')
 
 	facsimiles.push({
 		id: pb.getAttribute('path'),
 		versions: [{
-			areas: extractFacsimileAreas(doc, config),
+			areas: extractFacsimileAreas(entry.document, config),
 			path: `https://demo.docere.diginfra.net/iiif/gheys/${pb.getAttribute('path')}/info.json`,
 		}]
 	})

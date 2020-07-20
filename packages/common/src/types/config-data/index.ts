@@ -9,7 +9,6 @@ export * from './config'
 export * from './layer'
 
 export interface DocereConfigData extends DocereConfigFunctions {
-	// getComponents: GetComponents
 	getComponents?: (config: DocereConfig) => GetComponents
 	getUIComponent?: (config: DocereConfig) => GetUIComponent
 	config: DocereConfig

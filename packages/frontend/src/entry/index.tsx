@@ -21,7 +21,7 @@ function Entry(props: EntryProps) {
 			<Panels
 				{...props}
 				{...entryState}
-				entry={props.entry}
+				entry={entryState.entry}
 				entryDispatch={entryDispatch}
 			/>
 			<Aside

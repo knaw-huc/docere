@@ -1,15 +1,13 @@
-import type { DocereConfigData, ExtractedMetadata } from '@docere/common'
+import type { ExtractedMetadata, Entry } from '@docere/common'
 
-const extractMetadata: DocereConfigData['extractMetadata'] = function extractMetadata(doc, _config, id) {
+export default function extractMetadata(entry: Entry) {
 	const metadata: ExtractedMetadata = {}
 
-	metadata.author = doc.querySelector('correspAction[type="sent"] > name')?.textContent
-	metadata.addressee = doc.querySelector('correspAction[type="received"] > name')?.textContent
-	metadata.date = doc.querySelector('correspAction[type="sent"] > date')?.getAttribute('when')
-	metadata.place = doc.querySelector('correspAction[type="sent"] > placeName')?.textContent
-	metadata.type = id.slice(0, 7) === 'brieven' ? 'brief' : 'geschrift'
+	metadata.author = entry.document.querySelector('correspAction[type="sent"] > name')?.textContent
+	metadata.addressee = entry.document.querySelector('correspAction[type="received"] > name')?.textContent
+	metadata.date = entry.document.querySelector('correspAction[type="sent"] > date')?.getAttribute('when')
+	metadata.place = entry.document.querySelector('correspAction[type="sent"] > placeName')?.textContent
+	metadata.type = entry.id.slice(0, 7) === 'brieven' ? 'brief' : 'geschrift'
 
 	return metadata
 }
-
-export default extractMetadata

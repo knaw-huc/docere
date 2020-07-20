@@ -53,7 +53,7 @@ const config: DocereConfig = {
 		{
 			color: Colors.BlueBright,
 			id: 'textual',
-			extract: doc => Array.from(doc.querySelectorAll('div[type="textualNotes"] > note'))
+			extract: entry => Array.from(entry.document.querySelectorAll('div[type="textualNotes"] > note'))
 				.map(el => ({
 					id: el.getAttribute('xml:id'),
 					element: el,
@@ -65,7 +65,7 @@ const config: DocereConfig = {
 		{
 			color: Colors.BlueBright,
 			id: 'editor',
-			extract: doc => Array.from(doc.querySelectorAll('div[type="notes"] > note'))
+			extract: entry => Array.from(entry.document.querySelectorAll('div[type="notes"] > note'))
 				.map(el => ({
 					id: el.getAttribute('xml:id'),
 					element: el,
@@ -79,7 +79,7 @@ const config: DocereConfig = {
 	entities: [
 		{
 			color: '#fd7a7a',
-			extract: doc => Array.from(doc.querySelectorAll('div[type="translation"] rs[type="pers"]'))
+			extract: entry => Array.from(entry.document.querySelectorAll('div[type="translation"] rs[type="pers"]'))
 				.map(el => ({
 					id: el.getAttribute('key'),
 					value: el.textContent
@@ -92,7 +92,7 @@ const config: DocereConfig = {
 		},
 		{
 			color: Colors.Orange,
-			extract: doc => Array.from(doc.querySelectorAll('ref[target][type="entry-link"]'))
+			extract: entry => Array.from(entry.document.querySelectorAll('ref[target][type="entry-link"]'))
 				.map(el => ({
 					id: el.getAttribute('target').replace(/\.xml$/, ''),
 					value: el.textContent,
@@ -102,7 +102,7 @@ const config: DocereConfig = {
 		},
 		{
 			color: Colors.Brown,
-			extract: doc => Array.from(doc.querySelectorAll('ref[target][type="note-link"]'))
+			extract: entry => Array.from(entry.document.querySelectorAll('ref[target][type="note-link"]'))
 				.map(el => ({
 					id: el.getAttribute('target'),
 					value: el.textContent,
@@ -126,7 +126,7 @@ const config: DocereConfig = {
 			id: 'original',
 			type: LayerType.Text,
 			// selector: 'div[type="original"]',
-			extract: doc => doc.querySelector('div[type="original"]'),
+			extract: entry => entry.document.querySelector('div[type="original"]'),
 		},
 		// {
 		// 	active: false,
@@ -137,7 +137,7 @@ const config: DocereConfig = {
 		// },
 		{
 			active: true,
-			extract: doc => doc.querySelector('div[type="translation"]'),
+			extract: entry => entry.document.querySelector('div[type="translation"]'),
 			id: 'translation',
 			type: LayerType.Text,
 			// selector: 'div[type="translation"]',

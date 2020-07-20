@@ -1,15 +1,13 @@
 import type { DocereConfig, EntityConfig } from "./config"
 import { AsideTab } from '../../enum'
+import { Entry } from '../entry'
 
 
 export interface DocereConfigFunctions {
-	extractFacsimiles: (doc: XMLDocument, config: DocereConfig, id: string) => Facsimile[]
-	extractMetadata: (doc: XMLDocument, config: DocereConfig, id: string) => ExtractedMetadata
-	// extractNotes: (doc: XMLDocument, config: DocereConfig) => Note[]
-	extractText: (doc: XMLDocument, config: DocereConfig) => string
-	// extractEntities: (doc: XMLDocument, config: DocereConfig) => TextData[]
-	// extractLayers: (doc: XMLDocument, config: DocereConfig) => ExtractedLayer[]
-	prepareDocument: (doc: XMLDocument, config: DocereConfig, id: string) => XMLDocument
+	extractFacsimiles: (entry: Entry, config: DocereConfig) => Facsimile[]
+	extractMetadata: (entry: Entry, config: DocereConfig) => ExtractedMetadata
+	extractText: (entry: Entry, config: DocereConfig) => string
+	prepareDocument: (entry: Entry, config: DocereConfig) => Element
 }
 
 export interface ExtractedTextData {

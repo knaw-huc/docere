@@ -12,14 +12,18 @@ export type DateMetadata = DateFacetConfig & { value: number | number[] }
 export type MetadataItem = ListMetadata | HierarchyMetadata | BooleanMetadata | RangeMetadata | DateMetadata
 
 export interface Entry {
-	doc: XMLDocument
+	document: XMLDocument
+	element: Element
+	entities: Entity[]
 	facsimiles: Facsimile[]
 	id: string
+	layers: Layer[]
 	metadata: MetadataItem[]
 	notes: Note[]
-	entities: Entity[]
-	layers: Layer[]
+	parts?: EntryParts
 }
+
+export type EntryParts = Map<string, Entry>
 
 export type ExtractedEntry = Omit<Entry, 'doc' | 'layers' | 'metadata'> & {
 	layers: ExtractedLayer[]

@@ -1,3 +1,5 @@
+import { Entry } from '@docere/common'
+
 function getRectoVersoSequence(x: string) {
 	const [start, end] = x.split('-')
 	const [,startNoString, startVersorecto] = /(\d+)(r|v)/.exec(start)
@@ -29,10 +31,10 @@ function getRectoVersoSequence(x: string) {
 	return seq.map(x => x.padStart(4, '0'))
 }
 
-export default function extractFacsimiles(doc: XMLDocument, _config: any, id: string) {
-	const [region, entryId] = id.split('/')
+export default function extractFacsimiles(entry: Entry) {
+	const [region, entryId] = entry.id.split('/')
 
-	const registers = Array.from(doc.querySelectorAll('register')).map(k => k.textContent).filter(x => x.length > 0)
+	const registers = Array.from(entry.document.querySelectorAll('register')).map(k => k.textContent).filter(x => x.length > 0)
 	const tmp = registers
 		.map(register => {
 			const result = /(.*?)\s\((.*?)\), f. (.*), nr. (\d+)/.exec(register)

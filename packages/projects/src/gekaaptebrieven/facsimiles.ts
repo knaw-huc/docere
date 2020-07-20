@@ -1,8 +1,10 @@
-export default function extractFacsimiles(doc: XMLDocument) {
+import { Entry } from '@docere/common'
+
+export default function extractFacsimiles(entry: Entry) {
 	const attr = 'facs'
 	const selector = `pb[${attr}]`
 
-	let pbs = doc.querySelectorAll(selector)
+	let pbs = entry.document.querySelectorAll(selector)
 
 	return Array.from(pbs)
 		.map(pb => {

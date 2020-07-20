@@ -1,10 +1,12 @@
+import { Entry } from '@docere/common'
+
 function replacer(_match: string, offset: number) {
 	return `<note id="note_${offset}">`
 }
-export default function prepareDocument(doc: XMLDocument) {
-	const transcriptieElement = doc.querySelector('transcriptie')
+export default function prepareDocument(entry: Entry) {
+	const transcriptieElement = entry.document.querySelector('transcriptie')
 	transcriptieElement.innerHTML = transcriptieElement.textContent
 		.replace(/{/g, replacer)
 		.replace(/}/g, '</note>')
-	return doc
+	return entry.document.documentElement
 }

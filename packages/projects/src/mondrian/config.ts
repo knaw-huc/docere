@@ -1,4 +1,5 @@
 import { DocereConfig, EsDataType, RsType, Colors, LayerType } from '@docere/common'
+import { extractLayerElement } from '../utils'
 
 const config: DocereConfig = {
 	slug: 'mondrian',
@@ -34,7 +35,7 @@ const config: DocereConfig = {
 			color: Colors.Blue,
 			id: 'biblio',
 			type: RsType.PagePart,
-			extract: doc => Array.from(doc.querySelectorAll('ref[target^="biblio.xml#"]'))
+			extract: entry => Array.from(entry.document.querySelectorAll('ref[target^="biblio.xml#"]'))
 				.map(x => ({
 					id: x.getAttribute('target').split('#')[1],
 					value: x.textContent,
@@ -44,7 +45,7 @@ const config: DocereConfig = {
 			color: Colors.Green,
 			id: 'bio',
 			type: RsType.PagePart,
-			extract: doc => Array.from(doc.querySelectorAll('ref[target^="bio.xml#"]'))
+			extract: entry => Array.from(entry.document.querySelectorAll('ref[target^="bio.xml#"]'))
 				.map(x => ({
 					id: x.getAttribute('target').split('#')[1],
 					value: x.textContent,
@@ -54,7 +55,7 @@ const config: DocereConfig = {
 			color: Colors.Green,
 			id: 'rkd-artwork-link',
 			type: RsType.Artwork,
-			extract: doc => Array.from(doc.querySelectorAll('rs[type="artwork-m"]'))
+			extract: entry => Array.from(entry.document.querySelectorAll('rs[type="artwork-m"]'))
 				.map(x => ({
 					id: x.getAttribute('key'),
 					value: x.textContent,
@@ -64,12 +65,12 @@ const config: DocereConfig = {
 	layers: [
 		{
 			id: 'original',
-			extract: doc => doc.querySelector('div[type="original"]'),
+			extract: extractLayerElement('div[type="original"]'),
 			type: LayerType.Text,
 		},
 		{
 			id: 'translation',
-			extract: doc => doc.querySelector('div[type="translation"]'),
+			extract: extractLayerElement('div[type="translation"]'),
 			type: LayerType.Text,
 		}
 	],
@@ -77,8 +78,8 @@ const config: DocereConfig = {
 		{
 			color: Colors.Blue,
 			id: 'editor',
-			extract: doc =>
-				Array.from(doc.querySelectorAll('div[type="notes"] > note'))
+			extract: entry =>
+				Array.from(entry.document.querySelectorAll('div[type="notes"] > note'))
 					.map((el, index) => ({
 						element: el,
 						id: el.getAttribute('xml:id'),

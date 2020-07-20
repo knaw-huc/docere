@@ -1,20 +1,20 @@
-import type { DocereConfig } from '@docere/common'
+import type { DocereConfig, Entry } from '@docere/common'
 
-export default function prepareDocument(doc: XMLDocument, config: DocereConfig, id: string) {
-	const page = config.data.pages.find((p: any) => p.id === parseInt(id, 10) - 1)
+export default function prepareDocument(entry: Entry, config: DocereConfig) {
+	const page = config.data.pages.find((p: any) => p.id === parseInt(entry.id, 10) - 1)
 
 	if (page != null) {
-		const section = doc.querySelector('section')
-		const imgLocation = doc.createElement('imgLocation')
+		const section = entry.document.querySelector('section')
+		const imgLocation = entry.document.createElement('imgLocation')
 		imgLocation.textContent = page.imgLocation
 		section.prepend(imgLocation)
 	}
 
-	doc.querySelectorAll('block').forEach(block => {
+	entry.document.querySelectorAll('block').forEach(block => {
 		block.setAttribute('class', 'block')
 	})
 
-	doc.querySelectorAll('coords').forEach(coords => {
+	entry.document.querySelectorAll('coords').forEach(coords => {
 		const x = coords.querySelector('x')
 		coords.setAttribute('x', x.textContent)
 		coords.removeChild(x)
@@ -32,5 +32,5 @@ export default function prepareDocument(doc: XMLDocument, config: DocereConfig, 
 		coords.removeChild(h)
 	})
 
-	return doc
+	return entry.document.documentElement
 }

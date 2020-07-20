@@ -1,6 +1,8 @@
 // import { LayerType } from '@docere/common'
 // import type { TextLayer } from '@docere/common'
 
+import { Entry } from '@docere/common'
+
 /*
 function updateToPosition(currentPosition: Position, el: Element): Position {
 	const left = parseInt(el.getAttribute('HPOS'), 10)
@@ -25,8 +27,8 @@ interface Position {
 	right: number
 }
 */
-export default function extractPreparedLayer(doc: XMLDocument) {
-	const element = doc.querySelector('Layout')
+export default function extractPreparedLayer(entry: Entry) {
+	const element = entry.document.querySelector('Layout')
 
 	const nodeIterator = document.createNodeIterator(
 		element,

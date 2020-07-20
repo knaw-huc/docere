@@ -1,8 +1,8 @@
-import type { DocereConfigData, ExtractedMetadata } from '@docere/common'
+import type { Entry, ExtractedMetadata } from '@docere/common'
 
-const extractMetadata: DocereConfigData['extractMetadata'] = function extractMetadata(doc) {
+export default function extractMetadata(entry: Entry) {
 	const selector = "meta"
-	let els = doc.querySelectorAll(selector)
+	let els = entry.document.querySelectorAll(selector)
 	const metadata: ExtractedMetadata = {}
 	Array.from(els).forEach(el => {
 		let id = el.getAttribute('id')
@@ -12,5 +12,3 @@ const extractMetadata: DocereConfigData['extractMetadata'] = function extractMet
 
 	return metadata
 }
-
-export default extractMetadata

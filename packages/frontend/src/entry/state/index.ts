@@ -232,7 +232,6 @@ export default function useEntryState(entry: Entry) {
 
 		// Copy current state of active and pinned layers to keep interface consistent between entry changes
 		const nextLayers = entry.layers.map(layer => {
-			// x[0] = entryState
 			const stateLayer = x[0].layers.find(l => l.id === layer.id)
 			if (!stateLayer) return layer
 			layer.active = stateLayer.active 
@@ -247,7 +246,7 @@ export default function useEntryState(entry: Entry) {
 			layers: updatePanels(nextLayers, x[0]),
 			type: 'ENTRY_CHANGED',
 		})
-	}, [entry])
+	}, [entry, query])
 
 	React.useEffect(() => {
 		// x[1] = dispatch

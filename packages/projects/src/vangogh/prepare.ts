@@ -1,10 +1,9 @@
-// import { generateId } from '@docere/common'
-import type { DocereConfig } from '@docere/common'
+import { Entry } from '@docere/common'
 
-export default function prepareDocument(doc: XMLDocument, _config: DocereConfig) {
-	for (const anchor of doc.querySelectorAll(`anchor`)) {
+export default function prepareDocument(entry: Entry) {
+	for (const anchor of entry.document.querySelectorAll(`anchor`)) {
 		const anchorId = anchor.getAttribute('xml:id')
-		const note = doc.querySelector(`note[target="#${anchorId}"]`)
+		const note = entry.document.querySelector(`note[target="#${anchorId}"]`)
 		if (note != null) {
 			anchor.setAttribute('target', note.getAttribute('xml:id'))
 		}
@@ -15,11 +14,11 @@ export default function prepareDocument(doc: XMLDocument, _config: DocereConfig)
 	// 	note.id = note.getAttribute('target').slice(1)
 	// }
 
-	for (const ref of doc.querySelectorAll('ref[target]')) {
+	for (const ref of entry.document.querySelectorAll('ref[target]')) {
 		const target = ref.getAttribute('target')
 		const type = target.indexOf('#') > -1 ? 'note-link' : 'entry-link'
 		ref.setAttribute('type', type)
 	}
 
-	return doc
+	return entry.document.documentElement
 }

@@ -1,29 +1,16 @@
-import type { Entity } from '@docere/common'
+import { ExtractEntryPartElements, ExtractTextLayerElement } from '@docere/common'
 
-export class EntityController {
-	private _entities: Map<string, Entity> = new Map()
+export function extractLayerElement(selector: string): ExtractTextLayerElement {
+	return entry => entry.document.querySelector(selector)
+}
 
-	get entities() {
-		return Array.from(this._entities.values())
+export function extractEntryPartElements(selector: string, attribute: string): ExtractEntryPartElements {
+	return entry => {
+		const chapters: Map<string, Element> = new Map()
+		for (const chapter of entry.document.querySelectorAll(selector)) {
+			chapters.set(chapter.getAttribute(attribute), chapter)
+		}
+		return chapters
 	}
 
-	add(entity: Entity) {
-		if (this._entities.has(entity.id)) {
-			const e = this._entities.get(entity.id)
-			e.count += 1
-			this._entities.set(e.id, e)
-		}
-		else {
-			this._entities.set(
-				entity.id,
-				{
-					count: 1,
-					id: entity.id,
-					type: entity.type,
-					value: entity.value
-				}
-			)
-		}
-
-	}
 }

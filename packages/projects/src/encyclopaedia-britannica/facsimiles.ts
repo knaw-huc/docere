@@ -1,16 +1,6 @@
-// function parseArea(id: string)  {
-// 	return id
-// 		.split('_')
-// 		.map(x => parseInt(x, 10))
-// }
-
-import type { FacsimileArea, DocereConfig, Facsimile } from '@docere/common'
+import type { FacsimileArea, DocereConfig, Facsimile, Entry } from '@docere/common'
 
 function elementToArea(el: Element): FacsimileArea {
-	// const id = el.getAttribute('id')
-	// const area = el.getAttribute('area')
-	// const [x, y, w, h] = parseArea(area)
-	// console.log(id, x, y, w, h)
 	return {
 		id: el.getAttribute('ID'),
 		x: parseInt(el.getAttribute('HPOS'), 10),
@@ -27,7 +17,6 @@ function extractFacsimileAreas(doc: XMLDocument, _config: DocereConfig) {
 		const area = elementToArea(el)
 		area.showOnHover = false
 		area.target = { id: el.getAttribute('ID') }
-		// area.note = { ocr: el.textContent }
 		areas.push(area)
 	}
 
@@ -40,16 +29,16 @@ function extractFacsimileAreas(doc: XMLDocument, _config: DocereConfig) {
 	return areas
 }
 
-export default function extractFacsimiles(doc: XMLDocument, config: DocereConfig, id: string) {
+export default function extractFacsimiles(entry: Entry, config: DocereConfig) {
 	const facsimiles: Facsimile[] = []
 
-	const [,id2] = id.split('/alto/')
+	const [,id2] = entry.id.split('/alto/')
 	const path = id2.slice(0, 4) + '/' + id2.slice(4, 8) + '/' + id2.slice(0, 9) + '.5'
 
 	facsimiles.push({
 		id: path,
 		versions: [{
-			areas: extractFacsimileAreas(doc, config),
+			areas: extractFacsimileAreas(entry.document, config),
 			path: `http://localhost:4000/iiif/encyclopaedia-britannica/${path}/info.json`,
 			// path: `https://view.nls.uk/iiif/${path}/info.json`,
 		}]

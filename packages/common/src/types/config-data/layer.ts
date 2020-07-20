@@ -1,5 +1,6 @@
 import { LayerType } from '../../enum'
 import { BaseConfig, DocereConfig } from './config'
+import { Entry } from '../entry'
 
 // Config
 export interface LayerConfig extends BaseConfig {
@@ -16,15 +17,15 @@ interface BaseLayer {
 }
 
 // Text Layer
-type ExtractTextLayer = (doc: XMLDocument, config: DocereConfig) => XMLDocument | Element
+export type ExtractTextLayerElement = (entry: Entry, config: DocereConfig) => Element
 
 export interface TextLayerConfig extends LayerConfig {
-	extract?: ExtractTextLayer
+	extract?: ExtractTextLayerElement
 	type: LayerType.Text
 }
 
 export interface TextLayer extends TextLayerConfig, BaseLayer {
-	element: XMLDocument | Element
+	element: Element
 }
 
 // Facsimile Layer

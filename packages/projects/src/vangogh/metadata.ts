@@ -1,6 +1,6 @@
-import type { DocereConfigData, ExtractedMetadata } from '@docere/common'
+import type { ExtractedMetadata, Entry } from '@docere/common'
 
-const extractMetadata: DocereConfigData['extractMetadata'] = function extractMetadata(doc) {
+export default function extractMetadata(entry: Entry) {
 	const metadata: ExtractedMetadata = {}
 
 	const selectors = [
@@ -19,8 +19,8 @@ const extractMetadata: DocereConfigData['extractMetadata'] = function extractMet
 	} 
 
 	selectors.forEach(selector => {
-		const metadataRoot = doc.querySelector('sourceDesc')
-		const iterator = doc.evaluate(selector, metadataRoot, nsResolver as any, XPathResult.ANY_TYPE, null)
+		const metadataRoot = entry.document.querySelector('sourceDesc')
+		const iterator = entry.document.evaluate(selector, metadataRoot, nsResolver as any, XPathResult.ANY_TYPE, null)
 		const el = iterator.iterateNext()
 
 		if (el) {
@@ -39,9 +39,7 @@ const extractMetadata: DocereConfigData['extractMetadata'] = function extractMet
 		}
 	})
 
-	metadata.has_figure = doc.querySelector('figure') != null
+	metadata.has_figure = entry.document.querySelector('figure') != null
 
 	return metadata
 }
-
-export default extractMetadata

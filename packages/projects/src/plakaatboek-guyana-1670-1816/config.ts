@@ -1,4 +1,5 @@
 import { DocereConfig, EsDataType, LayerType } from '@docere/common'
+import { extractLayerElement } from '../utils'
 
 const config: DocereConfig = {
 	entrySettings: {
@@ -32,7 +33,7 @@ const config: DocereConfig = {
 	],
 	layers: [
 		{
-			extract: doc => doc.querySelector('transcriptie'),
+			extract: extractLayerElement('transcriptie'),
 			id: 'transcriptie',
 			type: LayerType.Text,
 		}

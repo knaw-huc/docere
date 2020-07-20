@@ -13,6 +13,8 @@ export interface UrlQuery {
 	noteId?: string			/* ni */
 	facsimileId?: string	/* fi */
 	lineId?: string			/* li */
+	paragraphId?: string	/* pi */
+	splitId?: string		/* si */
 }
 export interface NavigatePayload {
 	type: 'entry' | 'page' | 'search'

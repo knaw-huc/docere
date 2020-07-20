@@ -1,6 +1,7 @@
 import pages from './data/pages/index.json'
 import { LayerType } from '@docere/common'
 import type { DocereConfig } from '@docere/common'
+import { extractLayerElement } from '../utils'
 
 const config: DocereConfig = {
 	collection: {
@@ -24,28 +25,28 @@ const config: DocereConfig = {
 		},
 		{
 			active: true,
-			extract: doc => doc.querySelector('transcription[lang="la"]'),
+			extract: extractLayerElement('transcription[lang="la"]'),
 			id: 'la',
 			title: 'Latin',
 			type: LayerType.Text,
 		},
 		{
 			active: false,
-			extract: doc => doc.querySelector('transcription[lang="nl"]'),
+			extract: extractLayerElement('transcription[lang="nl"]'),
 			id: 'nl',
 			title: 'Dutch',
 			type: LayerType.Text,
 		},
 		{
 			active: false,
-			extract: doc => doc.querySelector('transcription[lang="en"]'),
+			extract: extractLayerElement('transcription[lang="en"]'),
 			id: 'en',
 			title: 'English',
 			type: LayerType.Text,
 		},
 		{
 			active: false,
-			extract: doc => doc.querySelector('transcription[lang="fr"]'),
+			extract: extractLayerElement('transcription[lang="fr"]'),
 			id: 'fr',
 			title: 'French',
 			type: LayerType.Text,

@@ -2,13 +2,12 @@ import { EsDataType, RsType, LayerType, ExtractTextData, ExtractedTextData } fro
 import { DocereConfig } from '@docere/common'
 
 function extractEntity(name: string): ExtractTextData {
-	return function(doc) {
-		return Array.from(doc.querySelectorAll(`ner[type~=${name}]`))
+	return entry =>
+		Array.from(entry.document.querySelectorAll(`ner[type~=${name}]`))
 			.map((element): ExtractedTextData => ({
 				id: element.textContent,
 				value: element.textContent
 			}))
-	}
 }
 
 

@@ -1,4 +1,4 @@
-import type { FacsimileArea, Facsimile } from '@docere/common'
+import type { FacsimileArea, Facsimile, Entry } from '@docere/common'
 
 function extractFacsimileAreas(doc: XMLDocument) {
 	const areas: FacsimileArea[] = []
@@ -26,15 +26,15 @@ function extractFacsimileAreas(doc: XMLDocument) {
 	return areas
 }
 
-export default function extractFacsimiles(doc: XMLDocument) {
+export default function extractFacsimiles(entry: Entry) {
 	const facsimiles: Facsimile[] = []
-	const facsimile = doc.querySelector('imgLocation')
+	const facsimile = entry.document.querySelector('imgLocation')
 
 	if (facsimile) {
 		facsimiles.push({
 			id: facsimile.textContent,
 			versions: [{
-				areas: extractFacsimileAreas(doc),
+				areas: extractFacsimileAreas(entry.document),
 				path: `https://objects.library.uu.nl/fcgi-bin/iipsrv.fcgi?IIIF=/manifestation/viewer${facsimile.textContent.slice(0, -4)}.jp2/info.json`
 			}]
 		})

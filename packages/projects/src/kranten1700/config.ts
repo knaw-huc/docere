@@ -1,5 +1,6 @@
 import { EsDataType, LayerType, Colors, ExtractedTextData } from '@docere/common'
 import { DocereConfig } from '@docere/common'
+import { extractLayerElement } from '../utils'
 
 const config: DocereConfig = {
 	slug: 'kranten1700',
@@ -22,7 +23,7 @@ const config: DocereConfig = {
 	entities: [
 		{
 			color: Colors.Pink,
-			extract: doc => Array.from(doc.querySelectorAll('w'))
+			extract: entry => Array.from(entry.document.querySelectorAll('w'))
 				.map((el): ExtractedTextData => ({
 					id: el.getAttribute('pos'),
 					value: el.getAttribute('pos'),
@@ -52,7 +53,7 @@ const config: DocereConfig = {
 	layers: [
 		{
 			active: true,
-			extract: doc => doc.querySelector('text'),
+			extract: extractLayerElement('text'),
 			id: 'Origineel',
 			type: LayerType.Text,
 		},

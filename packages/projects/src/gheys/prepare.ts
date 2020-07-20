@@ -1,4 +1,4 @@
-import type { DocereConfig } from '@docere/common'
+import type { Entry } from '@docere/common'
 
 const renameMap: [RegExp, string][] = [
 	[new RegExp(/^NHA_1972/), 'RHC-NHA/1972'],
@@ -9,26 +9,26 @@ const renameMap: [RegExp, string][] = [
 	[new RegExp(/^NHA_1617/), 'RHC-NHA/1617'],
 ]
 
-export default function prepareDocument(doc: XMLDocument, _config: DocereConfig, id: string) {
-	let jpgPath = id
+export default function prepareDocument(entry: Entry) {
+	let jpgPath = entry.id
 	
-	const found = renameMap.find(x => x[0].test(id))
+	const found = renameMap.find(x => x[0].test(entry.id))
 	if (found != null) jpgPath = jpgPath.replace(found[0], found[1])
 
 	// Exception for Tresoar because of a different dir structure
-	if (/^RHC_part2\/RHC-Tresoar/.test(id)) {
-		const sub = id.split('_').slice(-2, -1)[0]
+	if (/^RHC_part2\/RHC-Tresoar/.test(entry.id)) {
+		const sub = entry.id.split('_').slice(-2, -1)[0]
 		jpgPath = jpgPath.replace('/26/NL', `/26/${sub}/NL`)
 	}
 
-	const pb = doc.createElement('pb')
+	const pb = entry.document.createElement('pb')
 	pb.setAttribute('path', `${jpgPath}.jpg`)
-	doc.documentElement.prepend(pb)
+	entry.document.documentElement.prepend(pb)
 
-	for (const el of doc.querySelectorAll('String')) {
+	for (const el of entry.document.querySelectorAll('String')) {
 		el.textContent = el.getAttribute('CONTENT') + ' '
 		el.removeAttribute('CONTENT')
 	}
 
-	return doc
+	return entry.document.documentElement
 }
