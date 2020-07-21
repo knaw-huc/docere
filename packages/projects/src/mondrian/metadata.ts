@@ -9,5 +9,9 @@ export default function extractMetadata(entry: Entry) {
 	metadata.place = entry.document.querySelector('correspAction[type="sent"] > placeName')?.textContent
 	metadata.type = entry.id.slice(0, 7) === 'brieven' ? 'brief' : 'geschrift'
 
+	metadata.noteCount = entry.document.querySelectorAll('div[type="notes"] > note').length
+	metadata.ogtNoteCount = entry.document.querySelectorAll('div[type="ogtnotes"] > note').length
+	metadata.typedNoteCount = entry.document.querySelectorAll('div[type="typednotes"] > note').length
+
 	return metadata
 }
