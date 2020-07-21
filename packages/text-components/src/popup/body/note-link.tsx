@@ -4,7 +4,7 @@ import DocereTextView from '@docere/text'
 
 import { PopupBodyLink, PopupBodyWrapper } from './index'
 
-import type { DocereComponentProps, NavigatePayload } from '@docere/common'
+import type { DocereComponentProps, UrlObject } from '@docere/common'
 
 interface NoteLinkProps {
 	activeEntity: Entity
@@ -18,9 +18,8 @@ function NoteLink(props: NoteLinkProps) {
 	const handleClick = React.useCallback((ev: React.MouseEvent) => {
 		ev.stopPropagation()
 
-		const payload: NavigatePayload = {
-			type: 'entry',
-			id: props.entryId,
+		const payload: UrlObject = {
+			entryId: props.entryId,
 			query: { noteId: props.noteId }
 		}
 

@@ -1,5 +1,6 @@
 import React from 'react'
-import { useLocation } from "react-router-dom"
+import { useLocation, useParams } from "react-router-dom"
+import { UrlObject } from './navigate'
 
 export interface UrlQuery {
 	entityId?: string		/* ei = person, location, gloss */
@@ -19,24 +20,38 @@ const urlQueryMap: Record<string, keyof UrlQuery> = {
 	pi: 'partId',
 }
 
-function defaultUrlQuery(): UrlQuery {
-	return {}
+function defaultPayload(): UrlObject {
+	return {
+		projectId: null,
+		pageId: null,
+		entryId: null,
+		query: null,
+	}
 }
 
-export function useQuery() {
+export function useUrlObject() {
 	const location = useLocation()
-	const [query, setQuery] = React.useState<UrlQuery>(defaultUrlQuery())
+	const { projectId, entryId, pageId } = useParams()
+	const [urlObject, setUrlObject] = React.useState<UrlObject>(defaultPayload())
 
 	React.useEffect(() => {
-		const nextQuery = defaultUrlQuery()
+		const nextQuery: UrlQuery = {}
 		for (const [key, value] of new URLSearchParams(location.search)) {
 			if (!urlQueryMap.hasOwnProperty(key)) continue
 
 			// See interface UrlQuery for key (ei, ni, fi, ...) descriptions
 			nextQuery[urlQueryMap[key]] = value
 		}
-		setQuery(nextQuery)
-	}, [location.search])
 
-	return query 
+		const nextPayload: UrlObject = {
+			projectId,
+			entryId,
+			pageId,
+			query: nextQuery
+		}
+
+		setUrlObject(nextPayload)
+	}, [location.pathname, location.search])
+
+	return urlObject 
 }

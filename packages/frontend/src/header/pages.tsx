@@ -1,9 +1,9 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { DEFAULT_SPACING, MAINHEADER_HEIGHT, Colors, ProjectContext, getPagePath } from '@docere/common'
+import { DEFAULT_SPACING, MAINHEADER_HEIGHT, Colors, ProjectContext, getPagePath, useUrlObject } from '@docere/common'
 
 import type { PageConfig } from '@docere/common'
-import { Link, useParams } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 const Wrapper = styled.ul`
 	align-self: center;
@@ -82,12 +82,12 @@ const PageLink = styled(Link)`
 
 type PageMenuItemProps = { pageConfig: PageConfig }
 function PageMenuItem(props: PageMenuItemProps) {
-	const { projectId } = useParams()
+	const { projectId } = useUrlObject()
 
 	return (
 		<li>
 			<PageLink
-				to={getPagePath(projectId, props.pageConfig.id)}
+				to={getPagePath({ projectId, pageId: props.pageConfig.id })}
 			>
 				{props.pageConfig.title}
 			</PageLink>

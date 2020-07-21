@@ -1,6 +1,5 @@
 import * as React from 'react'
-import { useParams } from 'react-router-dom'
-import { SearchTab, Viewport } from '@docere/common'
+import { SearchTab, Viewport, useUrlObject } from '@docere/common'
 
 import type { AppState, AppStateAction } from '@docere/common'
 
@@ -65,10 +64,9 @@ function appStateReducer(appState: AppState, action: AppStateAction): AppState {
 // let historyNavigator: HistoryNavigator
 export default function useAppState() {
 	const x = React.useReducer(appStateReducer, initialAppState)
-	const { entryId } = useParams()
+	const { entryId } = useUrlObject()
 
 	React.useEffect(() => {
-		console.log(entryId, x[0].viewport)
 		if (entryId != null && x[0].viewport !== Viewport.Entry) {
 			x[1]({ type: 'SET_VIEWPORT', viewport: Viewport.Entry })
 		}

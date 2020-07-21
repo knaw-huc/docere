@@ -5,6 +5,7 @@ import Puppenv from '../puppenv'
 import { sendJson, listProjects, readFileContents, getEntryIdFromFilePath, getElasticSearchDocument, isError, getXmlFiles } from '../utils'
 
 import type { ElasticSearchDocument, DocereApiError } from '../types'
+import { createElasticSearchIdFromIds } from '../../../common/src'
 
 async function indexDocument(filePath: string, projectId: string, puppenv: Puppenv, esClient: es.Client) {
 	const xml = readFileContents(filePath)
@@ -26,7 +27,7 @@ async function indexDocument(filePath: string, projectId: string, puppenv: Puppe
 			for (const part of extractedEntry.parts) {
 				const esPartDocument = getElasticSearchDocument(part)
 				if (isError(esPartDocument)) continue
-				esPartDocument.id = `${esDocument.id}__part__${esPartDocument.id}`,
+				esPartDocument.id = createElasticSearchIdFromIds(esDocument.id, esPartDocument.id)
 				await esClient.index({
 					id: esPartDocument.id,
 					index: projectId,

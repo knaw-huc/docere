@@ -63,7 +63,7 @@ interface ProjectProps {
 function Project(props: ProjectProps) {
 	return (
 		<Li>
-			<Link to={getSearchPath(props.config.slug)}>
+			<Link to={getSearchPath({ projectId: props.config.slug })}>
 				<img src={thumbByProjectId[props.config.slug]} />
 				{props.config.title}
 			</Link>

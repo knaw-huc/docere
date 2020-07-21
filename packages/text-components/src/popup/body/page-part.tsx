@@ -4,7 +4,7 @@ import DocereTextView from '@docere/text'
 
 import { PopupBodyLink, PopupBodyWrapper } from './index'
 
-import type { DocereComponentProps, NavigatePayload, Entity } from '@docere/common'
+import type { DocereComponentProps, UrlObject, Entity } from '@docere/common'
 
 
 interface PageLinkProps {
@@ -17,10 +17,10 @@ function PageLink(props: PageLinkProps) {
 	const goToPage = React.useCallback((ev: React.MouseEvent) => {
 		ev.stopPropagation()
 
-		const payload: NavigatePayload = { type: 'page', id: props.activeEntity.config.id }
-		if (props.activeEntity.id != null) payload.query = { entityId: props.activeEntity.id }
+		const urlObject: UrlObject = { pageId: props.activeEntity.config.id }
+		if (props.activeEntity.id != null) urlObject.query = { entityId: props.activeEntity.id }
 
-		navigate(payload)
+		navigate(urlObject)
 	}, [props.activeEntity])
 
 	return (

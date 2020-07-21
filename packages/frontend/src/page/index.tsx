@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import DocereTextView from '@docere/text'
-import { TOP_OFFSET, DEFAULT_SPACING, DocereComponentContainer, useComponents, usePage, getSearchPath, PageComponentProps, useQuery } from '@docere/common'
+import { TOP_OFFSET, DEFAULT_SPACING, DocereComponentContainer, useComponents, usePage, getSearchPath, PageComponentProps, useUrlObject } from '@docere/common'
 
 const Wrapper = styled.div`
 	background: white;
@@ -42,8 +42,7 @@ const Close = styled(Link)`
 // TODO useQuery is used to pass activeId to Page, but that should not be necessary
 
 export default function PageView() {
-	const { projectId, pageId } = useParams()
-	const query = useQuery()
+	const { projectId, pageId, query } = useUrlObject()
 	const page = usePage(pageId)
 	const components = useComponents(DocereComponentContainer.Page, pageId)
 
@@ -61,7 +60,7 @@ export default function PageView() {
 				components={components}
 				node={page.doc}
 			/>
-			<Close to={getSearchPath(projectId)}>✕</Close>
+			<Close to={getSearchPath({ projectId })}>✕</Close>
 		</Wrapper>
 	)
 }

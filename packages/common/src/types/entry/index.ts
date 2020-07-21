@@ -45,6 +45,6 @@ export function extractIdsFromElasticSearchId(elasticSearchId: string) {
 	return elasticSearchId.split('__part__')
 }
 
-export function createElasticSearchIdFromIds(documentId: string, partId: string) {
-	return `${documentId}__part__${partId}`
+export function createElasticSearchIdFromIds(documentId: string, partId?: string) {
+	return partId == null ? documentId : `${documentId}__part__${partId}`
 }

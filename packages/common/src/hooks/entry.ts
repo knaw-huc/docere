@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { getDefaultEntry, extractEntryData, extractParts } from '../puppenv.utils'
-import { Entry, fetchEntryXml, ProjectContext, GetEntryProps, useQuery } from '..'
+import { Entry, fetchEntryXml, ProjectContext, GetEntryProps, useUrlObject } from '..'
 
 const entryCache = new Map<string, Entry>()
 
@@ -17,7 +17,7 @@ async function getEntry(props: Pick<GetEntryProps, 'id' | 'configData'>) {
 export function useEntry(id: string) {
 	const projectContext = React.useContext(ProjectContext)
 	const [entry, setEntry] = React.useState<Entry>(null)
-	const query = useQuery()
+	const { query } = useUrlObject()
 
 	React.useEffect(() => {
 		if (id == null || projectContext == null) return
@@ -38,7 +38,7 @@ export function useEntry(id: string) {
 			})
 		}
 
-	}, [id, query.partId])
+	}, [id, query?.partId])
 
 	return entry
 }

@@ -3,7 +3,7 @@ import { isHierarchyFacetConfig, isListFacetConfig } from '@docere/search'
 import OpenSeadragon from 'openseadragon';
 import TiledImages from './tiled-images'
 
-import type { DocereConfig, Entry, Navigate } from '@docere/common'
+import type { DocereConfig, Entry } from '@docere/common'
 
 export default class CollectionNavigatorController {
 	private entry: Entry
@@ -14,7 +14,7 @@ export default class CollectionNavigatorController {
 		private viewer: OpenSeadragon.Viewer,
 		private config: DocereConfig['collection'],
 		private searchUrl: ProjectContext['searchUrl'],
-		private navigate: Navigate
+		private handleClick: (id: string) => void
 	) {
 		this.viewer.addHandler('canvas-click', this.canvasClickHandler)
 		this.viewer.addHandler('full-screen', this.fullScreenHandler)
@@ -46,7 +46,7 @@ export default class CollectionNavigatorController {
 		if (!event.quick) return
 
 		const id = this.tiledImages.getEntryFromMousePosition(event.position)
-		this.navigate({ type: 'entry', id })
+		this.handleClick(id)
 	}
 
 	private fullScreenHandler = (event: OpenSeadragon.ViewerEvent) => {

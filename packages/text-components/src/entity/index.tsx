@@ -76,8 +76,7 @@ export default function getEntity(preProps?: PreProps) {
 			ev.stopPropagation()
 
 			navigate({
-				type: 'entry',
-				id: props.entry.id,
+				entryId: props.entry.id,
 				query: { entityId: entity.id }
 			})
 

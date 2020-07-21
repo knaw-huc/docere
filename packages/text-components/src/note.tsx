@@ -51,8 +51,7 @@ export default function getNote(extractNoteId: ExtractNoteId) {
 
 		const handleClick = React.useCallback(() => {
 			navigate({
-				type: 'entry',
-				id: props.entry.id,
+				entryId: props.entry.id,
 				query: { noteId: note.id }
 			})
 		}, [note, navigate])

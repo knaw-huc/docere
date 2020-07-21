@@ -1,5 +1,5 @@
 import React from 'react'
-import { DocereComponentProps, useUIComponent, UIComponentType, Hit, Entity, NavigatePayload, useNavigate } from '@docere/common'
+import { DocereComponentProps, useUIComponent, UIComponentType, Hit, Entity, UrlObject, useNavigate } from '@docere/common'
 import { PopupBodyWrapper, PopupBodyLink } from './index'
 
 function useSearchResult(id: string) {
@@ -23,7 +23,7 @@ function EntryLink(props: EntryLinkProps) {
 	const goToEntry = React.useCallback((ev: React.MouseEvent) => {
 		ev.stopPropagation()
 
-		const payload: NavigatePayload = { type: 'entry', id: props.activeEntity.id }
+		const payload: UrlObject = { entryId: props.activeEntity.id }
 
 		navigate(payload)
 	}, [props.activeEntity])

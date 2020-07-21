@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { SearchContext, useSearchReducer } from '@docere/search'
-import { ProjectContext } from '@docere/common'
+import { ProjectContext, useUrlObject } from '@docere/common'
 import configDatas from '@docere/projects'
 
 import EntrySelector from '../entry-selector'
@@ -10,15 +10,16 @@ import PageView from '../page'
 import useAppState from './state'
 
 import useFacetsConfig from '../entry-selector/use-fields'
-import { useParams, Route, useRouteMatch } from 'react-router-dom'
+import { Route, useRouteMatch } from 'react-router-dom'
 
 import type { DocereConfigData } from '@docere/common'
 
 function useProjectData() {
 	const [projectData, setProjectData] = React.useState<[DocereConfigData, ProjectContext]>([null, null])
-	const { projectId } = useParams()
+	const { projectId } = useUrlObject()
 
 	React.useEffect(() => {
+		if (projectId == null) return
 		// TODO redirect to 404 if projectSlug does not exist
 		configDatas[projectId]().then(({ default: configData }) => {
 			const projectContextValue: ProjectContext = {

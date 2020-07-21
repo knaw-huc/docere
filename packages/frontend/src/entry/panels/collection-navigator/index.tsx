@@ -1,13 +1,13 @@
 import React from 'react'
 import styled from 'styled-components'
-import { ProjectContext, Entry, DocereConfig, Colors, Navigate, useNavigate } from '@docere/common'
+import { ProjectContext, Entry, DocereConfig, Colors, useNavigate, useUrlObject } from '@docere/common'
 
 import CollectionNavigatorController from './controller'
 
 function useOpenSeadragonController(
 	config: DocereConfig['collection'],
 	searchUrl: ProjectContext['searchUrl'],
-	navigate: Navigate
+	handleClick: (id: string) => void
 ) {
 	const [controller, setController] = React.useState<any>(null)
 
@@ -27,7 +27,7 @@ function useOpenSeadragonController(
 					showZoomControl: false,
 				})
 
-				const collectionNavigatorController = new CollectionNavigatorController(viewer, config, searchUrl, navigate)
+				const collectionNavigatorController = new CollectionNavigatorController(viewer, config, searchUrl, handleClick)
 
 				if (controller != null) controller.destroy()
 				setController(collectionNavigatorController)
@@ -57,12 +57,20 @@ interface Props {
 }
 function CollectionNavigator(props: Props) {
 	const navigate = useNavigate()
+	const { projectId } = useUrlObject()
+
+	const handleClick = React.useCallback((id) => {
+		navigate({ projectId, entryId: id })	
+	}, [projectId])
+
 	const controller = useOpenSeadragonController(
 		props.config,
 		props.searchUrl,
-		navigate,
+		handleClick,
 	)
+
 	useEntry(controller, props.entry)
+
 
 	return (
 		<Container
