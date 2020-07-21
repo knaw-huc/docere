@@ -7,6 +7,7 @@ import { Input } from '../../full-text-search'
 
 import type { ListFacetProps } from '.'
 import SearchContext from '../../../facets-context'
+import FacetedSearchContext from '../../../context'
 
 export const OptionsWrapper = styled('div')`
 	font-size: .9em;
@@ -45,6 +46,7 @@ const FilterInput = styled(Input)`
 `
 
 function Options(props: ListFacetProps) {
+	const { i18n } = React.useContext(FacetedSearchContext)
 	const { dispatch } = React.useContext(SearchContext)
 	const [filterInputValue, setFilterInputValue] = React.useState('')
 
@@ -69,7 +71,7 @@ function Options(props: ListFacetProps) {
 
 	return (
 		<OptionsWrapper>
-			<OptionsTitle>Order</OptionsTitle>
+			<OptionsTitle>{i18n.list_facet_order}</OptionsTitle>
 			<RadioGroup>
 				<Div>
 					<input
@@ -81,7 +83,7 @@ function Options(props: ListFacetProps) {
 						onChange={handleCheckboxChange}
 						type="radio"
 					/>
-					<label htmlFor="highest-first-radio">Highest first</label>
+					<label htmlFor="highest-first-radio">{i18n.highest_first}</label>
 					<input
 						checked={props.facetData.sort.by === SortBy.Count && props.facetData.sort.direction === SortDirection.Asc}
 						data-by={SortBy.Count}
@@ -91,7 +93,7 @@ function Options(props: ListFacetProps) {
 						name="sort"
 						onChange={handleCheckboxChange}
 					/>
-					<label htmlFor="lowest-first-radio">Lowest first</label>
+					<label htmlFor="lowest-first-radio">{i18n.lowest_first}</label>
 				</Div>
 				<Div>
 					<input
@@ -116,7 +118,7 @@ function Options(props: ListFacetProps) {
 					<label htmlFor="za-radio">Z - A</label>
 				</Div>
 			</RadioGroup>
-			<OptionsTitle>Filter</OptionsTitle>
+			<OptionsTitle>{i18n.list_facet_filter}</OptionsTitle>
 			<FilterInput
 				onChange={handleFilterInputChange}
 				type="text"
