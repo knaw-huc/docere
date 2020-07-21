@@ -3,6 +3,7 @@ const english = {
 	clear: "clear",
 	list_facet_filter: "Search list",
 	filters: "Filters",
+	full_text_query: "Full text query",
 	highest_first: "Highest first",
 	lowest_first: "Lowest first",
 	of: "Of",

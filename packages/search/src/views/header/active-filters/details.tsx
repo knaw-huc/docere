@@ -70,7 +70,7 @@ function ActiveFiltersDetails(props: Props) {
 				{
 					props.query.length > 0 &&
 					<li>
-						<div>Full text query</div>
+						<div>{i18n.full_text_query}</div>
 						<ul>
 							<li
 								onClick={clearFullTextInput}

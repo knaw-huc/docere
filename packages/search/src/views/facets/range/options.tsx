@@ -105,7 +105,7 @@ export default function RangeOptions(props: { facetData: RangeFacetData | DateFa
 			<Fieldset>
 				<legend>{i18n.set_range}</legend>
 				<div>
-					<label htmlFor={`${idPrefix}from`}>From</label>
+					<label htmlFor={`${idPrefix}from`}>{i18n.range_from}</label>
 					<input
 						id={`${idPrefix}from`}
 						max={maxInputValue}
@@ -116,7 +116,7 @@ export default function RangeOptions(props: { facetData: RangeFacetData | DateFa
 						type={isDateFacet ? 'date' : 'number'}
 						value={fromInputValue}
 					/>
-					<label htmlFor={`${idPrefix}to`}>To</label>
+					<label htmlFor={`${idPrefix}to`}>{i18n.range_to}</label>
 					<input
 						id={`${idPrefix}to`}
 						max={maxInputValue}
