@@ -28,6 +28,7 @@ services:
     volumes:
       - /data/henegouwseregisters/facsimiles:/opt/loris/tests/img/henegouwseregisters
       - /data/mondrian/facsimiles:/opt/loris/tests/img/mondrian
+      - /data/isidore/facsimiles:/opt/loris/tests/img/isidore
 
   api:
     build:
