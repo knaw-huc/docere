@@ -1,8 +1,9 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { ProjectContext, TOP_OFFSET, DEFAULT_SPACING, Viewport, Colors } from '@docere/common'
+import { ProjectContext, TOP_OFFSET, DEFAULT_SPACING, Viewport, Colors, getPath } from '@docere/common'
 import type { AppStateAction } from '@docere/common'
 import PagesMenu from './pages'
+import { Link } from 'react-router-dom'
 
 export const HEADER_DARK_TEXT = '#AAA'
 
@@ -43,7 +44,8 @@ const H1 = styled('h1')`
 		text-decoration: none;
 	}
 
-	small {
+	& > a:first-of-type,
+	& > small {
 		font-weight: normal;
 		font-size: 0.8rem;
 		text-transform: none;
@@ -66,22 +68,18 @@ const Header = React.memo(function Header(props: HeaderProps) {
 	)
 })
 
-interface ProjectHeaderProps {
-	appDispatch: React.Dispatch<AppStateAction>
-}
-export function ProjectHeader(props: ProjectHeaderProps) {
+export function ProjectHeader() {
 	const { config } = React.useContext(ProjectContext)
-	const setSearchTab = React.useCallback(() =>
-		props.appDispatch({ type: 'SET_VIEWPORT', viewport: Viewport.EntrySelector }),
-	[])
 
 	return (
 		<Header>
 			<H1>
-				<small onClick={() => window.location.href = '/'}>Docere</small>
-				<span onClick={setSearchTab}>
-				{config.title}
-				</span>
+				<Link to="/">
+					Docere
+				</Link>
+				<Link to={getPath({ projectId: config.slug })}>
+					{config.title}
+				</Link>
 			</H1>
 			<PagesMenu />
 		</Header>

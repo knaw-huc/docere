@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import Layers from './layers'
 import Settings from './settings'
 import Downloads from './downloads'
-import { FOOTER_HEIGHT, FOOTER_HANDLE_HEIGHT, FooterTab, SearchTab, AsideTab, AppStateAction, AppState, Colors } from '@docere/common'
+import { FOOTER_HEIGHT, FOOTER_HANDLE_HEIGHT, FooterTab, SearchTab, AsideTab, AppStateAction, AppState, Colors, useNavigate } from '@docere/common'
 import type { Facsimile, EntryState, EntryStateAction, Entry, DocereConfig } from '@docere/common'
 
 const Wrapper = styled.footer`
@@ -76,9 +76,13 @@ interface Props {
 	searchTab: AppState['searchTab']
 }
 function Footer(props: Props) {
+	const navigate = useNavigate()
+
 	const handleTabClick = React.useCallback(ev => {
 		const { tab, type } = ev.target.dataset
-		if (type === 'aside') {
+		if (tab === SearchTab.Search) {
+			navigate()
+		} else if (type === 'aside') {
 			props.entryDispatch({ type: 'TOGGLE_TAB', tabType: type, tab })			
 		} else if (type === 'search' || type === 'footer') {
 			props.appDispatch({ type: 'TOGGLE_TAB', tabType: type, tab })

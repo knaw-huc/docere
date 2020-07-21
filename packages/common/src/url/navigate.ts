@@ -28,7 +28,7 @@ export function useNavigate() {
 	// const { projectId } = useParams()
 	const urlObject = useUrlObject()
 
-	const navigate = React.useCallback((nextUrlObject: UrlObject) => {
+	const navigate = React.useCallback((nextUrlObject: UrlObject = {}) => {
 		if (nextUrlObject.projectId == null) nextUrlObject.projectId = urlObject.projectId
 		// Get the next query if it's the first time navigate is used and when
 		// the type (search, entry, page) stays the same. When the type changes,
@@ -39,8 +39,8 @@ export function useNavigate() {
 		const isSamePage = (
 			urlObject.projectId === nextUrlObject.projectId && 
 			(
-				urlObject.entryId === nextUrlObject.entryId ||
-				urlObject.pageId === nextUrlObject.pageId
+				(nextUrlObject.entryId != null && urlObject.entryId === nextUrlObject.entryId) ||
+				(nextUrlObject.pageId != null && urlObject.pageId === nextUrlObject.pageId)
 			)
 		)
 

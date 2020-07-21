@@ -69,6 +69,8 @@ export default function useAppState() {
 	React.useEffect(() => {
 		if (entryId != null && x[0].viewport !== Viewport.Entry) {
 			x[1]({ type: 'SET_VIEWPORT', viewport: Viewport.Entry })
+		} else if (entryId == null && x[0].viewport !== Viewport.EntrySelector) {
+			x[1]({ type: 'SET_VIEWPORT', viewport: Viewport.EntrySelector })
 		}
 	}, [entryId])
 
