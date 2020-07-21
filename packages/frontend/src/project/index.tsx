@@ -63,9 +63,7 @@ function RealProject(props: Props) {
 
 	return (
 		<SearchContext.Provider value={{ state, dispatch }}>
-			<ProjectHeader
-				appDispatch={appDispatch}
-			/>
+			<ProjectHeader />
 			<Route path={`${match.path}/pages/:pageId`}>
 				<PageView />
 			</Route>

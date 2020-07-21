@@ -1,7 +1,6 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { ProjectContext, TOP_OFFSET, DEFAULT_SPACING, Viewport, Colors, getPath } from '@docere/common'
-import type { AppStateAction } from '@docere/common'
+import { ProjectContext, TOP_OFFSET, DEFAULT_SPACING, Colors, getPath } from '@docere/common'
 import PagesMenu from './pages'
 import { Link } from 'react-router-dom'
 
