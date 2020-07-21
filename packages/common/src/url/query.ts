@@ -20,19 +20,19 @@ const urlQueryMap: Record<string, keyof UrlQuery> = {
 	pi: 'partId',
 }
 
-function defaultPayload(): UrlObject {
-	return {
-		projectId: null,
-		pageId: null,
-		entryId: null,
-		query: null,
-	}
-}
+// function defaultPayload(): UrlObject {
+// 	return {
+// 		projectId: null,
+// 		pageId: null,
+// 		entryId: null,
+// 		query: null,
+// 	}
+// }
 
 export function useUrlObject() {
 	const location = useLocation()
 	const { projectId, entryId, pageId } = useParams()
-	const [urlObject, setUrlObject] = React.useState<UrlObject>(defaultPayload())
+	const [urlObject, setUrlObject] = React.useState<UrlObject>({ projectId, entryId, pageId, query: {} })
 
 	React.useEffect(() => {
 		const nextQuery: UrlQuery = {}

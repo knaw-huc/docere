@@ -49,7 +49,7 @@ export default function PageView() {
 	if (page == null) return null
 
 	const customProps: PageComponentProps = {
-		activeId: null,
+		activeId: query.entityId,
 		...query,
 	}
 
