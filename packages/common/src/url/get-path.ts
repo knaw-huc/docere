@@ -1,17 +1,4 @@
-import type { UrlQuery } from './types'
-
-const PROJECTS = '/projects/'
-const ENTRIES = '/entries/'
-const PAGES = '/pages/'
-
-/**
- * URL search query abbreviations
- * 
- * ei	entity ID 
- * et	entity type
- * ni	note ID
- * nt	note type
- */
+import { UrlQuery } from "./query"
 
 function getQueryString(urlQuery: UrlQuery) {
 	if (urlQuery == null) return ''
@@ -25,6 +12,10 @@ function getQueryString(urlQuery: UrlQuery) {
 			return `${prev}${key}=${value}`
 		}, '')
 }
+
+const PROJECTS = '/projects/'
+const ENTRIES = '/entries/'
+const PAGES = '/pages/'
 
 export function getSearchPath(projectId: string, query?: UrlQuery) {
 	return `${PROJECTS}${projectId}${getQueryString(query)}`

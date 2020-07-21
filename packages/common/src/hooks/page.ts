@@ -35,7 +35,7 @@ async function getPage(id: string, config: DocereConfig): Promise<Page> {
 	return pageCache.get(id)
 }
 
-export default function usePage(pageId: string) {
+export function usePage(pageId: string) {
 	const projectContext = React.useContext(ProjectContext)
 	const [page, setPage] = React.useState<Page>(null)
 

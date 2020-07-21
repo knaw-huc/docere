@@ -5,6 +5,6 @@ export * from './utils'
 export * from './types'
 export * from './context'
 export * from './components'
-export * from './paths'
+export * from './url'
 
 export * from './hooks'

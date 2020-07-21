@@ -1,5 +1,7 @@
 import * as path from 'path'
 import express from 'express'
+import chalk from 'chalk'
+
 import Puppenv from './puppenv'
 import { listProjects, getElasticSearchDocument, sendJson, isError } from './utils'
 import projectApi from './api/project'
@@ -7,7 +9,6 @@ import documentApi from './api/document'
 import indexerApi from './api/indexer'
 import dtsApi from './api/dts'
 import otherApi from './api/other'
-import chalk from 'chalk'
 
 const copyright = `Docere Copyright (C) 2018 - 2020 Gijsjan Brouwer
 

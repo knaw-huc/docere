@@ -1,8 +1,12 @@
 import type { PrepareAndExtractOutput } from '../types'
-import type { DocereConfigData, Entity, ExtractedMetadata, Note, Facsimile, ExtractedLayer } from '@docere/common'
+import type { DocereConfigData, Entry, GetEntryProps, ExtractedEntry, MetadataItem } from '@docere/common'
 
 declare global {
 	const DocereProjects: any
+	const PuppenvUtils: {
+		getDefaultEntry: (id: string) => Entry
+		getEntrySync: (props: GetEntryProps) => Entry
+	}
 }
 
 export async function prepareAndExtract(xml: string, documentId: string, projectId: string): Promise<PrepareAndExtractOutput | { __error: string }> {
@@ -28,73 +32,43 @@ export async function prepareAndExtract(xml: string, documentId: string, project
 		}
 	}
 
-	// TODO use ID for when splitting is needed
+	const entryTmp = PuppenvUtils.getDefaultEntry(documentId)
+	entryTmp.document = xmlRoot
+
 	// Prepare document
-	let doc: XMLDocument
+	// let doc: XMLDocument
 	try {
-		doc = await docereConfigData.prepareDocument(xmlRoot, docereConfigData.config, documentId)
+		entryTmp.element = await docereConfigData.prepareDocument(entryTmp, docereConfigData.config)
 	} catch (err) {
 		return { __error: `Document ${documentId}: Preparation error\n${err.toString()}` }
 	}
 
-	// Entities
-	let entities: Entity[] = []
-	try {
-		entities = docereConfigData.extractEntities(doc, docereConfigData.config)
-	} catch (err) {
-		return { __error: `Document ${documentId}: Entity extraction error\n${err.toString()}` }
+	const entry = PuppenvUtils.getEntrySync({
+		configData: docereConfigData,
+		id: entryTmp.id,
+		document: entryTmp.document,
+		element: entryTmp.element,
+		extractParts: true,
+	})
+
+	function serializeEntry(e: Entry): ExtractedEntry {
+		return {
+			...e,
+			metadata: e.metadata?.reduce((prev, curr) => {
+				prev[curr.id] = curr.value
+				return prev
+			}, {} as Record<string, MetadataItem['value']>),
+			parts: Array.from(e.parts || []).map((part => serializeEntry(part[1]))),
+			text: docereConfigData.extractText(e, docereConfigData.config),
+		}
+
 	}
-
-	// Metadata
-	let metadata: ExtractedMetadata = {}
-	try {
-		metadata = docereConfigData.extractMetadata(doc, docereConfigData.config, documentId)
-	} catch (err) {
-		return { __error: `Document ${documentId}: Metadata extraction error\n${err.toString()}` }
-	}
-
-	// Notes
-	let notes: Note[] = []
-	try {
-		notes = docereConfigData.extractNotes(doc, docereConfigData.config)
-	} catch (err) {
-		return { __error: `Document ${documentId}: Note extraction error\n${err.toString()}` }
-	}
-
-	// Facsimiles
-	let facsimiles: Facsimile[] = []
-	try {
-		facsimiles = docereConfigData.extractFacsimiles(doc, docereConfigData.config, documentId)
-
-		// For indexing, we only need the facsimile paths
-		// facsimiles = facsimiles.reduce((prev, curr) => prev.concat(curr.versions.map(v => v.path)), [])
-	} catch (err) {
-		return { __error: `Document ${documentId}: Facsimile extraction error\n${err.toString()}` }
-	}
-
-
-	// Layers
-	let layers: ExtractedLayer[] = []
-	try {
-		layers = docereConfigData.extractLayers(doc, docereConfigData.config)
-	} catch (err) {
-		return { __error: `Document ${documentId}: Layer extraction error\n${err.toString()}` }
-	}
-
-	const text = docereConfigData.extractText(doc, docereConfigData.config)
 
 	return [
+		serializeEntry(entry),
 		{
-			entities,
-			facsimiles,
-			id: documentId,
-			layers,
-			metadata,
-			notes,
-			text,
-		}, {
 			original: xml,
-			prepared: new XMLSerializer().serializeToString(doc),
+			prepared: new XMLSerializer().serializeToString(entry.document),
 		}
 	]
 }

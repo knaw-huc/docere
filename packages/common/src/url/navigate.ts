@@ -1,8 +1,15 @@
 import React from 'react'
 import { useHistory, useParams } from "react-router-dom"
+import { UrlQuery, useQuery } from './query'
+import { getPath } from './get-path'
 
-import { UrlQuery, NavigatePayload, getPath } from '..'
-import useQuery from './query'
+export type Navigate = (payload: NavigatePayload) => void
+
+export interface NavigatePayload {
+	type: 'entry' | 'page' | 'search'
+	id: string
+	query?: UrlQuery
+}
 
 function getNextQuery(currentQuery: UrlQuery, payloadQuery: UrlQuery) {
 	const nextQuery = { ...currentQuery, ...payloadQuery }
@@ -15,7 +22,7 @@ function getNextQuery(currentQuery: UrlQuery, payloadQuery: UrlQuery) {
 }
 
 let prevPayload: NavigatePayload = { type: null, id: null }
-export default function useNavigate() {
+export function useNavigate() {
 	const history = useHistory()
 	const { projectId } = useParams()
 	const query = useQuery()

@@ -83,17 +83,19 @@ export default class Puppenv {
 		const docereConfigData = await this.getConfigData(projectId)
 		if (isError(docereConfigData)) return docereConfigData
 
-		const selectedFileNames = [
-			filePaths[0],
-			filePaths[Math.floor(filePaths.length * .125)],
-			filePaths[Math.floor(filePaths.length * .25)],
-			filePaths[Math.floor(filePaths.length * .375)],
-			filePaths[Math.floor(filePaths.length * .5)],
-			filePaths[Math.floor(filePaths.length * .625)],
-			filePaths[Math.floor(filePaths.length * .75)],
-			filePaths[Math.floor(filePaths.length * .875)],
-			filePaths[filePaths.length - 1]
-		]	
+		const selectedFileNames = filePaths.length > 20 ?
+			[
+				filePaths[0],
+				filePaths[Math.floor(filePaths.length * .125)],
+				filePaths[Math.floor(filePaths.length * .25)],
+				filePaths[Math.floor(filePaths.length * .375)],
+				filePaths[Math.floor(filePaths.length * .5)],
+				filePaths[Math.floor(filePaths.length * .625)],
+				filePaths[Math.floor(filePaths.length * .75)],
+				filePaths[Math.floor(filePaths.length * .875)],
+				filePaths[filePaths.length - 1]
+			] :
+			filePaths	
 
 		const xmlContents = await Promise.all(selectedFileNames.map(fn => readFileContents(fn)))
 
@@ -161,6 +163,7 @@ export default class Puppenv {
 		await page.goto(`http://localhost:${port}`)
 
 		await page.addScriptTag({ path: path.resolve(process.cwd(), './packages/projects/dist/index.js') })
+		await page.addScriptTag({ path: path.resolve(process.cwd(), './packages/api/build.puppenv.utils/bundle.js') })
 
 		this.pages.set(projectId, page)	
 		console.log(`Return ${projectId} page`)

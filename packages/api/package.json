@@ -5,7 +5,7 @@
   "main": "build/api/src/index.js",
   "private": true,
   "scripts": {
-    "build": "rm -rf build && tsc",
+    "build": "./build.sh",
     "test": "node build/api/src/tests/index.js",
     "watch": "tsc -w"
   },

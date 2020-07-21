@@ -1,7 +1,9 @@
 import { Express } from 'express'
+
 import { listProjects, isError } from '../utils'
 import Puppenv from '../puppenv'
-import { DocereConfigData } from '@docere/common'
+
+import type { DocereConfigData } from '@docere/common'
 
 export default function handleDtsApi(app: Express, puppenv: Puppenv) {
 	app.get('/dts', (_req, res) => {

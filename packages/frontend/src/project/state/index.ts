@@ -68,6 +68,7 @@ export default function useAppState() {
 	const { entryId } = useParams()
 
 	React.useEffect(() => {
+		console.log(entryId, x[0].viewport)
 		if (entryId != null && x[0].viewport !== Viewport.Entry) {
 			x[1]({ type: 'SET_VIEWPORT', viewport: Viewport.Entry })
 		}

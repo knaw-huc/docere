@@ -6,22 +6,6 @@ import { TextLayer } from './config-data/layer'
 export type ReactComponent = React.FunctionComponent<any>
 export type DocereComponents = Record<string, ReactComponent>
 
-export type Navigate = (payload: NavigatePayload) => void
-
-export interface UrlQuery {
-	entityId?: string		/* ei */
-	noteId?: string			/* ni */
-	facsimileId?: string	/* fi */
-	lineId?: string			/* li */
-	paragraphId?: string	/* pi */
-	splitId?: string		/* si */
-}
-export interface NavigatePayload {
-	type: 'entry' | 'page' | 'search'
-	id: string
-	query?: UrlQuery
-}
-
 export interface ComponentProps {
 	attributes?: Record<string, string>
 	children?: React.ReactNode

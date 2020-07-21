@@ -3,6 +3,7 @@ import * as fs from 'fs'
 import { Response as ExpressResponse } from 'express'
 import chalk from 'chalk'
 import { EsDataType } from '../../common/src/enum'
+
 import type { DocereConfig, ExtractedEntry } from '@docere/common'
 import type { DocereApiError, ElasticSearchDocument } from './types'
 
@@ -117,8 +118,8 @@ export function getElasticSearchDocument(input: ExtractedEntry | DocereApiError)
 	if (isError(input)) return input
 
 	const entities = input.entities.reduce((prev, curr) => {
-		prev[curr.type] = (prev.hasOwnProperty(curr.type)) ?
-			prev[curr.type].concat(curr.value) :
+		prev[curr.config.id] = (prev.hasOwnProperty(curr.config.id)) ?
+			prev[curr.config.id].concat(curr.value) :
 			[curr.value]
 
 		return prev

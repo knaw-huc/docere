@@ -1,7 +1,7 @@
 import { Express } from 'express'
 import fetch from 'node-fetch'
-import { sendXml } from '../utils'
 
+import { sendXml } from '../utils'
 
 async function getRkdImage(id: string) {
 	const url = `http://opendata.rkd.nl/oai-pmh/image?verb=GetRecord&metadataPrefix=oai_rdf&identifier=${id}`

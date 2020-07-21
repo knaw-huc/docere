@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import HucFacetedSearch  from '@docere/search'
-import { ProjectContext, useUIComponent, UIComponentType, Viewport, Language } from '@docere/common'
+import { ProjectContext, useUIComponent, UIComponentType, Viewport, Language, getPath, extractIdsFromElasticSearchId } from '@docere/common'
 
 import { FileExplorerProps } from './wrap-as-file-explorer'
 import useAutoSuggest from './use-auto-suggest'
@@ -27,7 +27,8 @@ function Search(props: FileExplorerProps) {
 	const { entryId } = useParams()
 
 	const onClickResult = React.useCallback((result: Hit) => {
-		history.push(`/projects/${config.slug}/entries/${result.id}`)
+		const [entryId, partId] = extractIdsFromElasticSearchId(result.id)
+		history.push(getPath('entry', config.slug, entryId, { partId }))
 	}, [])
 
 	return (

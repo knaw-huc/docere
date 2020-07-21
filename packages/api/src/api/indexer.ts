@@ -3,6 +3,7 @@ import * as es from '@elastic/elasticsearch'
 
 import Puppenv from '../puppenv'
 import { sendJson, listProjects, readFileContents, getEntryIdFromFilePath, getElasticSearchDocument, isError, getXmlFiles } from '../utils'
+
 import type { ElasticSearchDocument, DocereApiError } from '../types'
 
 async function indexDocument(filePath: string, projectId: string, puppenv: Puppenv, esClient: es.Client) {
@@ -20,6 +21,20 @@ async function indexDocument(filePath: string, projectId: string, puppenv: Puppe
 			index: projectId,
 			body: esDocument,
 		})
+
+		if (extractedEntry.parts != null) {
+			for (const part of extractedEntry.parts) {
+				const esPartDocument = getElasticSearchDocument(part)
+				if (isError(esPartDocument)) continue
+				esPartDocument.id = `${esDocument.id}__part__${esPartDocument.id}`,
+				await esClient.index({
+					id: esPartDocument.id,
+					index: projectId,
+					body: esPartDocument,
+				})
+			}
+		}
+
 		return esDocument
 	} catch (err) {
 		return { __error: err }

@@ -3,8 +3,8 @@ import Puppenv from '../puppenv'
 import { sendJson, isError, sendText, sendXml } from '../utils'
 
 import type { Request, Response } from 'express'
-import { ExtractedEntry } from '@docere/common'
-import { ExtractedXml } from '../types'
+import type { ExtractedEntry } from '@docere/common'
+import type { ExtractedXml } from '../types'
 
 function sendEntry(puppenv: Puppenv, prop?: Prop) {
 	return async (req: Request, res: Response) => {
