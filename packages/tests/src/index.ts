@@ -1,7 +1,7 @@
 import path from 'path'
 import chalk from 'chalk'
 
-const createBuckets = require('esm')(module)(path.resolve(process.cwd(), '../search_/src/use-search/get-buckets')).default
+const createBuckets = require('esm')(module)(path.resolve(process.cwd(), '../search/src/use-search/get-buckets')).default
 
 function logTestResult(success: boolean, errorMessage: string = '') {
 	if (success)	console.log(chalk.green('Pass'))
