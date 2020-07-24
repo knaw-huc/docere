@@ -17,7 +17,7 @@ function getComponentClass(el: Element, props: DocereTextViewProps): ReactCompon
 	return props.components[selector]
 }
 
-function nodeToComponentTree(root: Node, props: DocereTextViewProps, rootIndex?: string): ComponentLeaf {
+function nodeToComponentTree(root: Element, props: DocereTextViewProps, rootIndex?: string): ComponentLeaf {
 	// If root is null or undefined, return null, which is a valid output for a React.Component
 	if (root == null) return null
 
@@ -38,14 +38,14 @@ function nodeToComponentTree(root: Node, props: DocereTextViewProps, rootIndex?:
 			attributes: attrsToObject(element.attributes),
 			key: rootIndex,
 		},
-		children: Array.from(element.childNodes).map((childNode, index) => nodeToComponentTree(childNode, props, `${rootIndex}-${index}`))
+		children: Array.from(element.childNodes).map((childNode, index) => nodeToComponentTree(childNode as Element, props, `${rootIndex}-${index}`))
 	}
 }
 
 function prepareNode(node: Node, props: DocereTextViewProps): ComponentTree {
-	if (node instanceof XMLDocument || node instanceof HTMLDocument) node = node.documentElement
-	if (props.rootSelector != null) node = (node as Element).querySelector(props.rootSelector)
-	return nodeToComponentTree(node, props) as ComponentTree
+	const el = (node instanceof XMLDocument || node instanceof HTMLDocument) ? node.documentElement : node as Element
+	const prepare = props.prepare != null ? props.prepare : () => el
+	return nodeToComponentTree(prepare(el), props) as ComponentTree
 }
 
 export default function useGetComponentTree(props: DocereTextViewProps) {

@@ -29,7 +29,7 @@ export interface DocereTextViewProps {
 	ignore?: string[]
 	onLoad?: (isReady: boolean, el: Element) => void
 	node?: Node
-	rootSelector?: string
+	prepare?: (node: Element) => Element
 	setHighlightAreas?: (areas: number[]) => void
 	url?: string
 	xml?: string
