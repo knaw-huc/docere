@@ -4,6 +4,7 @@ import Puppenv from '../puppenv'
 import { getXmlFiles, sendJson } from '../utils'
 
 import type { Mapping, DocereApiError } from '../types'
+import handleAnalyzeApi from './analyze'
 
 export default function handleProjectApi(app: Express, puppenv: Puppenv) {
 	app.get('/projects/:projectId/config', async (req, res) => {
@@ -24,4 +25,6 @@ export default function handleProjectApi(app: Express, puppenv: Puppenv) {
 
 		sendJson(mapping, res)
 	})
+
+	handleAnalyzeApi(app)
 }

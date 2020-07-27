@@ -41,6 +41,20 @@ services:
       - ../../:/app
     working_dir: /app
 
+  db:
+    container_name: docere_db
+    environment:
+      - POSTGRES_PASSWORD=docker
+      - POSTGRES_USER=docker
+      - POSTGRES_HOST=db
+    image: postgis/postgis:12-3.0-alpine
+    networks:
+      - elastic
+    ports:
+      - 5432:5432
+    volumes:
+      - docere_db:/var/lib/postgresql/data
+
   es01:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.6.0
     environment:
@@ -60,8 +74,10 @@ services:
       - docere_es_dev:/usr/share/elasticsearch/data
 
 volumes:
+  docere_db:
+    driver: local
   docere_es_dev:
-      driver: local
+    driver: local
 
 networks:
   elastic:

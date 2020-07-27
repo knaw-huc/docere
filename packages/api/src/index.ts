@@ -9,6 +9,7 @@ import documentApi from './api/document'
 import indexerApi from './api/indexer'
 import dtsApi from './api/dts'
 import otherApi from './api/other'
+import './api/standoff'
 
 const copyright = `Docere Copyright (C) 2018 - 2020 Gijsjan Brouwer
 
