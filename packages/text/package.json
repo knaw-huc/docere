@@ -1,6 +1,6 @@
 {
   "name": "@docere/text",
-  "version": "1.3.0",
+  "version": "1.3.5",
   "description": "",
   "main": "build/bundle.js",
   "types": "build/index.d.ts",
