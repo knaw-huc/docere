@@ -6,19 +6,6 @@ import { analyzeProject } from './project'
 const BASE_URL = '/projects/:projectId/analyze'
 
 export default function handleAnalyzeApi(app: Express) {
-	app.get(BASE_URL, async (req, res) => {
-		const pool = await getPool(req.params.projectId)
-		const result = await pool.query(
-			`SELECT
-				array_agg(DISTINCT document.name) as documents,
-				array_agg(DISTINCT tag.name) as tags,
-				array_agg(DISTINCT attribute.name) as attributeNames,
-				array_agg(DISTINCT attribute.value) as attributeValues
-			FROM document, tag, attribute;`
-		)
-		console.log(result)
-		sendJson(result.rows[0], res)
-	})
 
 	app.get(`${BASE_URL}/documents`, async (req, res) => {
 		const pool = await getPool(req.params.projectId)
@@ -72,4 +59,51 @@ export default function handleAnalyzeApi(app: Express) {
 		analyzeProject(req.params.projectId)
 		res.end()
 	})
+
+	app.post(`${BASE_URL}/tmp`, async (req, res) => {
+		const pool = await getPool(req.params.projectId)
+
+		if (req.body == null || !Object.keys(req.body).length) {
+			sendJson({ __error: "The payload can't be empty." }, res)
+			return
+		}
+
+		if (req.body.document_name == null && req.body.tag_name == null && req.body.attribute_name == null && req.body.attribute_value == null) {
+			sendJson({ __error: "The payload is not formatted correctly." }, res)
+			return
+		}
+
+		const andDocumentName = req.body.document_name == null ? '' : req.body.document_name.reduce((prev: string, curr: string) => `${prev} AND document.name='${curr}'`, '')
+		const andTagName = req.body.tag_name == null ? '' : req.body.tag_name.reduce((prev: string, curr: string) => `${prev} AND tag.name='${curr}'`, '')
+		const andAttributeName = req.body.attribute_name == null ? '' : req.body.attribute_name.reduce((prev: string, curr: string) => `${prev} AND attribute.name='${curr}'`, '')
+		const andAttributeValue = req.body.attribute_value == null ? '' : req.body.attribute_value.reduce((prev: string, curr: string) => `${prev} AND attribute.value='${curr}'`, '')
+
+		if (!(andDocumentName + andTagName + andAttributeName + andAttributeValue).length) {
+			sendJson({ __error: "The payload can't be empty." }, res)
+			return
+		}
+
+		const query = `
+			SELECT
+				array_agg(DISTINCT document.name) as documents,
+				array_agg(DISTINCT tag.name) as tags,
+				array_agg(DISTINCT attribute.name) as attribute_names,
+				array_agg(DISTINCT attribute.value) as attribute_values
+			FROM
+				document, tag, attribute
+			WHERE
+				attribute.tag_id=tag.id
+					AND
+				tag.document_id=document.id
+				${andDocumentName}
+				${andTagName}
+				${andAttributeName}
+				${andAttributeValue};`
+
+
+		const result = await pool.query(query)
+
+		sendJson(result.rows[0], res)
+	})
 }
+

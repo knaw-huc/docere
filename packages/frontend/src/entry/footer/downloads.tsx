@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { ProjectContext, Entry, Colors } from '@docere/common'
+import { getEntryApiPath, Entry, Colors, useUrlObject } from '@docere/common'
 
 import { BottomTabWrapper } from './layers'
 
@@ -46,53 +46,54 @@ interface Props {
 	entry: Entry
 }
 function Layers(props: Props) {
-	const { config } = React.useContext(ProjectContext)
-	const baseUrl = `/api/projects/${config.slug}/documents/${encodeURIComponent(props.entry.id)}`
+	// const { config } = React.useContext(ProjectContext)
+	const { projectId, entryId } = useUrlObject()
+	// const baseUrl = `/api/projects/${config.slug}/documents/${encodeURIComponent(props.entry.id)}`
 	return (
 		<BottomTabWrapper active={props.active}>
 			<Ul>
 				<li>
-					<ExternalLink href={baseUrl}>
+					<ExternalLink href={getEntryApiPath(projectId, entryId)}>
 						All document data
 					</ExternalLink>
 				</li>
 				<li>
-					<ExternalLink href={`${baseUrl}/metadata`}>
+					<ExternalLink href={getEntryApiPath(projectId, entryId, 'metadata')}>
 						Metadata
 					</ExternalLink>
 				</li>
 				<li>
-					<ExternalLink href={`${baseUrl}/entities`}>
+					<ExternalLink href={getEntryApiPath(projectId, entryId, 'entities')}>
 						Entities
 					</ExternalLink>
 				</li>
 				<li>
-					<ExternalLink href={`${baseUrl}/facsimiles`}>
+					<ExternalLink href={getEntryApiPath(projectId, entryId, 'facsimiles')}>
 						Facsimiles
 					</ExternalLink>
 				</li>
 				<li>
-					<ExternalLink href={`${baseUrl}/notes`}>
+					<ExternalLink href={getEntryApiPath(projectId, entryId, 'notes')}>
 						Notes
 					</ExternalLink>
 				</li>
 				<li>
-					<ExternalLink href={`${baseUrl}/layers`}>
+					<ExternalLink href={getEntryApiPath(projectId, entryId, 'layers')}>
 						Layers
 					</ExternalLink>
 				</li>
 				<li>
-					<ExternalLink href={`${baseUrl}/text`}>
+					<ExternalLink href={getEntryApiPath(projectId, entryId, 'text')}>
 						Plain text
 					</ExternalLink>
 				</li>
 				<li>
-					<ExternalLink href={`${baseUrl}/original`}>
+					<ExternalLink href={getEntryApiPath(projectId, entryId, 'original')}>
 						Original XML
 					</ExternalLink>
 				</li>
 				<li>
-					<ExternalLink href={`${baseUrl}/prepared`}>
+					<ExternalLink href={getEntryApiPath(projectId, entryId, 'prepared')}>
 						Prepared XML
 					</ExternalLink>
 				</li>

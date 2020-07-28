@@ -39,3 +39,7 @@ export function getPath(urlObject: NextUrlObject) {
 	else if (urlObject.pageId != null)	return getPagePath(urlObject)
 	else								return getSearchPath(urlObject)
 }
+
+export function getEntryApiPath(projectId: string, entryId: string, prop: string = '') {
+	return `/api/projects/${projectId}/documents/${encodeURIComponent(entryId)}/${prop}`
+}

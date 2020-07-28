@@ -31,6 +31,7 @@ const app = express()
 app.disable('x-powered-by')
 const port = 3000
 
+app.use(express.json())
 app.use((req, _res, next) => {
 	if (req.get('Content-Type') === 'application/xml' || req.get('Content-Type') === 'text/xml') {
 		req.body = ''
