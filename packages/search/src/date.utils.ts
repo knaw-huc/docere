@@ -78,8 +78,13 @@ export function roundUpDate(date: Date, granularity: DateInterval): Date {
 	}
 }
 
-export function getQuarterFromDate(date: Date): number {
+function getQuarterFromDate(date: Date): number {
 	return Math.ceil((date.getUTCMonth() + 1) / 3)
+}
+
+function getMonthFromQuarter(quarter: number): string {
+	const index = (quarter * 3 - 3)
+	return months[index]
 }
 
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
@@ -96,7 +101,8 @@ export function formatDate(timestamp: number, granularity: DateInterval): string
 	}
 	else if (granularity === 'q') {
 		const quarter = getQuarterFromDate(d)
-		date = isNaN(year) ? '' : `Q${quarter} ${year.toString()}`
+		const month = getMonthFromQuarter(quarter)
+		date = isNaN(year) ? '' : `${month} ${year.toString()}`
 	}
 	else if (granularity === 'M') {
 		date = `${months[d.getUTCMonth()]} ${year}`
