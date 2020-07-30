@@ -1,6 +1,6 @@
 {
   "name": "@docere/text-components",
-  "version": "1.3.5",
+  "version": "1.3.6",
   "description": "",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -12,8 +12,8 @@
   "author": "Gijsjan Brouwer",
   "license": "GPL-3.0-or-later",
   "dependencies": {
-    "@docere/common": "^1.3.0",
-    "@docere/text": "^1.3.5"
+    "@docere/common": "^1.3.6",
+    "@docere/text": "^1.3.6"
   },
   "devDependencies": {
     "typescript": "^3.9.5"
