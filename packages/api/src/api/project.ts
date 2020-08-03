@@ -7,13 +7,13 @@ import type { Mapping, DocereApiError } from '../types'
 import handleAnalyzeApi from './analyze'
 
 export default function handleProjectApi(app: Express, puppenv: Puppenv) {
-	app.get('/projects/:projectId/config', async (req, res) => {
+	app.get('/api/projects/:projectId/config', async (req, res) => {
 		const configData = await puppenv.getConfigData(req.params.projectId)
 
 		sendJson(configData, res)
 	})
 
-	app.get('/projects/:projectId/mapping', async (req, res) => {
+	app.get('/api/projects/:projectId/mapping', async (req, res) => {
 		const files = await getXmlFiles(req.params.projectId)
 
 		let mapping: Mapping | DocereApiError

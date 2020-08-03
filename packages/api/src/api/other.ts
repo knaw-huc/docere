@@ -10,7 +10,7 @@ async function getRkdImage(id: string) {
 }
 
 export default function handleOtherApi(app: Express) {
-	app.get('/rkdimages/:key', async (req, res) => {
+	app.get('/api/rkdimages/:key', async (req, res) => {
 		const data = await getRkdImage(req.params.key)
 		sendXml(data, res)
 	})

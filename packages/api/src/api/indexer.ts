@@ -121,12 +121,12 @@ type IndexerState = Map<string, IndexerStateData>
 export default function indexerApi(app: Express, puppenv: Puppenv) {
 	const state = new Map() as IndexerState
 
-	app.get('/indexer/:projectId/status', async (req, res) => {
+	app.get('/api/indexer/:projectId/status', async (req, res) => {
 		if (!state.has(req.params.projectId)) res.sendStatus(404)
 		else sendJson(state.get(req.params.projectId), res)
 	})
 
-	app.get('/indexer/status', async (_req, res) => {
+	app.get('/api/indexer/status', async (_req, res) => {
 		const activeProject = Array.from(state.values()).find(v => v.status === IndexerStatus.Active)
 		if (activeProject != null) {
 			res.status(503).json(activeProject)
@@ -135,7 +135,7 @@ export default function indexerApi(app: Express, puppenv: Puppenv) {
 		res.sendStatus(200)
 	})
 
-	app.get('/indexer/:projectId?', async (req, res) => {
+	app.get('/api/indexer/:projectId?', async (req, res) => {
 		if (Array.from(state.values()).some(v => v.status === IndexerStatus.Active)) {
 			sendJson({ __error: 'Server is busy', code: 503 }, res)
 			return

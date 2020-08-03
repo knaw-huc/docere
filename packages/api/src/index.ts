@@ -9,7 +9,6 @@ import documentApi from './api/document'
 import indexerApi from './api/indexer'
 import dtsApi from './api/dts'
 import otherApi from './api/other'
-import './api/standoff'
 
 const copyright = `Docere Copyright (C) 2018 - 2020 Gijsjan Brouwer
 
@@ -49,7 +48,7 @@ async function main() {
 	const puppenv = new Puppenv()
 	await puppenv.start()
 
-	app.get('/', (_req, res) => res.json({
+	app.get('/api', (_req, res) => res.json({
 		title: 'Docere API',
 		version: '0.0.0'
 	}))
@@ -58,7 +57,7 @@ async function main() {
 		res.sendFile(path.resolve('./swagger.yml'))
 	})
 
-	app.get('/projects', (_req, res) => sendJson(listProjects(), res))
+	app.get('/api/projects', (_req, res) => sendJson(listProjects(), res))
 
 	projectApi(app, puppenv)
 	documentApi(app, puppenv)

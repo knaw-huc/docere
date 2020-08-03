@@ -4,7 +4,7 @@ import { sendJson } from '../../utils'
 import { analyzeProject } from './project'
 import { xmlToStandoff } from '../standoff'
 
-const BASE_URL = '/projects/:projectId/analyze'
+const BASE_URL = '/api/projects/:projectId/analyze'
 
 export default function handleAnalyzeApi(app: Express) {
 	app.get(`${BASE_URL}/documents/:documentId/standoff`, async (req, res) => {
