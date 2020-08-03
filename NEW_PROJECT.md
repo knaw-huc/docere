@@ -7,7 +7,6 @@
 - $ cp -r <facsimles-source> <new-project-id>/facsimiles/
 - $ cp <other-project-id>/index.ts <new-project-id>
 - $ cp <other-project-id>/config.ts <new-project-id>
-- $ cp <other-project-id>/layers.ts <new-project-id>
 - $ cp -r <other-project-id>/components <new-project-id>
 - Edit `index.ts` and `config.ts`
 - Set `private: true` in project config?
@@ -16,6 +15,7 @@
 ## Fill the index
 - $ cd <docere-root>/packages/projects
 - $ npm run dist
+- $ docker restart docere_api_1
 - $ curl localhost/api/indexer/<new-project-id>
 - $ curl localhost/api/indexer/<new-project-id>/status | jq .
 
