@@ -2,14 +2,25 @@ import { Express } from 'express'
 import { getPool } from '../../db'
 import { sendJson } from '../../utils'
 import { analyzeProject } from './project'
+import { xmlToStandoff } from '../standoff'
 
 const BASE_URL = '/projects/:projectId/analyze'
 
 export default function handleAnalyzeApi(app: Express) {
+	app.get(`${BASE_URL}/documents/:documentId/standoff`, async (req, res) => {
+		const standoff = await xmlToStandoff(req.params.projectId, req.params.documentId)
+		sendJson(standoff, res)
+	})
 
 	app.get(`${BASE_URL}/documents`, async (req, res) => {
 		const pool = await getPool(req.params.projectId)
-		const result = await pool.query('SELECT array_agg(DISTINCT name) as agg FROM document;')
+		let result
+		try {
+			result = await pool.query('SELECT array_agg(DISTINCT name) as agg FROM document;')
+		} catch (err) {
+			sendJson({ __error: err.toString() }, res)
+			return
+		}
 		sendJson(result.rows[0].agg, res)
 	})
 
