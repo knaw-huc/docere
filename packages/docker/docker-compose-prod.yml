@@ -15,6 +15,7 @@ services:
       - ../frontend:/var/www/html
       - ../projects:/var/www/html/node_modules/@docere/projects
       - /data/gheys/xml:/var/www/html/node_modules/@docere/projects/src/gheys/xml
+      - /data/docere/xml:/var/www/html/node_modules/@docere/projects/src/docere/xml
       - /data/henegouwseregisters/xml:/var/www/html/node_modules/@docere/projects/src/henegouwseregisters/xml
       - /data/encyclopaedia-britannica/xml:/var/www/html/node_modules/@docere/projects/src/encyclopaedia-britannica/xml
 
@@ -43,6 +44,7 @@ services:
     volumes:
       - ../../:/app
       - /data/gheys/xml:/app/packages/projects/src/gheys/xml
+      - /data/republic/xml:/app/packages/projects/src/republic/xml
       - /data/henegouwseregisters/xml:/app/packages/projects/src/henegouwseregisters/xml
       - /data/encyclopaedia-britannica/xml:/app/packages/projects/src/encyclopaedia-britannica/xml
     working_dir: /app
