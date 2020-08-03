@@ -1,5 +1,5 @@
 import { ProjectContext, fetchPost } from '@docere/common'
-import { isHierarchyFacetConfig, isListFacetConfig } from '@docere/search'
+import { isHierarchyFacetConfig, isListFacetConfig, isRangeFacetConfig } from '@docere/search'
 import OpenSeadragon from 'openseadragon';
 import TiledImages from './tiled-images'
 
@@ -97,6 +97,10 @@ export default class CollectionNavigatorController {
 					term: {
 						[metadata.id]: metadata.value
 					}
+				}
+			} else if (isRangeFacetConfig(metadata)) {
+				payload.query = {
+					match_all: {}
 				}
 			} else {
 				console.error('NOT IMPLEMENTED')

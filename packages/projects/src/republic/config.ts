@@ -1,4 +1,4 @@
-import { LayerType } from '@docere/common'
+import { LayerType, EsDataType } from '@docere/common'
 
 import type { DocereConfig } from '@docere/common'
 
@@ -6,10 +6,17 @@ const config: DocereConfig = {
 	slug: 'republic',
 	title: 'Republic',
 	collection: {
-		metadataId: 'toegang',
-		sortBy: 'n'
+		metadataId: 'order',
+		sortBy: 'order',
 	},
-	// metadata: [],
+	metadata: [
+		{
+			datatype: EsDataType.Integer,
+			id: 'order',
+			range: 1000,
+			showAsFacet: false,
+		}	
+	],
 	entities: [],
 	layers: [
 		{
