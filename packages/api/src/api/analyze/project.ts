@@ -2,10 +2,20 @@ import { getXmlFiles, getEntryIdFromFilePath } from '../../utils'
 import { getPool } from '../../db'
 import { xmlToStandoff } from '../standoff'
 
+function chunkArray(myArray: string[], chunk_size: number){
+    var results = [];
+    
+    while (myArray.length) {
+        results.push(myArray.splice(0, chunk_size));
+    }
+    
+    return results;
+}
+
 export async function analyzeProject(projectId: string) {
 	const pool = await getPool(projectId)
 
-	await pool.query(`DROP TABLE IF EXISTS document;`)
+	await pool.query(`DROP TABLE IF EXISTS document cascade;`)
 	await pool.query(`
 		CREATE TABLE document (
 			id SERIAL PRIMARY KEY,
@@ -16,7 +26,7 @@ export async function analyzeProject(projectId: string) {
 		);
 	`)
 
-	await pool.query(`DROP TABLE IF EXISTS tag;`)
+	await pool.query(`DROP TABLE IF EXISTS tag cascade;`)
 	await pool.query(`
 		CREATE TABLE tag (
 			id SERIAL PRIMARY KEY,
@@ -29,7 +39,7 @@ export async function analyzeProject(projectId: string) {
 		);
 	`)
 
-	await pool.query(`DROP TABLE IF EXISTS attribute;`)
+	await pool.query(`DROP TABLE IF EXISTS attribute cascade;`)
 	await pool.query(`
 		CREATE TABLE attribute (
 			id SERIAL PRIMARY KEY,
@@ -79,39 +89,44 @@ export async function analyzeProject(projectId: string) {
 			)
 		})
 
-		// Insert all tags in one INSERT INTO statement
-		const tagValuesString = [...Array(annotationValues.length/6).keys()].map(x => `($${x * 6 + 1},$${x * 6 + 2},$${x * 6 + 3},$${x * 6 + 4},$${x * 6 + 5},$${x * 6 + 6})`).join(',')
-		const insertTagsResult = await pool.query(
-			`INSERT INTO tag
-				(document_id, name, startOffset, endOffset, startOrder, endOrder)
-			VALUES
-				${tagValuesString}
-			RETURNING id;`,
-			annotationValues
-		)
+		// Maximum of 1000 annotations per query
+		const chunkedAnnotationValues = chunkArray(annotationValues, 1000 * 6)
+		for (const annotationValuesChunk of chunkedAnnotationValues) {
+			// Insert all tags in one INSERT INTO statement
+			const tagValuesString = [...Array(annotationValuesChunk.length/6).keys()].map(x => `($${x * 6 + 1},$${x * 6 + 2},$${x * 6 + 3},$${x * 6 + 4},$${x * 6 + 5},$${x * 6 + 6})`).join(',')
+			const insertTagsResult = await pool.query(
+				`INSERT INTO tag
+					(document_id, name, startOffset, endOffset, startOrder, endOrder)
+				VALUES
+					${tagValuesString}
+				RETURNING id;`,
+				annotationValuesChunk
+			)
 
-		// Zip the tag IDs with the attribute's key/value's
-		const attributeValues = insertTagsResult.rows.reduce((prev, curr, index) => {
-			attributeKeyValues[index].forEach(([name, value]) => {
-				prev.push(curr.id)
-				prev.push(name)
-				prev.push(value)
-			})
-			return prev
-		}, [])
 
-		// Insert all attributes in one INSERT INTO statement
-		const attributeValuesString = [...Array(attributeValues.length/3).keys()].map(x => `($${x * 3 + 1},$${x * 3 + 2},$${x * 3 + 3})`).join(',')
-		await pool.query(
-			`INSERT INTO attribute
-				(tag_id, name, value)
-			VALUES
-				${attributeValuesString};`,
-			attributeValues
-		)
+			// Zip the tag IDs with the attribute's key/value's
+			const attributeValues = insertTagsResult.rows.reduce((prev, curr, index) => {
+				attributeKeyValues[index].forEach(([name, value]) => {
+					prev.push(curr.id)
+					prev.push(name)
+					prev.push(value)
+				})
+				return prev
+			}, [])
+
+			// Maximum of 1000 attributes per query
+			const chunkedAttributeValues = chunkArray(attributeValues, 1000 * 3)
+			for (const attributeValuesChunk of chunkedAttributeValues) {
+				// Insert all attributes in one INSERT INTO statement
+				const attributeValuesString = [...Array(attributeValuesChunk.length/3).keys()].map(x => `($${x * 3 + 1},$${x * 3 + 2},$${x * 3 + 3})`).join(',')
+				await pool.query(
+					`INSERT INTO attribute
+						(tag_id, name, value)
+					VALUES
+						${attributeValuesString};`,
+					attributeValuesChunk
+				)
+			}
+		}
 	}
-
-	// pool.end()
 }
-
-// insertProject('mondrian').then(() => console.log('DONE'))
