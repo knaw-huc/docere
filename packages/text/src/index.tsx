@@ -1,4 +1,5 @@
 import React from 'react'
+import styled from 'styled-components'
 import useGetComponentTree from './use-get-component-tree'
 import useHighlight from './use-highlight'
 import useComponentDidMount from './use-component-did-mount'
@@ -9,6 +10,16 @@ import type { ComponentLeaf } from './types'
 export type { DocereComponents } from '@docere/common'
 
 export { highlightQueryInDomElement } from './use-highlight'
+
+const Error = styled.div`
+	background: darkred;
+	border-radius: .25em;
+	color: white;
+	display: inline-block;
+	font-size: 1.5rem;
+	font-weight: bold;
+	padding: 1em;
+`
 
 function renderComponentTree(tree: ComponentLeaf, props: DocereTextViewProps): React.ReactNode {
 	if (tree == null || typeof tree === 'string') return tree
@@ -42,6 +53,10 @@ function DocereTextView(props: DocereTextViewProps) {
 	useComponentDidMount(props, tree, wrapperRef.current)
 	
 	useHighlight(wrapperRef, tree, props.highlight, props.setHighlightAreas)
+
+	if (componentTree === undefined) {
+		return <Error>Failed to fetch {props.url}</Error>
+	}
 
 	return (
 		<div ref={wrapperRef}>
