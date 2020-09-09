@@ -11,6 +11,7 @@ export default  {
 	mondrian: async function() { return await import('./mondrian') },
 	'plakaatboek-guyana-1670-1816': async function() { return await import('./plakaatboek-guyana-1670-1816') },
 	republic: async function() { return await import('./republic') },
+	suriano: async function() { return await import('./suriano') },
 	utrechtpsalter: async function() { return await import('./utrechtpsalter') },
 	vangogh: async function() { return await import('./vangogh') },
 } as Record<string, () => Promise<{ default: DocereConfigData }>>

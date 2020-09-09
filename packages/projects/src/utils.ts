@@ -14,3 +14,5 @@ export function extractEntryPartElements(selector: string, attribute: string): E
 	}
 
 }
+
+export const NoOp = () => null as JSX.Element
