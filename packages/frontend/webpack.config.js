@@ -1,5 +1,8 @@
 const path = require('path')
 
+const { parsed: env, error: envError } = require('dotenv').config({ path: path.resolve(__dirname, '../../.env') })
+if (envError) throw envError
+
 module.exports = {
 	devServer: {
 		contentBase: path.resolve(__dirname),
@@ -12,7 +15,7 @@ module.exports = {
 		proxy: {
 			'/api': {
 				target: 'http://localhost:3000',
-				pathRewrite: {'^/api': ''}
+				// pathRewrite: {'^/api': ''}
 			},
 			'/search': {
 				target: 'http://localhost:9200',
@@ -25,8 +28,10 @@ module.exports = {
 			},
 			'/iiif': {
 				changeOrigin: true,
-				target: 'http://localhost:5004',
-				pathRewrite: {'^/iiif': ''}
+				target: env.IIIF_DEV_URL,
+				// target: 'http://localhost:5004',
+				// target: 'http://192.168.1.191',
+				// pathRewrite: {'^/iiif': ''}
 			},
 		},
 		watchOptions: {
@@ -43,14 +48,14 @@ module.exports = {
 	mode: 'development',
 	module: {
 		rules: [
-				{
-					exclude: /node_modules/,
-					test: /\.tsx?$/,
-					loader: "ts-loader",
-					options: {
-						transpileOnly: true
-					}
+			{
+				exclude: /node_modules/,
+				test: /\.tsx?$/,
+				loader: "ts-loader",
+				options: {
+					transpileOnly: true
 				}
+			}
 		]
 	},
 	optimization: {
