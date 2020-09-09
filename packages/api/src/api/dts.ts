@@ -22,7 +22,6 @@ export default function handleDtsApi(app: Express, puppenv: Puppenv) {
 		const configDatas = await Promise.all(projectIds.map(id => puppenv.getConfigData(id)))
 		const filtered = configDatas.filter(cd => !isError(cd) && !cd.config.private)
 
-
 		res.json({
 			"@context": {
 				"dts": "https://w3id.org/dts/api#",

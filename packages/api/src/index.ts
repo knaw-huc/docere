@@ -53,8 +53,8 @@ async function main() {
 		version: '0.0.0'
 	}))
 
-	app.get('/swaggerconfig', (_req, res) => {
-		res.sendFile(path.resolve('./swagger.yml'))
+	app.get('/api/swaggerconfig', (_req, res) => {
+		res.sendFile(path.resolve('./packages/api/swagger.yml'))
 	})
 
 	app.get('/api/projects', (_req, res) => sendJson(listProjects(), res))

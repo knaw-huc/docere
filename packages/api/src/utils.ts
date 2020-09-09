@@ -24,10 +24,14 @@ export function getXMLPath(projectId: string, documentId: string) {
 	return path.resolve(getXmlDir(projectId), `${documentId}.xml`)
 }
 
+export function getPageXmlPath(projectId: string, pagePath: string) {
+	return path.resolve(getProjectSourceDir(projectId), 'pages', pagePath)
+	// return readFileContents(p)
+}
+
 export function getEntryIdFromFilePath(xmlFilePath: string, projectId: string) {
 	const dir = path.dirname(xmlFilePath).replace(getXmlDir(projectId), '')
 	const base = path.basename(xmlFilePath, '.xml')
-
 	return `${dir}/${base}`.replace(/^\//, '')
 }
 

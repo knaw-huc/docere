@@ -1,4 +1,3 @@
-import * as fs from 'fs'
 import * as path from 'path'
 import puppeteer from 'puppeteer'
 import express from 'express'
@@ -53,7 +52,7 @@ export default class Puppenv {
 
 		let contents
 		try {
-			contents = await fs.readFileSync(filePath, 'utf8')
+			contents = readFileContents(filePath)
 		} catch (err) {
 			return { __error: `File '${documentId}.xml' for project '${projectId}' not found` }
 		}
@@ -151,6 +150,23 @@ export default class Puppenv {
 
 		return configData
 	}
+
+
+	async getPageConfig(projectId: string, pageId: string) {
+		const configData = await this.getConfigData(projectId)
+		if (isError(configData)) return configData
+
+		// Flatten pages before using .find
+		const pagesConfig = configData.config.pages
+			.reduce((prev, curr) => {
+				if (Array.isArray(curr.children)) prev.push(...curr.children)
+				prev.push(curr)
+				return prev
+			}, [])
+
+		return pagesConfig.find(p => p.id === pageId)
+	}
+
 
 	private async getPage(projectId: string) {
 		if (this.pages.has(projectId)) return this.pages.get(projectId)

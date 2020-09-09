@@ -1,25 +1,16 @@
 import React from 'react'
-import { fetchXml, getPageXmlPath } from '../utils'
+import { fetchPageXml, fetchPageConfig } from '../utils'
 
 import type { DocereConfig, Page } from '../types'
 import { ProjectContext } from '../context'
 
-let pagesConfig: Page[]
 const pageCache = new Map<string, Page>()
 
 async function getPage(id: string, config: DocereConfig): Promise<Page> {
 	if (pageCache.has(id)) return pageCache.get(id)
 
-	// Flatten pages before using .find
-	if (pagesConfig == null) {
-		pagesConfig = config.pages.reduce((prev, curr) => {
-			if (Array.isArray(curr.children)) prev.push(...curr.children)
-			prev.push(curr)
-			return prev
-		}, [])
-	}
-	const pageConfig = pagesConfig.find(p => p.id === id)
-	const doc = await fetchXml(getPageXmlPath(config.slug, pageConfig))
+	const doc = await fetchPageXml(config.slug, id)
+	const pageConfig = await fetchPageConfig(config.slug, id)
 
 	let parts: Map<string, Element>
 	if (pageConfig.split != null) {

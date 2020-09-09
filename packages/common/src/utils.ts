@@ -1,7 +1,7 @@
 import { DEFAULT_SPACING, TEXT_PANEL_ASIDE_WIDTH, TEXT_PANEL_MINIMAP_WIDTH, TEXT_PANEL_TEXT_WIDTH } from './constants'
 import { LayerType } from './enum'
 
-import type { TextLayer, PageConfig, DocereConfig, Note, Entity, LayerConfig } from './types'
+import type { TextLayer, DocereConfig, Note, Entity, LayerConfig, PageConfig } from './types'
 
 export function getTextPanelLeftSpacing(settings: DocereConfig['entrySettings']) {
 	let width = DEFAULT_SPACING
@@ -70,23 +70,37 @@ export function isSearchPage() {
 	return analyzeWindowLocation().documentType === 'search'
 }
 
-function getProjectDir(projectId: string) {
-	return `/node_modules/@docere/projects/src/${projectId}`
-} 
+// function getProjectDir(projectId: string) {
+// 	return `/node_modules/@docere/projects/src/${projectId}`
+// } 
 
-export function getEntryXmlPath(projectSlug: string, documentId: string) {
-	return `${getProjectDir(projectSlug)}/xml/${documentId}.xml`
+// export function getPageXmlPath(projectSlug: string, page: PageConfig) {
+// 	return `${getProjectDir(projectSlug)}/pages/${page.path}`
+// }
+export async function fetchPageConfig(projectId: string, pageId: string): Promise<PageConfig> {
+	const endpoint = `/api/projects/${projectId}/pages/${pageId}/config`
+	return await fetchJson(endpoint)
 }
 
-export function getPageXmlPath(projectSlug: string, page: PageConfig) {
-	return `${getProjectDir(projectSlug)}/pages/${page.path}`
+export async function fetchPageXml(projectSlug: string, pageId: string) {
+	const endpoint = `/api/projects/${projectSlug}/pages/${pageId}`
+
+	let doc: XMLDocument
+	try {
+		doc = await fetchXml(endpoint)
+	} catch (err) {
+		doc = null			
+	}
+
+	return doc
 }
 
 export async function fetchEntryXml(projectSlug: string, documentId: string) {
-	let doc: XMLDocument
+	const endpoint = `/api/projects/${projectSlug}/documents/${documentId}/original`
 
+	let doc: XMLDocument
 	try {
-		doc = await fetchXml(getEntryXmlPath(projectSlug, documentId))
+		doc = await fetchXml(endpoint)
 	} catch (err) {
 		doc = null			
 	}
