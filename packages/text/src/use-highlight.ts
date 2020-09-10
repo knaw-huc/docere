@@ -2,6 +2,14 @@ import React from 'react'
 
 import type { DocereTextViewProps } from '.'
 
+function unwrap(el: HTMLElement) {
+	// move all children out of the element
+	while (el.firstChild) el.parentNode.insertBefore(el.firstChild, el)
+
+	// remove the empty element
+	el.parentNode.removeChild(el)
+}
+
 function wrap(node: Text, index: number, found: string) {
 	const textRange = document.createRange()
 	textRange.setStart(node, index)
@@ -11,8 +19,14 @@ function wrap(node: Text, index: number, found: string) {
 	return el
 }
 
-export function highlightQueryInDomElement(element: HTMLElement, query: string | string[]) {
-	const treeWalker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT)
+function removeCurrentHighlights(container: HTMLElement) {
+	for (const mark of container.querySelectorAll('mark')) {
+		unwrap(mark)
+	}
+}
+
+export function highlightQueryInDomElement(container: HTMLElement, query: string | string[]) {
+	const treeWalker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT)
 	const map = new Map()
 
 	if (Array.isArray(query)) query = query.join('|')
@@ -53,6 +67,7 @@ export default function useHighlight(
 	React.useEffect(() => {
 		if (ref.current == null || highlight == null || highlight.length === 0) return
 
+		removeCurrentHighlights(ref.current)
 		const tops = highlightQueryInDomElement(ref.current, highlight)
 
 		if (setHighlightAreas) setHighlightAreas(tops.filter((v, i, a) => v > 0 && a.indexOf(v) === i))

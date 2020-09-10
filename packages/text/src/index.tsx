@@ -52,6 +52,7 @@ function DocereTextView(props: DocereTextViewProps) {
 	const tree = renderComponentTree(componentTree, props)
 	useComponentDidMount(props, tree, wrapperRef.current)
 	
+	// console.log(wrapperRef.current.outerHTML)
 	useHighlight(wrapperRef, tree, props.highlight, props.setHighlightAreas)
 
 	if (componentTree === undefined) {
