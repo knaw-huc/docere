@@ -49,7 +49,7 @@ function prepareNode(node: Node, props: DocereTextViewProps): ComponentTree {
 }
 
 export default function useGetComponentTree(props: DocereTextViewProps) {
-	const [node, setNode] = React.useState<ComponentTree>(null)
+	const [node, setNode] = React.useState<ComponentTree | undefined>(null)
 
 	/**
 	 * Set the document. There are three props options.
@@ -61,7 +61,9 @@ export default function useGetComponentTree(props: DocereTextViewProps) {
 		if (props.components == null) return
 
 		if (props.url != null) {
-			fetchXml(props.url).then(node => setNode(prepareNode(node, props)))
+			fetchXml(props.url)
+				.then(node => setNode(prepareNode(node, props)))
+				.catch(() => setNode(undefined))
 		} else {
 			let tmpNode: Node
 			if (props.node != null) {

@@ -1,4 +1,6 @@
 function fetchXml(url: string): Promise<any> {
+	const rejectMessage = `Fetching XML of "${url}" failed`
+
 	return new Promise((resolve, reject) => {
 		var xhr = new XMLHttpRequest
 		xhr.open('GET', url)
@@ -6,12 +8,10 @@ function fetchXml(url: string): Promise<any> {
 		xhr.overrideMimeType('text/xml')
 
 		xhr.onload = function() {
-			if (xhr.readyState === xhr.DONE && xhr.status === 200) {
-				if (xhr.responseXML == null) {
-					reject(`Fetching XML of "${url}" failed`)
-					return
-				}
+			if (xhr.readyState === xhr.DONE && xhr.status === 200 && xhr.responseXML != null) {
 				resolve(xhr.responseXML)
+			} else {
+				reject(rejectMessage)
 			}
 		}
 
