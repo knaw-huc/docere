@@ -136,6 +136,7 @@ export default function indexerApi(app: Express, puppenv: Puppenv) {
 	})
 
 	app.get('/api/indexer/:projectId?', async (req, res) => {
+		// ToDo replace with server queue?
 		if (Array.from(state.values()).some(v => v.status === IndexerStatus.Active)) {
 			sendJson({ __error: 'Server is busy', code: 503 }, res)
 			return

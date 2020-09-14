@@ -61,7 +61,6 @@ export async function prepareAndExtract(xml: string, documentId: string, project
 			parts: Array.from(e.parts || []).map((part => serializeEntry(part[1]))),
 			text: docereConfigData.extractText(e, docereConfigData.config),
 		}
-
 	}
 
 	return [
