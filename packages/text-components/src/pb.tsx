@@ -1,7 +1,8 @@
 import React from 'react'
 import { Colors, DEFAULT_SPACING, Entry } from '@docere/common'
-import type { DocereComponentProps } from '@docere/common'
 import styled from 'styled-components'
+
+import type { DocereComponentProps } from '@docere/common'
 
 const Wrapper = styled.span`
 	& > div {

@@ -8,8 +8,8 @@ import handleAnalyzeApi from './analyze'
 
 export default function handleProjectApi(app: Express, puppenv: Puppenv) {
 	app.get('/api/projects/:projectId/config', async (req, res) => {
-		const configData = await puppenv.getConfigData(req.params.projectId)
-		sendJson(configData, res)
+		const config = await puppenv.getConfig(req.params.projectId)
+		sendJson(config, res)
 	})
 
 	app.get('/api/projects/:projectId/mapping', async (req, res) => {

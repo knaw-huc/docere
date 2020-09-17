@@ -5,12 +5,12 @@ import { Entry, fetchEntryXml, ProjectContext, GetEntryProps, useUrlObject } fro
 
 const entryCache = new Map<string, Entry>()
 
-async function getEntry(props: Pick<GetEntryProps, 'id' | 'configData'>) {
+async function getEntry(props: Pick<GetEntryProps, 'id' | 'config'>) {
 	const entry = getDefaultEntry(props.id)
-	entry.document = await fetchEntryXml(props.configData.config.slug, props.id)
-	entry.element =  props.configData.prepareDocument(entry, props.configData.config)
-	extractEntryData(entry, props.configData)
-	extractParts(entry, props.configData)
+	entry.document = await fetchEntryXml(props.config.slug, props.id)
+	entry.element =  props.config.prepare(entry, props.config)
+	extractEntryData(entry, props.config)
+	extractParts(entry, props.config)
 	return entry
 }
 
@@ -29,7 +29,7 @@ export function useEntry(id: string) {
 			else
 				setEntry(entry)
 		} else {
-			getEntry({ id, configData: projectContext.configData }).then(entry => {
+			getEntry({ id, config: projectContext.config }).then(entry => {
 				entryCache.set(entry.id, entry)
 				if (query.partId != null && entry.parts.has(query.partId))
 					setEntry(entry.parts.get(query.partId))

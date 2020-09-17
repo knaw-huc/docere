@@ -240,9 +240,11 @@ export default function useEntryState() {
 			return layer
 		})
 
+		// TODO activeFacsimile is a state of layer, not the entry
 		// x[1] = dispatch
 		x[1]({
-			activeFacsimile: entry.facsimiles?.length ? entry.facsimiles[0] : null,
+			// activeFacsimile: entry.facsimiles?.length ? entry.facsimiles[0] : null,
+			activeFacsimile: null,
 			entry,
 			layers: updatePanels(nextLayers, x[0]),
 			type: 'ENTRY_CHANGED',

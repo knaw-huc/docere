@@ -3,7 +3,7 @@ import { Express } from 'express'
 import { listProjects, isError } from '../utils'
 import Puppenv from '../puppenv'
 
-import type { DocereConfigData } from '@docere/common'
+import type { DocereConfig } from '@docere/common'
 
 export default function handleDtsApi(app: Express, puppenv: Puppenv) {
 	app.get('/api/dts', (_req, res) => {
@@ -19,8 +19,8 @@ export default function handleDtsApi(app: Express, puppenv: Puppenv) {
 
 	app.get('/api/dts/collections', async (_req, res) => {
 		const projectIds = listProjects()
-		const configDatas = await Promise.all(projectIds.map(id => puppenv.getConfigData(id)))
-		const filtered = configDatas.filter(cd => !isError(cd) && !cd.config.private)
+		const configs = await Promise.all(projectIds.map(id => puppenv.getConfig(id)))
+		const filtered = configs.filter(config => !isError(config) && !config.private)
 
 		res.json({
 			"@context": {
@@ -31,12 +31,12 @@ export default function handleDtsApi(app: Express, puppenv: Puppenv) {
 			"title": "Docere collections",
 			"@id": "https://demo.docere.diginfra.net/api/dts/collections",
 			"totalItems": filtered.length,
-			"member": filtered.map((cd: DocereConfigData) => (
+			"member": filtered.map((config: DocereConfig) => (
 				{
 					"totalItems": 4,
 					"@type": "Collection",
-					"title": cd.config.title,
-					"@id": cd.config.slug
+					"title": config.title,
+					"@id": config.slug
 				}
 			))
 		})

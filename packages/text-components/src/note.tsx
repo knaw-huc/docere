@@ -1,6 +1,6 @@
 import React from 'react'
-import { DocereComponentProps, Note, useNavigate } from '@docere/common'
 import styled from 'styled-components'
+import { DocereComponentProps, Note, useNavigate } from '@docere/common'
 import { Popup } from './popup'
 
 interface NAProps { active: boolean, color: string, openToAside: boolean }

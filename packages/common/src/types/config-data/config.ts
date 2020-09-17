@@ -1,7 +1,7 @@
 import { RsType } from '../../enum'
 import type { FacetConfig } from '../search/facets'
 import { PageConfig } from '../page'
-import { ExtractedNote, ExtractedTextData } from './functions'
+import { ExtractedNote, ExtractedTextData, Note, Entity, Facsimile } from './functions'
 import { TextLayerConfig, FacsimileLayerConfig } from './layer'
 import { Entry } from '../entry'
 
@@ -17,15 +17,17 @@ export interface DocereConfig {
 	metadata?: MetadataConfig[]
 	notes?: NotesConfig[]
 	pages?: PageConfig[]
+	plainText?: (entry: Entry, config: DocereConfig) => string
+	prepare?: (entry: Entry, config: DocereConfig) => Element
 	private?: boolean
 	searchResultCount?: number
 	slug: string
 	parts?: {
 		extract: ExtractEntryPartElements
-		entities?: EntityConfig[]
-		layers?: (TextLayerConfig | FacsimileLayerConfig)[]
-		metadata?: MetadataConfig[]
-		notes?: NotesConfig[]
+		filterEntities?: (el: Element) => (entity: Entity) => boolean
+		filterFacsimiles?: (el: Element) => (facsimile: Facsimile) => boolean
+		filterNotes?: (el: Element) => (note: Note) => boolean
+		keepSource?: boolean /* Keep the source document and store as an entry */
 	},
 	title: string
 }
@@ -47,14 +49,18 @@ export interface BaseConfig {
 	title?: string
 }
 
-export type MetadataConfig = FacetConfig & {
+type TmpConfig = FacetConfig & {
 	showInAside?: boolean /* Show data in the aside of the detail view? */
 	showAsFacet?: boolean /* Show data as a facet? */
 }
 
+export type MetadataConfig = TmpConfig & {
+	extract: (entry: Entry, config?: DocereConfig) => string | number | string[] | number[] | boolean
+}
+
 export type ExtractTextData = (entry: Entry, config?: DocereConfig) => ExtractedTextData[]
 
-export type EntityConfig = MetadataConfig & {
+export type EntityConfig = TmpConfig & {
 	color?: string
 	extract: ExtractTextData
 	revealOnHover?: boolean

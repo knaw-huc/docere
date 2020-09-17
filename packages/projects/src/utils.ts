@@ -4,15 +4,48 @@ export function extractLayerElement(selector: string): ExtractTextLayerElement {
 	return entry => entry.document.querySelector(selector)
 }
 
-export function extractEntryPartElements(selector: string, attribute: string): ExtractEntryPartElements {
+function getChapterId(el: Element, attribute: string, index: number) {
+	return attribute == null ?
+		`part${index + 1}` :
+		el.getAttribute(attribute)
+
+}
+
+export function extractEntryPartElements(selector: string, attribute?: string): ExtractEntryPartElements {
 	return entry => {
 		const chapters: Map<string, Element> = new Map()
-		for (const chapter of entry.document.querySelectorAll(selector)) {
-			chapters.set(chapter.getAttribute(attribute), chapter)
+		let i = 0
+
+		for (const el of entry.document.querySelectorAll(selector)) {
+			const chapterId = getChapterId(el, attribute, i)
+			chapters.set(chapterId, el)
 		}
 		return chapters
 	}
 
+}
+
+export function extractEntryPartElementsFromMilestone(selector: string, attribute?: string): ExtractEntryPartElements {
+	return entry => {
+		const chapters: Map<string, Element> = new Map()
+
+		const milestones = entry.document.querySelectorAll(selector)
+		Array.from(milestones)
+			.forEach((milestone, index) => {
+				const chapterId = getChapterId(milestone, attribute, index)
+
+				const range = new Range()
+				range.setStartAfter(milestone)	
+				if (milestones[index + 1] != null) {
+					range.setEndBefore(milestones[index + 1])
+				}
+				const el = document.createElement('div')
+				el.appendChild(range.extractContents())
+				chapters.set(chapterId, el)
+			})
+
+		return chapters
+	}
 }
 
 export const NoOp = () => null as JSX.Element

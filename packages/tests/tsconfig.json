@@ -19,6 +19,11 @@
     "node_modules"
   ],
   "include": [
-    "src/index.ts",
+    "src/*.ts",
+  ],
+  "types": [
+    "puppeteer",
+    "jest-environment-puppeteer",
+    "expect-puppeteer"
   ]
 }

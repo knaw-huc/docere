@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { SearchContext, useSearchReducer } from '@docere/search'
-import { ProjectContext, useUrlObject } from '@docere/common'
-import configDatas from '@docere/projects'
+import { ProjectContext, useUrlObject, DocereConfig } from '@docere/common'
+import configs from '@docere/projects'
 
 import EntrySelector from '../entry-selector'
 import { ProjectHeader } from '../header'
@@ -12,53 +12,57 @@ import useAppState from './state'
 import useFacetsConfig from '../entry-selector/use-fields'
 import { Route, useRouteMatch } from 'react-router-dom'
 
-import type { DocereConfigData } from '@docere/common'
-
 function useProjectData() {
-	const [projectData, setProjectData] = React.useState<[DocereConfigData, ProjectContext]>([null, null])
+	const [projectContext, setProjectContext] = React.useState<ProjectContext>(null)
 	const { projectId } = useUrlObject()
 
 	React.useEffect(() => {
 		if (projectId == null) return
+
+		
+		if (configs[projectId].getUIComponent == null) configs[projectId].getUIComponent = async () => ({ default: () => async () => null })
 		// TODO redirect to 404 if projectSlug does not exist
-		configDatas[projectId]().then(({ default: configData }) => {
-			const projectContextValue: ProjectContext = {
-				config: configData.config,
-				configData,
-				getComponents: configData.getComponents(configData.config),
-				getUIComponent: configData.getUIComponent(configData.config),
-				searchUrl: `/search/${configData.config.slug}/_search`,
+		Promise.all([
+			configs[projectId].config(),
+			configs[projectId].getTextComponents(),
+			configs[projectId].getUIComponent(),
+		]).then(result => {
+			const config = result[0].default
+			const context: ProjectContext = {
+				config,
+				getComponents: result[1].default(config),
+				getUIComponent: result[2].default(config),
+				searchUrl: `/search/${config.slug}/_search`,
 			}
 
-			setProjectData([configData, projectContextValue])
+			setProjectContext(context)
 		})
-
 	}, [projectId])
 
-	return projectData
+	return projectContext
 }
 
 export default function Project() {
-	const [projectConfigData, projectContextValue] = useProjectData()
-	if (projectConfigData == null) return null
+	const projectContext = useProjectData()
+	if (projectContext == null) return null
 
 	return (
-		<ProjectContext.Provider value={projectContextValue}>
+		<ProjectContext.Provider value={projectContext}>
 			<RealProject
-				projectConfigData={projectConfigData}
+				config={projectContext.config}
 			/>
 		</ProjectContext.Provider>
 	)
 }
 
 interface Props {
-	projectConfigData: DocereConfigData
+	config: DocereConfig
 }
 function RealProject(props: Props) {
 	const match = useRouteMatch()
 	const [appState, appDispatch] = useAppState()
 
-	const facetsConfig = useFacetsConfig(props.projectConfigData.config)
+	const facetsConfig = useFacetsConfig(props.config)
 	const [state, dispatch] = useSearchReducer(facetsConfig)
 
 	return (

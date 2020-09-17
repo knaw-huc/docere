@@ -2,10 +2,11 @@ import * as path from 'path'
 import * as fs from 'fs'
 import { Response as ExpressResponse } from 'express'
 import chalk from 'chalk'
-import { EsDataType } from '../../common/src/enum'
+import { EsDataType, LayerType } from '../../common/src/enum'
 
-import type { DocereConfig, ExtractedEntry } from '@docere/common'
 import type { DocereApiError, ElasticSearchDocument } from './types'
+import type { DocereConfig } from '../../common/src/types/config-data/config'
+import type { ExtractedEntry } from '../../common/src/types/entry'
 
 export function getProjectsSourceDir() {
 	// The current working dir is api/, the projects/ dir shares the same parent as api/
@@ -55,6 +56,11 @@ export function getType(key: string, config: DocereConfig): EsDataType {
 
 	return type
 }
+
+// TODO implement. Add to build.puppenv.utils?
+// export function createError(message: string) {
+// 	return { __error: message }
+// }
 
 export function logError(title: string, subTitle?: string, error?: string) {
 	console.log(chalk.red(title), chalk.cyan(subTitle))
@@ -118,10 +124,10 @@ export function isError(payload: any | DocereApiError): payload is DocereApiErro
 	return payload != null && payload.hasOwnProperty('__error')
 }
 
-export function getElasticSearchDocument(input: ExtractedEntry | DocereApiError): ElasticSearchDocument | DocereApiError {
-	if (isError(input)) return input
+export function getElasticSearchDocument(extractedEntry: ExtractedEntry | DocereApiError): ElasticSearchDocument | DocereApiError {
+	if (isError(extractedEntry)) return extractedEntry
 
-	const entities = input.entities.reduce((prev, curr) => {
+	const entities = extractedEntry.entities.reduce((prev, curr) => {
 		prev[curr.config.id] = (prev.hasOwnProperty(curr.config.id)) ?
 			prev[curr.config.id].concat(curr.value) :
 			[curr.value]
@@ -129,17 +135,24 @@ export function getElasticSearchDocument(input: ExtractedEntry | DocereApiError)
 		return prev
 	}, {} as Record<string, string[]>)
 
-	const facsimiles: string[] = input.facsimiles.reduce((prev, curr) => prev.concat(curr.versions.map(v => v.path)), [])
+	const facsimiles: string[] = extractedEntry.layers
+		.reduce((prev, curr) => {
+			if (curr.type === LayerType.Facsimile) {
+				const f = curr.facsimiles.reduce((prev, curr) => prev.concat(curr.versions.map(v => v.path)), [] as string[])
+				prev.push(f)
+			}
+			return prev
+		}, [])
 
 	return {
-		id: input.id,
+		id: extractedEntry.id,
 		facsimiles,
-		text: input.text,
+		text: extractedEntry.text,
 		text_suggest: {
-			input: input.text.split(' '),
+			input: extractedEntry.text.split(' '),
 		},
 		...entities,
-		...input.metadata
+		...extractedEntry.metadata
 	}
 }
 

@@ -1,12 +1,13 @@
-import { Entry, MetadataItem, GetEntryProps } from './types/entry'
-import { FacsimileArea, Facsimile, LayerConfig, TextLayerConfig, LayerType, TextData, Note, DocereConfigData, defaultMetadata, EsDataType, DocereConfig, Layer, isTextLayer } from '.'
+import { Entry, MetadataItem, GetEntryProps, GetPartProps } from './types/entry'
+import { FacsimileArea, Facsimile, LayerConfig, TextLayerConfig, LayerType, TextData, Note, defaultMetadata, DocereConfig, Layer, isTextLayer } from '.'
+import { isFacsimileLayer } from './utils'
 
 export function getDefaultEntry(id: string): Entry {
 	return {
 		document: null,
 		element: null,
 		entities: null,
-		facsimiles: null,
+		// facsimiles: null,
 		id,
 		layers: null,
 		metadata: null,
@@ -55,54 +56,64 @@ function addCount(prev: Map<string, TextData | Note>, curr: TextData) {
 	return prev
 }
 
-function extractMetadata(entry: Entry, configData: DocereConfigData): Entry['metadata'] {
-	const extractedMetadata = configData.extractMetadata(entry, configData.config)
-	const extractedMetadataKeys = Object.keys(extractedMetadata)
-
-	return extractedMetadataKeys
-		// Remove sub levels of hierarchy facet, their values will be added to the hierarchy metadata later
-		.filter(field => !/level\d+$/.test(field))
-
-		// Map extracted IDs to configured metadata
-		.map(id => {
-			const config = configData.config.metadata.find(md => md.id === id)
-			return (config == null) ?
-				{ ...defaultMetadata, id, title: id, value: extractedMetadata[id] } :
-				config
-		})
-
-
-		// Remove metadata which are configured to not be shown in the aside
-		.filter(config => config.showInAside)
-
-		// Add value to the config to create a MetadataItem
-		.map(config => ({
-			...config,
-			value: extractedMetadata[config.id]
-		} as MetadataItem))
-
-		// Add hierarchy facet metadata
-		.concat(
-			configData.config.metadata
-				.filter(md => md.datatype === EsDataType.Hierarchy)
-				.map(md => {
-					return {
-						...md,
-						value: extractedMetadataKeys
-							.filter(key => new RegExp(`^${md.id}_level`).test(key))
-							.sort((key1, key2) => {
-								const number1 = parseInt(key1.match(/\d+$/)[0], 10)
-								const number2 = parseInt(key2.match(/\d+$/)[0], 10)
-								return number1 - number2
-							})
-							.map(key => extractedMetadata[key] as string)
-					} as MetadataItem
-				})
-		)
-
-		// Sort metadata config by order
-		.sort((config1, config2) => config1.order - config2.order)
+function extractMetadata(entry: Entry, config: DocereConfig): Entry['metadata'] {
+	return config.metadata
+		.map(md => ({
+			...defaultMetadata,
+			title: md.id,
+			value: md.extract(entry, config)
+		}) as MetadataItem)
+ 		.sort((config1, config2) => config1.order - config2.order)
 }
+
+// function extractMetadata(entry: Entry, config: DocereConfig): Entry['metadata'] {
+// 	const extractedMetadata = configData.extractMetadata(entry, configData.config)
+// 	const extractedMetadataKeys = Object.keys(extractedMetadata)
+
+// 	return extractedMetadataKeys
+// 		// Remove sub levels of hierarchy facet, their values will be added to the hierarchy metadata later
+// 		.filter(field => !/level\d+$/.test(field))
+
+// 		// Map extracted IDs to configured metadata
+// 		.map(id => {
+// 			const config = configData.config.metadata.find(md => md.id === id)
+// 			return (config == null) ?
+// 				{ ...defaultMetadata, id, title: id, value: extractedMetadata[id] } :
+// 				config
+// 		})
+
+
+// 		// Remove metadata which are configured to not be shown in the aside
+// 		.filter(config => config.showInAside)
+
+// 		// Add value to the config to create a MetadataItem
+// 		.map(config => ({
+// 			...config,
+// 			value: extractedMetadata[config.id]
+// 		} as MetadataItem))
+
+// 		// Add hierarchy facet metadata
+// 		.concat(
+// 			configData.config.metadata
+// 				.filter(md => md.datatype === EsDataType.Hierarchy)
+// 				.map(md => {
+// 					return {
+// 						...md,
+// 						value: extractedMetadataKeys
+// 							.filter(key => new RegExp(`^${md.id}_level`).test(key))
+// 							.sort((key1, key2) => {
+// 								const number1 = parseInt(key1.match(/\d+$/)[0], 10)
+// 								const number2 = parseInt(key2.match(/\d+$/)[0], 10)
+// 								return number1 - number2
+// 							})
+// 							.map(key => extractedMetadata[key] as string)
+// 					} as MetadataItem
+// 				})
+// 		)
+
+// 		// Sort metadata config by order
+// 		.sort((config1, config2) => config1.order - config2.order)
+// }
 
 function extractLayers(entry: Entry, config: DocereConfig) {
 	return config.layers
@@ -115,12 +126,15 @@ function extractLayers(entry: Entry, config: DocereConfig) {
 					...layer,
 					element: layer.extract(entry, config)
 				}	
-			} else {
+			} else if (isFacsimileLayer(layer)) {
 				_layer = {
 					...defaultLayerConfig,
 					...layer,
-					type: LayerType.Facsimile
+					type: LayerType.Facsimile,
+					facsimiles: layer.extract(entry, config).map(extendFacsimile)
 				}
+			} else {
+				throw Error('Unknown layer type')
 			}
 
 			return _layer
@@ -151,36 +165,55 @@ function extractNotes(entry: Entry, config: DocereConfig) {
 	return Array.from(notes.values())
 }
 
-export function extractEntryData(entry: Entry, configData: DocereConfigData) {
-	entry.metadata = extractMetadata(entry, configData)
-	entry.layers = extractLayers(entry, configData.config)
-	entry.facsimiles = configData.extractFacsimiles(entry, configData.config).map(extendFacsimile)
-	entry.entities = extractEntities(entry, configData.config)
-	entry.notes = extractNotes(entry, configData.config)
+export function extractEntryData(entry: Entry, config: DocereConfig) {
+	entry.metadata = extractMetadata(entry, config)
+	entry.layers = extractLayers(entry, config)
+	// entry.facsimiles = config.extractFacsimiles(entry, config).map(extendFacsimile)
+	entry.entities = extractEntities(entry, config)
+	entry.notes = extractNotes(entry, config)
 }
 
-export function extractParts(entry: Entry, configData: DocereConfigData) {
-	if (configData.config.parts == null) return
+export function extractParts(entry: Entry, config: DocereConfig) {
+	if (config.parts == null) return
 
 	entry.parts = new Map()
-	for (const [partId, partEl] of configData.config.parts.extract(entry, configData.config)) {
-		const part = getEntrySync({
-			configData,
+	for (const [partId, partEl] of config.parts.extract(entry, config)) {
+		const part = getPartSync({
+			config,
 			document: entry.document,
 			element: partEl,
-			extractParts: false,
 			id: partId,
+			parent: entry,
 		})
 
 		entry.parts.set(partId, part)
 	}
 }
 
+function getPartSync(props: GetPartProps) {
+	const entry = getDefaultEntry(props.id)
+	entry.document = props.document
+	entry.element =  props.element
+
+	entry.metadata = props.parent.metadata
+	entry.layers = extractLayers(entry, props.config)
+
+	if (props.config.parts.filterEntities != null) {
+		entry.entities = props.parent.entities.filter(props.config.parts.filterEntities(props.element))
+	}
+
+	if (props.config.parts.filterNotes != null) {
+		entry.notes = props.parent.notes.filter(props.config.parts.filterNotes(props.element))
+	}
+
+	return entry
+}
+
 export function getEntrySync(props: GetEntryProps) {
 	const entry = getDefaultEntry(props.id)
 	entry.document = props.document
 	entry.element =  props.element
-	extractEntryData(entry, props.configData)
-	if (props.extractParts) extractParts(entry, props.configData)
+	extractEntryData(entry, props.config)
+	extractParts(entry, props.config)
 	return entry
 }

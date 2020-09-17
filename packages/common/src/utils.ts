@@ -1,7 +1,7 @@
 import { DEFAULT_SPACING, TEXT_PANEL_ASIDE_WIDTH, TEXT_PANEL_MINIMAP_WIDTH, TEXT_PANEL_TEXT_WIDTH } from './constants'
 import { LayerType } from './enum'
 
-import type { TextLayer, DocereConfig, Note, Entity, LayerConfig, PageConfig } from './types'
+import type { FacsimileLayer, TextLayer, DocereConfig, Note, Entity, LayerConfig, PageConfig } from './types'
 
 export function getTextPanelLeftSpacing(settings: DocereConfig['entrySettings']) {
 	let width = DEFAULT_SPACING
@@ -53,6 +53,10 @@ export function generateId(len = 10) {
 
 export function isTextLayer(layer: LayerConfig): layer is TextLayer {
 	return layer.type === LayerType.Text
+}
+
+export function isFacsimileLayer(layer: LayerConfig): layer is FacsimileLayer {
+	return layer.type === LayerType.Facsimile
 }
 
 // TODO Move window analyzer to app state reducer?

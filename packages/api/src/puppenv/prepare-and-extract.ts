@@ -1,5 +1,5 @@
-import type { PrepareAndExtractOutput } from '../types'
-import type { DocereConfigData, Entry, GetEntryProps, ExtractedEntry, MetadataItem } from '@docere/common'
+import type { PrepareAndExtractOutput, DocereApiError } from '../types'
+import type { DocereConfig, Entry, GetEntryProps, ExtractedEntry, MetadataItem } from '@docere/common'
 
 declare global {
 	const DocereProjects: any
@@ -9,12 +9,12 @@ declare global {
 	}
 }
 
-export async function prepareAndExtract(xml: string, documentId: string, projectId: string): Promise<PrepareAndExtractOutput | { __error: string }> {
+export async function prepareAndExtract(xml: string, documentId: string, projectId: string): Promise<PrepareAndExtractOutput | DocereApiError> {
 	const domParser = new DOMParser()
 	let xmlRoot: XMLDocument
 
 	// TODO fix if configData not found
-	const docereConfigData: DocereConfigData = (await DocereProjects.default[projectId]()).default
+	const config: DocereConfig = (await DocereProjects.default[projectId].config()).default
 
 	try {
 		xmlRoot = domParser.parseFromString(xml, "application/xml")
@@ -38,17 +38,16 @@ export async function prepareAndExtract(xml: string, documentId: string, project
 	// Prepare document
 	// let doc: XMLDocument
 	try {
-		entryTmp.element = await docereConfigData.prepareDocument(entryTmp, docereConfigData.config)
+		entryTmp.element = config.prepare(entryTmp, config)
 	} catch (err) {
 		return { __error: `Document ${documentId}: Preparation error\n${err.toString()}` }
 	}
 
 	const entry = PuppenvUtils.getEntrySync({
-		configData: docereConfigData,
+		config,
 		id: entryTmp.id,
 		document: entryTmp.document,
 		element: entryTmp.element,
-		extractParts: true,
 	})
 
 	function serializeEntry(e: Entry): ExtractedEntry {
@@ -59,7 +58,7 @@ export async function prepareAndExtract(xml: string, documentId: string, project
 				return prev
 			}, {} as Record<string, MetadataItem['value']>),
 			parts: Array.from(e.parts || []).map((part => serializeEntry(part[1]))),
-			text: docereConfigData.extractText(e, docereConfigData.config),
+			text: config.plainText(e, config),
 		}
 	}
 

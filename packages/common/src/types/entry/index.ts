@@ -1,7 +1,7 @@
 import { BooleanFacetConfig, ListFacetConfig, HierarchyFacetConfig, RangeFacetConfig, DateFacetConfig } from '../search'
 import { Layer, ExtractedLayer } from '../config-data/layer'
-import type { DocereConfigData } from '../config-data'
-import type { Entity, Note, Facsimile, ExtractedMetadata } from '../config-data/functions'
+import type { Entity, Note, ExtractedMetadata } from '../config-data/functions'
+import { DocereConfig } from '../config-data/config'
 
 export * from './state'
 
@@ -16,7 +16,7 @@ export interface Entry {
 	document: XMLDocument
 	element: Element
 	entities: Entity[]
-	facsimiles: Facsimile[]
+	// facsimiles: Facsimile[]
 	id: string
 	layers: Layer[]
 	metadata: MetadataItem[]
@@ -34,11 +34,14 @@ export type ExtractedEntry = Omit<Entry, 'document' | 'element' | 'layers' | 'me
 }
 
 export interface GetEntryProps {
-	configData: DocereConfigData
+	config: DocereConfig
 	document: XMLDocument
 	element: Element
 	id: string
-	extractParts: boolean
+}
+
+export interface GetPartProps extends GetEntryProps {
+	parent: Entry
 }
 
 export function extractIdsFromElasticSearchId(elasticSearchId: string) {

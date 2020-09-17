@@ -1,6 +1,7 @@
 import { LayerType } from '../../enum'
 import { BaseConfig, DocereConfig } from './config'
 import { Entry } from '../entry'
+import { Facsimile } from './functions'
 
 // Config
 export interface LayerConfig extends BaseConfig {
@@ -30,10 +31,12 @@ export interface TextLayer extends TextLayerConfig, BaseLayer {
 
 // Facsimile Layer
 export interface FacsimileLayerConfig extends LayerConfig {
+	extract: (entry: Entry, config: DocereConfig) => Facsimile[]
 	type: LayerType.Facsimile
 }
 
-interface FacsimileLayer extends FacsimileLayerConfig, BaseLayer {
+export interface FacsimileLayer extends FacsimileLayerConfig, BaseLayer {
+	facsimiles: Facsimile[]
 }
 
 // Layer

@@ -9,8 +9,8 @@ import { prepareAndExtract } from './prepare-and-extract'
 
 const projects = require('esm')(module)(path.resolve(process.cwd(), './packages/projects')).default
 
-import type { DocereConfigData } from '@docere/common'
 import type { PrepareAndExtractOutput, DocereApiError, Mapping, MappingProperties } from '../types'
+import { DocereConfig } from '@docere/common/src/types/config-data/config'
 
 const port = 3334
 
@@ -18,7 +18,7 @@ export default class Puppenv {
 	private browser: puppeteer.Browser
 	private server: Server
 	private pages: Map<string, puppeteer.Page> = new Map()
-	private configDatas: Map<string, DocereConfigData> = new Map()
+	private configs: Map<string, DocereConfig> = new Map()
 
 	constructor() {
 		const app = express()
@@ -79,8 +79,8 @@ export default class Puppenv {
 
 	async getMapping(projectId: string, filePaths: string[]): Promise<Mapping | DocereApiError> {
 		const properties: MappingProperties = {}
-		const docereConfigData = await this.getConfigData(projectId)
-		if (isError(docereConfigData)) return docereConfigData
+		const config = await this.getConfig(projectId)
+		if (isError(config)) return config
 
 		const selectedFileNames = filePaths.length > 20 ?
 			[
@@ -108,12 +108,12 @@ export default class Puppenv {
 			Object.keys(esDocument).forEach(fieldKey => fieldKeys.add(fieldKey))
 		}
 
-		if (docereConfigData.config.hasOwnProperty('metadata')) docereConfigData.config.metadata.forEach(md => fieldKeys.add(md.id))
-		if (docereConfigData.config.hasOwnProperty('entities')) docereConfigData.config.entities.forEach(td => fieldKeys.add(td.id))
+		if (config.hasOwnProperty('metadata')) config.metadata.forEach(md => fieldKeys.add(md.id))
+		if (config.hasOwnProperty('entities')) config.entities.forEach(td => fieldKeys.add(td.id))
 
 		fieldKeys
 			.forEach(key => {
-				const type = getType(key, docereConfigData.config)
+				const type = getType(key, config)
 				if (type != null) properties[key] = { type }
 			})
 
@@ -130,34 +130,34 @@ export default class Puppenv {
 		}
 	}
 
-	async getConfigData(projectId: string): Promise<DocereConfigData | DocereApiError> {
-		if (this.configDatas.has(projectId)) {
-			return this.configDatas.get(projectId)
+	async getConfig(projectId: string): Promise<DocereConfig | DocereApiError> {
+		if (this.configs.has(projectId)) {
+			return this.configs.get(projectId)
 		}
 
 		const error: DocereApiError = { code: 404, __error: `Config data not found. Does project '${projectId}' exist?` }
-		let configData: DocereConfigData | DocereApiError
+		let config: DocereConfig | DocereApiError
 		try {
-			const configDataImport = await projects[projectId]
-			configData = configDataImport == null ? error : (await configDataImport()).default
+			const configImport = await projects[projectId].config
+			config = configImport == null ? error : (await configImport()).default
 		} catch (err) {
 			console.log(err)
-			configData = error
+			config = error
 		}
 
-		if (!isError(configData)) this.configDatas.set(projectId, configData)
+		if (!isError(config)) this.configs.set(projectId, config)
 		else console.log(`Return ${projectId} config`)
 
-		return configData
+		return config
 	}
 
 
 	async getPageConfig(projectId: string, pageId: string) {
-		const configData = await this.getConfigData(projectId)
-		if (isError(configData)) return configData
+		const config = await this.getConfig(projectId)
+		if (isError(config)) return config
 
 		// Flatten pages before using .find
-		const pagesConfig = configData.config.pages
+		const pagesConfig = config.pages
 			.reduce((prev, curr) => {
 				if (Array.isArray(curr.children)) prev.push(...curr.children)
 				prev.push(curr)

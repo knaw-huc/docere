@@ -42,7 +42,7 @@ function sendEntry(puppenv: Puppenv, prop?: Prop) {
 }
 
 type Prop = (keyof ExtractedEntry | keyof ExtractedXml)
-const props: Prop[] = ['layers', 'text', 'entities', 'facsimiles', 'metadata', 'notes', 'original', 'prepared']
+const props: Prop[] = ['layers', 'text', 'entities', 'metadata', 'notes', 'original', 'prepared']
 export default function handleProjectApi(app: Express, puppenv: Puppenv) {
 	app.get('/api/projects/:projectId/documents/:documentId', sendEntry(puppenv))
 
