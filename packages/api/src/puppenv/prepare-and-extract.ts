@@ -59,6 +59,7 @@ export async function prepareAndExtract(xml: string, documentId: string, project
 			}, {} as Record<string, MetadataItem['value']>),
 			parts: Array.from(e.parts || []).map((part => serializeEntry(part[1]))),
 			text: config.plainText(e, config),
+			content: e.element.outerHTML,
 		}
 	}
 

@@ -72,19 +72,19 @@ export default function handleProjectApi(app: Express, puppenv: Puppenv) {
 			VALUES
 				($1, md5($2), $2, $3, $4, $5, NOW())
 			RETURNING id;`,
-			[fileName, documentFields[1].original, documentFields[1].original, standoff.text, JSON.stringify(standoff.annotations)]
+			[fileName, documentFields[1].original, documentFields[1].original, documentFields[1].prepared, standoff.text, JSON.stringify(standoff.annotations)]
 		)
-		// for (const part of documentFields[0].parts) {
-		// 	await tryQuery(
-		// 		client,
-		// 		`INSERT INTO xml
-		// 			(name, content, prepared, standoff_text, standoff_annotations, updated)
-		// 		VALUES
-		// 			($1, $2, $3, NOW())
-		// 		RETURNING id;`,
-		// 		[part.id]
-		// 	)
-		// }
+		for (const part of documentFields[0].parts) {
+			await tryQuery(
+				client,
+				`INSERT INTO document
+					(name, content, json, updated)
+				VALUES
+					($1, $2, $3, NOW())
+				RETURNING id;`,
+				[part.id, part.content, JSON.stringify(part)]
+			)
+		}
 		await tryQuery(client, 'COMMIT')
 
 		// sendJson(documentFields, res)
@@ -116,9 +116,7 @@ export default function handleProjectApi(app: Express, puppenv: Puppenv) {
 				id SERIAL PRIMARY KEY,
 				name TEXT UNIQUE,
 				content TEXT,
-				metadata TEXT,
-				layers TEXT,
-				entities TEXT,
+				json TEXT,
 				standoff_text TEXT,
 				standoff_annotations TEXT,
 				updated TIMESTAMP WITH TIME ZONE
