@@ -33,6 +33,7 @@ export type ExtractedEntry = Omit<Entry, 'document' | 'element' | 'layers' | 'me
 	parts: ExtractedEntry[]
 	parentId: string
 	text: string
+	content: string
 }
 
 export interface GetEntryProps {

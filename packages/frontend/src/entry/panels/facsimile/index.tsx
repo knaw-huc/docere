@@ -1,11 +1,12 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { DEFAULT_SPACING, ProjectContext } from '@docere/common'
+import { DEFAULT_SPACING, ProjectContext, PANEL_HEADER_HEIGHT } from '@docere/common'
 
 import useAreaRenderer, { AreaRenderer } from './use-area-renderer'
 import PanelHeader from '../header'
 
 import type { Layer, FacsimileArea, DocereConfig, EntryState, EntryStateAction } from '@docere/common'
+import CollectionNavigator2 from '../collection-navigator2'
 
 // TODO change facsimile when user scroll past a <pb />
 
@@ -135,8 +136,16 @@ function useActiveFacsimile(
 
 }
 
+const containerHeaderHeight = PANEL_HEADER_HEIGHT
+const containerNavigatorHeight = DEFAULT_SPACING * 2
+
 const Container = styled.div`
-	height: ${(props: { hasHeader: boolean }) => props.hasHeader ? `calc(100% - ${DEFAULT_SPACING}px)` : '100%'};
+	height: ${(props: { hasHeader: boolean, hasNavigator: boolean }) => {
+		let subtract = 0 		
+		if (props.hasHeader) subtract += containerHeaderHeight
+		if (props.hasNavigator) subtract += containerNavigatorHeight
+		return `calc(100% - ${subtract}px)`
+	}}
 `
 
 type Props =
@@ -153,6 +162,7 @@ function FacsimilePanel(props: Props) {
 	useActiveFacsimile(props.activeFacsimile, config.slug, areaRenderer, osd)
 	useActiveFacsimileAreas(props.activeFacsimileAreas, areaRenderer)
 
+	// console.log(props.layer.id, props.layer.facsimiles.length)
 	return (
 		<Wrapper className="facsimile-panel">
 			{
@@ -166,8 +176,17 @@ function FacsimilePanel(props: Props) {
 			}
 			<Container
 				hasHeader={props.entrySettings['panels.showHeaders']}
+				hasNavigator={props.layer.facsimiles.length > 1}
 				id="openseadragon"
 			/>
+			{
+				props.layer.facsimiles.length > 1 &&
+				<CollectionNavigator2
+					activeFacsimile={props.activeFacsimile}
+					entryDispatch={props.entryDispatch}
+					facsimiles={props.layer.facsimiles}
+				/>
+			}
 		</Wrapper>
 	)
 }

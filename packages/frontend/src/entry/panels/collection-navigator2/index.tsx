@@ -1,12 +1,12 @@
 import React from 'react'
 import styled from 'styled-components'
-import { ProjectContext, Entry, DocereConfig, Colors, useNavigate, useUrlObject } from '@docere/common'
+import { Colors, Facsimile, EntryStateAction } from '@docere/common'
 
 import CollectionNavigatorController from './controller'
 
 function useOpenSeadragonController(
-	config: DocereConfig['collection'],
-	searchUrl: ProjectContext['searchUrl'],
+	facsimiles: Facsimile[],
+	activeFacsimile: Facsimile,
 	handleClick: (id: string) => void
 ) {
 	const [controller, setController] = React.useState<any>(null)
@@ -27,7 +27,7 @@ function useOpenSeadragonController(
 					showZoomControl: false,
 				})
 
-				const collectionNavigatorController = new CollectionNavigatorController(viewer, config, searchUrl, handleClick)
+				const collectionNavigatorController = new CollectionNavigatorController(viewer, facsimiles, activeFacsimile, handleClick)
 
 				if (controller != null) controller.destroy()
 				setController(collectionNavigatorController)
@@ -37,12 +37,12 @@ function useOpenSeadragonController(
 	return controller
 }
 
-function useEntry(controller: CollectionNavigatorController, entry: Entry) {
-	React.useEffect(() => {
-		if (controller == null) return
-		controller.setEntry(entry)
-	}, [controller, entry])
-}
+// function useEntry(controller: CollectionNavigatorController, entry: Entry) {
+// 	React.useEffect(() => {
+// 		if (controller == null) return
+// 		controller.setEntry(entry)
+// 	}, [controller, entry])
+// }
 
 const Container = styled.div`
 	background: ${Colors.Grey};
@@ -51,25 +51,23 @@ const Container = styled.div`
 `
 
 interface Props {
-	config: ProjectContext['config']['collection']
-	entry: Entry
-	searchUrl: ProjectContext['searchUrl']
+	activeFacsimile: Facsimile
+	entryDispatch: React.Dispatch<EntryStateAction>
+	facsimiles: Facsimile[]
 }
 function CollectionNavigator(props: Props) {
-	const navigate = useNavigate()
-	const { projectId } = useUrlObject()
+	const handleClick = React.useCallback(id => {
+		props.entryDispatch({
+			type: "SET_ACTIVE_FACSIMILE",
+			id,
+		})	
+	}, [])
 
-	const handleClick = React.useCallback(entryId => {
-		navigate({ projectId, entryId })	
-	}, [projectId])
-
-	const controller = useOpenSeadragonController(
-		props.config,
-		props.searchUrl,
+	useOpenSeadragonController(
+		props.facsimiles,
+		props.activeFacsimile,
 		handleClick,
 	)
-
-	useEntry(controller, props.entry)
 
 	return (
 		<Container
