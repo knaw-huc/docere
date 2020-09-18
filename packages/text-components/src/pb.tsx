@@ -39,7 +39,7 @@ function useFacsimiles(extractPbId: ExtractPbId, props: DocereComponentProps) {
 		if (!Array.isArray(ids)) ids = [ids]
 
 		const _facsimiles = ids
-			.map(id => props.entry.facsimiles.find(f => f.id === id))
+			.map(id => props.layer.facsimiles.find(f => f.id === id))
 			.filter(facsimile => facsimile != null)
 
 		setFacsimiles(_facsimiles)

@@ -78,7 +78,7 @@ function useOpenSeadragon(): [any, any] {
 						dblClickToZoom: true,
 					},
 					id: "openseadragon",
-					navigatorPosition: 'BOTTOM_LEFT',
+					navigatorPosition: 'TOP_RIGHT',
 					// TODO only for Electron, remove before commit
 					// prefixUrl: "/home/gijs/Projects/docere/node_modules/openseadragon/build/openseadragon/images/",
 					prefixUrl: "/static/images/osd/",

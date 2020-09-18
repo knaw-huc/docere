@@ -19,6 +19,7 @@ export default extendConfigData({
 		{
 			active: true,
 			filterFacsimiles,
+			filterNotes: () => () => false,
 			id: 'facsimile',
 			type: LayerType.Facsimile,
 		},

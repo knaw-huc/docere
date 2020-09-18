@@ -25,7 +25,71 @@ export function isidoreTests() {
 		part4 = entry.parts[3]
 	})
 
-	it('should work', () => {
-		expect(1).toBe(1)
+	it('Should have 2 layers', () => {
+		expect(entry.layers).toHaveLength(2)
+		expect(entry.layers[0].id).toBe('facsimile')
+		expect(entry.layers[0].type).toBe('facsimile')
+		expect(entry.layers[1].id).toBe('text')
+		expect(entry.layers[1].type).toBe('text')
+	})
+
+	it('Should have 6 facsimiles on the source and the layers', () => {
+		expect(entry.facsimiles).toHaveLength(6)
+		expect(entry.layers[0].facsimiles).toHaveLength(6)
+	 	expect(entry.layers[1].facsimiles).toHaveLength(6)
+	})
+
+	it('Should have 9 entities on the source and the layers', () => {
+		expect(entry.entities).toHaveLength(9)
+		expect(entry.layers[0].entities).toHaveLength(9)
+		expect(entry.layers[1].entities).toHaveLength(9)
+	})
+
+	it('Should have 0 notes', () => {
+		expect(entry.notes).toHaveLength(0)
+	})
+
+	it('Should have 0 metadata', () => {
+		expect(Object.keys(entry.metadata)).toHaveLength(0)
+	})
+
+	it('Should have 4 parts', () => {
+		expect(entry.parts).toHaveLength(4)
+	})
+
+	it('Should not have parent ID', () => {
+		expect(entry.parentId).toBeNull()
+	})
+
+	describe('Part 4', () => {
+		it('Should have ID: IV', () => {
+			expect(part4.id).toBe('IV')
+		})
+
+		it('Should have parent ID: TestDocumentID', () => {
+			expect(part4.parentId).toBe('TestDocumentID')
+		})
+
+		it('Should be DE LITTERIS LATINIS', () => {
+			expect(part4.text.slice(11, 30)).toBe('DE LITTERIS LATINIS')
+		})		
+
+		it('Should have 2 layers', () => {
+			expect(part4.layers).toHaveLength(2)
+			expect(part4.layers[0].id).toBe('facsimile')
+			expect(part4.layers[0].type).toBe('facsimile')
+			expect(part4.layers[1].id).toBe('text')
+			expect(part4.layers[1].type).toBe('text')
+		})
+
+		it('Should have 6 facsimiles', () => {
+			expect(part4.layers[0].facsimiles).toHaveLength(6)
+			expect(part4.layers[1].facsimiles).toHaveLength(6)
+		})
+
+		it('Should have 9 entities', () => {
+			expect(part4.layers[0].entities).toHaveLength(9)
+			expect(part4.layers[1].entities).toHaveLength(9)
+		})
 	})
 }

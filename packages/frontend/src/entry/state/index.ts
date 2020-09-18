@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ProjectContext, isTextLayer, AsideTab, getTextPanelWidth, LayerType, DEFAULT_SPACING, defaultEntrySettings, useUrlObject, useEntry } from '@docere/common'
+import { ProjectContext, isTextLayer, AsideTab, getTextPanelWidth, LayerType, DEFAULT_SPACING, defaultEntrySettings, useUrlObject, useEntry, isFacsimileLayer } from '@docere/common'
 
 import type { EntryState, EntryStateAction, FacsimileArea } from '@docere/common'
 
@@ -239,12 +239,13 @@ export default function useEntryState() {
 			layer.pinned = stateLayer.pinned
 			return layer
 		})
+		
+		const facsimiles = entry.layers.find(isFacsimileLayer)?.facsimiles
 
 		// TODO activeFacsimile is a state of layer, not the entry
 		// x[1] = dispatch
 		x[1]({
-			// activeFacsimile: entry.facsimiles?.length ? entry.facsimiles[0] : null,
-			activeFacsimile: null,
+			activeFacsimile: facsimiles != null ? facsimiles[0] : null,
 			entry,
 			layers: updatePanels(nextLayers, x[0]),
 			type: 'ENTRY_CHANGED',

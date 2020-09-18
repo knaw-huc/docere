@@ -13,6 +13,7 @@ export function getDefaultEntry(id: string): Entry {
 		metadata: null,
 		notes: null,
 		parts: null,
+		parentId: null,
 	}
 }
 
@@ -121,9 +122,9 @@ function extractLayers(entry: Entry, parent: Entry, config: DocereConfig) {
 			let _layer: Layer
 
 			const filters = {
-				entities: layer.filterEntities != null ? parent.entities.filter(layer.filterEntities(entry)) : parent.entities,
-				facsimiles: layer.filterFacsimiles != null ? parent.facsimiles.filter(layer.filterFacsimiles(entry)) : parent.facsimiles,
-				notes: layer.filterNotes != null ? parent.notes.filter(layer.filterNotes(entry)) : parent.notes,
+				entities: layer.filterEntities != null ? parent.entities?.filter(layer.filterEntities(entry)) : parent.entities,
+				facsimiles: layer.filterFacsimiles != null ? parent.facsimiles?.filter(layer.filterFacsimiles(entry)) : parent.facsimiles,
+				notes: layer.filterNotes != null ? parent.notes?.filter(layer.filterNotes(entry)) : parent.notes,
 			}
 
 			if (isTextLayer(layer)) {
@@ -174,10 +175,13 @@ function extractNotes(entry: Entry, config: DocereConfig) {
 
 export function extractEntryData(entry: Entry, config: DocereConfig) {
 	entry.metadata = extractMetadata(entry, config)
-	entry.layers = extractLayers(entry, entry, config)
+
 	entry.facsimiles = config.facsimiles.extract(entry, config).map(extendFacsimile)
 	entry.entities = extractEntities(entry, config)
 	entry.notes = extractNotes(entry, config)
+
+	// Extraction of layers depends on entry.facsimiles, entry.entities and entry.notes
+	entry.layers = extractLayers(entry, entry, config)
 }
 
 export function extractParts(entry: Entry, config: DocereConfig) {
@@ -199,10 +203,17 @@ export function extractParts(entry: Entry, config: DocereConfig) {
 
 function getPartSync(props: GetPartProps) {
 	const entry = getDefaultEntry(props.id)
+	entry.parentId = props.parent.id
+
 	entry.document = props.document
 	entry.element =  props.element
 
 	entry.metadata = props.parent.metadata
+
+	entry.facsimiles = props.config.facsimiles.extract(entry, props.config).map(extendFacsimile)
+	entry.entities = extractEntities(entry, props.config)
+	entry.notes = extractNotes(entry, props.config)
+
 	entry.layers = extractLayers(entry, props.parent, props.config)
 
 	// if (props.config.parts.filterEntities != null) {

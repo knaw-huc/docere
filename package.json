@@ -10,7 +10,7 @@
     "publish": "lerna publish",
     "start": "./packages/docker/start.sh",
     "start:dev": "DEV_ENV=1 ./packages/docker/start.sh",
-    "test": "lerna run test"
+    "test": "cd ./packages/tests && npm t"
   },
   "devDependencies": {
     "@types/lodash.debounce": "^4.0.6",
@@ -20,7 +20,7 @@
     "@types/styled-components": "5.1.0",
     "dotenv": "^8.2.0",
     "lerna": "^3.22.1",
-    "ts-loader": "^7.0.5",
+    "ts-loader": "^8.0.3",
     "tslib": "^2.0.0",
     "typescript": "^3.9.5",
     "webpack": "^4.43.0",

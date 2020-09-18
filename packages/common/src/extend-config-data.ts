@@ -27,8 +27,7 @@ const defaultConfig: DocereConfig = {
 	pages: [],
 	private: false,
 	searchResultCount: 20,
-	slug: 'unknown-project',
-	title: 'Unknown project',
+	slug: null,
 }
 
 export const defaultMetadata: MetadataConfig = {
@@ -76,6 +75,8 @@ function extendTextData(td: EntityConfig) {
 // TODO rename to extendConfig
 export function extendConfigData(configDataRaw: DocereConfig): DocereConfig {
 	const config = { ...defaultConfig, ...configDataRaw }
+	if (config.title == null) config.title = config.slug.charAt(0).toUpperCase() + config.slug.slice(1)
+
 	config.entrySettings = { ...defaultEntrySettings, ...config.entrySettings }
 	config.layers = config.layers.map(layer => {
 		if (isTextLayer(layer) && layer.extract == null) {
@@ -107,7 +108,6 @@ export function extendConfigData(configDataRaw: DocereConfig): DocereConfig {
 	return {
 		prepare: entry => entry.document.documentElement,
 		plainText: entry => entry.element.textContent,
-		...configDataRaw,
 		...config,
 	}
 }

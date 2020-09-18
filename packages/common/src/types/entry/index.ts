@@ -21,6 +21,7 @@ export interface Entry {
 	layers: Layer[]
 	metadata: MetadataItem[]
 	notes: Note[]
+	parentId: string
 	parts?: EntryParts
 }
 
@@ -30,6 +31,7 @@ export type ExtractedEntry = Omit<Entry, 'document' | 'element' | 'layers' | 'me
 	layers: ExtractedLayer[]
 	metadata: ExtractedMetadata
 	parts: ExtractedEntry[]
+	parentId: string
 	text: string
 }
 

@@ -27,7 +27,7 @@ export interface DocereConfig {
 		extract: ExtractEntryPartElements
 		keepSource?: boolean /* Keep the source document and store as an entry */
 	},
-	title: string
+	title?: string
 }
 
 export type ExtractEntryPartElements = (entry: Entry, config: DocereConfig) => Map<string, Element>
