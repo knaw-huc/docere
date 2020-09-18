@@ -7,7 +7,7 @@ export function getDefaultEntry(id: string): Entry {
 		document: null,
 		element: null,
 		entities: null,
-		// facsimiles: null,
+		facsimiles: null,
 		id,
 		layers: null,
 		metadata: null,
@@ -115,23 +115,30 @@ function extractMetadata(entry: Entry, config: DocereConfig): Entry['metadata'] 
 // 		.sort((config1, config2) => config1.order - config2.order)
 // }
 
-function extractLayers(entry: Entry, config: DocereConfig) {
+function extractLayers(entry: Entry, parent: Entry, config: DocereConfig) {
 	return config.layers
 		.map(layer => {
 			let _layer: Layer
+
+			const filters = {
+				entities: layer.filterEntities != null ? parent.entities.filter(layer.filterEntities(entry)) : parent.entities,
+				facsimiles: layer.filterFacsimiles != null ? parent.facsimiles.filter(layer.filterFacsimiles(entry)) : parent.facsimiles,
+				notes: layer.filterNotes != null ? parent.notes.filter(layer.filterNotes(entry)) : parent.notes,
+			}
 
 			if (isTextLayer(layer)) {
 				_layer = {
 					...defaultTextLayerConfig,
 					...layer,
-					element: layer.extract(entry, config)
+					...filters,
+					element: layer.extract(entry, config),
 				}	
 			} else if (isFacsimileLayer(layer)) {
 				_layer = {
 					...defaultLayerConfig,
 					...layer,
+					...filters,
 					type: LayerType.Facsimile,
-					facsimiles: layer.extract(entry, config).map(extendFacsimile)
 				}
 			} else {
 				throw Error('Unknown layer type')
@@ -167,8 +174,8 @@ function extractNotes(entry: Entry, config: DocereConfig) {
 
 export function extractEntryData(entry: Entry, config: DocereConfig) {
 	entry.metadata = extractMetadata(entry, config)
-	entry.layers = extractLayers(entry, config)
-	// entry.facsimiles = config.extractFacsimiles(entry, config).map(extendFacsimile)
+	entry.layers = extractLayers(entry, entry, config)
+	entry.facsimiles = config.facsimiles.extract(entry, config).map(extendFacsimile)
 	entry.entities = extractEntities(entry, config)
 	entry.notes = extractNotes(entry, config)
 }
@@ -196,15 +203,15 @@ function getPartSync(props: GetPartProps) {
 	entry.element =  props.element
 
 	entry.metadata = props.parent.metadata
-	entry.layers = extractLayers(entry, props.config)
+	entry.layers = extractLayers(entry, props.parent, props.config)
 
-	if (props.config.parts.filterEntities != null) {
-		entry.entities = props.parent.entities.filter(props.config.parts.filterEntities(props.element))
-	}
+	// if (props.config.parts.filterEntities != null) {
+	// 	entry.entities = props.parent.entities.filter(props.config.parts.filterEntities(props.element))
+	// }
 
-	if (props.config.parts.filterNotes != null) {
-		entry.notes = props.parent.notes.filter(props.config.parts.filterNotes(props.element))
-	}
+	// if (props.config.parts.filterNotes != null) {
+	// 	entry.notes = props.parent.notes.filter(props.config.parts.filterNotes(props.element))
+	// }
 
 	return entry
 }

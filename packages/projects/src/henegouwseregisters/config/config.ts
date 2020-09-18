@@ -72,10 +72,12 @@ const config: DocereConfig = {
 				}))
 		}
 	],
+	facsimiles: {
+		extract: extractFacsimiles,
+	},
 	layers: [
 		{
 			active: true,
-			extract: extractFacsimiles,
 			id: 'facsimile',
 			title: 'Facsimile',
 			type: LayerType.Facsimile

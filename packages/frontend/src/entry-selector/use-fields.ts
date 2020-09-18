@@ -24,8 +24,7 @@ function sortByOrder(f1: MetadataConfig, f2: MetadataConfig) {
 
 function mapToFacetConfig(config: DocereConfig) {
 	// Create a map, because a look up is much faster than a [].find
-	const metadataById = config.metadata
-		.concat(config.entities)
+	const metadataById = [...config.metadata, ...config.entities]
 		.reduce((prev, curr) => {
 			prev[curr.id] = curr
 			return prev

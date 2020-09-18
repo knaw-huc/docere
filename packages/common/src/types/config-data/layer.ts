@@ -1,13 +1,16 @@
 import { LayerType } from '../../enum'
 import { BaseConfig, DocereConfig } from './config'
 import { Entry } from '../entry'
-import { Facsimile } from './functions'
+import { Facsimile, Entity, Note } from './functions'
 
 // Config
 export interface LayerConfig extends BaseConfig {
 	active?: boolean
 	pinned?: boolean
 	type?: LayerType.Facsimile | LayerType.Text
+	filterEntities?: (entry: Entry) => (entity: Entity) => boolean
+	filterFacsimiles?: (entry: Entry) => (facsimile: Facsimile) => boolean
+	filterNotes?: (entry: Entry) => (note: Note) => boolean
 }
 
 // Base
@@ -25,20 +28,24 @@ export interface TextLayerConfig extends LayerConfig {
 	type: LayerType.Text
 }
 
-export interface TextLayer extends TextLayerConfig, BaseLayer {
+export interface TextLayer extends TextLayerConfig, BaseLayer, LayerEntities {
 	element: Element
 }
 
 // Facsimile Layer
 export interface FacsimileLayerConfig extends LayerConfig {
-	extract: (entry: Entry, config: DocereConfig) => Facsimile[]
 	type: LayerType.Facsimile
 }
 
-export interface FacsimileLayer extends FacsimileLayerConfig, BaseLayer {
+export interface FacsimileLayer extends FacsimileLayerConfig, BaseLayer, LayerEntities {
 	facsimiles: Facsimile[]
 }
 
 // Layer
 export type Layer = TextLayer | FacsimileLayer
 export type ExtractedLayer = Pick<Layer, 'id'> & Partial<Layer>
+interface LayerEntities {
+	facsimiles: Facsimile[]
+	entities: Entity[]
+	notes: Note[]
+}

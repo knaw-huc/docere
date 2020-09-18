@@ -53,7 +53,7 @@ export default function getPb(extractPbId: ExtractPbId): React.FC<DocereComponen
 	return function Pb(props: DocereComponentProps) {
 		if (
 			!props.entrySettings['panels.text.showPageBeginnings'] ||
-			props.entry.facsimiles == null
+			props.layer.facsimiles == null
 		) return null
 
 		const facsimiles = useFacsimiles(extractPbId, props)

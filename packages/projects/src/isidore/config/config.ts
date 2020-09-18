@@ -19,9 +19,11 @@ const config: DocereConfig = {
 			revealOnHover: true
 		}
 	],
+	facsimiles: {
+		extract: extractFacsimiles,
+	},
 	layers: [
 		{
-			extract: extractFacsimiles,
 			id: 'facsimile',
 			type: LayerType.Facsimile,
 		},

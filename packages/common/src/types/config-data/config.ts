@@ -1,7 +1,7 @@
 import { RsType } from '../../enum'
 import type { FacetConfig } from '../search/facets'
 import { PageConfig } from '../page'
-import { ExtractedNote, ExtractedTextData, Note, Entity, Facsimile } from './functions'
+import { ExtractedNote, ExtractedTextData, Facsimile } from './functions'
 import { TextLayerConfig, FacsimileLayerConfig } from './layer'
 import { Entry } from '../entry'
 
@@ -13,6 +13,7 @@ export interface DocereConfig {
 	data?: Record<string, any>
 	entities?: EntityConfig[]
 	entrySettings?: EntrySettings
+	facsimiles?: FacsimileConfig
 	layers?: (TextLayerConfig | FacsimileLayerConfig)[]
 	metadata?: MetadataConfig[]
 	notes?: NotesConfig[]
@@ -24,9 +25,6 @@ export interface DocereConfig {
 	slug: string
 	parts?: {
 		extract: ExtractEntryPartElements
-		filterEntities?: (el: Element) => (entity: Entity) => boolean
-		filterFacsimiles?: (el: Element) => (facsimile: Facsimile) => boolean
-		filterNotes?: (el: Element) => (note: Note) => boolean
 		keepSource?: boolean /* Keep the source document and store as an entry */
 	},
 	title: string
@@ -64,6 +62,7 @@ export type EntityConfig = TmpConfig & {
 	color?: string
 	extract: ExtractTextData
 	revealOnHover?: boolean
+	// TODO remove textLayers prop, entities are attached to layers
 	textLayers?: string[]
 	type?: RsType | string
 }
@@ -74,4 +73,6 @@ export type NotesConfig = Omit<EntityConfig, 'extract'> & {
 }
 // export interface NotesConfig extends BaseConfig {
 
-
+interface FacsimileConfig {
+	extract: (entry: Entry, config: DocereConfig) => Facsimile[]
+}

@@ -19,10 +19,12 @@ const config: DocereConfig = {
 	},
 	slug: 'utrechtpsalter',
 	title: 'Utrecht Psalter',
+	facsimiles: {
+		extract: extractFacsimiles,
+	},
 	layers: [
 		{
 			active: true,
-			extract: extractFacsimiles,
 			id: 'facsimile',
 			type: LayerType.Facsimile,
 		},

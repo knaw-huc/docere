@@ -26,9 +26,11 @@ const config: DocereConfig = {
 			textLayers: ['alto'],
 		}
 	],
+	facsimiles: {
+		extract: extractFacsimiles,
+	},
 	layers: [
 		{
-			extract: extractFacsimiles,
 			id: 'scan',
 			type: LayerType.Facsimile,
 			active: false

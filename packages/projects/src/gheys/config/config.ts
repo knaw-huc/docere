@@ -154,9 +154,11 @@ const config: DocereConfig = {
 			showInAside: false,
 		}
 	],
+	facsimiles: {
+		extract: extractFacsimiles,
+	},
 	layers: [
 		{
-			extract: extractFacsimiles,
 			id: 'scan',
 			type: LayerType.Facsimile
 		},

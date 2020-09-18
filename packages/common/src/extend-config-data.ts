@@ -68,18 +68,9 @@ function setPath(page: PageConfig) {
 	return page
 }
 
-
-function extendTextData(config: DocereConfig) {
-	return function (td: EntityConfig) {
-		const textDataConfig = {...defaultEntityConfig, ...td } as EntityConfig
-
-		// If not text layers are set on the config, add all text layers
-		if (!Array.isArray(td.textLayers)) {
-			textDataConfig.textLayers = config.layers.map(tl => tl.id)
-		}
-
-		return setTitle(textDataConfig)
-	}
+function extendTextData(td: EntityConfig) {
+	const textDataConfig = {...defaultEntityConfig, ...td } as EntityConfig
+	return setTitle(textDataConfig)
 }
 
 // TODO rename to extendConfig
@@ -98,8 +89,8 @@ export function extendConfigData(configDataRaw: DocereConfig): DocereConfig {
 		return setTitle(metadataConfig)
 	})
 
-	config.entities = config.entities.map(extendTextData(config))
-	config.notes = config.notes.map(extendTextData(config))
+	config.entities = config.entities.map(extendTextData)
+	config.notes = config.notes.map(extendTextData)
 
 	config.pages = config.pages.map(page => {
 		if (Array.isArray(page.children)) {

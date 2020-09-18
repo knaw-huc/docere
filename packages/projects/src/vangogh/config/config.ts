@@ -74,10 +74,12 @@ const config: DocereConfig = {
 		// 	type: RsType.Line
 		// }
 	],
+	facsimiles: {
+		extract: extractFacsimiles,
+	},
 	layers: [
 		{
 			active: true,
-			extract: extractFacsimiles,
 			id: 'facsimile',
 			type: LayerType.Facsimile,
 		},

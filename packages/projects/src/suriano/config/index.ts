@@ -1,22 +1,36 @@
-import { extendConfigData, LayerType, Colors } from '@docere/common'
+import { extendConfigData, LayerType, Colors, Facsimile, Entry } from '@docere/common'
 import { extractEntryPartElementsFromMilestone } from '../../utils'
 import extractFacsimiles from './facsimiles'
 import prepare from './prepare'
+
+function filterFacsimiles(entry: Entry) {
+	const facsimileIds = Array.from(entry.element.querySelectorAll('pb')).map(pb => pb.id)
+	return (facsimile: Facsimile) => facsimileIds.indexOf(facsimile.id) > -1
+}
 
 export default extendConfigData({
 	slug: 'suriano',
 	title: "Suriano",
 	private: true,
+	facsimiles: {
+		extract: extractFacsimiles,
+	},
 	layers: [
 		{
 			active: true,
-			extract: extractFacsimiles,
+			filterFacsimiles,
 			id: 'facsimile',
 			type: LayerType.Facsimile,
 		},
 		{
 			id: 'text',
 			type: LayerType.Text,
+			filterFacsimiles,
+			filterNotes: entry => {
+				const noteIds = Array.from(entry.element.querySelectorAll('a.footnote-ref'))
+					.map(a => a.getAttribute('href').slice(1))
+				return note => noteIds.indexOf(note.id) > -1
+			}
 		},
 	],
 	notes: [
@@ -35,16 +49,6 @@ export default extendConfigData({
 	],
 	parts: {
 		extract: extractEntryPartElementsFromMilestone('letterStart'),
-		filterFacsimiles: el => {
-			const facsimileIds = Array.from(el.querySelectorAll('pb'))
-				.map(pb => pb.id)
-			return facsimile => facsimileIds.indexOf(facsimile.id) > -1
-		},
-		filterNotes: el => {
-			const noteIds = Array.from(el.querySelectorAll('a.footnote-ref'))
-				.map(a => a.getAttribute('href').slice(1))
-			return note => noteIds.indexOf(note.id) > -1
-		}
 	},
 	prepare,
 })

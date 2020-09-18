@@ -23,9 +23,11 @@ const config: DocereConfig = {
 		}	
 	],
 	entities: [],
+	facsimiles: {
+		extract: extractFacsimiles,
+	},
 	layers: [
 		{
-			extract: extractFacsimiles,
 			id: 'scan',
 			type: LayerType.Facsimile
 		},

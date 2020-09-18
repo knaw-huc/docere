@@ -1,6 +1,6 @@
 import { BooleanFacetConfig, ListFacetConfig, HierarchyFacetConfig, RangeFacetConfig, DateFacetConfig } from '../search'
 import { Layer, ExtractedLayer } from '../config-data/layer'
-import type { Entity, Note, ExtractedMetadata } from '../config-data/functions'
+import type { Entity, Note, ExtractedMetadata, Facsimile } from '../config-data/functions'
 import { DocereConfig } from '../config-data/config'
 
 export * from './state'
@@ -16,7 +16,7 @@ export interface Entry {
 	document: XMLDocument
 	element: Element
 	entities: Entity[]
-	// facsimiles: Facsimile[]
+	facsimiles: Facsimile[]
 	id: string
 	layers: Layer[]
 	metadata: MetadataItem[]
