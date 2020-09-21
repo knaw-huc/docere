@@ -1,4 +1,4 @@
-import { Pool } from 'pg'
+import { Pool, PoolClient } from 'pg'
 
 const pgConnection = {
 	password: 'docker',
@@ -24,4 +24,16 @@ export async function getPool(projectId: string) {
 	}
 
 	return poolCache.get(projectId)
+}
+
+export async function tryQuery(client: PoolClient, query: string, values?: (string | number)[]) {
+	let result
+	try {
+		result = await client.query(query, values)
+	} catch (error) {
+		console.log(error)
+		console.log('ROLLING BACK')
+		await client.query('ROLLBACK')		
+	}
+	return result
 }

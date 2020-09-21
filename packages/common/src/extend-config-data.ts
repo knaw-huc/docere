@@ -4,7 +4,7 @@ import type { FacetConfigBase } from './types/search/facets'
 // import type { DocereConfigDataRaw, DocereConfigData } from './types/config-data'
 import type { DocereConfig, MetadataConfig, EntityConfig } from './types/config-data/config'
 import type { PageConfig } from './types/page'
-import { isTextLayer } from './utils'
+import { isTextLayerConfig } from './utils'
 
 export const defaultEntrySettings: DocereConfig['entrySettings'] = {
 	'panels.showHeaders': true,
@@ -79,7 +79,7 @@ export function extendConfigData(configDataRaw: DocereConfig): DocereConfig {
 
 	config.entrySettings = { ...defaultEntrySettings, ...config.entrySettings }
 	config.layers = config.layers.map(layer => {
-		if (isTextLayer(layer) && layer.extract == null) {
+		if (isTextLayerConfig(layer) && layer.extract == null) {
 			layer.extract = (entry) => entry.element
 		}
 		return setTitle(layer)

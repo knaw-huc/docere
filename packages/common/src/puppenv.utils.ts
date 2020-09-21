@@ -1,6 +1,7 @@
 import { Entry, MetadataItem, GetEntryProps, GetPartProps } from './types/entry'
-import { FacsimileArea, Facsimile, LayerConfig, TextLayerConfig, LayerType, TextData, Note, defaultMetadata, DocereConfig, Layer, isTextLayer } from '.'
-import { isFacsimileLayer } from './utils'
+import { FacsimileArea, Facsimile, LayerConfig, TextLayerConfig, LayerType, TextData, Note, defaultMetadata, DocereConfig, Layer, TextLayer } from '.'
+import { isFacsimileLayerConfig, isTextLayerConfig } from './utils'
+import { FacsimileLayer } from './types'
 
 export function getDefaultEntry(id: string): Entry {
 	return {
@@ -116,36 +117,34 @@ function extractMetadata(entry: Entry, config: DocereConfig): Entry['metadata'] 
 // 		.sort((config1, config2) => config1.order - config2.order)
 // }
 
-function extractLayers(entry: Entry, parent: Entry, config: DocereConfig) {
+function extractLayers(entry: Entry, parent: Entry, config: DocereConfig): Layer[] {
 	return config.layers
 		.map(layer => {
-			let _layer: Layer
-
-			const filters = {
+			const filtered = {
 				entities: layer.filterEntities != null ? parent.entities?.filter(layer.filterEntities(entry)) : parent.entities,
 				facsimiles: layer.filterFacsimiles != null ? parent.facsimiles?.filter(layer.filterFacsimiles(entry)) : parent.facsimiles,
 				notes: layer.filterNotes != null ? parent.notes?.filter(layer.filterNotes(entry)) : parent.notes,
 			}
 
-			if (isTextLayer(layer)) {
-				_layer = {
+			if (isTextLayerConfig(layer)) {
+				const tl: TextLayer = {
 					...defaultTextLayerConfig,
 					...layer,
-					...filters,
+					...filtered,
 					element: layer.extract(entry, config),
-				}	
-			} else if (isFacsimileLayer(layer)) {
-				_layer = {
+				}
+				return tl
+			} else if (isFacsimileLayerConfig(layer)) {
+				const fl: FacsimileLayer = {
 					...defaultLayerConfig,
 					...layer,
-					...filters,
+					...filtered,
 					type: LayerType.Facsimile,
 				}
+				return fl
 			} else {
 				throw Error('Unknown layer type')
 			}
-
-			return _layer
 		})
 }
 
@@ -215,14 +214,6 @@ function getPartSync(props: GetPartProps) {
 	entry.notes = extractNotes(entry, props.config)
 
 	entry.layers = extractLayers(entry, props.parent, props.config)
-
-	// if (props.config.parts.filterEntities != null) {
-	// 	entry.entities = props.parent.entities.filter(props.config.parts.filterEntities(props.element))
-	// }
-
-	// if (props.config.parts.filterNotes != null) {
-	// 	entry.notes = props.parent.notes.filter(props.config.parts.filterNotes(props.element))
-	// }
 
 	return entry
 }

@@ -1,6 +1,6 @@
 import { Express } from 'express'
 import { getPool } from '../../db'
-import { sendJson } from '../../utils'
+import { sendJson, readFileContents, getXMLPath } from '../../utils'
 import { analyzeProject } from './project'
 import { xmlToStandoff } from '../standoff'
 
@@ -8,7 +8,8 @@ const BASE_URL = '/api/projects/:projectId/analyze'
 
 export default function handleAnalyzeApi(app: Express) {
 	app.get(`${BASE_URL}/documents/:documentId/standoff`, async (req, res) => {
-		const standoff = await xmlToStandoff(req.params.projectId, req.params.documentId)
+		const content = readFileContents(getXMLPath(req.params.projectId, req.params.documentId))
+		const standoff = await xmlToStandoff(content)
 		sendJson(standoff, res)
 	})
 

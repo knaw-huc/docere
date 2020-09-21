@@ -1,6 +1,5 @@
 // import fs from 'fs'
 import sax, { QualifiedAttribute } from 'sax'
-import { getXMLPath, readFileContents } from '../utils'
 
 interface Annotation {
 	attributes: Record<string, string> | Record<string, QualifiedAttribute>
@@ -20,14 +19,14 @@ interface Standoff {
 const strict = true
 const parser = sax.parser(strict)
  
-export function xmlToStandoff(projectId: string, documentId: string): Promise<Standoff> {
+export function xmlToStandoff(content: string): Promise<Standoff> {
 	let offset = 0
 	let text = ''
 	const annotations: Annotation[] = []
 	const stack: Annotation[] = []
 
-	const filePath = getXMLPath(projectId, documentId)
-	const xml = readFileContents(filePath)
+	// const filePath = getXMLPath(projectId, documentId)
+	// const xml = readFileContents(filePath)
 
 	// Keep the order per offset, to be able to reconstruct the XML. The original order
 	// is lost when sorting on offset only, because of the Array.sort algorithm 
@@ -80,7 +79,7 @@ export function xmlToStandoff(projectId: string, documentId: string): Promise<St
 			resolve({ text, annotations })
 		}
 		
-		parser.write(xml).close()
+		parser.write(content).close()
 	})
 }
 

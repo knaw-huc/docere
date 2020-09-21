@@ -139,7 +139,7 @@ export function getElasticSearchDocument(extractedEntry: ExtractedEntry | Docere
 		.reduce((prev, curr) => {
 			if (curr.type === LayerType.Facsimile) {
 				const f = curr.facsimiles.reduce((prev, curr) => prev.concat(curr.versions.map(v => v.path)), [] as string[])
-				prev.push(f)
+				prev = prev.concat(f)
 			}
 			return prev
 		}, [])

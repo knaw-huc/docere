@@ -10,7 +10,7 @@ import { prepareAndExtract } from './prepare-and-extract'
 const projects = require('esm')(module)(path.resolve(process.cwd(), './packages/projects')).default
 
 import type { PrepareAndExtractOutput, DocereApiError, Mapping, MappingProperties } from '../types'
-import { DocereConfig } from '@docere/common/src/types/config-data/config'
+import type { DocereConfig } from '../../../common/src/types/config-data/config'
 
 const port = 3334
 

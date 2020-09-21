@@ -1,4 +1,4 @@
-import { getXmlFiles, getEntryIdFromFilePath } from '../../utils'
+import { getXmlFiles, getEntryIdFromFilePath, readFileContents, getXMLPath } from '../../utils'
 import { getPool } from '../../db'
 import { xmlToStandoff } from '../standoff'
 
@@ -53,7 +53,8 @@ export async function analyzeProject(projectId: string) {
 	for (const file of files) {
 		const entryId = getEntryIdFromFilePath(file, projectId)
 		console.log(`[${projectId}] Inserting '${entryId}'`)
-		const standoff = await xmlToStandoff(projectId, entryId)
+		const content = readFileContents(getXMLPath(projectId, entryId))
+		const standoff = await xmlToStandoff(content)
 
 		// Insert 1 document
 		const insertDocumentResult = await pool.query(

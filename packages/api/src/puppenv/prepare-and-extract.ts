@@ -50,14 +50,21 @@ export async function prepareAndExtract(xml: string, documentId: string, project
 		element: entryTmp.element,
 	})
 
-	function serializeEntry(e: Entry): ExtractedEntry {
+	function serializeEntry(e: Entry, parentId?: string): ExtractedEntry {
 		return {
-			...e,
+			id: e.id,
+			layers: e.layers,
+			entities: e.entities,
+			facsimiles: e.facsimiles,
+			notes: e.notes,
+			parentId,
 			metadata: e.metadata?.reduce((prev, curr) => {
 				prev[curr.id] = curr.value
 				return prev
 			}, {} as Record<string, MetadataItem['value']>),
-			parts: Array.from(e.parts || []).map((part => serializeEntry(part[1]))),
+			parts: Array.from(e.parts || []).map((part =>
+				serializeEntry(part[1], e.id))
+			),
 			text: config.plainText(e, config),
 			content: e.element.outerHTML,
 		}

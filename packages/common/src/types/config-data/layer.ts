@@ -28,8 +28,14 @@ export interface TextLayerConfig extends LayerConfig {
 	type: LayerType.Text
 }
 
-export interface TextLayer extends TextLayerConfig, BaseLayer, LayerEntities {
+type TransferableFromTextLayerConfig = Omit<TextLayerConfig, 'extract' | 'filterEntities' | 'filterFacsimiles' | 'filterNotes'>
+
+export interface TextLayer extends TransferableFromTextLayerConfig, BaseLayer, LayerEntities {
 	element: Element
+}
+
+export interface TextLayerPayload extends Omit<TextLayer, 'element'> {
+	content: string
 }
 
 // Facsimile Layer
