@@ -1,14 +1,14 @@
 import path from 'path'
 import fs from 'fs'
 import { PrepareAndExtractOutput } from '../../../api/src/types'
-import type { ExtractedEntry } from '../../../common/src'
+import type { SerializedEntry } from '../../../common/src'
 import { prepareAndExtract } from '../../../api/src/puppenv/prepare-and-extract'
 import { isError } from '../../../api/src/utils'
 
 export function isidoreTests() {
 	let output: PrepareAndExtractOutput
-	let entry: ExtractedEntry
-	let part4: ExtractedEntry
+	let entry: SerializedEntry
+	let part4: SerializedEntry
 
 	beforeAll(async () => {
 		const xml = fs.readFileSync(path.resolve(process.cwd(), '../projects/src/isidore/xml/Isidore.xml'), 'utf8')
@@ -57,21 +57,13 @@ export function isidoreTests() {
 		expect(entry.parts).toHaveLength(4)
 	})
 
-	it('Should not have parent ID', () => {
-		expect(entry.parentId).toBeNull()
-	})
-
 	describe('Part 4', () => {
 		it('Should have ID: IV', () => {
 			expect(part4.id).toBe('IV')
 		})
 
-		it('Should have parent ID: TestDocumentID', () => {
-			expect(part4.parentId).toBe('TestDocumentID')
-		})
-
 		it('Should be DE LITTERIS LATINIS', () => {
-			expect(part4.text.slice(11, 30)).toBe('DE LITTERIS LATINIS')
+			expect(part4.plainText.slice(11, 30)).toBe('DE LITTERIS LATINIS')
 		})		
 
 		it('Should have 2 layers', () => {

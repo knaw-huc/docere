@@ -28,8 +28,8 @@ describe('Config', () => {
 	})
 
 	describe('Parts', () => {
-		it('Should not keep source', () => {
-			expect(config.parts.keepSource).toBeFalsy()
+		it('Should not be defined', () => {
+			expect(config.parts).toBeNull()
 		})
 	})
 })
