@@ -1,6 +1,6 @@
 import { LayerType } from '../../enum'
 import { BaseConfig, DocereConfig } from './config'
-import { Entry } from '../entry'
+import { ConfigEntry } from '../entry'
 import { Facsimile, Entity, Note } from './functions'
 
 // Config
@@ -8,9 +8,9 @@ export interface LayerConfig extends BaseConfig {
 	active?: boolean
 	pinned?: boolean
 	type?: LayerType.Facsimile | LayerType.Text
-	filterEntities?: (entry: Entry) => (entity: Entity) => boolean
-	filterFacsimiles?: (entry: Entry) => (facsimile: Facsimile) => boolean
-	filterNotes?: (entry: Entry) => (note: Note) => boolean
+	filterEntities?: (entry: ConfigEntry) => (entity: Entity) => boolean
+	filterFacsimiles?: (entry: ConfigEntry) => (facsimile: Facsimile) => boolean
+	filterNotes?: (entry: ConfigEntry) => (note: Note) => boolean
 }
 
 // Base
@@ -21,7 +21,7 @@ interface BaseLayer {
 }
 
 // Text Layer
-export type ExtractTextLayerElement = (entry: Entry, config: DocereConfig) => Element
+export type ExtractTextLayerElement = (entry: ConfigEntry, config: DocereConfig) => Element
 
 export interface TextLayerConfig extends LayerConfig {
 	extract?: ExtractTextLayerElement
@@ -31,12 +31,16 @@ export interface TextLayerConfig extends LayerConfig {
 type TransferableFromTextLayerConfig = Omit<TextLayerConfig, 'extract' | 'filterEntities' | 'filterFacsimiles' | 'filterNotes'>
 
 export interface TextLayer extends TransferableFromTextLayerConfig, BaseLayer, LayerEntities {
-	element: Element
-}
-
-export interface TextLayerPayload extends Omit<TextLayer, 'element'> {
+	// element: Element
 	content: string
 }
+
+
+	// element: Element
+
+// export interface TextLayerPayload extends Omit<TextLayer, 'element'> {
+// 	content: string
+// }
 
 // Facsimile Layer
 export interface FacsimileLayerConfig extends LayerConfig {
@@ -55,3 +59,21 @@ interface LayerEntities {
 	entities: Entity[]
 	notes: Note[]
 }
+
+// Serialized layer
+export type SerializedBaseLayer =
+	Required<BaseConfig> &
+	Required<Pick<LayerConfig, 'active' | 'pinned' | 'type'>> &
+	LayerEntities
+
+export type SerializedTextLayer = SerializedBaseLayer & {
+	content: string
+}
+
+export type SerializedFacsimileLayer = SerializedBaseLayer
+
+export type SerializedLayer = SerializedTextLayer | SerializedFacsimileLayer
+
+// export type ClientTextLayer = ClientBaseLayer & {
+// 	content: string
+// }

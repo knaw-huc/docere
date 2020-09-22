@@ -1,6 +1,6 @@
-import { Entry } from '@docere/common'
+import { ConfigEntry } from '@docere/common'
 
-export default function prepareDocument(entry: Entry) {
+export default function prepareDocument(entry: ConfigEntry) {
 	// Add <pb>s
 	for (const span of entry.document.querySelectorAll('span.span0')) {
 		// Find the span's with textContent "\ 100r \" or "\ 102v \"

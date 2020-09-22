@@ -1,6 +1,6 @@
-import type { Entry, ExtractedMetadata } from '@docere/common'
+import type { ConfigEntry, ExtractedMetadata } from '@docere/common'
 
-export default function extractMetadata(entry: Entry) {
+export default function extractMetadata(entry: ConfigEntry) {
 	const selector = "meta"
 	let els = entry.document.querySelectorAll(selector)
 	const metadata: ExtractedMetadata = {}

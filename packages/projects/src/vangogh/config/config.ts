@@ -45,7 +45,6 @@ const config: DocereConfig = {
 				})),
 			id: 'pers',
 			showInAside: true,
-			textLayers: ['translation'],
 			title: 'Persons',
 			type: RsType.Person,
 		},
@@ -88,7 +87,6 @@ const config: DocereConfig = {
 			extract: entry => entry.document.querySelector('div[type="original"]'),
 			id: 'original',
 			type: LayerType.Text,
-			// selector: 'div[type="original"]',
 		},
 		{
 			active: true,

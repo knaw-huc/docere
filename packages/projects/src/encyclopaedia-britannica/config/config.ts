@@ -1,4 +1,4 @@
-import { LayerType, EsDataType, TextLayer } from '@docere/common'
+import { LayerType, EsDataType } from '@docere/common'
 import { DocereConfig } from '@docere/common'
 import sets from '../data/sets.json'
 import extractPreparedLayer from './layers'
@@ -15,7 +15,7 @@ const config: DocereConfig = {
 	title: 'Encyclopaedia Britannica',
 	entities: [
 		{
-			extract: entry => Array.from((entry.layers.find(l => l.id === 'alto') as TextLayer).element.querySelectorAll('String[CONTENT][ID]'))
+			extract: entry => Array.from(entry.element.querySelectorAll('String[CONTENT][ID]'))
 				.map((el: Element) => ({
 					element: el,
 					id: el.getAttribute('ID'),
@@ -23,7 +23,7 @@ const config: DocereConfig = {
 				})),
 			id: 'string',
 			revealOnHover: true,
-			textLayers: ['alto'],
+			// textLayers: ['alto'],
 		}
 	],
 	facsimiles: {

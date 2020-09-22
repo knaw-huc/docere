@@ -6,5 +6,6 @@ export * from './types'
 export * from './context'
 export * from './components'
 export * from './url'
+export type { GetEntrySync, GetDefaultEntry, SerializeEntry } from './puppenv.utils'
 
 export * from './hooks'

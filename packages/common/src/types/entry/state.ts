@@ -14,6 +14,11 @@ export interface EntryState {
 	entry: Entry
 	entrySettings: DocereConfig['entrySettings']
 	layers: Layer[]
+	lookup: {
+		facsimiles: Record<string, Facsimile>
+		entities: Record<string, Entity>
+		notes: Record<string, Note>
+	}
 }
 
 interface ProjectChanged {
@@ -23,6 +28,7 @@ interface ProjectChanged {
 
 interface EntryChanged extends Pick<EntryState, 'activeFacsimile' | 'entry' | 'layers'> {
 	type: "ENTRY_CHANGED",
+	lookup: EntryState['lookup']
 }
 
 interface ESA_Toggle_Layer {

@@ -1,4 +1,4 @@
-import type { FacsimileArea, Facsimile, Entry } from '@docere/common'
+import type { FacsimileArea, Facsimile, ConfigEntry } from '@docere/common'
 
 function extractFacsimileAreas(doc: XMLDocument) {
 	const areas: FacsimileArea[] = []
@@ -26,7 +26,7 @@ function extractFacsimileAreas(doc: XMLDocument) {
 	return areas
 }
 
-export default function extractFacsimiles(entry: Entry) {
+export default function extractFacsimiles(entry: ConfigEntry) {
 	const facsimiles: Facsimile[] = []
 	const facsimile = entry.document.querySelector('imgLocation')
 

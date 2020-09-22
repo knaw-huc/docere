@@ -8,7 +8,7 @@ import prepare from './prepare'
 const config: DocereConfig = {
 	collection: {
 		metadataId: null,
-		sortBy: 'id'
+		sortBy: 'n'
 	},
 	data: {
 		pages
@@ -56,6 +56,13 @@ const config: DocereConfig = {
 			title: 'French',
 			type: LayerType.Text,
 		},
+	],
+	metadata: [
+		{
+			id: 'n',
+			extract: entry => parseInt(entry.id),
+			// datatype: EsDataType.Integer,
+		}
 	],
 	prepare
 }

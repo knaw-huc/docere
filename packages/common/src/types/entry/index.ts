@@ -1,5 +1,5 @@
 import { BooleanFacetConfig, ListFacetConfig, HierarchyFacetConfig, RangeFacetConfig, DateFacetConfig } from '../search'
-import { Layer, ExtractedLayer } from '../config-data/layer'
+import { Layer, SerializedLayer } from '../config-data/layer'
 import type { Entity, Note, ExtractedMetadata, Facsimile } from '../config-data/functions'
 import { DocereConfig } from '../config-data/config'
 
@@ -13,26 +13,27 @@ export type DateMetadata = DateFacetConfig & { value: number | number[] }
 export type MetadataItem = ListMetadata | HierarchyMetadata | BooleanMetadata | RangeMetadata | DateMetadata
 
 export interface Entry {
+	id: string
+	layers: Layer[]
+	metadata: MetadataItem[]
+}
+
+export type ConfigEntry = Omit<Entry, 'layers'> & {
 	document: XMLDocument
 	element: Element
 	entities: Entity[]
 	facsimiles: Facsimile[]
-	id: string
-	layers: Layer[]
-	metadata: MetadataItem[]
+	layers: SerializedLayer[]
 	notes: Note[]
-	parentId: string
 	parts?: EntryParts
 }
 
-export type EntryParts = Map<string, Entry>
+export type EntryParts = Map<string, ConfigEntry>
 
-export type ExtractedEntry = Omit<Entry, 'document' | 'element' | 'layers' | 'metadata' | 'parts'> & {
-	layers: ExtractedLayer[]
+export type SerializedEntry = Omit<ConfigEntry, 'document' | 'element' | 'parts' | 'metadata'> & {
 	metadata: ExtractedMetadata
-	parts: ExtractedEntry[]
-	parentId: string
-	text: string
+	parts: SerializedEntry[]
+	plainText: string
 	content: string
 }
 
@@ -44,13 +45,13 @@ export interface GetEntryProps {
 }
 
 export interface GetPartProps extends GetEntryProps {
-	parent: Entry
+	parent: ConfigEntry
 }
 
-export function extractIdsFromElasticSearchId(elasticSearchId: string) {
-	return elasticSearchId.split('__part__')
-}
+// export function extractIdsFromElasticSearchId(elasticSearchId: string) {
+// 	return elasticSearchId.split('__part__')
+// }
 
-export function createElasticSearchIdFromIds(documentId: string, partId?: string) {
-	return partId == null ? documentId : `${documentId}__part__${partId}`
-}
+// export function createElasticSearchIdFromIds(documentId: string, partId?: string) {
+// 	return partId == null ? documentId : `${documentId}__part__${partId}`
+// }

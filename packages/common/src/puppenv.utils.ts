@@ -1,9 +1,10 @@
-import { Entry, MetadataItem, GetEntryProps, GetPartProps } from './types/entry'
-import { FacsimileArea, Facsimile, LayerConfig, TextLayerConfig, LayerType, TextData, Note, defaultMetadata, DocereConfig, Layer, TextLayer } from '.'
-import { isFacsimileLayerConfig, isTextLayerConfig } from './utils'
-import { FacsimileLayer } from './types'
+import { Entry, MetadataItem, GetEntryProps, GetPartProps, ConfigEntry, SerializedEntry } from './types/entry'
+import { FacsimileArea, Facsimile, LayerType, TextData, Note, defaultMetadata, DocereConfig, setTitle } from '.'
+import { isTextLayerConfig, isSerializedTextLayer } from './utils'
+import { SerializedLayer } from './types'
 
-export function getDefaultEntry(id: string): Entry {
+export type GetDefaultEntry = (id: string) => ConfigEntry
+export function getDefaultEntry(id: string): ConfigEntry {
 	return {
 		document: null,
 		element: null,
@@ -14,7 +15,6 @@ export function getDefaultEntry(id: string): Entry {
 		metadata: null,
 		notes: null,
 		parts: null,
-		parentId: null,
 	}
 }
 
@@ -39,17 +39,20 @@ function extendFacsimile(facsimile: Facsimile) {
 	return facsimile
 }
 
-const defaultLayerConfig: LayerConfig = {
-	active: true,
-	pinned: false,
-	id: null,
-}
+// const defaultLayerConfig: LayerConfig = {
+// 	active: true,
+// 	pinned: false,
+// 	id: null,
+// }
 
-const defaultTextLayerConfig: TextLayerConfig = {
-	...defaultLayerConfig,
-	extract: entry => entry.element,
-	type: LayerType.Text
-}
+// const defaultTextLayerConfig: TextLayerConfig = {
+// 	...defaultLayerConfig,
+// 	extract: entry => entry.element,
+// 	type: LayerType.Text,
+// 	filterEntities: () => () => false,
+// 	filterFacsimiles: () => () => false,
+// 	filterNotes: () => () => false,
+// }
 
 
 function addCount(prev: Map<string, TextData | Note>, curr: TextData) {
@@ -58,10 +61,11 @@ function addCount(prev: Map<string, TextData | Note>, curr: TextData) {
 	return prev
 }
 
-function extractMetadata(entry: Entry, config: DocereConfig): Entry['metadata'] {
+function extractMetadata(entry: ConfigEntry, config: DocereConfig): Entry['metadata'] {
 	return config.metadata
 		.map(md => ({
 			...defaultMetadata,
+			id: md.id,
 			title: md.id,
 			value: md.extract(entry, config)
 		}) as MetadataItem)
@@ -117,38 +121,34 @@ function extractMetadata(entry: Entry, config: DocereConfig): Entry['metadata'] 
 // 		.sort((config1, config2) => config1.order - config2.order)
 // }
 
-function extractLayers(entry: Entry, parent: Entry, config: DocereConfig): Layer[] {
+function extractLayers(entry: ConfigEntry, parent: ConfigEntry, config: DocereConfig): SerializedLayer[] {
 	return config.layers
 		.map(layer => {
-			const filtered = {
-				entities: layer.filterEntities != null ? parent.entities?.filter(layer.filterEntities(entry)) : parent.entities,
-				facsimiles: layer.filterFacsimiles != null ? parent.facsimiles?.filter(layer.filterFacsimiles(entry)) : parent.facsimiles,
-				notes: layer.filterNotes != null ? parent.notes?.filter(layer.filterNotes(entry)) : parent.notes,
+			const filterEntities = layer.filterEntities != null ? layer.filterEntities : () => () => true
+			const filterFacsimiles = layer.filterFacsimiles != null ? layer.filterFacsimiles : () => () => true
+			const filterNotes = layer.filterNotes != null ? layer.filterNotes : () => () => true
+
+			const textLayer: SerializedLayer = {
+				active: layer.active != null ? layer.active : true,
+				entities: parent.entities?.filter(filterEntities(entry)),
+				facsimiles: parent.facsimiles?.filter(filterFacsimiles(entry)),
+				id: layer.id,
+				notes: parent.notes?.filter(filterNotes(entry)),
+				pinned: layer.pinned != null ? layer.pinned : false,
+				type: layer.type != null ? layer.type : LayerType.Text,
+				title: layer.title,
 			}
 
-			if (isTextLayerConfig(layer)) {
-				const tl: TextLayer = {
-					...defaultTextLayerConfig,
-					...layer,
-					...filtered,
-					element: layer.extract(entry, config),
-				}
-				return tl
-			} else if (isFacsimileLayerConfig(layer)) {
-				const fl: FacsimileLayer = {
-					...defaultLayerConfig,
-					...layer,
-					...filtered,
-					type: LayerType.Facsimile,
-				}
-				return fl
-			} else {
-				throw Error('Unknown layer type')
+			if (isSerializedTextLayer(textLayer) && isTextLayerConfig(layer)) {
+				const extractContent = layer.extract == null ? (entry: ConfigEntry) => entry.element : layer.extract
+				textLayer.content = extractContent(entry, config)?.outerHTML
 			}
+
+			return setTitle(textLayer)
 		})
 }
 
-function extractEntities(entry: Entry, config: DocereConfig) {
+function extractEntities(entry: ConfigEntry, config: DocereConfig) {
 	const entities: Map<string, TextData> = config.entities
 		.reduce((prev, curr) => {
 			const extracted = curr.extract(entry, config)
@@ -160,7 +160,7 @@ function extractEntities(entry: Entry, config: DocereConfig) {
 	return Array.from(entities.values())
 }
 
-function extractNotes(entry: Entry, config: DocereConfig) {
+function extractNotes(entry: ConfigEntry, config: DocereConfig) {
 	const notes: Map<string, Note> = config.notes
 		.reduce((prev, curr) => {
 			const extracted = curr.extract(entry, config)
@@ -172,10 +172,10 @@ function extractNotes(entry: Entry, config: DocereConfig) {
 	return Array.from(notes.values())
 }
 
-export function extractEntryData(entry: Entry, config: DocereConfig) {
+export function extractEntryData(entry: ConfigEntry, config: DocereConfig) {
 	entry.metadata = extractMetadata(entry, config)
 
-	entry.facsimiles = config.facsimiles.extract(entry, config).map(extendFacsimile)
+	entry.facsimiles = config.facsimiles?.extract(entry, config).map(extendFacsimile)
 	entry.entities = extractEntities(entry, config)
 	entry.notes = extractNotes(entry, config)
 
@@ -183,7 +183,7 @@ export function extractEntryData(entry: Entry, config: DocereConfig) {
 	entry.layers = extractLayers(entry, entry, config)
 }
 
-export function extractParts(entry: Entry, config: DocereConfig) {
+export function extractParts(entry: ConfigEntry, config: DocereConfig) {
 	if (config.parts == null) return
 
 	entry.parts = new Map()
@@ -202,22 +202,18 @@ export function extractParts(entry: Entry, config: DocereConfig) {
 
 function getPartSync(props: GetPartProps) {
 	const entry = getDefaultEntry(props.id)
-	entry.parentId = props.parent.id
 
 	entry.document = props.document
 	entry.element =  props.element
 
 	entry.metadata = props.parent.metadata
 
-	entry.facsimiles = props.config.facsimiles.extract(entry, props.config).map(extendFacsimile)
-	entry.entities = extractEntities(entry, props.config)
-	entry.notes = extractNotes(entry, props.config)
-
 	entry.layers = extractLayers(entry, props.parent, props.config)
 
 	return entry
 }
 
+export type GetEntrySync = (props: GetEntryProps) => ConfigEntry
 export function getEntrySync(props: GetEntryProps) {
 	const entry = getDefaultEntry(props.id)
 	entry.document = props.document
@@ -225,4 +221,24 @@ export function getEntrySync(props: GetEntryProps) {
 	extractEntryData(entry, props.config)
 	extractParts(entry, props.config)
 	return entry
+}
+
+export type SerializeEntry = (entry: ConfigEntry, config: DocereConfig) => SerializedEntry
+export function serializeEntry(entry: ConfigEntry, config: DocereConfig): SerializedEntry {
+	return {
+		content: entry.element.outerHTML,
+		entities: entry.entities,
+		facsimiles: entry.facsimiles,
+		id: entry.id,
+		layers: entry.layers,
+		metadata: entry.metadata?.reduce((prev, curr) => {
+			prev[curr.id] = curr.value
+			return prev
+		}, {} as Record<string, MetadataItem['value']>),
+		notes: entry.notes,
+		parts: Array.from(entry.parts || []).map((part =>
+			serializeEntry(part[1], config))
+		),
+		plainText: config.plainText(entry, config),
+	}
 }

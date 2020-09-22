@@ -1,9 +1,9 @@
-import { extendConfigData, LayerType, Colors, Facsimile, Entry } from '@docere/common'
+import { extendConfigData, LayerType, Colors, Facsimile, ConfigEntry } from '@docere/common'
 import { extractEntryPartElementsFromMilestone } from '../../utils'
 import extractFacsimiles from './facsimiles'
 import prepare from './prepare'
 
-function filterFacsimiles(entry: Entry) {
+function filterFacsimiles(entry: ConfigEntry) {
 	const facsimileIds = Array.from(entry.element.querySelectorAll('pb')).map(pb => pb.id)
 	return (facsimile: Facsimile) => facsimileIds.indexOf(facsimile.id) > -1
 }

@@ -1,6 +1,6 @@
-import type { Entry } from '@docere/common'
+import type { ConfigEntry } from '@docere/common'
 
-export default function prepareDocument(entry: Entry) {
+export default function prepareDocument(entry: ConfigEntry) {
 	const typeById: Map<string, string> = new Map()
 	entry.document.querySelectorAll('w').forEach(el => {
 		el.setAttribute('value', el.querySelector('t').textContent)

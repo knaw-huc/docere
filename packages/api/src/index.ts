@@ -6,7 +6,7 @@ import Puppenv from './puppenv'
 import { listProjects, getElasticSearchDocument, sendJson, isError } from './utils'
 import projectApi from './api/project'
 import documentApi from './api/document'
-import indexerApi from './api/indexer'
+// import indexerApi from './api/indexer'
 import dtsApi from './api/dts'
 import otherApi from './api/other'
 
@@ -61,7 +61,7 @@ async function main() {
 
 	projectApi(app, puppenv)
 	documentApi(app, puppenv)
-	indexerApi(app, puppenv)
+	// indexerApi(app, puppenv)
 	dtsApi(app, puppenv)
 	otherApi(app)
 

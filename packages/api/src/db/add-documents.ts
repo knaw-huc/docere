@@ -1,20 +1,25 @@
 import crypto from 'crypto'
 import * as es from '@elastic/elasticsearch'
+import { PoolClient } from 'pg'
+
+import { SerializedEntry } from '../../../common/src'
+
 import { isError, readFileContents, getXMLPath } from '../utils'
 import { xmlToStandoff } from '../api/standoff'
-import { getPool, tryQuery } from './index'
 import Puppenv from '../puppenv'
-import { PoolClient } from 'pg'
-import { PrepareAndExtractOutput } from '../types'
+
+import { getPool, tryQuery } from './index'
 import { indexDocument } from './init-project'
 
 async function documentExists(content: string, client: PoolClient) {
 	const hash = crypto.createHash('md5').update(content)
-	const existsResult = await client.query(`SELECT EXISTS(SELECT 1 FROM xml WHERE hash='${hash.digest('hex')}')`)
+	const hex = hash.digest('hex')
+	console.log(hex)
+	const existsResult = await client.query(`SELECT EXISTS(SELECT 1 FROM xml WHERE hash='${hex}')`)
 	return existsResult.rows[0].exists
 }
 
-export async function addDocumentsToDb(projectId: string, fileName: string, puppenv: Puppenv) {
+export async function addXmlToDb(projectId: string, fileName: string, puppenv: Puppenv) {
 	const content = readFileContents(getXMLPath(projectId, fileName))
 
 	const pool = await getPool(projectId)
@@ -26,12 +31,14 @@ export async function addDocumentsToDb(projectId: string, fileName: string, pupp
 		return
 	}
 
-	const documentFields = await puppenv.prepareAndExtract(content, projectId, fileName)
-	if (isError(documentFields)) {
+	const prepareAndExtractOutput = await puppenv.prepareAndExtract(content, projectId, fileName)
+	if (isError(prepareAndExtractOutput)) {
 		// TODO log error
 		client.release()
+		console.log(prepareAndExtractOutput.__error)
 		return
 	}
+	const [serializedEntry, extractedXml] = prepareAndExtractOutput
 
 	const esClient = new es.Client({ node: 'http://es01:9200' })
 	const standoff = await xmlToStandoff(content)
@@ -52,16 +59,16 @@ export async function addDocumentsToDb(projectId: string, fileName: string, pupp
 			standoff_annotations=$4,
 			updated=NOW()
 		RETURNING id;`,
-		[fileName, documentFields[1].original, standoff.text, JSON.stringify(standoff.annotations)]
+		[fileName, extractedXml.original, standoff.text, JSON.stringify(standoff.annotations)]
 	)
 	const xml_id = rows[0].id
 
-	await addDocumentToDb({ client, fileName, xml_id, order_number: null, documentFields, content: documentFields[1].prepared })
-	await indexDocument(projectId, documentFields[0], esClient)
+	await addDocumentToDb({ client, fileName, xml_id, order_number: null, entry: serializedEntry, content: extractedXml.prepared })
+	await indexDocument(projectId, serializedEntry, esClient)
 
 	let i = 0
-	for (const part of documentFields[0].parts) {
-		await addDocumentToDb({ client, fileName: part.id, xml_id, order_number: i++, documentFields, content: part.content })
+	for (const part of serializedEntry.parts) {
+		await addDocumentToDb({ client, fileName: part.id, xml_id, order_number: i++, entry: part, content: part.content })
 		await indexDocument(projectId, part, esClient)
 	}
 
@@ -74,9 +81,11 @@ async function addDocumentToDb(props: {
 	fileName: string,
 	xml_id: string,
 	order_number: number,
-	documentFields: PrepareAndExtractOutput,
+	entry: SerializedEntry,
 	content: string
 }) {
+	const { plainText, ...dbEntry } = props.entry
+
 	await tryQuery(
 		props.client,
 		`INSERT INTO document
@@ -91,6 +100,6 @@ async function addDocumentToDb(props: {
 			json=$5,
 			updated=NOW()
 		RETURNING id;`,
-		[props.fileName, props.xml_id, props.order_number, props.documentFields[1].prepared, JSON.stringify(props.documentFields[0])]
+		[props.fileName, props.xml_id, props.order_number, props.content, JSON.stringify(dbEntry)]
 	)
 }

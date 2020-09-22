@@ -1,7 +1,6 @@
 import { Colors, EsDataType, RsType } from './enum'
 
 import type { FacetConfigBase } from './types/search/facets'
-// import type { DocereConfigDataRaw, DocereConfigData } from './types/config-data'
 import type { DocereConfig, MetadataConfig, EntityConfig } from './types/config-data/config'
 import type { PageConfig } from './types/page'
 import { isTextLayerConfig } from './utils'
@@ -55,11 +54,13 @@ export const defaultEntityConfig: Omit<EntityConfig, 'extract'> = {
 // }
 
 // Add a title to a config if the title is not explicitly set in the config
-export function setTitle<T extends FacetConfigBase>(entityConfig: T): T {
-	if (entityConfig.title == null) {
-		entityConfig.title = entityConfig.id.charAt(0).toUpperCase() + entityConfig.id.slice(1)
+export function setTitle<T extends FacetConfigBase>(entityConfig: T): T & { title: string } {
+	return {
+		...entityConfig,
+		title: entityConfig.title == null ? 
+			entityConfig.id.charAt(0).toUpperCase() + entityConfig.id.slice(1) :
+			entityConfig.title,
 	}
-	return entityConfig
 }
 
 function setPath(page: PageConfig) {
@@ -100,9 +101,11 @@ export function extendConfigData(configDataRaw: DocereConfig): DocereConfig {
 		return setTitle(setPath(page))
 	})
 
-	config.parts = {
-		keepSource: false,
-		...config.parts
+	if (config.parts != null) {
+		config.parts = {
+			keepSource: false,
+			...config.parts
+		}
 	}
 
 	return {

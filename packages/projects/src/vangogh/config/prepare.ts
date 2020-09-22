@@ -1,6 +1,6 @@
-import { Entry } from '@docere/common'
+import { ConfigEntry } from '@docere/common'
 
-export default function prepareDocument(entry: Entry) {
+export default function prepareDocument(entry: ConfigEntry) {
 	for (const anchor of entry.document.querySelectorAll(`anchor`)) {
 		const anchorId = anchor.getAttribute('xml:id')
 		const note = entry.document.querySelector(`note[target="#${anchorId}"]`)

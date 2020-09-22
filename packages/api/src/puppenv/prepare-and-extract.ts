@@ -1,11 +1,13 @@
 import type { PrepareAndExtractOutput, DocereApiError } from '../types'
-import type { DocereConfig, Entry, GetEntryProps, ExtractedEntry, MetadataItem } from '@docere/common'
+import type { DocereConfig, GetEntrySync, GetDefaultEntry } from '../../../common/src'
+import { SerializeEntry } from '@docere/common'
 
 declare global {
 	const DocereProjects: any
 	const PuppenvUtils: {
-		getDefaultEntry: (id: string) => Entry
-		getEntrySync: (props: GetEntryProps) => Entry
+		getDefaultEntry: GetDefaultEntry
+		getEntrySync: GetEntrySync
+		serializeEntry: SerializeEntry
 	}
 }
 
@@ -50,28 +52,8 @@ export async function prepareAndExtract(xml: string, documentId: string, project
 		element: entryTmp.element,
 	})
 
-	function serializeEntry(e: Entry, parentId?: string): ExtractedEntry {
-		return {
-			id: e.id,
-			layers: e.layers,
-			entities: e.entities,
-			facsimiles: e.facsimiles,
-			notes: e.notes,
-			parentId,
-			metadata: e.metadata?.reduce((prev, curr) => {
-				prev[curr.id] = curr.value
-				return prev
-			}, {} as Record<string, MetadataItem['value']>),
-			parts: Array.from(e.parts || []).map((part =>
-				serializeEntry(part[1], e.id))
-			),
-			text: config.plainText(e, config),
-			content: e.element.outerHTML,
-		}
-	}
-
 	return [
-		serializeEntry(entry),
+		PuppenvUtils.serializeEntry(entry, config),
 		{
 			original: xml,
 			prepared: new XMLSerializer().serializeToString(entry.document),

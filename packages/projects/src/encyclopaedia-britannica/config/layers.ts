@@ -1,7 +1,7 @@
 // import { LayerType } from '@docere/common'
 // import type { TextLayer } from '@docere/common'
 
-import { Entry } from '@docere/common'
+import { ConfigEntry } from '@docere/common'
 
 /*
 function updateToPosition(currentPosition: Position, el: Element): Position {
@@ -27,7 +27,7 @@ interface Position {
 	right: number
 }
 */
-export default function extractPreparedLayer(entry: Entry) {
+export default function extractPreparedLayer(entry: ConfigEntry) {
 	const element = entry.document.querySelector('Layout')
 
 	const nodeIterator = document.createNodeIterator(

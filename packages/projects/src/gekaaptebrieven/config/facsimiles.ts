@@ -1,6 +1,6 @@
-import { Entry } from '@docere/common'
+import { ConfigEntry } from '@docere/common'
 
-export default function extractFacsimiles(entry: Entry) {
+export default function extractFacsimiles(entry: ConfigEntry) {
 	const attr = 'facs'
 	const selector = `pb[${attr}]`
 

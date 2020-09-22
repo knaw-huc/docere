@@ -6,7 +6,7 @@ import { EsDataType, LayerType } from '../../common/src/enum'
 
 import type { DocereApiError, ElasticSearchDocument } from './types'
 import type { DocereConfig } from '../../common/src/types/config-data/config'
-import type { ExtractedEntry } from '../../common/src/types/entry'
+import type { SerializedEntry } from '../../common/src/types/entry'
 
 export function getProjectsSourceDir() {
 	// The current working dir is api/, the projects/ dir shares the same parent as api/
@@ -124,7 +124,7 @@ export function isError(payload: any | DocereApiError): payload is DocereApiErro
 	return payload != null && payload.hasOwnProperty('__error')
 }
 
-export function getElasticSearchDocument(extractedEntry: ExtractedEntry | DocereApiError): ElasticSearchDocument | DocereApiError {
+export function getElasticSearchDocument(extractedEntry: SerializedEntry | DocereApiError): ElasticSearchDocument | DocereApiError {
 	if (isError(extractedEntry)) return extractedEntry
 
 	const entities = extractedEntry.entities.reduce((prev, curr) => {
@@ -147,9 +147,11 @@ export function getElasticSearchDocument(extractedEntry: ExtractedEntry | Docere
 	return {
 		id: extractedEntry.id,
 		facsimiles,
-		text: extractedEntry.text,
+		text: extractedEntry.plainText,
 		text_suggest: {
-			input: extractedEntry.text.split(' '),
+			input: extractedEntry.plainText
+				.split(' ')
+				.filter(t => t.trim().length > 0),
 		},
 		...entities,
 		...extractedEntry.metadata

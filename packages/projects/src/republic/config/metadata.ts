@@ -1,6 +1,6 @@
-import type { ExtractedMetadata, Entry } from '@docere/common';
+import type { ExtractedMetadata, ConfigEntry } from '@docere/common';
 
-export default function extractMetadata(entry: Entry) {
+export default function extractMetadata(entry: ConfigEntry) {
 	// const metadata: ExtractedMetadata = {}
 
 	const num = /\d+$/.exec(entry.id.replace(/\.jpg\.page$/, ''))

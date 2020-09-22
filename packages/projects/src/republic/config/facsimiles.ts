@@ -1,7 +1,7 @@
-import { Entry } from '@docere/common'
+import { ConfigEntry } from '@docere/common'
 import type { Facsimile } from '@docere/common'
 
-export default function extractFacsimiles(entry: Entry) {
+export default function extractFacsimiles(entry: ConfigEntry) {
 	const facsimiles: Facsimile[] = []
 
 	const id = `https://images.diginfra.net/iiif/${entry.id.replace(/\.page$/, '')}`

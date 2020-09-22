@@ -1,6 +1,6 @@
-import { Entry } from '@docere/common'
+import { ConfigEntry } from '@docere/common'
 
-export default function extractFacsimiles(entry: Entry) {
+export default function extractFacsimiles(entry: ConfigEntry) {
 	return Array.from(entry.document.querySelectorAll('facsimile zone'))
 		.map(zone => {
 			const id = zone.getAttribute('xml:id')

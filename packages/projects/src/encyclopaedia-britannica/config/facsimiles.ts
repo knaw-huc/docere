@@ -1,4 +1,4 @@
-import type { FacsimileArea, DocereConfig, Facsimile, Entry } from '@docere/common'
+import type { FacsimileArea, DocereConfig, Facsimile, ConfigEntry } from '@docere/common'
 
 function elementToArea(el: Element): FacsimileArea {
 	return {
@@ -29,7 +29,7 @@ function extractFacsimileAreas(doc: XMLDocument, _config: DocereConfig) {
 	return areas
 }
 
-export default function extractFacsimiles(entry: Entry, config: DocereConfig) {
+export default function extractFacsimiles(entry: ConfigEntry, config: DocereConfig) {
 	const facsimiles: Facsimile[] = []
 
 	const [,id2] = entry.id.split('/alto/')

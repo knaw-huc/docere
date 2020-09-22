@@ -1,4 +1,4 @@
-import { Entry } from '@docere/common'
+import { ConfigEntry } from '@docere/common'
 
 function getRectoVersoSequence(x: string) {
 	const [start, end] = x.split('-')
@@ -31,7 +31,7 @@ function getRectoVersoSequence(x: string) {
 	return seq.map(x => x.padStart(4, '0'))
 }
 
-export default function extractFacsimiles(entry: Entry) {
+export default function extractFacsimiles(entry: ConfigEntry) {
 	const [region, entryId] = entry.id.split('/')
 
 	const registers = Array.from(entry.document.querySelectorAll('register')).map(k => k.textContent).filter(x => x.length > 0)

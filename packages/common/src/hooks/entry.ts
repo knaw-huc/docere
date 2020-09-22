@@ -1,44 +1,28 @@
 import React from 'react'
 
-import { getDefaultEntry, extractEntryData, extractParts } from '../puppenv.utils'
-import { Entry, fetchEntryXml, ProjectContext, GetEntryProps, useUrlObject } from '..'
+import { Entry, useUrlObject } from '..'
+import { fetchJson } from '../utils'
 
 const entryCache = new Map<string, Entry>()
 
-async function getEntry(props: Pick<GetEntryProps, 'id' | 'config'>) {
-	const entry = getDefaultEntry(props.id)
-	entry.document = await fetchEntryXml(props.config.slug, props.id)
-	entry.element =  props.config.prepare(entry, props.config)
-	extractEntryData(entry, props.config)
-	extractParts(entry, props.config)
-	return entry
-}
-
 export function useEntry(id: string) {
-	const projectContext = React.useContext(ProjectContext)
 	const [entry, setEntry] = React.useState<Entry>(null)
-	const { query } = useUrlObject()
+	const { projectId, entryId } = useUrlObject()
 
 	React.useEffect(() => {
-		if (id == null || projectContext == null) return
+		if (id == null) return
 
 		if (entryCache.has(id)) {
 			const entry = entryCache.get(id)
-			if (query.partId != null && entry.parts.has(query.partId))
-				setEntry(entry.parts.get(query.partId))
-			else
-				setEntry(entry)
+			setEntry(entry)
 		} else {
-			getEntry({ id, config: projectContext.config }).then(entry => {
-				entryCache.set(entry.id, entry)
-				if (query.partId != null && entry.parts.has(query.partId))
-					setEntry(entry.parts.get(query.partId))
-				else
+			fetchJson(`/api/projects/${projectId}/documents/${entryId}`)
+				.then(entry => {
+					entryCache.set(entry.id, entry)
 					setEntry(entry)
-			})
+				})
 		}
-
-	}, [id, query?.partId])
+	}, [id])
 
 	return entry
 }

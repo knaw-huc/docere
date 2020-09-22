@@ -1,6 +1,6 @@
-// import type { ExtractedMetadata, Entry } from '@docere/common'
+// import type { ExtractedMetadata, ConfigEntry } from '@docere/common'
 
-// export default function extractMetadata(entry: Entry) {
+// export default function extractMetadata(entry: ConfigEntry) {
 // 	// const metadata: ExtractedMetadata = {}
 // 	// metadata.doctype = entry.document.querySelector('doctype > doctype')?.textContent
 // 	// metadata.kolonie = Array.from(entry.document.querySelectorAll('kolonie > kolonie_')).map(k => k.textContent)

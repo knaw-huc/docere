@@ -1,6 +1,6 @@
-import type { DocereConfig, Entry } from '@docere/common'
+import type { DocereConfig, ConfigEntry } from '@docere/common'
 
-export default function prepareDocument(entry: Entry, config: DocereConfig) {
+export default function prepareDocument(entry: ConfigEntry, config: DocereConfig) {
 	const page = config.data.pages.find((p: any) => p.id === parseInt(entry.id, 10) - 1)
 
 	if (page != null) {
@@ -9,6 +9,10 @@ export default function prepareDocument(entry: Entry, config: DocereConfig) {
 		imgLocation.textContent = page.imgLocation
 		section.prepend(imgLocation)
 	}
+
+	entry.document.querySelectorAll('transcription').forEach(transcription => {
+		transcription.setAttribute('lang', transcription.querySelector('lang').textContent)
+	})
 
 	entry.document.querySelectorAll('block').forEach(block => {
 		block.setAttribute('class', 'block')

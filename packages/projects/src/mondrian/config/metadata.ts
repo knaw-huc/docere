@@ -1,6 +1,6 @@
-import type { ExtractedMetadata, Entry } from '@docere/common'
+import type { ExtractedMetadata, ConfigEntry } from '@docere/common'
 
-export default function extractMetadata(entry: Entry) {
+export default function extractMetadata(entry: ConfigEntry) {
 	const metadata: ExtractedMetadata = {}
 
 	metadata.author = entry.document.querySelector('correspAction[type="sent"] > name')?.textContent

@@ -2,7 +2,7 @@ import path from 'path'
 import { getPool, tryQuery } from './index'
 import { getType, isError, getElasticSearchDocument } from '../utils'
 import { DocereApiError, MappingProperties } from '../types'
-import { DocereConfig, EsDataType, ExtractedEntry } from '../../../common/src'
+import { DocereConfig, EsDataType, SerializedEntry } from '../../../common/src'
 const projects = require('esm')(module)(path.resolve(process.cwd(), './packages/projects')).default
 import * as es from '@elastic/elasticsearch'
 
@@ -33,7 +33,7 @@ export async function initProject(projectId: string) {
 			order_number INT,
 			name TEXT UNIQUE,
 			content TEXT,
-			json TEXT,
+			json JSONB,
 			standoff_text TEXT,
 			standoff_annotations TEXT,
 			updated TIMESTAMP WITH TIME ZONE
@@ -112,7 +112,7 @@ async function getProjectConfig(projectId: string) {
 	return config
 }
 
-export async function indexDocument(projectId: string, extractedEntry: ExtractedEntry, esClient: es.Client) {
+export async function indexDocument(projectId: string, extractedEntry: SerializedEntry, esClient: es.Client) {
 	const esDocument = getElasticSearchDocument(extractedEntry)
 	if (isError(esDocument)) return esDocument
 

@@ -1,7 +1,7 @@
 import { DEFAULT_SPACING, TEXT_PANEL_ASIDE_WIDTH, TEXT_PANEL_MINIMAP_WIDTH, TEXT_PANEL_TEXT_WIDTH } from './constants'
 import { LayerType } from './enum'
 
-import type { DocereConfig, Note, Entity, LayerConfig, PageConfig, TextLayerConfig, FacsimileLayerConfig, TextLayer, Layer, FacsimileLayer } from './types'
+import type { DocereConfig, Note, Entity, LayerConfig, PageConfig, TextLayerConfig, FacsimileLayerConfig, TextLayer, Layer, FacsimileLayer, SerializedLayer, SerializedTextLayer, SerializedFacsimileLayer } from './types'
 
 export function getTextPanelLeftSpacing(settings: DocereConfig['entrySettings']) {
 	let width = DEFAULT_SPACING
@@ -59,7 +59,15 @@ export function isTextLayer(layer: Layer): layer is TextLayer {
 	return layer.type === LayerType.Text
 }
 
+export function isSerializedTextLayer(layer: SerializedLayer): layer is SerializedTextLayer {
+	return layer.type === LayerType.Text
+}
+
 export function isFacsimileLayerConfig(layer: LayerConfig): layer is FacsimileLayerConfig {
+	return layer.type === LayerType.Facsimile
+}
+
+export function isSerializedFacsimileLayer(layer: SerializedLayer): layer is SerializedFacsimileLayer {
 	return layer.type === LayerType.Facsimile
 }
 

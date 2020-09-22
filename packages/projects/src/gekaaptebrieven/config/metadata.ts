@@ -1,19 +1,19 @@
-import type { Entry } from '@docere/common'
+import type { ConfigEntry } from '@docere/common'
 
-function extractMultiple(entry: Entry, selector: string) {
+function extractMultiple(entry: ConfigEntry, selector: string) {
 	return entry.document.querySelector(selector)?.textContent.split(/;|\//).map(part => part.trim())
 }
 
-export function extractLanguages(entry: Entry) {
+export function extractLanguages(entry: ConfigEntry) {
 	return extractMultiple(entry, 'meta[type="languages"]')
 }
 
-export function extractTextTypes(entry: Entry) {
+export function extractTextTypes(entry: ConfigEntry) {
 	return extractMultiple(entry, 'meta[type="texttypes"]')
 }
 
 
-// export default function extractMetadata(entry: Entry) {
+// export default function extractMetadata(entry: ConfigEntry) {
 // 	const selector = "meta"
 // 	let els = entry.document.querySelectorAll(selector)
 // 	const metadata: ExtractedMetadata = {}

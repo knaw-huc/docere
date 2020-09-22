@@ -8,7 +8,7 @@ export interface UrlQuery {
 	facsimileId?: string	/* fi = pb */
 	lineId?: string			/* li = lb */
 	blockId?: string		/* bi = p, ab, div */
-	partId?: string			/* pi */
+	// partId?: string			/* pi */
 }
 
 const urlQueryMap: Record<string, keyof UrlQuery> = {
@@ -17,7 +17,7 @@ const urlQueryMap: Record<string, keyof UrlQuery> = {
 	fi: 'facsimileId',
 	li: 'lineId',
 	bi: 'blockId',
-	pi: 'partId',
+	// pi: 'partId',
 }
 
 // function defaultPayload(): UrlObject {

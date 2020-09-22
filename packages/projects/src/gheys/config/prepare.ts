@@ -1,4 +1,4 @@
-import type { Entry } from '@docere/common'
+import type { ConfigEntry } from '@docere/common'
 
 const renameMap: [RegExp, string][] = [
 	[new RegExp(/^NHA_1972/), 'RHC-NHA/1972'],
@@ -9,7 +9,7 @@ const renameMap: [RegExp, string][] = [
 	[new RegExp(/^NHA_1617/), 'RHC-NHA/1617'],
 ]
 
-export default function prepareDocument(entry: Entry) {
+export default function prepareDocument(entry: ConfigEntry) {
 	let jpgPath = entry.id
 	
 	const found = renameMap.find(x => x[0].test(entry.id))

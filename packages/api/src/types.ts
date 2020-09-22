@@ -1,7 +1,7 @@
-import type { ExtractedEntry } from '@docere/common'
+import type { SerializedEntry } from '../../common/src'
 
 export type ExtractedXml = { original: string, prepared: string }
-export type PrepareAndExtractOutput = [ExtractedEntry, ExtractedXml]
+export type PrepareAndExtractOutput = [SerializedEntry, ExtractedXml]
 
 /**
  * JSON object which represents a ElasticSearch document
