@@ -1,12 +1,12 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Colors, Facsimile, EntryStateAction } from '@docere/common'
+import { Facsimile, EntryStateAction, FacsimileLayer } from '@docere/common'
 
 import CollectionNavigatorController from './controller'
 
 function useOpenSeadragonController(
 	facsimiles: Facsimile[],
-	activeFacsimile: Facsimile,
+	// activeFacsimile: Facsimile,
 	handleClick: (id: string) => void
 ) {
 	const [controller, setController] = React.useState<any>(null)
@@ -27,7 +27,7 @@ function useOpenSeadragonController(
 					showZoomControl: false,
 				})
 
-				const collectionNavigatorController = new CollectionNavigatorController(viewer, facsimiles, activeFacsimile, handleClick)
+				const collectionNavigatorController = new CollectionNavigatorController(viewer, facsimiles, handleClick)
 
 				if (controller != null) controller.destroy()
 				setController(collectionNavigatorController)
@@ -37,6 +37,12 @@ function useOpenSeadragonController(
 	return controller
 }
 
+function useActiveFacsimile(controller: CollectionNavigatorController, activeFacsimile: Facsimile) {
+	React.useEffect(() => {
+		if (controller == null) return
+		controller.setActiveFacsimile(activeFacsimile)
+	}, [controller, activeFacsimile])
+}
 // function useEntry(controller: CollectionNavigatorController, entry: Entry) {
 // 	React.useEffect(() => {
 // 		if (controller == null) return
@@ -45,29 +51,34 @@ function useOpenSeadragonController(
 // }
 
 const Container = styled.div`
-	background: ${Colors.Grey};
-	grid-column: 1 / -1;
+	background: rgba(0, 0, 0, .5);
+	bottom: 0;
 	height: 64px;
+	position: absolute;
+	width: 100%;
 `
 
 interface Props {
 	activeFacsimile: Facsimile
 	entryDispatch: React.Dispatch<EntryStateAction>
-	facsimiles: Facsimile[]
+	layer: FacsimileLayer
 }
 function CollectionNavigator(props: Props) {
 	const handleClick = React.useCallback(id => {
 		props.entryDispatch({
-			type: "SET_ACTIVE_FACSIMILE",
 			id,
+			triggerLayer: props.layer,
+			type: "SET_ACTIVE_FACSIMILE",
 		})	
 	}, [])
 
-	useOpenSeadragonController(
-		props.facsimiles,
-		props.activeFacsimile,
+	const controller = useOpenSeadragonController(
+		props.layer.facsimiles,
+		// props.activeFacsimile,
 		handleClick,
 	)
+
+	useActiveFacsimile(controller, props.activeFacsimile)
 
 	return (
 		<Container

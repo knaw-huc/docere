@@ -143,7 +143,7 @@ function Footer(props: Props) {
 							Metadata
 						</Button>
 					}
-					{
+					{/* {
 						!isEmpty(props.entry.entities) &&
 						<Button
 							active={props.asideTab === AsideTab.TextData}
@@ -162,7 +162,7 @@ function Footer(props: Props) {
 						>
 							Notes
 						</Button>
-					}
+					} */}
 				</div>
 			</MenuItems>
 			<Body>

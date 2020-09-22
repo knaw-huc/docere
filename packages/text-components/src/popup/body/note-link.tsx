@@ -43,8 +43,7 @@ export default function NoteLinkPopupBody(props: DocereComponentProps) {
 	const entry = useEntry(fileName.replace(/\.xml$/, ''))
 	const components = useComponents(DocereComponentContainer.Layer)
 
-	if (entry == null) return null
-	const note = entry.notes.find(n => n.id === noteId)
+	const note = props.layer.notes.find(n => n.id === noteId)
 	if (note == null) return null
 
 	return (

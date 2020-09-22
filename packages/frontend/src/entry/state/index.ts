@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { ProjectContext, isTextLayer, AsideTab, getTextPanelWidth, LayerType, DEFAULT_SPACING, defaultEntrySettings, useUrlObject, useEntry, isFacsimileLayer } from '@docere/common'
+import { ProjectContext, isTextLayer, AsideTab, getTextPanelWidth, LayerType, DEFAULT_SPACING, defaultEntrySettings, useUrlObject, useEntry, isFacsimileLayer, useNavigate, ActiveFacsimile } from '@docere/common'
 
-import type { EntryState, EntryStateAction, FacsimileArea } from '@docere/common'
+import type { EntryState, EntryStateAction } from '@docere/common'
 
 const initialEntryState: EntryState = {
 	activeEntity: null,
@@ -13,6 +13,11 @@ const initialEntryState: EntryState = {
 	projectConfig: null,
 	entry: null,
 	layers: [],
+	lookup: {
+		facsimiles: {},
+		notes: {},
+		entities: {},
+	}
 }
 
 function entryStateReducer(entryState: EntryState, action: EntryStateAction): EntryState {
@@ -36,20 +41,21 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 		}
 
 		case 'SET_ENTITY': {
-			let activeFacsimileAreas = entryState.entry.facsimiles?.reduce((prev, curr) => {
-				curr.versions.forEach(version => {
-					version.areas.forEach(area => {
-						if (area.target?.id === action.id) {
-							if (!Array.isArray(prev)) prev = []
-							prev.push(area)
-						}
-					})
-				})
-				return prev
-			}, null as FacsimileArea[])
+			// let activeFacsimileAreas = entryState.entry.facsimiles?.reduce((prev, curr) => {
+			// 	curr.versions.forEach(version => {
+			// 		version.areas.forEach(area => {
+			// 			if (area.target?.id === action.id) {
+			// 				if (!Array.isArray(prev)) prev = []
+			// 				prev.push(area)
+			// 			}
+			// 		})
+			// 	})
+			// 	return prev
+			// }, null as FacsimileArea[])
 
-			const activeEntity = entryState.entry.entities?.find(e => e.id === action.id)
+			// const activeEntity = entryState.entry.entities?.find(e => e.id === action.id)
 			// if (entity == null) entity = { id: action.id, type: null, value: null }
+			const activeEntity = entryState.lookup.entities[action.id]
 
 			// const config = entryState.projectConfig.entities.find(x => x.id === entity.type)
 			// let activeEntity = { ...entity, config }
@@ -61,7 +67,7 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 			return {
 				...entryState,
 				activeEntity,
-				activeFacsimileAreas,
+				// activeFacsimileAreas,
 				layers: updatePanels(entryState.layers, { activeEntity, activeNote: entryState.activeNote, entrySettings: entryState.entrySettings })
 			}
 		}
@@ -76,8 +82,7 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 		}
 
 		case 'SET_NOTE': {
-			const activeNote = entryState.entry.notes.find(n => n.id === action.id)
-
+			const activeNote = entryState.lookup.notes[action.id]
 			return {
 				...entryState,
 				activeNote,
@@ -85,6 +90,7 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 			}
 		}
 
+		// TODO remove and use SET_NOTE with activeNote = null
 		case 'UNSET_NOTE': {
 			return {
 				...entryState,
@@ -103,33 +109,34 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 		}
 
 		case 'SET_ACTIVE_FACSIMILE': {
-			const activeFacsimile = entryState.entry.facsimiles.find(f => f.id === action.id)
-
 			return {
 				...entryState,
-				activeFacsimile,
+				activeFacsimile: {
+					...entryState.lookup.facsimiles[action.id],
+					triggerLayer: action.triggerLayer
+				},
 				activeFacsimileAreas: null
 			}
 		}
 
 		case 'SET_ACTIVE_FACSIMILE_AREAS': {
-			let activeFacsimileAreas = entryState.entry.facsimiles
-				.reduce((prev, curr) => {
-					curr.versions.forEach(version => {
-						version.areas.forEach(area => {
-							if (action.ids.indexOf(area.id) > -1) prev.push(area)
-						})
-					})
-					return prev
-				}, [] as FacsimileArea[])
+			// let activeFacsimileAreas = entryState.entry.facsimiles
+			// 	.reduce((prev, curr) => {
+			// 		curr.versions.forEach(version => {
+			// 			version.areas.forEach(area => {
+			// 				if (action.ids.indexOf(area.id) > -1) prev.push(area)
+			// 			})
+			// 		})
+			// 		return prev
+			// 	}, [] as FacsimileArea[])
 			
-			if (JSON.stringify(action.ids) === JSON.stringify(entryState.activeFacsimileAreas?.map(afa => afa.id))) {
-				activeFacsimileAreas = null
-			}
+			// if (JSON.stringify(action.ids) === JSON.stringify(entryState.activeFacsimileAreas?.map(afa => afa.id))) {
+			// 	activeFacsimileAreas = null
+			// }
 
 			return {
 				...entryState,
-				activeFacsimileAreas,
+				// activeFacsimileAreas,
 				activeEntity: null,
 				activeNote: null,
 				asideTab: null
@@ -190,12 +197,24 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 	return entryState
 }
 
-
 export default function useEntryState() {
 	const { config } = React.useContext(ProjectContext)
 	const { entryId, query } = useUrlObject()
 	const x = React.useReducer(entryStateReducer, initialEntryState)
 	const entry = useEntry(entryId)
+	const navigate = useNavigate()
+
+	React.useEffect(() => {
+		if (x[0].activeFacsimile == null) return
+		// console.log(entry === x[0].entry, x[0].activeFacsimile)
+		console.log(x[0].activeFacsimile.id)
+		navigate({
+			entryId,
+			query: {
+				facsimileId: x[0].activeFacsimile.id
+			}
+		})	
+	}, [x[0].activeFacsimile])
 
 	React.useEffect(() => {
 		if (x[0].entry == null) return
@@ -229,25 +248,46 @@ export default function useEntryState() {
 	}, [query])
 
 	React.useEffect(() => {
-		if (entry == null) return
+		if (entry == null || entry === x[0].entry) return
 
 		// Copy current state of active and pinned layers to keep interface consistent between entry changes
 		const nextLayers = entry.layers.map(layer => {
 			const stateLayer = x[0].layers.find(l => l.id === layer.id)
+
+			// Return layer as is if it did not exist on previous entry
 			if (!stateLayer) return layer
+
+			// Copy state
 			layer.active = stateLayer.active 
 			layer.pinned = stateLayer.pinned
+
 			return layer
 		})
 		
+		// Set the active facsimile. If the facsimile parameter of the URL query is set,
+		// use that, otherwise pick the first facsimile
 		const facsimiles = entry.layers.find(isFacsimileLayer)?.facsimiles
+		let activeFacsimile: ActiveFacsimile
+		if (facsimiles.length > 0) {
+			activeFacsimile = facsimiles[0]
+
+			if (query.facsimileId != null) {
+				activeFacsimile = facsimiles.find(f => f.id === query.facsimileId)
+			}
+		}
 
 		// TODO activeFacsimile is a state of layer, not the entry
 		// x[1] = dispatch
 		x[1]({
-			activeFacsimile: facsimiles != null ? facsimiles[0] : null,
+			activeFacsimile,
 			entry,
 			layers: updatePanels(nextLayers, x[0]),
+			lookup: entry.layers.reduce((agg, layer) => {
+				layer.facsimiles.forEach(l => { agg.facsimiles[l.id] = l; })
+				layer.entities.forEach(e => { agg.entities[e.id] = e; })
+				layer.notes.forEach(n => { agg.notes[n.id] = n; })
+				return agg
+			}, { facsimiles: {}, notes: {}, entities: {} } as EntryState['lookup']),
 			type: 'ENTRY_CHANGED',
 		})
 	}, [entry, query])

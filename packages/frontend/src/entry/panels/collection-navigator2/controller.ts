@@ -12,18 +12,22 @@ export default class CollectionNavigatorController {
 	constructor(
 		private viewer: OpenSeadragon.Viewer,
 		facsimiles: Facsimile[],
-		activeFacsimile: Facsimile,
+		// private activeFacsimile: Facsimile,
 		private handleClick: (id: string) => void
 	) {
 		this.viewer.addHandler('canvas-click', this.canvasClickHandler)
 		this.viewer.addHandler('full-screen', this.fullScreenHandler)
 
-	 	this.tiledImages = new TiledImages(this.viewer, facsimiles, activeFacsimile)
+	 	this.tiledImages = new TiledImages(this.viewer, facsimiles)
 	}
 
 	destroy() {
 		this.viewer.removeHandler('canvas-click', this.canvasClickHandler)
 		this.viewer.removeHandler('full-screen', this.fullScreenHandler)
+	}
+
+	setActiveFacsimile(facsimile: Facsimile) {
+		this.tiledImages.setActiveFacsimile(facsimile)
 	}
 
 	// setEntry(entry: Entry) {
@@ -47,7 +51,7 @@ export default class CollectionNavigatorController {
 		if (!event.quick) return
 
 		const id = this.tiledImages.getEntryFromMousePosition(event.position)
-		this.handleClick(id)
+		if (id != null) this.handleClick(id)
 	}
 
 	private fullScreenHandler = (event: OpenSeadragon.ViewerEvent) => {

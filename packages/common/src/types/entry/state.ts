@@ -1,12 +1,12 @@
 import type { DocereConfig } from '../config-data/config'
-import type { Note, Facsimile, FacsimileArea, Entity } from '../config-data/functions'
+import type { Note, Facsimile, FacsimileArea, Entity, ActiveFacsimile } from '../config-data/functions'
 import type { Entry } from '.'
 import { AsideTab } from '../../enum'
 import { Layer } from '../config-data/layer'
 
 export interface EntryState {
 	activeEntity: Entity,
-	activeFacsimile: Facsimile
+	activeFacsimile: ActiveFacsimile
 	activeFacsimileAreas: FacsimileArea[]
 	activeNote: Note,
 	asideTab: AsideTab
@@ -67,9 +67,10 @@ interface UnsetNote {
 	type: 'UNSET_NOTE'
 }
 
-interface ESA_Set_Active_Facsimile {
-	type: 'SET_ACTIVE_FACSIMILE'
+interface SetActiveFacsimile {
 	id: string
+	triggerLayer: Layer
+	type: 'SET_ACTIVE_FACSIMILE'
 }
 
 interface ESA_Set_Active_Facsimile_Areas {
@@ -87,7 +88,7 @@ export type EntryStateAction =
 	ProjectChanged |
 	EntryChanged |
 	ToggleTab |
-	ESA_Set_Active_Facsimile |
+	SetActiveFacsimile |
 	SetEntity |
 	UnsetEntity |
 	ESA_Set_Active_Facsimile_Areas |

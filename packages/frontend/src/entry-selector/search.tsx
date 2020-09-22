@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import HucFacetedSearch  from '@docere/search'
-import { ProjectContext, useUIComponent, UIComponentType, Viewport, Language, getPath, extractIdsFromElasticSearchId, useUrlObject, createElasticSearchIdFromIds } from '@docere/common'
+import { ProjectContext, useUIComponent, UIComponentType, Viewport, Language, getPath, useUrlObject } from '@docere/common'
 
 import { FileExplorerProps } from './wrap-as-file-explorer'
 import useAutoSuggest from './use-auto-suggest'
@@ -24,11 +24,11 @@ function Search(props: FileExplorerProps) {
 	const { config, searchUrl } = React.useContext(ProjectContext)
 	const autoSuggest = useAutoSuggest(searchUrl)
 	const ResultBodyComponent = useUIComponent(UIComponentType.SearchResult)
-	const { projectId, entryId, query } = useUrlObject()
+	const { projectId, entryId } = useUrlObject()
 
 	const onClickResult = React.useCallback((result: Hit) => {
-		const [entryId, partId] = extractIdsFromElasticSearchId(result.id)
-		history.push(getPath({ projectId, entryId, query: { partId } }))
+		// const [entryId, partId] = extractIdsFromElasticSearchId(result.id)
+		history.push(getPath({ projectId, entryId: result.id }))
 	}, [projectId])
 
 	return (
@@ -39,7 +39,7 @@ function Search(props: FileExplorerProps) {
 			onClickResult={onClickResult}
 			ResultBodyComponent={ResultBodyComponent}
 			resultBodyProps={{
-				activeId: createElasticSearchIdFromIds(entryId, query?.partId),
+				activeId: entryId, //createElasticSearchIdFromIds(entryId, query?.partId),
 				searchTab: props.searchTab,
 			}}
 			resultsPerPage={config.searchResultCount}

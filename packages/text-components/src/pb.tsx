@@ -1,12 +1,16 @@
 import React from 'react'
-import { Colors, DEFAULT_SPACING, Entry } from '@docere/common'
+import { Colors, DEFAULT_SPACING, Facsimile } from '@docere/common'
 import styled from 'styled-components'
 
 import type { DocereComponentProps } from '@docere/common'
 
+// TODO changed display from grid to inline, which breaks multiple 
+// facsimiles in one PB. For a fix: add a container div with a grid,
+// instead of directly on the wrapper. If the wrapper is not inline,
+// it will not align well with the inline <pb> in the text
 const Wrapper = styled.span`
 	& > div {
-		display: grid;
+		display: inline;
 		left: ${DEFAULT_SPACING}px;
 		position: absolute;
 	}
@@ -31,7 +35,7 @@ const Img = styled.img`
 type ExtractPbId = (props: DocereComponentProps) => string | string[]
 
 function useFacsimiles(extractPbId: ExtractPbId, props: DocereComponentProps) {
-	const [facsimiles, setFacsimiles] = React.useState<Entry['facsimiles']>([])
+	const [facsimiles, setFacsimiles] = React.useState<Facsimile[]>([])
 
 	React.useEffect(() => {
 		let ids = extractPbId(props)
@@ -58,6 +62,18 @@ export default function getPb(extractPbId: ExtractPbId): React.FC<DocereComponen
 
 		const facsimiles = useFacsimiles(extractPbId, props)
 
+		const onClick = React.useCallback((ev) => {
+			const { facsimileId } = ev.target.dataset
+
+			if (facsimileId !== props.activeFacsimile.id) {
+				props.entryDispatch({
+					id: facsimileId,
+					triggerLayer: props.layer,
+					type: 'SET_ACTIVE_FACSIMILE',
+				})
+			}
+		}, [props.activeFacsimile, props.layer])
+
 		return (
 			<Wrapper>
 				<div>
@@ -68,10 +84,9 @@ export default function getPb(extractPbId: ExtractPbId): React.FC<DocereComponen
 							return (
 								<Img
 									active={active}
+									data-facsimile-id={facsimile.id}
 									key={facsimile.id}
-									onClick={() => {
-										if (!active) props.entryDispatch({ type: 'SET_ACTIVE_FACSIMILE', id: facsimile.id })
-									}}
+									onClick={onClick}
 									src={src.slice(-10) === '/info.json' ? src.replace('/info.json', '/full/,32/0/default.jpg') : src}
 								/>
 							)

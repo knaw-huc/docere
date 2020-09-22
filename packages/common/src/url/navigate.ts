@@ -44,7 +44,9 @@ export function useNavigate() {
 			)
 		)
 
-		if (isSamePage) nextUrlObject.query = getNextQuery(urlObject.query, nextUrlObject.query)
+		// TODO this is used to toggle notes and entities but it doesn't work.
+		// TODO data flow should be: state => url and only on page load url => state
+		// if (isSamePage) nextUrlObject.query = getNextQuery(urlObject.query, nextUrlObject.query)
 
 		// When staying on the same type with the same ID, replace the entry in the history,
 		// otherwise the back button would show all the UI interactions of the user

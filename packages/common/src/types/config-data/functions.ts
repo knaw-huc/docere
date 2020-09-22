@@ -1,5 +1,6 @@
 import type { EntityConfig } from "./config"
 import { AsideTab } from '../../enum'
+import { Layer } from './layer'
 // import { Entry } from '../entry'
 
 
@@ -83,4 +84,8 @@ interface FacsimileVersion {
 export interface Facsimile {
 	id: string
 	versions: FacsimileVersion[]
+}
+
+export interface ActiveFacsimile extends Facsimile {
+	triggerLayer?: Layer
 }

@@ -29,7 +29,7 @@ function useNote(extractNoteId: ExtractNoteId, props: DocereComponentProps) {
 
 	React.useEffect(() => {
 		const noteId = extractNoteId(props)
-		const note = props.entry.notes.find(x => x.id === noteId)
+		const note = props.layer.notes.find(x => x.id === noteId)
 		setNote(note)
 	}, [props.entry.id])
 
@@ -43,7 +43,7 @@ export default function getNote(extractNoteId: ExtractNoteId) {
 
 		if (
 			!props.entrySettings['panels.text.showNotes'] ||
-			props.entry.notes == null
+			props.layer.notes == null
 		) return <span>{props.children}</span>
 
 		const note = useNote(extractNoteId, props)

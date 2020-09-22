@@ -104,6 +104,17 @@ function TextPanel(props: TextPanelProps) {
 		layer: props.layer,
 	}
 
+	React.useEffect(() => {
+		if (
+			textWrapperRef.current == null ||
+			props.activeFacsimile == null ||
+			props.layer === props.activeFacsimile.triggerLayer
+		) return
+		textWrapperRef.current
+			.querySelector(`[data-facsimile-id="${props.activeFacsimile.id}"]`)
+			.scrollIntoView({ behavior: 'smooth' })
+	}, [props.activeFacsimile])
+
 	if (components == null) return null
 
 	return (
@@ -130,8 +141,8 @@ function TextPanel(props: TextPanelProps) {
 						customProps={customProps}
 						components={components}
 						highlight={searchContext.state.query}
+						html={layer.content}
 						onLoad={setDocereTextViewReady}
-						node={layer.element}
 						setHighlightAreas={setHighlightAreas}
 					/>
 				</Text>

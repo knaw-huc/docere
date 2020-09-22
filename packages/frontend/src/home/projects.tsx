@@ -14,7 +14,6 @@ function useProjectConfigs() {
 						setProjectConfigs(
 							configs
 								.filter((x: any) => x != null)
-								.map((c: { config: DocereConfig }) => ({ ...c.config }))
 								.filter((c: DocereConfig) => !c.private)
 						)
 					})
@@ -43,11 +42,7 @@ const thumbByProjectId: Record<string, string> = {
 }
 
 const Li = styled.li`
-	align-items: end;
 	border: 1px solid #DDD;
-	display: grid;
-	grid-template-rows: 200px minmax(${DEFAULT_SPACING * 2}px, auto);
-	justify-items: center;
 	padding: ${DEFAULT_SPACING}px;
 
 	img {
@@ -79,7 +74,8 @@ export default function Projects() {
 			{
 				projectConfigs.map(projectConfig =>
 					<Project
-						config={projectConfig}  key={projectConfig.slug}
+						config={projectConfig}
+						key={projectConfig.slug}
 					/>
 				)
 			}

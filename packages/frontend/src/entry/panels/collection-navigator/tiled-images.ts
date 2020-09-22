@@ -1,6 +1,6 @@
 import OpenSeadragon from 'openseadragon';
 
-import type { Hit, Entry } from '@docere/common';
+import { Hit, Entry, isFacsimileLayer } from '@docere/common';
 
 interface TiledImageOptions {
 	bounds: OpenSeadragon.Rect
@@ -47,7 +47,7 @@ export default class TiledImages {
 
 	// Set the active options from this.entry.facsimiles. Used to calculate this.startIndex and this.highlightActive
 	setActiveOptions() {
-		const facsimilePaths = this.entry.facsimiles.reduce((prev, curr) => {
+		const facsimilePaths = this.entry.layers.find(isFacsimileLayer).facsimiles.reduce((prev, curr) => {
 			const ps = curr.versions.map(v => v.path)
 			return prev.concat(ps)
 		}, [] as string[])

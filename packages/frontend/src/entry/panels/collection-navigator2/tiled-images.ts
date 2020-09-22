@@ -10,6 +10,8 @@ interface TiledImageOptions {
 }
 
 export default class TiledImages {
+	private activeFacsimile: Facsimile
+
 	// The bounds of the currently loaded thumbs
 	private loadedBounds = new OpenSeadragon.Rect(0, 0, 0, 0)
 
@@ -27,10 +29,11 @@ export default class TiledImages {
 	private leftIndex: number
 	private currentIndex: number
 
+	// TODO activeFacsimile should/could be present at loading TiledImages
 	constructor(
 		private viewer: OpenSeadragon.Viewer,
 		private facsimiles: Facsimile[],
-		private activeFacsimile: Facsimile
+		// private activeFacsimile: Facsimile
 	) {
 		// Add event handlers
 		this.viewer.world.addHandler('add-item', this.addItemHandler)
@@ -47,15 +50,16 @@ export default class TiledImages {
 		this.addTiledImage()
 	}
 
-	// Set the active options from this.entry.facsimiles. Used to calculate this.startIndex and this.highlightActive
-	// setActiveOptions() {
-	// 	const facsimilePaths = this.entry.facsimiles.reduce((prev, curr) => {
-	// 		const ps = curr.versions.map(v => v.path)
-	// 		return prev.concat(ps)
-	// 	}, [] as string[])
+	setActiveFacsimile(facsimile: Facsimile) {
+		this.activeFacsimile = facsimile
+		this.setActiveOptions()
+		this.highlightActiveTiles()	
+	}
 
-	// 	this.activeTileOptions = this.tileOptions.filter(option => facsimilePaths.indexOf(option.tileSource) > -1)
-	// }
+	// Set the active options from this.entry.facsimiles. Used to calculate this.startIndex and this.highlightActive
+	setActiveOptions() {
+		this.activeTileOptions = this.tileOptions.filter(option => option.tileSource === this.activeFacsimile.versions[0].path)
+	}
 
 	// Set a new entry. When this.highlightActive returns false, not all tiles of that entry are loaded.
 	// The controller will than initiate a new TiledImages with that entry as centre for loading tiles.
@@ -98,7 +102,9 @@ export default class TiledImages {
 
 	private init() {
 		// start = index of the current tiled image / first active facsimile
-		this.startIndex = this.facsimiles.findIndex(f => f.id === this.activeFacsimile.id)
+		this.startIndex = this.activeFacsimile == null ?
+			0 :
+			this.facsimiles.findIndex(f => f.id === this.activeFacsimile.id)
 
 		// current = alternates between the left and right index
 		this.currentIndex = this.startIndex

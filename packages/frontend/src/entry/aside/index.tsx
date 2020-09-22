@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import { ASIDE_WIDTH, AsideTab, Colors, FOOTER_HANDLE_HEIGHT } from '@docere/common'
 
 import MetadataAside from './metadata/index'
-import NotesAside from './notes'
-import TextDataAside from './text-data'
+// import NotesAside from './notes'
+// import TextDataAside from './text-data'
 
 import type { EntryState, EntryStateAction } from '@docere/common'
 import type { EntryProps } from '..';
@@ -41,7 +41,7 @@ function Aside(props: EntryAsideProps) {
 					metadata={props.entry.metadata}
 				/>
 			}
-			{
+			{/* {
 				props.asideTab === AsideTab.TextData &&
 				<TextDataAside
 					active={props.asideTab === AsideTab.TextData}
@@ -65,7 +65,7 @@ function Aside(props: EntryAsideProps) {
 					entryDispatch={props.entryDispatch}
 					entrySettings={props.entrySettings}
 				/>
-			}
+			} */}
 		</Wrapper>
 	)
 }
