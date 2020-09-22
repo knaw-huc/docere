@@ -2,11 +2,11 @@ import * as path from 'path'
 import * as fs from 'fs'
 import { Response as ExpressResponse } from 'express'
 import chalk from 'chalk'
-import { EsDataType, LayerType } from '../../common/src/enum'
+import { EsDataType } from '../../common/src/enum'
 
 import type { DocereApiError, ElasticSearchDocument } from './types'
 import type { DocereConfig } from '../../common/src/types/config-data/config'
-import type { SerializedEntry } from '../../common/src/types/entry'
+import { SerializedEntry, createLookup } from '../../common/src/types/entry'
 
 export function getProjectsSourceDir() {
 	// The current working dir is api/, the projects/ dir shares the same parent as api/
@@ -127,26 +127,28 @@ export function isError(payload: any | DocereApiError): payload is DocereApiErro
 export function getElasticSearchDocument(extractedEntry: SerializedEntry | DocereApiError): ElasticSearchDocument | DocereApiError {
 	if (isError(extractedEntry)) return extractedEntry
 
-	const entities = extractedEntry.entities.reduce((prev, curr) => {
-		prev[curr.config.id] = (prev.hasOwnProperty(curr.config.id)) ?
-			prev[curr.config.id].concat(curr.value) :
-			[curr.value]
+	const lookup = createLookup(extractedEntry.layers)
 
-		return prev
-	}, {} as Record<string, string[]>)
+	const entities = Object.values(lookup.entities)
+		.reduce((agg, entity) => {
+			agg[entity.config.id] = (agg.hasOwnProperty(entity.config.id)) ?
+				agg[entity.config.id].concat(entity.value) :
+				[entity.value]
+			return agg
+		}, {} as Record<string, string[]>)
 
-	const facsimiles: string[] = extractedEntry.layers
-		.reduce((prev, curr) => {
-			if (curr.type === LayerType.Facsimile) {
-				const f = curr.facsimiles.reduce((prev, curr) => prev.concat(curr.versions.map(v => v.path)), [] as string[])
-				prev = prev.concat(f)
-			}
-			return prev
+	const facsimiles: string[] = Object.values(lookup.facsimiles)
+		.reduce((agg, facsimile) => {
+			return agg.concat(facsimile.versions.map(v => v.path))
 		}, [])
+
+	// const notes: string[] = Object.values(lookup.notes)
+	// 	.map(note => note.content)
 
 	return {
 		id: extractedEntry.id,
 		facsimiles,
+		// notes,
 		text: extractedEntry.plainText,
 		text_suggest: {
 			input: extractedEntry.plainText
@@ -154,7 +156,7 @@ export function getElasticSearchDocument(extractedEntry: SerializedEntry | Docer
 				.filter(t => t.trim().length > 0),
 		},
 		...entities,
-		...extractedEntry.metadata
+		...extractedEntry.metadata,
 	}
 }
 

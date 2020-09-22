@@ -66,7 +66,7 @@ const config: DocereConfig = {
 			id: 'editor',
 			extract: entry => Array.from(entry.document.querySelectorAll('note'))
 				.map((element, index): ExtractedNote => ({
-					element,
+					content: element.outerHTML,
 					id: element.id,
 					n: (index + 1).toString(),
 				}))

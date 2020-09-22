@@ -110,7 +110,7 @@ const config: DocereConfig = {
 			extract: entry =>
 				Array.from(entry.document.querySelectorAll('div[type="notes"] > note'))
 					.map((el, index) => ({
-						element: el,
+						content: el.outerHTML,
 						id: el.getAttribute('xml:id'),
 						n: (index + 1).toString(),
 						title: 'Note',

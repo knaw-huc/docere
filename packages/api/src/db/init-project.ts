@@ -76,6 +76,9 @@ async function getProjectIndexMapping(projectId: string) {
 	if (isError(config)) return config
 	
 	const properties: MappingProperties = {
+		// notes: {
+		// 	type: EsDataType.Text
+		// },
 		text_suggest: {
 			type: EsDataType.Completion,
 			analyzer: "simple",

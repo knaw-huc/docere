@@ -14,8 +14,8 @@ const config: DocereConfig = {
 			id: 'textual',
 			extract: entry => Array.from(entry.document.querySelectorAll('div[type="textualNotes"] > note'))
 				.map(el => ({
+					content: el.outerHTML,
 					id: el.getAttribute('xml:id'),
-					element: el,
 					n: el.getAttribute('n'),
 					title: `Note ${el.getAttribute('n')}`,
 				})),
@@ -26,8 +26,8 @@ const config: DocereConfig = {
 			id: 'editor',
 			extract: entry => Array.from(entry.document.querySelectorAll('div[type="notes"] > note'))
 				.map(el => ({
+					content: el.outerHTML,
 					id: el.getAttribute('xml:id'),
-					element: el,
 					n: el.getAttribute('n'),
 					title: `Note ${el.getAttribute('n')}`,
 				})),

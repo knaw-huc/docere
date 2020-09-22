@@ -1,4 +1,4 @@
-import { DocereConfig, Colors, ExtractedTextData, LayerType } from '@docere/common'
+import { DocereConfig, Colors, LayerType } from '@docere/common'
 import { extractEntryPartElements } from '../../utils'
 import extractFacsimiles from './facsimiles'
 
@@ -11,8 +11,8 @@ const config: DocereConfig = {
 			color: Colors.BlueBright,
 			id: 'gloss',
 			extract: entry => Array.from(entry.document.querySelectorAll('gloss[corresp]'))
-				.map((el): ExtractedTextData => ({
-					element: el,
+				.map(el => ({
+					content: el.outerHTML,
 					id: el.getAttribute('corresp').slice(1),
 					value: el.textContent,
 				})),

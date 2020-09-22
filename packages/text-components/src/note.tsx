@@ -75,9 +75,9 @@ export default function getNote(extractNoteId: ExtractNoteId) {
 					active={active}
 					color={note.config.color}
 					docereComponentProps={props}
-					node={note.element}
 					openToAside={openToAside}
 					title={note.title}
+					xml={note.content}
 				/>
 			</Wrapper>
 		)

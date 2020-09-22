@@ -1,4 +1,4 @@
-import type { SerializedEntry } from '../../common/src'
+import type { SerializedEntry, EsDataType } from '../../common/src'
 
 export type ExtractedXml = { original: string, prepared: string }
 export type PrepareAndExtractOutput = [SerializedEntry, ExtractedXml]
@@ -9,13 +9,14 @@ export type PrepareAndExtractOutput = [SerializedEntry, ExtractedXml]
 export interface ElasticSearchDocument {
 	facsimiles: string[]
 	id: string
+	// notes: string[]
 	text: string
 	text_suggest: { input: string[] }
 	[key: string]: any
 }
 
 export type MappingProperties = Record<string, {
-	type: import('../../common/src/enum').EsDataType
+	type: EsDataType
 	[key: string]: string | number | boolean
 }>
 

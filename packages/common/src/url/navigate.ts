@@ -12,13 +12,10 @@ export interface UrlObject {
 	query?: UrlQuery
 }
 
+// Merge next query with the current query. The next query can be 
+// a partial query, so current props are either kept or overwritten
 function getNextQuery(currentQuery: UrlQuery, payloadQuery: UrlQuery) {
 	const nextQuery = { ...currentQuery, ...payloadQuery }
-
-	Object.keys(payloadQuery).forEach((pq: keyof UrlQuery) => {
-		if (payloadQuery[pq] === currentQuery[pq]) nextQuery[pq] = null
-	})
-
 	return nextQuery
 }
 
@@ -44,9 +41,7 @@ export function useNavigate() {
 			)
 		)
 
-		// TODO this is used to toggle notes and entities but it doesn't work.
-		// TODO data flow should be: state => url and only on page load url => state
-		// if (isSamePage) nextUrlObject.query = getNextQuery(urlObject.query, nextUrlObject.query)
+		if (isSamePage) nextUrlObject.query = getNextQuery(urlObject.query, nextUrlObject.query)
 
 		// When staying on the same type with the same ID, replace the entry in the history,
 		// otherwise the back button would show all the UI interactions of the user

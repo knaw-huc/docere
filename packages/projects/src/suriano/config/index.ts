@@ -40,8 +40,8 @@ export default extendConfigData({
 			id: 'note',
 			extract: entry => Array.from(entry.document.querySelectorAll('li[role=doc-endnote]'))
 				.map(el => ({
+					content: el.outerHTML,
 					id: el.id,
-					element: el,
 					n: el.id.slice(2),
 					title: `Note ${el.id.slice(2)}`,
 				})),

@@ -28,13 +28,11 @@ export interface TextLayerConfig extends LayerConfig {
 	type: LayerType.Text
 }
 
-type TransferableFromTextLayerConfig = Omit<TextLayerConfig, 'extract' | 'filterEntities' | 'filterFacsimiles' | 'filterNotes'>
 
-export interface TextLayer extends TransferableFromTextLayerConfig, BaseLayer, LayerEntities {
+export interface TextLayer extends SerializedTextLayer, BaseLayer {
 	// element: Element
 	content: string
 }
-
 
 	// element: Element
 
@@ -47,7 +45,7 @@ export interface FacsimileLayerConfig extends LayerConfig {
 	type: LayerType.Facsimile
 }
 
-export interface FacsimileLayer extends FacsimileLayerConfig, BaseLayer, LayerEntities {
+export interface FacsimileLayer extends SerializedFacsimileLayer, BaseLayer {
 	facsimiles: Facsimile[]
 }
 

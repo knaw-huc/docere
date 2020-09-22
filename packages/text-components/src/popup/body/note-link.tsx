@@ -51,7 +51,7 @@ export default function NoteLinkPopupBody(props: DocereComponentProps) {
 			<DocereTextView
 				customProps={props}
 				components={components}
-				node={note.element}
+				xml={note.content}
 			/>
 			<NoteLink
 				activeEntity={props.activeEntity}

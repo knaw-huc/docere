@@ -1,7 +1,7 @@
 import { RsType } from '../../enum'
 import type { FacetConfig } from '../search/facets'
 import { PageConfig } from '../page'
-import { ExtractedNote, ExtractedTextData, Facsimile } from './functions'
+import { ExtractedTextData, Facsimile, ExtractedNote } from './functions'
 import { TextLayerConfig, FacsimileLayerConfig } from './layer'
 import { ConfigEntry } from '../entry'
 
@@ -16,7 +16,7 @@ export interface DocereConfig {
 	facsimiles?: FacsimileConfig
 	layers?: (TextLayerConfig | FacsimileLayerConfig)[]
 	metadata?: MetadataConfig[]
-	notes?: NotesConfig[]
+	notes?: NoteConfig[]
 	pages?: PageConfig[]
 	plainText?: (entry: ConfigEntry, config: DocereConfig) => string
 	prepare?: (entry: ConfigEntry, config: DocereConfig) => Element
@@ -66,7 +66,8 @@ export type EntityConfig = TmpConfig & {
 }
 
 // TODO rename to NoteConfig
-export type NotesConfig = Omit<EntityConfig, 'extract'> & {
+export interface NoteConfig extends BaseConfig {
+	color?: string
 	extract: (entry: ConfigEntry, config?: DocereConfig) => ExtractedNote[]
 }
 // export interface NotesConfig extends BaseConfig {

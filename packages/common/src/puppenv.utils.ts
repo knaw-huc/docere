@@ -1,5 +1,5 @@
 import { Entry, MetadataItem, GetEntryProps, GetPartProps, ConfigEntry, SerializedEntry } from './types/entry'
-import { FacsimileArea, Facsimile, LayerType, TextData, Note, defaultMetadata, DocereConfig, setTitle } from '.'
+import { FacsimileArea, Facsimile, LayerType, TextData, defaultMetadata, DocereConfig, setTitle } from '.'
 import { isTextLayerConfig, isSerializedTextLayer } from './utils'
 import { SerializedLayer } from './types'
 
@@ -55,7 +55,7 @@ function extendFacsimile(facsimile: Facsimile) {
 // }
 
 
-function addCount(prev: Map<string, TextData | Note>, curr: TextData) {
+function addCount(prev: Map<string, TextData>, curr: TextData) {
 	if (prev.has(curr.id)) prev.get(curr.id).count += 1
 	else prev.set(curr.id, { ...curr, count: 1 })
 	return prev
@@ -161,15 +161,12 @@ function extractEntities(entry: ConfigEntry, config: DocereConfig) {
 }
 
 function extractNotes(entry: ConfigEntry, config: DocereConfig) {
-	const notes: Map<string, Note> = config.notes
+	return config.notes
 		.reduce((prev, curr) => {
 			const extracted = curr.extract(entry, config)
 				.map(x => ({ ...x, config: curr }))
 			return prev.concat(extracted)
 		}, [])
-		.reduce(addCount, new Map<string, Note>())
-
-	return Array.from(notes.values())
 }
 
 export function extractEntryData(entry: ConfigEntry, config: DocereConfig) {
@@ -227,15 +224,12 @@ export type SerializeEntry = (entry: ConfigEntry, config: DocereConfig) => Seria
 export function serializeEntry(entry: ConfigEntry, config: DocereConfig): SerializedEntry {
 	return {
 		content: entry.element.outerHTML,
-		entities: entry.entities,
-		facsimiles: entry.facsimiles,
 		id: entry.id,
 		layers: entry.layers,
 		metadata: entry.metadata?.reduce((prev, curr) => {
 			prev[curr.id] = curr.value
 			return prev
 		}, {} as Record<string, MetadataItem['value']>),
-		notes: entry.notes,
 		parts: Array.from(entry.parts || []).map((part =>
 			serializeEntry(part[1], config))
 		),

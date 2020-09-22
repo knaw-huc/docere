@@ -1,4 +1,4 @@
-import type { EntityConfig } from "./config"
+import type { EntityConfig, BaseConfig, NoteConfig } from "./config"
 import { AsideTab } from '../../enum'
 import { Layer } from './layer'
 // import { Entry } from '../entry'
@@ -11,10 +11,7 @@ import { Layer } from './layer'
 // 	prepareDocument: (entry: Entry, config: DocereConfig) => Element
 // }
 
-export interface ExtractedTextData {
-	element?: Element
-	id: string
-	title?: string
+export interface ExtractedTextData extends BaseConfig {
 	value?: string
 }
 
@@ -22,12 +19,19 @@ export interface ExtractedTextData {
 export interface TextData extends ExtractedTextData {
 	config: EntityConfig
 	count?: number
-	// id: string
-	// type: string
 }
 
-
 export type Entity = TextData
+
+export interface ExtractedNote extends BaseConfig {
+	content: string
+	n?: string
+}
+
+export interface Note extends ExtractedNote {
+	config: NoteConfig
+}
+
 // EXTRACT ENTITIES
 // export interface Entity extends TextData {
 // 	element?: Element
@@ -40,16 +44,13 @@ export type Entity = TextData
 
 // TODO add default color to default note: DEFAULT_POPUP_BG_COLOR
 // EXTRACT NOTES
-export interface ExtractedNote extends ExtractedTextData {
-	// color?: Colors,
-	// el: Element | string
-	n?: string
-	// targetId: string | number
-}
 
-export interface Note extends TextData, ExtractedNote {
+// export interface ExtractedNote extends ExtractedTextData {
+// }
 
-}
+// export interface SerializedNote extends Note {
+// 	content: string
+// }
 
 // EXTRACT METADATA
 export type ExtractedMetadata = Record<string, number | number[] | boolean | string | string[]>

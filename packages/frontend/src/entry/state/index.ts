@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ProjectContext, isTextLayer, AsideTab, getTextPanelWidth, LayerType, DEFAULT_SPACING, defaultEntrySettings, useUrlObject, useEntry, isFacsimileLayer, useNavigate, ActiveFacsimile } from '@docere/common'
+import { ProjectContext, isTextLayer, AsideTab, getTextPanelWidth, LayerType, DEFAULT_SPACING, defaultEntrySettings, useUrlObject, useEntry, isFacsimileLayer, useNavigate, createLookup } from '@docere/common'
 
 import type { EntryState, EntryStateAction } from '@docere/common'
 
@@ -206,8 +206,7 @@ export default function useEntryState() {
 
 	React.useEffect(() => {
 		if (x[0].activeFacsimile == null) return
-		// console.log(entry === x[0].entry, x[0].activeFacsimile)
-		console.log(x[0].activeFacsimile.id)
+
 		navigate({
 			entryId,
 			query: {
@@ -264,30 +263,26 @@ export default function useEntryState() {
 			return layer
 		})
 		
-		// Set the active facsimile. If the facsimile parameter of the URL query is set,
-		// use that, otherwise pick the first facsimile
-		const facsimiles = entry.layers.find(isFacsimileLayer)?.facsimiles
-		let activeFacsimile: ActiveFacsimile
-		if (facsimiles.length > 0) {
-			activeFacsimile = facsimiles[0]
+		const lookup = createLookup(entry.layers)
 
-			if (query.facsimileId != null) {
-				activeFacsimile = facsimiles.find(f => f.id === query.facsimileId)
-			}
+		const activeEntity = lookup.entities[query.entityId]
+		const activeNote = lookup.notes[query.noteId]
+
+		let activeFacsimile = lookup.facsimiles[query.facsimileId]
+		if (activeFacsimile == null) {
+			const facsimiles = entry.layers.find(isFacsimileLayer)?.facsimiles
+			if (facsimiles.length) activeFacsimile = facsimiles[0]
 		}
 
 		// TODO activeFacsimile is a state of layer, not the entry
 		// x[1] = dispatch
 		x[1]({
+			activeEntity,
 			activeFacsimile,
+			activeNote,
 			entry,
 			layers: updatePanels(nextLayers, x[0]),
-			lookup: entry.layers.reduce((agg, layer) => {
-				layer.facsimiles.forEach(l => { agg.facsimiles[l.id] = l; })
-				layer.entities.forEach(e => { agg.entities[e.id] = e; })
-				layer.notes.forEach(n => { agg.notes[n.id] = n; })
-				return agg
-			}, { facsimiles: {}, notes: {}, entities: {} } as EntryState['lookup']),
+			lookup,
 			type: 'ENTRY_CHANGED',
 		})
 	}, [entry, query])

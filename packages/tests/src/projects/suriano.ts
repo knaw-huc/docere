@@ -32,10 +32,6 @@ export const surianoTests = () => {
 		expect(output[0].parts).toHaveLength(12)
 	})
 
-	it('Should have 119 notes', () => {
-		expect(output[0].notes).toHaveLength(119)
-	})
-
 	it('Should have 86 facsimiles', () => {
 		const textLayer = output[0].layers.find(isSerializedTextLayer)
 		expect(textLayer.facsimiles).toHaveLength(86)
@@ -57,20 +53,23 @@ export const surianoTests = () => {
 			expect(part4.plainText.slice(1, 6)).toBe('n. 46')
 		})
 
-		it('Should have 16 notes on the text layer', () => {
-			expect(part4.layers[1].notes).toHaveLength(16)
+		describe('Layers', () => {
+			it('Should have 16 notes on the text layer', () => {
+				expect(part4.layers[1].notes).toHaveLength(16)
+			})
+
+			it('Should have content in the first note', () => {
+				expect(part4.layers[1].notes[0].content.slice(0, 184)).toBe('<li xmlns="http://www.w3.org/1999/xhtml" id="fn10" role="doc-endnote"><p><span class="span1"><sup xmlns="http://www.w3.org/1999/xhtml"><a href="#section0002.xhtml#calledF2">a</a></sup>')
+			})
+
+			it('Should have no notes on the facsimile layer', () => {
+				expect(part4.layers[0].notes).toHaveLength(0)
+			})
+
+			it('Should have facsimile 145r as the first facsimile on the text layer', () => {
+				expect(part4.layers[0].facsimiles[0].id).toBe('145r')
+			})
 		})
 
-		it('Should have no notes on the facsimile layer', () => {
-			expect(part4.layers[0].notes).toHaveLength(0)
-		})
-
-		it('Should have facsimile 145r as the first facsimile on the text layer', () => {
-			expect(part4.layers[0].facsimiles[0].id).toBe('145r')
-		})
-
-		it('Should have facsimile 145r as the first facsimile on the entry', () => {
-			expect(part4.facsimiles[0].id).toBe('145r')
-		})
 	})
 }

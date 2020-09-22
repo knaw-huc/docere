@@ -33,20 +33,14 @@ export function isidoreTests() {
 		expect(entry.layers[1].type).toBe('text')
 	})
 
-	it('Should have 6 facsimiles on the source and the layers', () => {
-		expect(entry.facsimiles).toHaveLength(6)
+	it('Should have 6 facsimiles on the layers', () => {
 		expect(entry.layers[0].facsimiles).toHaveLength(6)
 	 	expect(entry.layers[1].facsimiles).toHaveLength(6)
 	})
 
-	it('Should have 9 entities on the source and the layers', () => {
-		expect(entry.entities).toHaveLength(9)
+	it('Should have 9 entities on the layers', () => {
 		expect(entry.layers[0].entities).toHaveLength(9)
 		expect(entry.layers[1].entities).toHaveLength(9)
-	})
-
-	it('Should have 0 notes', () => {
-		expect(entry.notes).toHaveLength(0)
 	})
 
 	it('Should have 0 metadata', () => {
