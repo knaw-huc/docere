@@ -3,7 +3,9 @@
   "version": "1.0.2",
   "description": "",
   "main": "build/index.js",
-  "bin": "./build/index.js",
+  "bin": {
+    "xml-file-server": "./build/index.js"
+  },
   "scripts": {
     "build": "tsc",
     "start": "node build/index.js",
