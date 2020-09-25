@@ -35,8 +35,8 @@ export function utrechtpsalterTests() {
 	})
 
 	it('Should have only "n" metadata', () => {
-		expect(Object.keys(entry.metadata)).toHaveLength(1)
-		expect(entry.metadata.n).toBe(123)
+		expect(entry.metadata).toHaveLength(1)
+		expect(entry.metadata.find(md => md.id === 'n')?.value).toBe(123)
 	})
 
 	describe('Latin layer', () => {

@@ -84,7 +84,7 @@ async function addDocumentToDb(props: {
 	entry: SerializedEntry,
 	content: string
 }) {
-	const { plainText, ...dbEntry } = props.entry
+	const { plainText, parts, ...dbEntry } = props.entry
 
 	await tryQuery(
 		props.client,

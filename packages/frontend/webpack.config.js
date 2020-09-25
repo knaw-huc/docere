@@ -29,9 +29,10 @@ module.exports = {
 			'/iiif': {
 				changeOrigin: true,
 				target: env.IIIF_DEV_URL,
-				// target: 'http://localhost:5004',
-				// target: 'http://192.168.1.191',
-				// pathRewrite: {'^/iiif': ''}
+			},
+			'/xml': {
+				changeOrigin: true,
+				target: env.XML_DEV_URL,
 			},
 		},
 		watchOptions: {

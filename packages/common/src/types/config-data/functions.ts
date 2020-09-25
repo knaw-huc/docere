@@ -53,7 +53,7 @@ export interface Note extends ExtractedNote {
 // }
 
 // EXTRACT METADATA
-export type ExtractedMetadata = Record<string, number | number[] | boolean | string | string[]>
+// export type ExtractedMetadata = Record<string, number | number[] | boolean | string | string[]>
 
 // EXTRACT LAYERS
 

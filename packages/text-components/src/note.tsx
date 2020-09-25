@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { DocereComponentProps, Note, useNavigate } from '@docere/common'
+import { DocereComponentProps, Note } from '@docere/common'
 import { Popup } from './popup'
 
 interface NAProps { active: boolean, color: string, openToAside: boolean }
@@ -47,19 +47,18 @@ export default function getNote(extractNoteId: ExtractNoteId) {
 		) return <span>{props.children}</span>
 
 		const note = useNote(extractNoteId, props)
-		const navigate = useNavigate()
+
+		const active = note != null && note.id === props.activeNote?.id
+		const openToAside = active && !props.entrySettings['panels.text.openPopupAsTooltip']
 
 		const handleClick = React.useCallback(() => {
-			navigate({
-				entryId: props.entry.id,
-				query: { noteId: note.id }
+			props.entryDispatch({
+				type: 'SET_NOTE',
+				id: active ? null : note.id
 			})
-		}, [note, navigate])
+		}, [note, active])
 
 		if (note == null) return null
-
-		const active = note.id === props.activeNote?.id
-		const openToAside = active && !props.entrySettings['panels.text.openPopupAsTooltip']
 
 		return (
 			<Wrapper

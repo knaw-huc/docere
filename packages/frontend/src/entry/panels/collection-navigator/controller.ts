@@ -79,6 +79,7 @@ export default class CollectionNavigatorController {
 			payload.query = { match_all: {} }
 		} else {
 			const metadata = this.entry.metadata.find(md => md.id === this.config.metadataId)
+
 			if (metadata == null) return
 
 			if (isHierarchyFacetConfig(metadata)) {

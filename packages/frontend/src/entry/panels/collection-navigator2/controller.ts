@@ -12,7 +12,6 @@ export default class CollectionNavigatorController {
 	constructor(
 		private viewer: OpenSeadragon.Viewer,
 		facsimiles: Facsimile[],
-		// private activeFacsimile: Facsimile,
 		private handleClick: (id: string) => void
 	) {
 		this.viewer.addHandler('canvas-click', this.canvasClickHandler)
@@ -22,6 +21,7 @@ export default class CollectionNavigatorController {
 	}
 
 	destroy() {
+		this.tiledImages.removeListeners()
 		this.viewer.removeHandler('canvas-click', this.canvasClickHandler)
 		this.viewer.removeHandler('full-screen', this.fullScreenHandler)
 	}

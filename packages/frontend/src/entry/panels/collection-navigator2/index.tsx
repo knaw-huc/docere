@@ -6,7 +6,6 @@ import CollectionNavigatorController from './controller'
 
 function useOpenSeadragonController(
 	facsimiles: Facsimile[],
-	// activeFacsimile: Facsimile,
 	handleClick: (id: string) => void
 ) {
 	const [controller, setController] = React.useState<any>(null)
@@ -19,7 +18,7 @@ function useOpenSeadragonController(
 						clickToZoom: false,
 						scrollToZoom: false,
 					},
-					id: "osd_collection_navigator",
+					id: "osd_collection_navigator2",
 					prefixUrl: "/static/images/osd/",
 					panVertical: false,
 					preserveImageSizeOnResize: true,
@@ -28,11 +27,14 @@ function useOpenSeadragonController(
 				})
 
 				const collectionNavigatorController = new CollectionNavigatorController(viewer, facsimiles, handleClick)
-
-				if (controller != null) controller.destroy()
 				setController(collectionNavigatorController)
 			})
-	}, [])
+
+		return () => {
+			controller?.viewer.destroy()
+			controller?.destroy()
+		}
+	}, [facsimiles])
 
 	return controller
 }
@@ -43,12 +45,6 @@ function useActiveFacsimile(controller: CollectionNavigatorController, activeFac
 		controller.setActiveFacsimile(activeFacsimile)
 	}, [controller, activeFacsimile])
 }
-// function useEntry(controller: CollectionNavigatorController, entry: Entry) {
-// 	React.useEffect(() => {
-// 		if (controller == null) return
-// 		controller.setEntry(entry)
-// 	}, [controller, entry])
-// }
 
 const Container = styled.div`
 	background: rgba(0, 0, 0, .5);
@@ -74,7 +70,6 @@ function CollectionNavigator(props: Props) {
 
 	const controller = useOpenSeadragonController(
 		props.layer.facsimiles,
-		// props.activeFacsimile,
 		handleClick,
 	)
 
@@ -82,7 +77,7 @@ function CollectionNavigator(props: Props) {
 
 	return (
 		<Container
-			id="osd_collection_navigator"
+			id="osd_collection_navigator2"
 		/>
 	)
 }

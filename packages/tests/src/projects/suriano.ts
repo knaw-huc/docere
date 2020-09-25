@@ -19,9 +19,10 @@ export const surianoTests = () => {
 		const result = await page.evaluate(
 			prepareAndExtract,
 			xml,
-			'TestDocumentID',
+			'suriano',
 			'suriano',
 		)
+
 		if (isError(result)) return;
 		output = result
 		entry = output[0]
@@ -51,6 +52,19 @@ export const surianoTests = () => {
 
 		it('Should be letter n. 46', () => {
 			expect(part4.plainText.slice(1, 6)).toBe('n. 46')
+		})
+
+		describe('Metadata', () => {
+			it('Should have length 2', () => {
+				expect(part4.metadata).toHaveLength(2)
+			})
+			it('Should have a parent on metadata', () => {
+				expect(part4.metadata.find(md => md.id === 'parent')?.value).toBe('suriano')
+			})
+
+			it('Should have a order number on metadata', () => {
+				expect(part4.metadata.find(md => md.id === 'n')?.value).toBe(4)
+			})
 		})
 
 		describe('Layers', () => {

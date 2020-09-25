@@ -200,10 +200,11 @@ export function extractParts(entry: ConfigEntry, config: DocereConfig) {
 function getPartSync(props: GetPartProps) {
 	const entry = getDefaultEntry(props.id)
 
+	entry.parent = props.parent
+	entry.metadata = extractMetadata(entry, props.config)
+
 	entry.document = props.document
 	entry.element =  props.element
-
-	entry.metadata = props.parent.metadata
 
 	entry.layers = extractLayers(entry, props.parent, props.config)
 
@@ -226,10 +227,7 @@ export function serializeEntry(entry: ConfigEntry, config: DocereConfig): Serial
 		content: entry.element.outerHTML,
 		id: entry.id,
 		layers: entry.layers,
-		metadata: entry.metadata?.reduce((prev, curr) => {
-			prev[curr.id] = curr.value
-			return prev
-		}, {} as Record<string, MetadataItem['value']>),
+		metadata: entry.metadata,
 		parts: Array.from(entry.parts || []).map((part =>
 			serializeEntry(part[1], config))
 		),

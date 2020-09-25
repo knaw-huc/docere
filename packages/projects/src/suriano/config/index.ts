@@ -9,12 +9,33 @@ function filterFacsimiles(entry: ConfigEntry) {
 }
 
 export default extendConfigData({
+	collection: {
+		metadataId: 'parent',
+		sortBy: 'n',
+	},
 	slug: 'suriano',
 	title: "Suriano",
 	private: true,
 	facsimiles: {
 		extract: extractFacsimiles,
 	},
+	metadata: [
+		{
+			id: 'parent',
+			extract: entry => entry.parent?.id
+		},
+		{
+			id: 'n',
+			extract: entry => {
+				const result = /\d+$/.exec(entry.id)
+				if (!Array.isArray(result) || result.length === 0) return null
+				const n = result[0]
+				return n != null && n.length ?
+					parseInt(n, 10) :
+					null
+			},
+		}
+	],
 	layers: [
 		{
 			active: true,

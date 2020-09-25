@@ -216,35 +216,30 @@ export default function useEntryState() {
 	}, [x[0].activeFacsimile])
 
 	React.useEffect(() => {
+		// If entry is not defined, there cannot be an active note,
+		// activeNote can be null to deselect the note
 		if (x[0].entry == null) return
 
-		if (query.entityId !== x[0].activeEntity?.id) {
-			if (query.entityId == null) {
-				x[1]({
-					type: 'UNSET_ENTITY',
-				})
-			} else {
-				x[1]({
-					type: 'SET_ENTITY',
-					id: query.entityId,
-				})
-
+		navigate({
+			entryId,
+			query: {
+				noteId: x[0].activeNote?.id
 			}
-		}
+		})	
+	}, [x[0].entry, x[0].activeNote])
 
-		if (query.noteId !== x[0].activeNote?.id) {
-			if (query.noteId == null) {
-				x[1]({
-					type: 'UNSET_NOTE',
-				})
-			} else {
-				x[1]({
-					type: 'SET_NOTE',
-					id: query.noteId,
-				})
+	React.useEffect(() => {
+		// If entry is not defined, there cannot be an active note,
+		// activeNote can be null to deselect the note
+		if (x[0].entry == null) return
+
+		navigate({
+			entryId,
+			query: {
+				entityId: x[0].activeEntity?.id
 			}
-		}
-	}, [query])
+		})	
+	}, [x[0].entry, x[0].activeEntity])
 
 	React.useEffect(() => {
 		if (entry == null || entry === x[0].entry) return

@@ -88,6 +88,7 @@ export default class TiledImages {
 			return prev.union(curr.bounds)
 		}, null as OpenSeadragon.Rect)
 
+		if (bounds == null) return null
 		this.viewer.viewport.fitBounds(bounds)
 
 		return bounds
@@ -95,7 +96,7 @@ export default class TiledImages {
 
 	removeListeners() {
 		this.viewer.removeHandler('animation-finish', this.animationFinishHandler)
-		this.viewer.addHandler('add-item-failed', this.tileLoadFailedHandler)
+		this.viewer.removeHandler('add-item-failed', this.tileLoadFailedHandler)
 		this.viewer.world.removeHandler('add-item', this.addItemHandler)
 		this.viewer.world.removeHandler('add-item', this.highlightActiveTiles)
 	}

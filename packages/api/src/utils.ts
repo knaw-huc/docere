@@ -6,7 +6,7 @@ import { EsDataType } from '../../common/src/enum'
 
 import type { DocereApiError, ElasticSearchDocument } from './types'
 import type { DocereConfig } from '../../common/src/types/config-data/config'
-import { SerializedEntry, createLookup } from '../../common/src/types/entry'
+import { SerializedEntry, createLookup, MetadataItem } from '../../common/src/types/entry'
 
 export function getProjectsSourceDir() {
 	// The current working dir is api/, the projects/ dir shares the same parent as api/
@@ -142,6 +142,11 @@ export function getElasticSearchDocument(extractedEntry: SerializedEntry | Docer
 			return agg.concat(facsimile.versions.map(v => v.path))
 		}, [])
 
+	const metadata = extractedEntry.metadata?.reduce((prev, curr) => {
+			prev[curr.id] = curr.value
+			return prev
+		}, {} as Record<string, MetadataItem['value']>)
+
 	// const notes: string[] = Object.values(lookup.notes)
 	// 	.map(note => note.content)
 
@@ -156,7 +161,7 @@ export function getElasticSearchDocument(extractedEntry: SerializedEntry | Docer
 				.filter(t => t.trim().length > 0),
 		},
 		...entities,
-		...extractedEntry.metadata,
+		...metadata,
 	}
 }
 

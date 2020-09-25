@@ -112,7 +112,7 @@ function TextPanel(props: TextPanelProps) {
 		) return
 		textWrapperRef.current
 			.querySelector(`[data-facsimile-id="${props.activeFacsimile.id}"]`)
-			.scrollIntoView({ behavior: 'smooth' })
+			?.scrollIntoView({ behavior: 'smooth' })
 	}, [props.activeFacsimile])
 
 	if (components == null) return null

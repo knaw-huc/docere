@@ -1,6 +1,6 @@
 import { BooleanFacetConfig, ListFacetConfig, HierarchyFacetConfig, RangeFacetConfig, DateFacetConfig } from '../search'
 import { SerializedLayer, Layer } from '../config-data/layer'
-import type { Entity, Note, ExtractedMetadata, Facsimile } from '../config-data/functions'
+import type { Entity, Note, Facsimile } from '../config-data/functions'
 import { DocereConfig } from '../config-data/config'
 
 export * from './state'
@@ -25,13 +25,13 @@ export type ConfigEntry = Omit<Entry, 'layers'> & {
 	facsimiles: Facsimile[]
 	layers: SerializedLayer[]
 	notes: Note[]
+	parent?: ConfigEntry
 	parts?: EntryParts
 }
 
 export type EntryParts = Map<string, ConfigEntry>
 
-export interface SerializedEntry extends Pick<ConfigEntry, 'layers' | 'id'> {
-	metadata: ExtractedMetadata
+export interface SerializedEntry extends Pick<ConfigEntry, 'layers' | 'id' | 'metadata'> {
 	parts: SerializedEntry[]
 	plainText: string
 	content: string
