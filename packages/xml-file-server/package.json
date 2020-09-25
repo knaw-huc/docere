@@ -1,11 +1,9 @@
 {
   "name": "@docere/xml-file-server",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "description": "",
   "main": "build/index.js",
-  "bin": {
-    "serve": "./build/index.js"
-  },
+  "bin": "./build/index.js",
   "scripts": {
     "build": "tsc",
     "start": "node build/index.js",
