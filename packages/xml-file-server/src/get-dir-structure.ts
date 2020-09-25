@@ -1,6 +1,6 @@
 import fs from 'fs'
 import path from 'path'
-import { PROJECTS_PATH } from '.'
+import { BASE_PATH } from '.'
 
 function getDirents(dirPath: string) {
 	let projectDirs: fs.Dirent[] = []
@@ -20,7 +20,7 @@ function isXmlFile(dirent: fs.Dirent) {
 }
 
 const pathCreator = (dir: string) => {
-	const relativePath = dir.replace(PROJECTS_PATH, '')
+	const relativePath = dir.replace(BASE_PATH, '')
 	return (dirEnt: fs.Dirent) =>  path.resolve(relativePath, dirEnt.name)
 }
 
