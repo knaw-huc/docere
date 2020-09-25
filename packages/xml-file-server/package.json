@@ -1,6 +1,6 @@
 {
   "name": "@docere/xml-file-server",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "",
   "main": "build/index.js",
   "bin": "./run.js",
