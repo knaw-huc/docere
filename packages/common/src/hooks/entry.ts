@@ -16,7 +16,7 @@ export function useEntry(id: string) {
 			const entry = entryCache.get(id)
 			setEntry(entry)
 		} else {
-			fetchJson(`/api/projects/${projectId}/documents/${entryId}`)
+			fetchJson(`/api/projects/${projectId}/documents/${encodeURIComponent(entryId)}`)
 				.then(entry => {
 					entryCache.set(entry.id, entry)
 					setEntry(entry)

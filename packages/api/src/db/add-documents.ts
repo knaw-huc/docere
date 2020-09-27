@@ -1,10 +1,12 @@
+import path from 'path'
 import crypto from 'crypto'
 import * as es from '@elastic/elasticsearch'
 import { PoolClient } from 'pg'
+import fetch from 'node-fetch'
 
 import { SerializedEntry } from '../../../common/src'
 
-import { isError, readFileContents, getXMLPath } from '../utils'
+import { isError } from '../utils'
 import { xmlToStandoff } from '../api/standoff'
 import Puppenv from '../puppenv'
 
@@ -19,8 +21,31 @@ async function documentExists(content: string, client: PoolClient) {
 	return existsResult.rows[0].exists
 }
 
-export async function addXmlToDb(projectId: string, fileName: string, puppenv: Puppenv) {
-	const content = readFileContents(getXMLPath(projectId, fileName))
+export async function addRemoteFiles(remotePath: string, projectId: string, puppenv: Puppenv) {
+	if (remotePath.charAt(0) === '/') remotePath = remotePath.slice(1)
+
+	const xmlEndpoint = `${process.env.DOCERE_XML_URL}/${remotePath}`
+
+	console.log(xmlEndpoint)
+
+	const result = await fetch(xmlEndpoint)
+	const dirStructure = await result.json()
+	for (const filePath of dirStructure.files) {
+		const entryPath = remotePath === projectId ? '' : `${remotePath}/`
+		const entryId = (entryPath + path.basename(filePath, '.xml')).replace(new RegExp(`^${projectId}/?`), '')
+		console.log(`[${projectId}] Adding: '${entryId}'`)
+		const result = await fetch(`${process.env.DOCERE_XML_URL}/${filePath}`)
+		const content = await result.text()	
+		await addXmlToDb(content, projectId, entryId, puppenv)
+	}
+
+	for (const dirPath of dirStructure.directories) {
+		await addRemoteFiles(dirPath, projectId, puppenv)
+	}
+}
+
+export async function addXmlToDb(content: string, projectId: string, fileName: string, puppenv: Puppenv) {
+	// const content = readFileContents(getXMLPath(projectId, fileName))
 
 	const pool = await getPool(projectId)
 	const client = await pool.connect()
@@ -84,7 +109,7 @@ async function addDocumentToDb(props: {
 	entry: SerializedEntry,
 	content: string
 }) {
-	const { plainText, parts, ...dbEntry } = props.entry
+	const { plainText, parts, content, ...dbEntry } = props.entry
 
 	await tryQuery(
 		props.client,

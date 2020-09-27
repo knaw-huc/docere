@@ -56,9 +56,9 @@ export interface EntryLookup {
 }
 export function createLookup<T extends SerializedLayer[]>(layers: T) {
 	return layers.reduce((agg, layer) => {
-		layer.facsimiles.forEach(l => { agg.facsimiles[l.id] = l; })
-		layer.entities.forEach(e => { agg.entities[e.id] = e; })
-		layer.notes.forEach(n => { agg.notes[n.id] = n; })
+		layer.facsimiles?.forEach(l => { agg.facsimiles[l.id] = l; })
+		layer.entities?.forEach(e => { agg.entities[e.id] = e; })
+		layer.notes?.forEach(n => { agg.notes[n.id] = n; })
 		return agg
 	}, { facsimiles: {}, notes: {}, entities: {} } as EntryLookup)
 }

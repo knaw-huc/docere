@@ -1,16 +1,26 @@
 import { Express } from 'express'
+import fetch from 'node-fetch'
 
 import Puppenv from '../puppenv'
-import { addXmlToDb } from '../db/add-documents'
+import { addXmlToDb, addRemoteFiles } from '../db/add-documents'
 import { initProject } from '../db/init-project'
 import { getPool } from '../db'
-import { getXmlFiles, getEntryIdFromFilePath } from '../utils'
 
 export default function handleProjectApi(app: Express, puppenv: Puppenv) {
 	app.get('/api/projects/:projectId/documents/:documentId', async (req, res) => {
 		const pool = await getPool(req.params.projectId)
 		const { rows } = await pool.query(`SELECT json FROM document WHERE name=$1;`, [req.params.documentId])
 		res.json(rows[0].json)
+	})
+
+	app.get('/api/projects/:projectId/xml/:fileName', async (req, res) => {
+		const { projectId, fileName } = req.params
+
+		const xmlEndpoint = `${process.env.DOCERE_XML_URL}/${projectId}/${fileName}.xml`
+		const result = await fetch(xmlEndpoint)
+		const xml = await result.text()
+
+		res.send(xml)
 	})
 
 	app.post('/api/projects/:projectId/xml/:fileName', async (req, res) => {
@@ -20,7 +30,11 @@ export default function handleProjectApi(app: Express, puppenv: Puppenv) {
 
 		const { projectId, fileName } = req.params
 
-		await addXmlToDb(projectId, fileName, puppenv)
+		const xmlEndpoint = `${process.env.DOCERE_XML_URL}/${projectId}/${fileName}`
+		const result = await fetch(xmlEndpoint)
+		const content = await result.text()
+
+		await addXmlToDb(content, projectId, fileName, puppenv)
 
 		res.end()
 	})
@@ -28,20 +42,19 @@ export default function handleProjectApi(app: Express, puppenv: Puppenv) {
 	app.post('/api/projects/:projectId/xml', async (req, res) => {
 		// TODO check if project exists
 		// Return an async ACCEPTED immediately, the server will handle it from here
-		res.sendStatus(202)
+		res.sendStatus(202).end()
+
 
 		const { projectId } = req.params
-		const files = await getXmlFiles(projectId)
-		for (const filePath of files) {
-			console.log(`[${projectId}] Adding: '${filePath}'`)
-			await addXmlToDb(projectId, getEntryIdFromFilePath(filePath, projectId), puppenv)
-		}
+		addRemoteFiles(projectId, projectId, puppenv)
 
-		res.end()
+		// const files = await getXmlFiles(projectId)
+
+		// res.end()
 	})
 
 	app.post('/api/projects/:projectId/init', async (req, res) => {
-		initProject(req.params.projectId)
+		await initProject(req.params.projectId)
 
 		console.log(`Project '${req.params.projectId}' has an empty db and is ready for documents!`)
 
