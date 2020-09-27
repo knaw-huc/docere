@@ -2,6 +2,7 @@ import path from 'path'
 import { surianoTests } from './suriano'
 import { isidoreTests } from './isidore'
 import { utrechtpsalterTests } from './utrechtpsalter'
+import { mondrianTests } from './mondrian'
 
 describe('Projects', () => {
 	beforeAll(async () => {
@@ -14,7 +15,8 @@ describe('Projects', () => {
 		})
 	})
 
-	describe('Suriano', surianoTests)
 	describe('Isidore', isidoreTests)
+	describe('Mondrian', mondrianTests)
+	describe('Suriano', surianoTests)
 	describe('Utrecht psalter', utrechtpsalterTests)
 })
