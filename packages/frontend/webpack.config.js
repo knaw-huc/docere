@@ -1,6 +1,6 @@
 const path = require('path')
 
-const { parsed: env, error: envError } = require('dotenv').config({ path: path.resolve(__dirname, '../../.env') })
+const { parsed: env, error: envError } = require('dotenv').config({ path: path.resolve(__dirname, '../../.env.dev') })
 if (envError) throw envError
 
 module.exports = {
@@ -28,12 +28,12 @@ module.exports = {
 			},
 			'/iiif': {
 				changeOrigin: true,
-				target: env.IIIF_DEV_URL,
+				target: env.DOCERE_IIIF_URL,
 			},
-			'/xml': {
-				changeOrigin: true,
-				target: env.XML_DEV_URL,
-			},
+			// '/xml': {
+			// 	changeOrigin: true,
+			// 	target: env.DOCERE_XML_URL,
+			// },
 		},
 		watchOptions: {
 			ignored: /node_modules/

@@ -29,6 +29,8 @@ services:
       context: ../../
       dockerfile: ./packages/api/Dockerfile
     command: ["npx", "nodemon", "./packages/api", "-w", "./packages/api/build/api", "-w", "./packages/api/build.puppenv.utils/bundle.js"]
+    env_file:
+      - ../../.env.dev
     networks:
       - elastic
     ports:

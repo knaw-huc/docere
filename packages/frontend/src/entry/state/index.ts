@@ -266,7 +266,9 @@ export default function useEntryState() {
 		let activeFacsimile = lookup.facsimiles[query.facsimileId]
 		if (activeFacsimile == null) {
 			const facsimiles = entry.layers.find(isFacsimileLayer)?.facsimiles
-			if (facsimiles.length) activeFacsimile = facsimiles[0]
+			if (Array.isArray(facsimiles) && facsimiles.length) {
+				activeFacsimile = facsimiles[0]
+			}
 		}
 
 		// TODO activeFacsimile is a state of layer, not the entry

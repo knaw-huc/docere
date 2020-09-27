@@ -141,7 +141,7 @@ function TextPanel(props: TextPanelProps) {
 						customProps={customProps}
 						components={components}
 						highlight={searchContext.state.query}
-						html={layer.content}
+						xml={layer.content}
 						onLoad={setDocereTextViewReady}
 						setHighlightAreas={setHighlightAreas}
 					/>
