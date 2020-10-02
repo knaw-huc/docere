@@ -30,10 +30,20 @@ export function getPageXmlPath(projectId: string, pagePath: string) {
 	// return readFileContents(p)
 }
 
+// TODO old, remove
 export function getEntryIdFromFilePath(xmlFilePath: string, projectId: string) {
 	const dir = path.dirname(xmlFilePath).replace(getXmlDir(projectId), '')
 	const base = path.basename(xmlFilePath, '.xml')
 	return `${dir}/${base}`.replace(/^\//, '')
+}
+
+export function extractDocumentIdFromRemoteFilePath(filePath: string, projectId: string) {
+	if (filePath === projectId) return filePath
+
+	const re = new RegExp(`^/?${projectId}/?`)
+	const withoutExtension = path.resolve(path.dirname(filePath), path.basename(filePath, '.xml'))
+	const withoutProjectDir = withoutExtension.replace(re, '')
+	return withoutProjectDir
 }
 
 export function readFileContents(filePath: string) {
@@ -193,6 +203,17 @@ export function sendText(payload: string | DocereApiError, expressResponse: Expr
 	}
 
 	expressResponse.type('text/plain').send(payload)
+}
+
+// The URL query ?somequery=12 is user input and is received as 
+// string. This function safely converts to a number
+export function castUrlQueryToNumber(query: string | string[]) {
+	if (Array.isArray(query)) query = query[0]
+	if (query == null) return null
+	const regExpArray = /\d+/.exec(query as string)
+	return Array.isArray(regExpArray) && regExpArray.length ?
+		parseInt(regExpArray[0], 10) :
+		null
 }
 
 // export async function getDocumentFields(projectId: string, documentId: string) {

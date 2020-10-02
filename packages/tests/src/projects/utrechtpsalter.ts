@@ -1,23 +1,11 @@
-import path from 'path'
-import fs from 'fs'
 import { SerializedEntry, isSerializedTextLayer } from '../../../common/src'
-import { prepareAndExtract } from '../../../api/src/puppenv/prepare-and-extract'
-import { isError } from '../../../api/src/utils'
+import { handleXml } from '../utils'
 
 export function utrechtpsalterTests() {
 	let entry: SerializedEntry
 
 	beforeAll(async () => {
-		const xml = fs.readFileSync(path.resolve(process.cwd(), '../projects/src/utrechtpsalter/xml/0132.xml'), 'utf8')
-
-		const result = await page.evaluate(
-			prepareAndExtract,
-			xml,
-			'0123',
-			'utrechtpsalter',
-		)
-		if (isError(result)) return
-		entry = result[0]
+		entry = await handleXml('utrechtpsalter', '0123')
 	})
 
 	it('Should have 2 layers', () => {

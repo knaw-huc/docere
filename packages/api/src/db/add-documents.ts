@@ -1,56 +1,75 @@
-import path from 'path'
 import crypto from 'crypto'
 import * as es from '@elastic/elasticsearch'
 import { PoolClient } from 'pg'
 import fetch from 'node-fetch'
 
-import { SerializedEntry } from '../../../common/src'
+import { SerializedEntry, XmlDirectoryStructure } from '../../../common/src'
 
-import { isError } from '../utils'
+import { isError, extractDocumentIdFromRemoteFilePath } from '../utils'
 import { xmlToStandoff } from '../api/standoff'
 import Puppenv from '../puppenv'
 
 import { getPool, tryQuery } from './index'
 import { indexDocument } from './init-project'
 
-async function documentExists(content: string, client: PoolClient) {
+interface AddRemoteFilesOptions {
+	force?: boolean
+	maxPerDir?: number
+	maxPerDirOffset?: number
+}
+
+const defaultAddRemoteFilesOptions: Required<AddRemoteFilesOptions> = {
+	force: false,
+	maxPerDir: null,
+	maxPerDirOffset: 0,
+}
+
+async function xmlExists(fileName: string, content: string, client: PoolClient) {
 	const hash = crypto.createHash('md5').update(content)
 	const hex = hash.digest('hex')
-	console.log(hex)
-	const existsResult = await client.query(`SELECT EXISTS(SELECT 1 FROM xml WHERE hash='${hex}')`)
+	const existsResult = await client.query(`SELECT EXISTS(SELECT 1 FROM xml WHERE name='${fileName}' AND hash='${hex}')`)
 	return existsResult.rows[0].exists
 }
 
-export async function addRemoteFiles(remotePath: string, projectId: string, puppenv: Puppenv) {
+export async function addRemoteFiles(remotePath: string, projectId: string, puppenv: Puppenv, options?: AddRemoteFilesOptions) {
+	options = { ...defaultAddRemoteFilesOptions, ...options }
 	if (remotePath.charAt(0) === '/') remotePath = remotePath.slice(1)
 
+	// Fetch directory structure
 	const xmlEndpoint = `${process.env.DOCERE_XML_URL}/${remotePath}`
-
-	console.log(xmlEndpoint)
-
 	const result = await fetch(xmlEndpoint)
-	const dirStructure = await result.json()
-	for (const filePath of dirStructure.files) {
-		const entryPath = remotePath === projectId ? '' : `${remotePath}/`
-		const entryId = (entryPath + path.basename(filePath, '.xml')).replace(new RegExp(`^${projectId}/?`), '')
-		console.log(`[${projectId}] Adding: '${entryId}'`)
-		const result = await fetch(`${process.env.DOCERE_XML_URL}/${filePath}`)
+	if (result.status === 404) {
+		console.log(`[${projectId}] remote path not found: '${remotePath}'`)
+		return
+	}
+	const dirStructure: XmlDirectoryStructure = await result.json()
+
+	// Add XML files to database
+	// const files = options.maxPerDir ? dirStructure.files.slice(0, options.maxPerDir) : dirStr
+	let { files } = dirStructure
+	if (options.maxPerDir != null) {
+		const maxPerDirOffset = options.maxPerDirOffset == null ? 0 : options.maxPerDirOffset
+		files = files.slice(maxPerDirOffset, maxPerDirOffset + options.maxPerDir)
+	}
+	for (const filePath of files) {
+		const entryId = extractDocumentIdFromRemoteFilePath(filePath, projectId)
+		const result = await fetch(`${process.env.DOCERE_XML_URL}${filePath}`)
 		const content = await result.text()	
-		await addXmlToDb(content, projectId, entryId, puppenv)
+		await addXmlToDb(content, projectId, entryId, puppenv, options.force)
 	}
 
+	// Recursively add sub dirs
 	for (const dirPath of dirStructure.directories) {
-		await addRemoteFiles(dirPath, projectId, puppenv)
+		await addRemoteFiles(dirPath, projectId, puppenv, options)
 	}
 }
 
-export async function addXmlToDb(content: string, projectId: string, fileName: string, puppenv: Puppenv) {
-	// const content = readFileContents(getXMLPath(projectId, fileName))
-
+export async function addXmlToDb(content: string, projectId: string, fileName: string, puppenv: Puppenv, force = false) {
 	const pool = await getPool(projectId)
 	const client = await pool.connect()
-
-	if (await documentExists(content, client)) {
+	
+	const isUpdate = await xmlExists(fileName, content, client)
+	if (isUpdate && !force) {
 		console.log(`[${projectId}] document '${fileName}' exists`)
 		client.release()
 		return
@@ -98,6 +117,9 @@ export async function addXmlToDb(content: string, projectId: string, fileName: s
 	}
 
 	await tryQuery(client, 'COMMIT')
+
+	console.log(`[${projectId}] ${isUpdate ? 'Updated' : 'Added'}: '${fileName}'`)
+
 	client.release()
 }
 

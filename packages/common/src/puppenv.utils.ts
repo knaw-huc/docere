@@ -1,5 +1,5 @@
 import { Entry, MetadataItem, GetEntryProps, GetPartProps, ConfigEntry, SerializedEntry } from './types/entry'
-import { FacsimileArea, Facsimile, LayerType, TextData, defaultMetadata, DocereConfig, setTitle } from '.'
+import { FacsimileArea, Facsimile, LayerType, TextData, DocereConfig, setTitle } from '.'
 import { isTextLayerConfig, isSerializedTextLayer } from './utils'
 import { SerializedLayer } from './types'
 
@@ -64,9 +64,7 @@ function addCount(prev: Map<string, TextData>, curr: TextData) {
 function extractMetadata(entry: ConfigEntry, config: DocereConfig): Entry['metadata'] {
 	return config.metadata
 		.map(md => ({
-			...defaultMetadata,
-			id: md.id,
-			title: md.id,
+			...md,
 			value: md.extract(entry, config)
 		}) as MetadataItem)
  		.sort((config1, config2) => config1.order - config2.order)

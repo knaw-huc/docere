@@ -5,6 +5,7 @@ import Puppenv from '../puppenv'
 import { addXmlToDb, addRemoteFiles } from '../db/add-documents'
 import { initProject } from '../db/init-project'
 import { getPool } from '../db'
+import { castUrlQueryToNumber } from '../utils'
 
 export default function handleProjectApi(app: Express, puppenv: Puppenv) {
 	app.get('/api/projects/:projectId/documents/:documentId', async (req, res) => {
@@ -17,6 +18,7 @@ export default function handleProjectApi(app: Express, puppenv: Puppenv) {
 		const { projectId, fileName } = req.params
 
 		const xmlEndpoint = `${process.env.DOCERE_XML_URL}/${projectId}/${fileName}.xml`
+
 		const result = await fetch(xmlEndpoint)
 		const xml = await result.text()
 
@@ -30,11 +32,15 @@ export default function handleProjectApi(app: Express, puppenv: Puppenv) {
 
 		const { projectId, fileName } = req.params
 
-		const xmlEndpoint = `${process.env.DOCERE_XML_URL}/${projectId}/${fileName}`
+		const xmlEndpoint = `${process.env.DOCERE_XML_URL}/${projectId}/${fileName}.xml`
 		const result = await fetch(xmlEndpoint)
+		if (result.status === 404) {
+			res.status(404).end()
+			return
+		}
 		const content = await result.text()
 
-		await addXmlToDb(content, projectId, fileName, puppenv)
+		await addXmlToDb(content, projectId, fileName, puppenv, req.query.force === '')
 
 		res.end()
 	})
@@ -44,13 +50,13 @@ export default function handleProjectApi(app: Express, puppenv: Puppenv) {
 		// Return an async ACCEPTED immediately, the server will handle it from here
 		res.sendStatus(202).end()
 
-
 		const { projectId } = req.params
-		addRemoteFiles(projectId, projectId, puppenv)
 
-		// const files = await getXmlFiles(projectId)
-
-		// res.end()
+		addRemoteFiles(projectId, projectId, puppenv, {
+			force: req.query.force === '',
+			maxPerDir: castUrlQueryToNumber(req.query.max_per_dir as string),
+			maxPerDirOffset: castUrlQueryToNumber(req.query.max_per_dir_offset as string)
+		})
 	})
 
 	app.post('/api/projects/:projectId/init', async (req, res) => {

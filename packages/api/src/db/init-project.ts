@@ -17,7 +17,7 @@ export async function initProject(projectId: string) {
 		`CREATE TABLE xml (
 			id SERIAL PRIMARY KEY,
 			name TEXT UNIQUE,
-			hash TEXT UNIQUE, 
+			hash TEXT, 
 			content TEXT,
 			prepared TEXT,
 			standoff_text TEXT,

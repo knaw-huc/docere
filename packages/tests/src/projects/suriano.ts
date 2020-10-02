@@ -1,12 +1,9 @@
-import path from 'path'
-import fs from 'fs'
 import 'expect-puppeteer'
-import { prepareAndExtract } from '../../../api/src/puppenv/prepare-and-extract'
-import { isError } from '../../../api/src/utils'
 import { isSerializedTextLayer, isSerializedFacsimileLayer } from '../../../common/src/utils'
 
 import type { PrepareAndExtractOutput } from '../../../api/src/types'
 import type { SerializedEntry } from '../../../common/src'
+import { handleXml } from '../utils'
 
 export const surianoTests = () => {
 	let output: PrepareAndExtractOutput
@@ -14,18 +11,7 @@ export const surianoTests = () => {
 	let part4: SerializedEntry
 
 	beforeAll(async () => {
-		const xml = fs.readFileSync(path.resolve(process.cwd(), '../projects/src/suriano/xml/suriano.xml'), 'utf8')
-
-		const result = await page.evaluate(
-			prepareAndExtract,
-			xml,
-			'suriano',
-			'suriano',
-		)
-
-		if (isError(result)) return;
-		output = result
-		entry = output[0]
+		entry = await handleXml('suriano', 'suriano')
 		part4 = entry.parts[3]
 	})
 
