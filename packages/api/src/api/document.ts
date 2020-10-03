@@ -8,7 +8,7 @@ import { initProjectIndex } from '../es'
 import { getPool } from '../db'
 import { castUrlQueryToNumber } from '../utils'
 
-export default function handleProjectApi(app: Express, puppenv: Puppenv) {
+export default function handleDocumentApi(app: Express, puppenv: Puppenv) {
 	app.get('/api/projects/:projectId/documents/:documentId', async (req, res) => {
 		const pool = await getPool(req.params.projectId)
 		const { rows } = await pool.query(`SELECT json FROM document WHERE name=$1;`, [req.params.documentId])

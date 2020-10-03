@@ -8,8 +8,8 @@ import { gheysTests } from './gheys'
 describe('Projects', () => {
 	beforeAll(async () => {
 		await page.goto(`http://localhost:4444`)
-		await page.addScriptTag({ path: path.resolve(process.cwd(), '../projects/dist/index.js') })
-		await page.addScriptTag({ path: path.resolve(process.cwd(), '../api/build.puppenv.utils/bundle.js') })
+		await page.addScriptTag({ path: path.resolve(process.cwd(), '../api/build.puppenv.data/utils.js') })
+		await page.addScriptTag({ path: path.resolve(process.cwd(), '../api/build.puppenv.data/projects.js') })
 		page.on('console', (msg: any) => {
 			msg = msg.text()
 			console.log('From page: ', msg)

@@ -6,6 +6,7 @@ import { Mapping } from '../../api/src/types'
 
 export async function fetchEntry(projectId: string, documentId: string): Promise<SerializedEntry> {
 	const fetchResult = await fetch(`http://localhost/api/projects/${projectId}/xml/${encodeURIComponent(documentId)}`)
+	if (fetchResult.status === 404) throw Error(`XML file server return 404`)
 	const xml = await fetchResult.text()
 
 	const result = await page.evaluate(
@@ -14,7 +15,7 @@ export async function fetchEntry(projectId: string, documentId: string): Promise
 		documentId,
 		projectId,
 	) 
-	if (isError(result)) return
+	if (isError(result)) throw Error(result.__error)
 
 	return result[0]
 }

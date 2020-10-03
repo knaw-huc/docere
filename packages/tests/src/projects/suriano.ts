@@ -1,12 +1,10 @@
 import 'expect-puppeteer'
 import { isSerializedTextLayer, isSerializedFacsimileLayer } from '../../../common/src/utils'
 
-import type { PrepareAndExtractOutput } from '../../../api/src/types'
 import type { SerializedEntry } from '../../../common/src'
 import { fetchEntry } from '../utils'
 
 export const surianoTests = () => {
-	let output: PrepareAndExtractOutput
 	let entry: SerializedEntry
 	let part4: SerializedEntry
 
@@ -16,19 +14,19 @@ export const surianoTests = () => {
 	})
 
 	it('Should have 12 parts', () => {
-		expect(output[0].parts).toHaveLength(12)
+		expect(entry.parts).toHaveLength(12)
 	})
 
 	it('Should have 86 facsimiles', () => {
-		const textLayer = output[0].layers.find(isSerializedTextLayer)
+		const textLayer = entry.layers.find(isSerializedTextLayer)
 		expect(textLayer.facsimiles).toHaveLength(86)
 
-		const facsimileLayer = output[0].layers.find(isSerializedFacsimileLayer)
+		const facsimileLayer = entry.layers.find(isSerializedFacsimileLayer)
 		expect(facsimileLayer.facsimiles).toHaveLength(86)
 	})
 
 	it('Should have 2 layers', () => {
-		expect(output[0].layers).toHaveLength(2)
+		expect(entry.layers).toHaveLength(2)
 	})
 
 	describe('Part 4', () => {

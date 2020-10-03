@@ -1,11 +1,10 @@
 import { Express } from 'express'
 
-import { listProjects, isError } from '../utils'
-import Puppenv from '../puppenv'
+import { listProjects, isError, getProjectConfig } from '../utils'
 
 import type { DocereConfig } from '@docere/common'
 
-export default function handleDtsApi(app: Express, puppenv: Puppenv) {
+export default function handleDtsApi(app: Express) {
 	app.get('/api/dts', (_req, res) => {
 		res.json({
 			"@context": "dts/EntryPoint.jsonld",
@@ -19,7 +18,7 @@ export default function handleDtsApi(app: Express, puppenv: Puppenv) {
 
 	app.get('/api/dts/collections', async (_req, res) => {
 		const projectIds = listProjects()
-		const configs = await Promise.all(projectIds.map(id => puppenv.getConfig(id)))
+		const configs = await Promise.all(projectIds.map(id => getProjectConfig(id)))
 		const filtered = configs.filter(config => !isError(config) && !config.private)
 
 		res.json({

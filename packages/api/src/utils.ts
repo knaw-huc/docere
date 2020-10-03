@@ -2,7 +2,7 @@ import * as path from 'path'
 import * as fs from 'fs'
 import { Response as ExpressResponse } from 'express'
 import chalk from 'chalk'
-import { EsDataType } from '@docere/common'
+import { EsDataType, PageConfig } from '@docere/common'
 
 import type { DocereApiError, ElasticSearchDocument } from './types'
 import type { DocereConfig, MetadataItem, SerializedEntry } from '@docere/common'
@@ -40,13 +40,16 @@ export function getEntryIdFromFilePath(xmlFilePath: string, projectId: string) {
 	return `${dir}/${base}`.replace(/^\//, '')
 }
 
-export function extractDocumentIdFromRemoteFilePath(filePath: string, projectId: string) {
-	if (filePath === projectId) return filePath
+export function getDocumentIdFromRemoteXmlFilePath(filePath: string, projectId: string) {
+	const withoutExtension = path.resolve(path.dirname(filePath), path.basename(filePath, '.xml'))
+
+	// Return null if withoutExtension and filePath are equal,
+	// which means it's a dir or not an XML file
+	if (withoutExtension === filePath) return null
 
 	const re = new RegExp(`^/?${projectId}/?`)
-	const withoutExtension = path.resolve(path.dirname(filePath), path.basename(filePath, '.xml'))
 	const withoutProjectDir = withoutExtension.replace(re, '')
-	return withoutProjectDir
+	return withoutProjectDir.length ? withoutProjectDir : null
 }
 
 export function readFileContents(filePath: string) {
@@ -151,6 +154,19 @@ export async function getProjectConfig(projectId: string) {
 	}
 
 	return config
+}
+
+export async function getProjectPageConfig(projectId: string, pageId: string): Promise<PageConfig | DocereApiError> {
+	const config = await getProjectConfig(projectId)
+	if (isError(config)) return config
+
+	return config.pages
+		.reduce((prev, curr) => {
+			if (Array.isArray(curr.children)) prev.push(...curr.children)
+			prev.push(curr)
+			return prev
+		}, [])
+		.find(p => p.id === pageId)
 }
 
 export function getElasticSearchDocument(extractedEntry: SerializedEntry | DocereApiError): ElasticSearchDocument | DocereApiError {

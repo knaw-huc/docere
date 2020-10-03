@@ -7,7 +7,7 @@
 		"incremental": true,
 		"isolatedModules": true,
 		"jsx": "react",
-		"module": "esnext",
+		"module": "commonjs",
 		"moduleResolution": "node",
 		"noImplicitAny": true,
 		"noUnusedLocals": true,

@@ -5,7 +5,7 @@ import fetch from 'node-fetch'
 
 import { SerializedEntry, XmlDirectoryStructure } from '../../../common/src'
 
-import { isError, extractDocumentIdFromRemoteFilePath } from '../utils'
+import { isError, getDocumentIdFromRemoteXmlFilePath } from '../utils'
 import { xmlToStandoff } from '../api/standoff'
 import Puppenv from '../puppenv'
 
@@ -52,7 +52,7 @@ export async function addRemoteFiles(remotePath: string, projectId: string, pupp
 		files = files.slice(maxPerDirOffset, maxPerDirOffset + options.maxPerDir)
 	}
 	for (const filePath of files) {
-		const entryId = extractDocumentIdFromRemoteFilePath(filePath, projectId)
+		const entryId = getDocumentIdFromRemoteXmlFilePath(filePath, projectId)
 		const result = await fetch(`${process.env.DOCERE_XML_URL}${filePath}`)
 		const content = await result.text()	
 		await addXmlToDb(content, projectId, entryId, puppenv, options.force)

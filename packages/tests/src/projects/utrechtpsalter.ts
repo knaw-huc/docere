@@ -33,9 +33,9 @@ export function utrechtpsalterTests() {
 			expect(layer.title).toBe('Latin')
 		})
 
-		it('Should be PSALM 106', () => {
+		it('Should be PSALM 101', () => {
 			const layer = entry.layers.filter(isSerializedTextLayer)[0]
-			expect(layer.content.slice(96, 105)).toBe('PSALM 106')
+			expect(layer.content.slice(67, 76)).toBe('PSALM 101')
 		})
 	})
 }

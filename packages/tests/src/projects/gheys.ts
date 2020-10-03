@@ -12,7 +12,7 @@ export function gheysTests() {
 		entry = await fetchEntry(projectId, documentId)
 	})
 
-	describe('Mapping', () => {
+	describe('Gheys mapping', () => {
 		let mapping: Mapping
 
 		beforeAll(async () => {
@@ -22,6 +22,28 @@ export function gheysTests() {
 		it('Should have mappings and properties', () => {
 			expect(mapping).toHaveProperty('mappings')
 			expect(mapping.mappings).toHaveProperty('properties')
+		})
+
+		it('Should have hierarchy metadata "toegang"', () => {
+			expect(mapping.mappings.properties).toHaveProperty('toegang_level0')
+			expect(mapping.mappings.properties).toHaveProperty('toegang_level1')
+			expect(mapping.mappings.properties).toHaveProperty('toegang_level2')
+			expect(mapping.mappings.properties).toHaveProperty('toegang_level3')
+			expect(mapping.mappings.properties).not.toHaveProperty('toegang_level4')
+		})
+
+		it('Should have integer metadata', () => {
+			expect(mapping.mappings.properties.blocks.type).toBe('integer')
+			expect(mapping.mappings.properties.chars.type).toBe('integer')
+			expect(mapping.mappings.properties.n.type).toBe('integer')
+		})
+
+		it('Should have boolean metadata', () => {
+			expect(mapping.mappings.properties.has_date.type).toBe('boolean')
+		})
+
+		it('Should have date metadata', () => {
+			expect(mapping.mappings.properties.normalised_dates.type).toBe('date')
 		})
 	})
 

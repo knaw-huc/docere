@@ -2,15 +2,16 @@ const path = require('path')
 
 module.exports = {
 	entry: {
-		bundle: "./node_modules/@docere/common/src/puppenv.utils.ts"
+		utils: "./src/puppenv/utils.ts",
+		projects: "../projects/src/index.ts"
 	},
 	mode: "development",
 	output: {
 		filename: "[name].js",
 		globalObject: 'this',
-		library: "PuppenvUtils",
+		library: ["PuppenvData", "[name]"],
 		libraryTarget: "umd",
-		path: path.resolve(__dirname, './build.puppenv.utils'),
+		path: path.resolve(__dirname, './build.puppenv.data'),
 	},
 	resolve: {
 		extensions: [".webpack.js", ".web.js", ".ts", ".tsx", ".js"]
