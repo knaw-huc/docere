@@ -2,11 +2,14 @@ import * as path from 'path'
 import * as fs from 'fs'
 import { Response as ExpressResponse } from 'express'
 import chalk from 'chalk'
-import { EsDataType } from '../../common/src/enum'
+import { EsDataType } from '@docere/common'
 
 import type { DocereApiError, ElasticSearchDocument } from './types'
-import type { DocereConfig } from '../../common/src/types/config-data/config'
-import { SerializedEntry, createLookup, MetadataItem } from '../../common/src/types/entry'
+import type { DocereConfig, MetadataItem, SerializedEntry } from '@docere/common'
+import { createLookup } from '../../common/src/types/entry'
+
+// const projects = require('esm')(module)(path.resolve(process.cwd(), './packages/projects')).default
+import projects from '@docere/projects'
 
 export function getProjectsSourceDir() {
 	// The current working dir is api/, the projects/ dir shares the same parent as api/
@@ -134,6 +137,22 @@ export function isError(payload: any | DocereApiError): payload is DocereApiErro
 	return payload != null && payload.hasOwnProperty('__error')
 }
 
+
+export async function getProjectConfig(projectId: string) {
+	const error: DocereApiError = { code: 404, __error: `Config data not found. Does project '${projectId}' exist?` }
+
+	let config: DocereConfig | DocereApiError
+	try {
+		const configImport = await projects[projectId].config
+		config = configImport == null ? error : (await configImport()).default
+	} catch (err) {
+		console.log(err)
+		config = error
+	}
+
+	return config
+}
+
 export function getElasticSearchDocument(extractedEntry: SerializedEntry | DocereApiError): ElasticSearchDocument | DocereApiError {
 	if (isError(extractedEntry)) return extractedEntry
 
@@ -153,7 +172,15 @@ export function getElasticSearchDocument(extractedEntry: SerializedEntry | Docer
 		}, [])
 
 	const metadata = extractedEntry.metadata?.reduce((prev, curr) => {
-			prev[curr.id] = curr.value
+			if (curr.datatype === EsDataType.Hierarchy) {
+				if (Array.isArray(curr.value)) {
+					curr.value.forEach((v, i) => {
+						prev[`${curr.id}_level${i}`] = v
+					})
+				}
+			} else {
+				prev[curr.id] = curr.value
+			}
 			return prev
 		}, {} as Record<string, MetadataItem['value']>)
 

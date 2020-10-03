@@ -4,6 +4,7 @@ import fetch from 'node-fetch'
 import Puppenv from '../puppenv'
 import { addXmlToDb, addRemoteFiles } from '../db/add-documents'
 import { initProject } from '../db/init-project'
+import { initProjectIndex } from '../es'
 import { getPool } from '../db'
 import { castUrlQueryToNumber } from '../utils'
 
@@ -61,6 +62,7 @@ export default function handleProjectApi(app: Express, puppenv: Puppenv) {
 
 	app.post('/api/projects/:projectId/init', async (req, res) => {
 		await initProject(req.params.projectId)
+		await initProjectIndex(req.params.projectId)
 
 		console.log(`Project '${req.params.projectId}' has an empty db and is ready for documents!`)
 

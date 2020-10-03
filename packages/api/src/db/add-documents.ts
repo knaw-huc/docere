@@ -10,7 +10,7 @@ import { xmlToStandoff } from '../api/standoff'
 import Puppenv from '../puppenv'
 
 import { getPool, tryQuery } from './index'
-import { indexDocument } from './init-project'
+import { indexDocument } from '../es'
 
 interface AddRemoteFilesOptions {
 	force?: boolean

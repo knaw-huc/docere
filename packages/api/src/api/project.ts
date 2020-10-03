@@ -1,10 +1,10 @@
 import { Express } from 'express'
 
 import Puppenv from '../puppenv'
-import { getXmlFiles, sendJson, getPageXmlPath, isError } from '../utils'
+import { sendJson, getPageXmlPath, isError } from '../utils'
 
-import type { Mapping, DocereApiError } from '../types'
 import handleAnalyzeApi from './analyze'
+import { getProjectIndexMapping } from '../es'
 
 export default function handleProjectApi(app: Express, puppenv: Puppenv) {
 	app.get('/api/projects/:projectId/config', async (req, res) => {
@@ -13,15 +13,7 @@ export default function handleProjectApi(app: Express, puppenv: Puppenv) {
 	})
 
 	app.get('/api/projects/:projectId/mapping', async (req, res) => {
-		const files = await getXmlFiles(req.params.projectId)
-
-		let mapping: Mapping | DocereApiError
-		try {
-			mapping = await puppenv.getMapping(req.params.projectId, files)
-		} catch (err) {
-			mapping = { code: 404, __error: err.message }
-		}
-
+		const mapping = await getProjectIndexMapping(req.params.projectId)
 		sendJson(mapping, res)
 	})
 
