@@ -1,5 +1,6 @@
 import { SerializedEntry, isFacsimileLayer, isTextLayer, EsDataType } from '../../../common/src'
-import { handleXml } from '../utils'
+import { fetchEntry, fetchMapping } from '../utils'
+import { Mapping } from '../../../api/src/types'
 
 const projectId = 'gheys'
 const documentId = 'NAN_disk1/7746/NL-HaNA_1.04.02_7746_0007'
@@ -8,7 +9,20 @@ export function gheysTests() {
 	let entry: SerializedEntry
 
 	beforeAll(async () => {
-		entry = await handleXml(projectId, documentId)
+		entry = await fetchEntry(projectId, documentId)
+	})
+
+	describe('Mapping', () => {
+		let mapping: Mapping
+
+		beforeAll(async () => {
+			mapping = await fetchMapping(projectId)
+		})
+
+		it('Should have mappings and properties', () => {
+			expect(mapping).toHaveProperty('mappings')
+			expect(mapping.mappings).toHaveProperty('properties')
+		})
 	})
 
 	it(`Should have ID: ${documentId}`, () => {

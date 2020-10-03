@@ -1,11 +1,11 @@
 import { SerializedEntry, isSerializedTextLayer } from '../../../common/src'
-import { handleXml } from '../utils'
+import { fetchEntry } from '../utils'
 
 export function utrechtpsalterTests() {
 	let entry: SerializedEntry
 
 	beforeAll(async () => {
-		entry = await handleXml('utrechtpsalter', '0123')
+		entry = await fetchEntry('utrechtpsalter', '0123')
 	})
 
 	it('Should have 2 layers', () => {

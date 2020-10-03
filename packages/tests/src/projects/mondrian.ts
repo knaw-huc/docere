@@ -1,5 +1,5 @@
 import { SerializedEntry, isFacsimileLayer, isTextLayer } from '../../../common/src'
-import { handleXml } from '../utils'
+import { fetchEntry } from '../utils'
 
 const projectId = 'mondrian'
 const briefId = 'brieven/18931007_PM_ALLE_5004'
@@ -11,8 +11,8 @@ export function mondrianTests() {
 	let geschrift: SerializedEntry
 
 	beforeAll(async () => {
-		brief = await handleXml(projectId, briefId)
-		geschrift = await handleXml(projectId, geschriftId)
+		brief = await fetchEntry(projectId, briefId)
+		geschrift = await fetchEntry(projectId, geschriftId)
 	})
 
 	it('Should have 3 layers', () => {

@@ -1,12 +1,12 @@
 import type { SerializedEntry } from '../../../common/src'
-import { handleXml } from '../utils'
+import { fetchEntry } from '../utils'
 
 export function isidoreTests() {
 	let entry: SerializedEntry
 	let part4: SerializedEntry
 
 	beforeAll(async () => {
-		entry = await handleXml('isidore', 'Isidore')
+		entry = await fetchEntry('isidore', 'Isidore')
 		part4 = entry.parts[3]
 	})
 

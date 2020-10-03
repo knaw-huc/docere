@@ -3,7 +3,7 @@ import { isSerializedTextLayer, isSerializedFacsimileLayer } from '../../../comm
 
 import type { PrepareAndExtractOutput } from '../../../api/src/types'
 import type { SerializedEntry } from '../../../common/src'
-import { handleXml } from '../utils'
+import { fetchEntry } from '../utils'
 
 export const surianoTests = () => {
 	let output: PrepareAndExtractOutput
@@ -11,7 +11,7 @@ export const surianoTests = () => {
 	let part4: SerializedEntry
 
 	beforeAll(async () => {
-		entry = await handleXml('suriano', 'suriano')
+		entry = await fetchEntry('suriano', 'suriano')
 		part4 = entry.parts[3]
 	})
 
