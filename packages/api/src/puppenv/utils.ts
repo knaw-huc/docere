@@ -74,7 +74,7 @@ function extractLayers(entry: ConfigEntry, parent: ConfigEntry, config: DocereCo
 
 			if (isSerializedTextLayer(textLayer) && isTextLayerConfig(layer)) {
 				const extractContent = layer.extract == null ? (entry: ConfigEntry) => entry.element : layer.extract
-				textLayer.content = extractContent(entry, config)?.outerHTML
+				textLayer.content = xmlToString(extractContent(entry, config))
 			}
 
 			return setTitle(textLayer)
@@ -144,6 +144,12 @@ function getPartSync(props: GetPartProps) {
 	return entry
 }
 
+export type XmlToString = (xml: XMLDocument | Element) => string
+export function xmlToString(xml: XMLDocument | Element) {
+	if (xml == null) return null
+	return new XMLSerializer().serializeToString(xml)
+}
+
 export type GetEntrySync = (props: GetEntryProps) => ConfigEntry
 export function getEntrySync(props: GetEntryProps) {
 	const entry = getDefaultEntry(props.id)
@@ -157,7 +163,7 @@ export function getEntrySync(props: GetEntryProps) {
 export type SerializeEntry = (entry: ConfigEntry, config: DocereConfig) => SerializedEntry
 export function serializeEntry(entry: ConfigEntry, config: DocereConfig): SerializedEntry {
 	return {
-		content: entry.element.outerHTML,
+		content: xmlToString(entry.document),
 		id: entry.id,
 		layers: entry.layers,
 		metadata: entry.metadata,

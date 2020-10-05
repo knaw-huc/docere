@@ -1,5 +1,5 @@
 import type { PrepareAndExtractOutput, DocereApiError } from '../types'
-import type { SerializeEntry, GetEntrySync, GetDefaultEntry } from './utils'
+import type { SerializeEntry, GetEntrySync, GetDefaultEntry, XmlToString } from './utils'
 import type { ProjectList, DocereConfig } from '@docere/common'
 
 declare global {
@@ -9,6 +9,7 @@ declare global {
 			getDefaultEntry: GetDefaultEntry
 			getEntrySync: GetEntrySync
 			serializeEntry: SerializeEntry
+			xmlToString: XmlToString
 		},
 		projects: {
 			default: ProjectList
@@ -62,7 +63,7 @@ export async function prepareAndExtract(xml: string, documentId: string, project
 		PuppenvData.utils.serializeEntry(entry, config),
 		{
 			original: xml,
-			prepared: new XMLSerializer().serializeToString(entry.document),
+			prepared: PuppenvData.utils.xmlToString(entry.document),
 		}
 	]
 }

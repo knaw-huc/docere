@@ -12,7 +12,8 @@ export default function handleDocumentApi(app: Express, puppenv: Puppenv) {
 	app.get('/api/projects/:projectId/documents/:documentId', async (req, res) => {
 		const pool = await getPool(req.params.projectId)
 		const { rows } = await pool.query(`SELECT json FROM document WHERE name=$1;`, [req.params.documentId])
-		res.json(rows[0].json)
+		if (!rows.length) res.sendStatus(404)
+		else res.json(rows[0].json)
 	})
 
 	app.get('/api/projects/:projectId/xml/:fileName', async (req, res) => {
