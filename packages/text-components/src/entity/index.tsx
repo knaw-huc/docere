@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { DocereComponentProps, EntityConfig, useNavigate } from '@docere/common'
+import { DocereComponentProps, EntityConfig } from '@docere/common'
 
 import { Popup } from '../popup'
 import { useEntity, useChildren, ExtractEntityKey, ExtractEntityValue } from './hooks'
@@ -55,7 +55,6 @@ export default function getEntity(preProps?: PreProps) {
 		const entityValue = preProps.extractValue(props)
 		if (!props.entrySettings['panels.text.showEntities']) return <span>{entityValue}</span>
 
-		const navigate = useNavigate()
 		const entity = useEntity(preProps.extractKey, props)
 		const [children, firstWord, restOfFirstChild] = useChildren(entityValue, entity?.config)
 
@@ -75,13 +74,13 @@ export default function getEntity(preProps?: PreProps) {
 		const handleClick = React.useCallback(ev => {
 			ev.stopPropagation()
 
-			navigate({
-				entryId: props.entry.id,
-				query: { entityId: entity.id }
+			props.entryDispatch({
+				type: 'SET_ENTITY',
+				id: entity.id
 			})
 
 			setShowTooltip(true)
-		}, [entity?.id, navigate])
+		}, [entity?.id])
 
 		if (entity == null) return null
 

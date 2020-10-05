@@ -55,14 +55,16 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 
 			// const activeEntity = entryState.entry.entities?.find(e => e.id === action.id)
 			// if (entity == null) entity = { id: action.id, type: null, value: null }
-			const activeEntity = entryState.lookup.entities[action.id]
+			let activeEntity = entryState.lookup.entities[action.id]
 
 			// const config = entryState.projectConfig.entities.find(x => x.id === entity.type)
 			// let activeEntity = { ...entity, config }
 			if (activeEntity == null) {
-				console.error(`[SET_ENTITY] entity not found for '${activeEntity.config.id}' with ID: ${activeEntity.id}`)
+				console.error(`[SET_ENTITY] entity not found for '${entryState.projectConfig.slug}' with ID: ${activeEntity.id}`)
 				return entryState
 			}
+
+			if (entryState.activeEntity?.id === activeEntity.id) activeEntity = null
 			
 			return {
 				...entryState,
