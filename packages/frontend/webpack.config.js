@@ -29,6 +29,7 @@ module.exports = {
 			'/iiif': {
 				changeOrigin: true,
 				target: env.DOCERE_IIIF_URL,
+				pathRewrite: {'^/iiif': ''}
 			},
 			// '/xml': {
 			// 	changeOrigin: true,

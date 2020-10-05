@@ -49,3 +49,5 @@ export function extractEntryPartElementsFromMilestone(selector: string, attribut
 }
 
 export const NoOp = () => null as JSX.Element
+
+export const useAll = () => () => true

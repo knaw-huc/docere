@@ -2,6 +2,8 @@ import fs from 'fs'
 import path from 'path'
 import { BASE_PATH } from '.'
 
+import type { XmlDirectoryStructure } from '@docere/common'
+
 function getDirents(dirPath: string) {
 	let projectDirs: fs.Dirent[] = []
 	try {
@@ -31,7 +33,7 @@ const pathCreator = (dir: string) => {
 export function getDirStructure(
 	dir: string,
 	maxPerDir: number = null,
-) {
+): XmlDirectoryStructure {
 	const toPath = pathCreator(dir)
 	const dirents = getDirents(dir)
 	if (dirents == null) return

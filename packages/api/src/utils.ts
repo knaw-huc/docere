@@ -2,11 +2,14 @@ import * as path from 'path'
 import * as fs from 'fs'
 import { Response as ExpressResponse } from 'express'
 import chalk from 'chalk'
-import { EsDataType } from '../../common/src/enum'
+import { EsDataType, PageConfig } from '@docere/common'
 
 import type { DocereApiError, ElasticSearchDocument } from './types'
-import type { DocereConfig } from '../../common/src/types/config-data/config'
-import { SerializedEntry, createLookup, MetadataItem } from '../../common/src/types/entry'
+import type { DocereConfig, MetadataItem, SerializedEntry } from '@docere/common'
+import { createLookup } from '../../common/src/types/entry'
+
+// const projects = require('esm')(module)(path.resolve(process.cwd(), './packages/projects')).default
+import projects from '@docere/projects'
 
 export function getProjectsSourceDir() {
 	// The current working dir is api/, the projects/ dir shares the same parent as api/
@@ -30,10 +33,23 @@ export function getPageXmlPath(projectId: string, pagePath: string) {
 	// return readFileContents(p)
 }
 
+// TODO old, remove
 export function getEntryIdFromFilePath(xmlFilePath: string, projectId: string) {
 	const dir = path.dirname(xmlFilePath).replace(getXmlDir(projectId), '')
 	const base = path.basename(xmlFilePath, '.xml')
 	return `${dir}/${base}`.replace(/^\//, '')
+}
+
+export function getDocumentIdFromRemoteXmlFilePath(filePath: string, projectId: string) {
+	const withoutExtension = path.resolve(path.dirname(filePath), path.basename(filePath, '.xml'))
+
+	// Return null if withoutExtension and filePath are equal,
+	// which means it's a dir or not an XML file
+	if (withoutExtension === filePath) return null
+
+	const re = new RegExp(`^/?${projectId}/?`)
+	const withoutProjectDir = withoutExtension.replace(re, '')
+	return withoutProjectDir.length ? withoutProjectDir : null
 }
 
 export function readFileContents(filePath: string) {
@@ -124,6 +140,35 @@ export function isError(payload: any | DocereApiError): payload is DocereApiErro
 	return payload != null && payload.hasOwnProperty('__error')
 }
 
+
+export async function getProjectConfig(projectId: string) {
+	const error: DocereApiError = { code: 404, __error: `Config data not found. Does project '${projectId}' exist?` }
+
+	let config: DocereConfig | DocereApiError
+	try {
+		const configImport = await projects[projectId].config
+		config = configImport == null ? error : (await configImport()).default
+	} catch (err) {
+		console.log(err)
+		config = error
+	}
+
+	return config
+}
+
+export async function getProjectPageConfig(projectId: string, pageId: string): Promise<PageConfig | DocereApiError> {
+	const config = await getProjectConfig(projectId)
+	if (isError(config)) return config
+
+	return config.pages
+		.reduce((prev, curr) => {
+			if (Array.isArray(curr.children)) prev.push(...curr.children)
+			prev.push(curr)
+			return prev
+		}, [])
+		.find(p => p.id === pageId)
+}
+
 export function getElasticSearchDocument(extractedEntry: SerializedEntry | DocereApiError): ElasticSearchDocument | DocereApiError {
 	if (isError(extractedEntry)) return extractedEntry
 
@@ -143,7 +188,15 @@ export function getElasticSearchDocument(extractedEntry: SerializedEntry | Docer
 		}, [])
 
 	const metadata = extractedEntry.metadata?.reduce((prev, curr) => {
-			prev[curr.id] = curr.value
+			if (curr.datatype === EsDataType.Hierarchy) {
+				if (Array.isArray(curr.value)) {
+					curr.value.forEach((v, i) => {
+						prev[`${curr.id}_level${i}`] = v
+					})
+				}
+			} else {
+				prev[curr.id] = curr.value
+			}
 			return prev
 		}, {} as Record<string, MetadataItem['value']>)
 
@@ -193,6 +246,17 @@ export function sendText(payload: string | DocereApiError, expressResponse: Expr
 	}
 
 	expressResponse.type('text/plain').send(payload)
+}
+
+// The URL query ?somequery=12 is user input and is received as 
+// string. This function safely converts to a number
+export function castUrlQueryToNumber(query: string | string[]) {
+	if (Array.isArray(query)) query = query[0]
+	if (query == null) return null
+	const regExpArray = /\d+/.exec(query as string)
+	return Array.isArray(regExpArray) && regExpArray.length ?
+		parseInt(regExpArray[0], 10) :
+		null
 }
 
 // export async function getDocumentFields(projectId: string, documentId: string) {

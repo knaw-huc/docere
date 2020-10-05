@@ -12,7 +12,7 @@ const app = express()
 app.disable('x-powered-by')
 app.use(express.static(BASE_PATH, { index: false, redirect: false }))
 
-app.get('/:projectId/:path?', (req, res) => {
+app.get(['/:projectId', '/:projectId/*'], (req, res) => {
 	const structure = getDirStructure(
 		path.resolve(BASE_PATH, req.path.slice(1)),
 		parseInt(req.query.max_per_dir as string, 10)

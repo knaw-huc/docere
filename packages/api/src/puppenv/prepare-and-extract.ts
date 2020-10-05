@@ -1,13 +1,18 @@
 import type { PrepareAndExtractOutput, DocereApiError } from '../types'
-import type { DocereConfig, GetEntrySync, GetDefaultEntry } from '../../../common/src'
-import { SerializeEntry } from '@docere/common'
+import type { SerializeEntry, GetEntrySync, GetDefaultEntry } from './utils'
+import type { ProjectList, DocereConfig } from '@docere/common'
 
 declare global {
-	const DocereProjects: any
-	const PuppenvUtils: {
-		getDefaultEntry: GetDefaultEntry
-		getEntrySync: GetEntrySync
-		serializeEntry: SerializeEntry
+	// const DocereProjects: any
+	const PuppenvData: {
+		utils: {
+			getDefaultEntry: GetDefaultEntry
+			getEntrySync: GetEntrySync
+			serializeEntry: SerializeEntry
+		},
+		projects: {
+			default: ProjectList
+		}
 	}
 }
 
@@ -16,7 +21,8 @@ export async function prepareAndExtract(xml: string, documentId: string, project
 	let xmlRoot: XMLDocument
 
 	// TODO fix if configData not found
-	const config: DocereConfig = (await DocereProjects.default[projectId].config()).default
+	// const config: DocereConfig = (await DocereProjects.default[projectId].config()).default
+	const config: DocereConfig = (await PuppenvData.projects.default[projectId].config()).default
 
 	try {
 		xmlRoot = domParser.parseFromString(xml, "application/xml")
@@ -34,7 +40,7 @@ export async function prepareAndExtract(xml: string, documentId: string, project
 		}
 	}
 
-	const entryTmp = PuppenvUtils.getDefaultEntry(documentId)
+	const entryTmp = PuppenvData.utils.getDefaultEntry(documentId)
 	entryTmp.document = xmlRoot
 
 	// Prepare document
@@ -45,7 +51,7 @@ export async function prepareAndExtract(xml: string, documentId: string, project
 		return { __error: `Document ${documentId}: Preparation error\n${err.toString()}` }
 	}
 
-	const entry = PuppenvUtils.getEntrySync({
+	const entry = PuppenvData.utils.getEntrySync({
 		config,
 		id: entryTmp.id,
 		document: entryTmp.document,
@@ -53,7 +59,7 @@ export async function prepareAndExtract(xml: string, documentId: string, project
 	})
 
 	return [
-		PuppenvUtils.serializeEntry(entry, config),
+		PuppenvData.utils.serializeEntry(entry, config),
 		{
 			original: xml,
 			prepared: new XMLSerializer().serializeToString(entry.document),

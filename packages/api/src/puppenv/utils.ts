@@ -1,7 +1,7 @@
-import { Entry, MetadataItem, GetEntryProps, GetPartProps, ConfigEntry, SerializedEntry } from './types/entry'
-import { FacsimileArea, Facsimile, LayerType, TextData, defaultMetadata, DocereConfig, setTitle } from '.'
-import { isTextLayerConfig, isSerializedTextLayer } from './utils'
-import { SerializedLayer } from './types'
+import { Entry, MetadataItem, GetEntryProps, GetPartProps, ConfigEntry, SerializedEntry } from '@docere/common'
+import { FacsimileArea, Facsimile, LayerType, TextData, DocereConfig, setTitle } from '@docere/common'
+import { isTextLayerConfig, isSerializedTextLayer } from '@docere/common'
+import { SerializedLayer } from '@docere/common'
 
 export type GetDefaultEntry = (id: string) => ConfigEntry
 export function getDefaultEntry(id: string): ConfigEntry {
@@ -39,22 +39,6 @@ function extendFacsimile(facsimile: Facsimile) {
 	return facsimile
 }
 
-// const defaultLayerConfig: LayerConfig = {
-// 	active: true,
-// 	pinned: false,
-// 	id: null,
-// }
-
-// const defaultTextLayerConfig: TextLayerConfig = {
-// 	...defaultLayerConfig,
-// 	extract: entry => entry.element,
-// 	type: LayerType.Text,
-// 	filterEntities: () => () => false,
-// 	filterFacsimiles: () => () => false,
-// 	filterNotes: () => () => false,
-// }
-
-
 function addCount(prev: Map<string, TextData>, curr: TextData) {
 	if (prev.has(curr.id)) prev.get(curr.id).count += 1
 	else prev.set(curr.id, { ...curr, count: 1 })
@@ -64,62 +48,11 @@ function addCount(prev: Map<string, TextData>, curr: TextData) {
 function extractMetadata(entry: ConfigEntry, config: DocereConfig): Entry['metadata'] {
 	return config.metadata
 		.map(md => ({
-			...defaultMetadata,
-			id: md.id,
-			title: md.id,
+			...md,
 			value: md.extract(entry, config)
 		}) as MetadataItem)
  		.sort((config1, config2) => config1.order - config2.order)
 }
-
-// function extractMetadata(entry: Entry, config: DocereConfig): Entry['metadata'] {
-// 	const extractedMetadata = configData.extractMetadata(entry, configData.config)
-// 	const extractedMetadataKeys = Object.keys(extractedMetadata)
-
-// 	return extractedMetadataKeys
-// 		// Remove sub levels of hierarchy facet, their values will be added to the hierarchy metadata later
-// 		.filter(field => !/level\d+$/.test(field))
-
-// 		// Map extracted IDs to configured metadata
-// 		.map(id => {
-// 			const config = configData.config.metadata.find(md => md.id === id)
-// 			return (config == null) ?
-// 				{ ...defaultMetadata, id, title: id, value: extractedMetadata[id] } :
-// 				config
-// 		})
-
-
-// 		// Remove metadata which are configured to not be shown in the aside
-// 		.filter(config => config.showInAside)
-
-// 		// Add value to the config to create a MetadataItem
-// 		.map(config => ({
-// 			...config,
-// 			value: extractedMetadata[config.id]
-// 		} as MetadataItem))
-
-// 		// Add hierarchy facet metadata
-// 		.concat(
-// 			configData.config.metadata
-// 				.filter(md => md.datatype === EsDataType.Hierarchy)
-// 				.map(md => {
-// 					return {
-// 						...md,
-// 						value: extractedMetadataKeys
-// 							.filter(key => new RegExp(`^${md.id}_level`).test(key))
-// 							.sort((key1, key2) => {
-// 								const number1 = parseInt(key1.match(/\d+$/)[0], 10)
-// 								const number2 = parseInt(key2.match(/\d+$/)[0], 10)
-// 								return number1 - number2
-// 							})
-// 							.map(key => extractedMetadata[key] as string)
-// 					} as MetadataItem
-// 				})
-// 		)
-
-// 		// Sort metadata config by order
-// 		.sort((config1, config2) => config1.order - config2.order)
-// }
 
 function extractLayers(entry: ConfigEntry, parent: ConfigEntry, config: DocereConfig): SerializedLayer[] {
 	return config.layers
@@ -234,3 +167,68 @@ export function serializeEntry(entry: ConfigEntry, config: DocereConfig): Serial
 		plainText: config.plainText(entry, config),
 	}
 }
+
+
+// function extractMetadata(entry: Entry, config: DocereConfig): Entry['metadata'] {
+// 	const extractedMetadata = configData.extractMetadata(entry, configData.config)
+// 	const extractedMetadataKeys = Object.keys(extractedMetadata)
+
+// 	return extractedMetadataKeys
+// 		// Remove sub levels of hierarchy facet, their values will be added to the hierarchy metadata later
+// 		.filter(field => !/level\d+$/.test(field))
+
+// 		// Map extracted IDs to configured metadata
+// 		.map(id => {
+// 			const config = configData.config.metadata.find(md => md.id === id)
+// 			return (config == null) ?
+// 				{ ...defaultMetadata, id, title: id, value: extractedMetadata[id] } :
+// 				config
+// 		})
+
+
+// 		// Remove metadata which are configured to not be shown in the aside
+// 		.filter(config => config.showInAside)
+
+// 		// Add value to the config to create a MetadataItem
+// 		.map(config => ({
+// 			...config,
+// 			value: extractedMetadata[config.id]
+// 		} as MetadataItem))
+
+// 		// Add hierarchy facet metadata
+// 		.concat(
+// 			configData.config.metadata
+// 				.filter(md => md.datatype === EsDataType.Hierarchy)
+// 				.map(md => {
+// 					return {
+// 						...md,
+// 						value: extractedMetadataKeys
+// 							.filter(key => new RegExp(`^${md.id}_level`).test(key))
+// 							.sort((key1, key2) => {
+// 								const number1 = parseInt(key1.match(/\d+$/)[0], 10)
+// 								const number2 = parseInt(key2.match(/\d+$/)[0], 10)
+// 								return number1 - number2
+// 							})
+// 							.map(key => extractedMetadata[key] as string)
+// 					} as MetadataItem
+// 				})
+// 		)
+
+// 		// Sort metadata config by order
+// 		.sort((config1, config2) => config1.order - config2.order)
+// }
+
+// const defaultLayerConfig: LayerConfig = {
+// 	active: true,
+// 	pinned: false,
+// 	id: null,
+// }
+
+// const defaultTextLayerConfig: TextLayerConfig = {
+// 	...defaultLayerConfig,
+// 	extract: entry => entry.element,
+// 	type: LayerType.Text,
+// 	filterEntities: () => () => false,
+// 	filterFacsimiles: () => () => false,
+// 	filterNotes: () => () => false,
+// }
