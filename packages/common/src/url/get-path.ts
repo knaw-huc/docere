@@ -43,3 +43,7 @@ export function getPath(urlObject: NextUrlObject) {
 export function getEntryApiPath(projectId: string, entryId: string, prop: string = '') {
 	return `/api/projects/${projectId}/documents/${encodeURIComponent(entryId)}/${prop}`
 }
+
+export function getProjectMappingPath(projectId: string) {
+	return `/api/projects/${projectId}/mapping`
+}

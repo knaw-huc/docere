@@ -115,10 +115,10 @@ export default class ESRequestWithFacets extends ESRequest {
 		for (const facetData of options.facetsData.values()) {
 			let facetAggs	
 			if (isBooleanFacetData(facetData)) facetAggs = this.createBooleanAggregation(facetData)
-			if (isDateFacetData(facetData)) facetAggs = this.createDateHistogramAggregation(facetData)
-			if (isHierarchyFacetData(facetData)) facetAggs = this.createHierarchyAggregation(facetData)
-			if (isListFacetData(facetData)) facetAggs = this.createListAggregation(facetData)
-			if (isRangeFacetData(facetData)) facetAggs = this.createHistogramAggregation(facetData)
+			else if (isDateFacetData(facetData)) facetAggs = this.createDateHistogramAggregation(facetData)
+			else if (isHierarchyFacetData(facetData)) facetAggs = this.createHierarchyAggregation(facetData)
+			else if (isListFacetData(facetData)) facetAggs = this.createListAggregation(facetData)
+			else if (isRangeFacetData(facetData)) facetAggs = this.createHistogramAggregation(facetData)
 
 			if (facetAggs != null) {
 				this.aggs = {

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { fetchJson, EsDataType, defaultMetadata } from '@docere/common'
+import { fetchJson, EsDataType, defaultMetadata, getProjectMappingPath } from '@docere/common'
 
 import type { DocereConfig, FacetsConfig, MetadataConfig, EntityConfig } from '@docere/common'
 
@@ -46,24 +46,15 @@ export default function useFacetsConfig(config: DocereConfig) {
 	const [fields, setFields] = React.useState<FacetsConfig>({})
 
 	React.useEffect(() => {
-		// TODO extract url from projectContext.searchUrl
-		fetchJson(`/search/${config.slug}/_mapping`)
-			.then(json => {
-				const { properties } = json[config.slug].mappings
+		const facetsConfig = [...config.metadata, ...config.entities]
+			.filter(filterNonFacets)
+			.sort(sortByOrder)
+			.reduce((prev, curr) => {
+				prev[curr.id] = curr
+				return prev
+			}, {} as FacetsConfig)
 
-				const tmpFields = Object.keys(properties)
-					.filter(key => ignoreKeys.indexOf(key) === -1)
-					.map(mapToFacetConfig(config))
-					.filter(filterNonFacets)
-					.sort(sortByOrder)
-					.reduce((prev, curr) => {
-						prev[curr.id] = curr
-						return prev
-					}, {} as FacetsConfig)
-
-				setFields(tmpFields)
-			})
-			.catch(err => console.log(err))
+		setFields(facetsConfig)
 	}, [config.slug])
 	
 	return fields
