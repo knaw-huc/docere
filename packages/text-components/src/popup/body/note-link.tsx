@@ -4,12 +4,12 @@ import DocereTextView from '@docere/text'
 
 import { PopupBodyLink, PopupBodyWrapper } from './index'
 
-import type { DocereComponentProps, UrlObject } from '@docere/common'
+import type { UrlObject } from '@docere/common'
+import { PopupBodyProps } from '..'
 
 interface NoteLinkProps {
-	activeEntity: Entity
+	entity: Entity
 	entryId: string
-	noteId: string
 	children: React.ReactNode
 }
 function NoteLink(props: NoteLinkProps) {
@@ -20,15 +20,15 @@ function NoteLink(props: NoteLinkProps) {
 
 		const payload: UrlObject = {
 			entryId: props.entryId,
-			query: { noteId: props.noteId }
+			query: { entityId: [props.entity.id] }
 		}
 
 		navigate(payload)
-	}, [props.entryId, props.noteId])
+	}, [props.entryId, props.entity])
 
 	return (
 		<PopupBodyLink
-			entityConfig={props.activeEntity.config}
+			entity={props.entity}
 			onClick={handleClick}
 		>
 			{props.children}
@@ -36,27 +36,21 @@ function NoteLink(props: NoteLinkProps) {
 	)
 }
 
-export default function NoteLinkPopupBody(props: DocereComponentProps) {
-	if (props.activeEntity == null) return null
-
-	const [fileName, noteId] = props.activeEntity.id.split('#')
+export default function NoteLinkPopupBody(props: PopupBodyProps) {
+	const [fileName] = props.entity.id.split('#')
 	const entry = useEntry(fileName.replace(/\.xml$/, ''))
 	const components = useComponents(DocereComponentContainer.Layer)
-
-	const note = props.layer.notes.find(n => n.id === noteId)
-	if (note == null) return null
 
 	return (
 		<PopupBodyWrapper>
 			<DocereTextView
 				customProps={props}
 				components={components}
-				xml={note.content}
+				xml={props.entity.content}
 			/>
 			<NoteLink
-				activeEntity={props.activeEntity}
+				entity={props.entity}
 				entryId={entry.id}
-				noteId={noteId}
 			>
 				Go to note in entry {entry.id}
 			</NoteLink>

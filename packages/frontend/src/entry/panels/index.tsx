@@ -1,12 +1,12 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { DEFAULT_SPACING, Colors, FooterTab, FOOTER_HANDLE_HEIGHT, ProjectContext } from '@docere/common'
+import { DEFAULT_SPACING, Colors, FooterTab, FOOTER_HANDLE_HEIGHT, ProjectContext, ActiveEntities } from '@docere/common'
 
 import LayersFooterTab from '../footer/layers'
 import Panel from './panel'
 import CollectionNavigator from './collection-navigator'
 
-import type { DocereConfig, Entity, Layer, Note, EntryState, EntryStateAction } from '@docere/common'
+import type { DocereConfig, Layer, EntryState, EntryStateAction } from '@docere/common'
 import type { EntryProps } from '..'
 
 interface WProps {
@@ -44,9 +44,8 @@ const PanelsCommon = styled.div`
 `
 
 interface PWProps {
-	activeEntity: Entity
+	activeEntities: ActiveEntities
 	activeLayers: Layer[]
-	activeNote: Note
 	settings: DocereConfig['entrySettings']
 }
 const ActivePanels = styled(PanelsCommon)`
@@ -134,8 +133,7 @@ function Panels(props: PanelsProps) {
 				activeLayers.length > 0 &&
 				<ActivePanels
 					activeLayers={activeLayers}
-					activeEntity={props.activeEntity}
-					activeNote={props.activeNote}
+					activeEntities={props.activeEntities}
 					id="active-panels"
 					settings={props.entrySettings}
 				>
@@ -169,7 +167,6 @@ function Panels(props: PanelsProps) {
 						props.footerTab !== FooterTab.Layers &&
 						<LayersFooterTab
 							active={true}
-							activeFacsimile={props.activeFacsimile}
 							dispatch={props.entryDispatch}
 							layers={props.layers}
 						/>

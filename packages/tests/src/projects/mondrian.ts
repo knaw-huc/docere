@@ -31,14 +31,14 @@ export function mondrianTests() {
 		expect(blayers[0].id).toBe('original')
 		expect(blayers[0].content).toHaveLength(1994)
 		expect(blayers[1].id).toBe('translation')
-		expect(blayers[1].content).toBeUndefined()
+		expect(blayers[1].content).toBeNull()
 
 		const glayers = geschrift.layers.filter(isTextLayer)
 		expect(glayers).toHaveLength(2)
 		expect(glayers[0].id).toBe('original')
 		expect(glayers[0].content).toHaveLength(233402)
 		expect(glayers[1].id).toBe('translation')
-		expect(glayers[1].content).toBeUndefined()
+		expect(glayers[1].content).toBeNull()
 	})
 
 	describe('Brief', () => {
@@ -47,7 +47,7 @@ export function mondrianTests() {
 		})
 
 		it('Should be a letter from August Allebe', () => {
-			expect(brief.content.slice(183, 262)).toBe('Brief van August Allebé aan Piet Mondriaan. Amsterdam, zaterdag 7 oktober 1893.')
+			expect(brief.content.slice(458, 537)).toBe('Brief van August Allebé aan Piet Mondriaan. Amsterdam, zaterdag 7 oktober 1893.')
 		})
 
 		it('Should not have facsimiles', () => {
@@ -62,7 +62,7 @@ export function mondrianTests() {
 		})
 
 		it('Should be a letter from August Allebe', () => {
-			expect(geschrift.content.slice(223, 261)).toBe('De nieuwe beelding in de schilderkunst')
+			expect(geschrift.content.slice(498, 536)).toBe('De nieuwe beelding in de schilderkunst')
 		})
 
 		it('Should have 4 facsimiles on all layers', () => {

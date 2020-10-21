@@ -1,16 +1,19 @@
 import type { UrlQuery } from "./query"
 import type { UrlObject } from './navigate'
 
-function getQueryString(urlQuery: UrlQuery) {
+export function getQueryString(urlQuery: UrlQuery) {
 	if (urlQuery == null) return ''
 
 	return Object.keys(urlQuery)
 		.filter((x: keyof UrlQuery) => urlQuery[x] != null)
 		.reduce((prev, curr: keyof UrlQuery) => {
-			prev = prev.length ? `${prev}&` : '?'
 			const key = curr.charAt(0) + 'i'
-			const value = encodeURIComponent(urlQuery[curr])
-			return `${prev}${key}=${value}`
+			urlQuery[curr].forEach(value => {
+				prev = prev.length ? `${prev}&` : '?'
+				value = encodeURIComponent(value)
+				prev = `${prev}${key}=${value}`
+			}, '')
+			return prev
 		}, '')
 }
 
@@ -33,7 +36,7 @@ export function getPagePath({ projectId, pageId, query }: UrlObject) {
 
 export type NextUrlObject = Omit<UrlObject, 'projectId'> & { projectId: string }
 export function getPath(urlObject: NextUrlObject) {
-	if (urlObject.projectId == null) throw new Error('[getPath] Project ID cannot be null')
+	if (urlObject?.projectId == null) throw new Error('[getPath] Project ID cannot be null')
 
 	if		(urlObject.entryId != null) return getEntryPath(urlObject)
 	else if (urlObject.pageId != null)	return getPagePath(urlObject)

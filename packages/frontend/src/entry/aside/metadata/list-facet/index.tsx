@@ -3,10 +3,10 @@ import { SearchContext } from '@docere/search'
 
 import Value from './value'
 
-import type { Entity, ListMetadata, ListFacetData } from '@docere/common'
+import type { ListMetadata, ListFacetData } from '@docere/common'
 
 interface Props {
-	metadataItem: ListMetadata | Entity
+	metadataItem: ListMetadata // | Entity
 }
 export default function ListFacetValue(props: Props) {
 	const searchContext = React.useContext(SearchContext)

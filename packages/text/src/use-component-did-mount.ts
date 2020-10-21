@@ -2,15 +2,21 @@ import React from 'react'
 
 import type { DocereTextViewProps } from '.'
 
-export default function useComponentDidMount(props: DocereTextViewProps, tree: React.ReactNode, wrapperEl: Element) {
+export default function useComponentDidMount(
+	props: DocereTextViewProps,
+	tree: React.ReactNode,
+	wrapperEl: Element
+) {
 	const [isReady, setIsReady] = React.useState(false)
 
 	React.useEffect(() => {
 		if (!isReady && tree != null) {
-			if (props.onLoad != null) props.onLoad(true, wrapperEl)
+			if (props.onLoad != null) {
+				setTimeout(() => props.onLoad(true, wrapperEl), 0)
+			}
 			setIsReady(true)
 		}
-	}, [tree])
+	}, [isReady, tree, wrapperEl])
 
 	React.useEffect(() => {
 		if (props.onLoad != null) props.onLoad(false, wrapperEl)

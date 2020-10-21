@@ -1,7 +1,7 @@
-import { Colors, EsDataType, RsType } from './enum'
+import { Colors, EsDataType, EntityType } from './enum'
 
 import type { FacetConfigBase } from './types/search/facets'
-import type { DocereConfig, MetadataConfig, EntityConfig, NoteConfig } from './types/config-data/config'
+import type { DocereConfig, MetadataConfig, EntityConfig } from './types/config-data/config'
 import type { PageConfig } from './types/page'
 import { isTextLayerConfig } from './utils'
 
@@ -21,7 +21,6 @@ const defaultConfig: DocereConfig = {
 	entrySettings: {},
 	layers: [],
 	metadata: [],
-	notes: [],
 	parts: null,
 	pages: [],
 	private: false,
@@ -42,8 +41,9 @@ export const defaultMetadata: MetadataConfig = {
 export const defaultEntityConfig: Omit<EntityConfig, 'extract'> = {
 	...defaultMetadata,
 	color: Colors.Blue,
+	description: null,
 	revealOnHover: false,
-	type: RsType.None,
+	type: EntityType.None,
 }
 
 // const defaultDocereFunctions: DocereConfigFunctions = {
@@ -68,14 +68,9 @@ function setPath(page: PageConfig) {
 	return page
 }
 
-function extendTextData<T extends EntityConfig>(td: T) {
+function extendEntities<T extends EntityConfig>(td: T) {
 	const textDataConfig = {...defaultEntityConfig, ...td } as EntityConfig
 	return setTitle(textDataConfig)
-}
-
-function extendNote(td: NoteConfig) {
-	const noteConfig  = { ...{ color: Colors.Blue }, ...td }
-	return setTitle(noteConfig)
 }
 
 // TODO rename to extendConfig
@@ -96,8 +91,7 @@ export function extendConfigData(configDataRaw: DocereConfig): DocereConfig {
 		return setTitle(metadataConfig)
 	})
 
-	config.entities = config.entities.map(extendTextData)
-	config.notes = config.notes.map(extendNote)
+	config.entities = config.entities.map(extendEntities)
 
 	config.pages = config.pages.map(page => {
 		if (Array.isArray(page.children)) {

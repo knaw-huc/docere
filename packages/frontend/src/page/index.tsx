@@ -49,7 +49,8 @@ export default function PageView() {
 	if (page == null) return null
 
 	const customProps: PageComponentProps = {
-		activeId: query.entityId,
+		// ToDo can a page have more entity IDs? like a document?
+		activeId: query.entityId?.length > 0 ? query.entityId[0] : null,
 		...query,
 	}
 

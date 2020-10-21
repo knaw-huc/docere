@@ -2,24 +2,24 @@ import * as React from 'react'
 import styled from 'styled-components'
 import type { DocereComponentProps, DocereComponents } from '@docere/common'
 
-function useActive(props: DocereComponentProps): [boolean, (ev: any) => void] {
-	const [active, setActive] = React.useState<boolean>(false)
+// function useActive(props: DocereComponentProps): [boolean, (ev: any) => void] {
+// 	const [active, setActive] = React.useState<boolean>(false)
 
-	React.useEffect(() => {
-		// console.log(props.activeEntity, props.attributes.id)
-		setActive(props.attributes.id === props.activeEntity?.id)
-	}, [props.activeEntity])
+// 	React.useEffect(() => {
+// 		// console.log(props.activeEntity, props.attributes.id)
+// 		setActive(props.attributes.id === props.activeEntity?.id)
+// 	}, [props.activeEntity])
 
-	const handleClick = React.useCallback(ev => {
-		ev.stopPropagation()
-		props.entryDispatch({
-			type: 'SET_ENTITY',
-			id: props.attributes.id,
-		})
-	}, [props.attributes.id, active])
+// 	const handleClick = React.useCallback(ev => {
+// 		ev.stopPropagation()
+// 		props.entryDispatch({
+// 			type: 'SET_ENTITY',
+// 			id: props.attributes.id,
+// 		})
+// 	}, [props.attributes.id, active])
 
-	return [active, handleClick]
-}
+// 	return [active, handleClick]
+// }
 
 const ArticleWrapper = styled.div`
 	cursor: pointer;
@@ -38,13 +38,14 @@ const ArticleWrapper = styled.div`
 	}
 `
 
+// TODO fix useActive
 function Article(props: DocereComponentProps) {
-	const [active, handleClick] = useActive(props)
+	// const [active, handleClick] = useActive(props)
 
 	return (
 		<ArticleWrapper
-			active={active}
-			onClick={handleClick}
+			active={false}
+			// onClick={handleClick}
 		>
 			{props.children}
 		</ArticleWrapper>

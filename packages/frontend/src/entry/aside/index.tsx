@@ -24,7 +24,7 @@ const Wrapper = styled.aside`
 
 type EntryAsideProps =
 	Pick<EntryProps, 'appDispatch'> &
-	Pick<EntryState, 'activeEntity' | 'activeFacsimile' | 'activeFacsimileAreas' | 'activeNote' | 'asideTab' | 'entry' | 'layers' | 'entrySettings'> &
+	Pick<EntryState, 'asideTab' | 'entry'> &
 	{
 		entryDispatch: React.Dispatch<EntryStateAction>
 	}

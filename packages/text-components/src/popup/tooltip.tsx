@@ -1,8 +1,8 @@
 import * as React from "react"
 import styled from "styled-components"
-import { DEFAULT_POPUP_BG_COLOR, getTextPanelWidth } from '@docere/common'
+import { DEFAULT_POPUP_BG_COLOR, getTextPanelWidth, Entity } from '@docere/common'
 
-import type { Note, Entity, DocereConfig } from '@docere/common'
+import type { DocereConfig, ActiveEntities } from '@docere/common'
 
 interface P { offset: number }
 const Wrapper = styled.div`
@@ -19,7 +19,7 @@ const Wrapper = styled.div`
 
 export const TooltipBody = styled.div`
 	background: white;
-	border-color: ${(props: { color: string }) => props.color};
+	border-color: ${(props: { entity: Entity }) => props.entity.color};
 	border-radius: 6px;
 	border-style: solid;
 	border-width: 2px;
@@ -42,11 +42,10 @@ const Svg = styled.svg`
 
 // type Orientation = "top" | "right" | "bottom" | "left"
 interface Props {
-	activeNote: Note
-	activeEntity: Entity
+	activeEntities: ActiveEntities
 	bodyStyle?: React.CSSProperties
 	children: React.ReactNode
-	color?: string
+	entity: Entity
 	settings: DocereConfig['entrySettings']
 }
 function Tooltip(props: Props) {		
@@ -63,7 +62,7 @@ function Tooltip(props: Props) {
 		if (tooltipRect.left < textPanelLeft) offset = textPanelLeft - tooltipRect.left
 
 		const textPanelMiddle = textPanelRect.left + (textPanelRect.width / 2)
-		const textPanelRight = textPanelMiddle + (getTextPanelWidth(props.settings, props.activeNote, props.activeEntity) / 2) - 32
+		const textPanelRight = textPanelMiddle + (getTextPanelWidth(props.settings, props.activeEntities) / 2) - 32
 		if (tooltipRect.right > textPanelRight) offset = textPanelRight - tooltipRect.right
 
 		setOffset(offset)
@@ -75,23 +74,23 @@ function Tooltip(props: Props) {
 			ref={wrapperRef}
 		>
 			<TooltipBody
-				color={props.color}
+				entity={props.entity}
 				style={props.bodyStyle}
 			>
 				{props.children}
 			</TooltipBody>
 			<Svg
-				fill={props.color}
+				fill={props.entity.color}
 				height="20px"
 				offset={offset}
 				viewBox="0 0 30 30"
 				width="20px"
 			>
-				<path d="M0,30 L15,12 L30,30" stroke={props.color} strokeWidth="3" />
+				<path d="M0,30 L15,12 L30,30" stroke={props.entity.color} strokeWidth="3" />
 				<polygon points="15,12 0,30 30,30 15,12"/>
 			</Svg>
 		</Wrapper>
-	);
+	)
 }
 
 Tooltip.defaultProps = {

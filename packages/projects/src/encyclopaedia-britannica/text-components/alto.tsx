@@ -1,33 +1,33 @@
 import React from 'react'
 import styled from 'styled-components'
-import { getEntity, Lb } from '@docere/text-components'
-import { Colors } from '@docere/common'
+import { getEntity, Lb, PopupBodyProps } from '@docere/text-components'
+import { Colors, isFacsimileLayer } from '@docere/common'
 
-import type { EntryStateAction, DocereComponentProps, DocereComponents } from '@docere/common'
+import type { DocereComponentProps, DocereComponents } from '@docere/common'
 
 // TODO move alto to text-components, see duplication in gheys/htr-layers
 
-function setActiveFacsimileArea(dispatch: React.Dispatch<EntryStateAction>, ids: string[]) {
-	dispatch({
-		type: 'SET_ACTIVE_FACSIMILE_AREAS',
-		ids,
-	})
-}
+// function setActiveFacsimileArea(dispatch: React.Dispatch<EntryStateAction>, ids: string[]) {
+// 	dispatch({
+// 		type: 'SET_ACTIVE_FACSIMILE_AREAS',
+// 		ids,
+// 	})
+// }
 
-function useActive(props: DocereComponentProps): [boolean, (ev: any) => void] {
-	const [active, setActive] = React.useState<boolean>(false)
+// function useActive(props: DocereComponentProps): [boolean, (ev: any) => void] {
+// 	const [active, setActive] = React.useState<boolean>(false)
 
-	React.useEffect(() => {
-		setActive(props.activeFacsimileAreas?.some(fa => props.attributes.ID === fa.id))
-	}, [props.activeFacsimileAreas])
+// 	React.useEffect(() => {
+// 		setActive(props.activeFacsimileAreas?.some(fa => props.attributes.ID === fa.id))
+// 	}, [props.activeFacsimileAreas])
 
-	const handleClick = React.useCallback(ev => {
-		ev.stopPropagation()
-		setActiveFacsimileArea(props.entryDispatch, [props.attributes.ID])
-	}, [props.attributes.ID, active])
+// 	const handleClick = React.useCallback(ev => {
+// 		ev.stopPropagation()
+// 		setActiveFacsimileArea(props.entryDispatch, [props.attributes.ID])
+// 	}, [props.attributes.ID, active])
 
-	return [active, handleClick]
-}
+// 	return [active, handleClick]
+// }
 
 const TextLineWrapper = styled(Lb)`
 	min-height: 2rem;
@@ -55,13 +55,14 @@ const TextLineWrapper = styled(Lb)`
 	}
 `
 
+// TODO fix useActive
 function TextLine(props: DocereComponentProps) {
-	const [active, handleClick] = useActive(props)
+	// const [active, handleClick] = useActive(props)
 
 	return (
 		<TextLineWrapper
-			active={active}
-			onClick={handleClick}
+			active={false}
+			// onClick={handleClick}
 			{...props}
 		>
 			{props.children}
@@ -74,13 +75,14 @@ const EntityThumb = styled.img`
 	padding: 1rem;
 `
 
-function EntityPopupBody(props: DocereComponentProps) {
-	const { HPOS, VPOS, WIDTH, HEIGHT } = props.attributes
+function EntityPopupBody(props: PopupBodyProps) {
+	const { HPOS, VPOS, WIDTH, HEIGHT } = props.docereComponentProps.attributes
 	const rect = `${HPOS},${VPOS},${WIDTH},${HEIGHT}`
+	const activeFacsimile = props.docereComponentProps.entry.layers.find(isFacsimileLayer).activeFacsimile
 
 	return (
 		<EntityThumb
-			src={props.activeFacsimile.versions[0].path.replace('info.json', `${rect}/240,/0/default.jpg`)}
+			src={activeFacsimile.versions[0].path.replace('info.json', `${rect}/240,/0/default.jpg`)}
 			width="100%"
 		/>
 	)

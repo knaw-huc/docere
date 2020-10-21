@@ -1,7 +1,7 @@
 import { DEFAULT_SPACING, TEXT_PANEL_ASIDE_WIDTH, TEXT_PANEL_MINIMAP_WIDTH, TEXT_PANEL_TEXT_WIDTH } from './constants'
 import { LayerType } from './enum'
 
-import type { DocereConfig, Note, Entity, LayerConfig, PageConfig, TextLayerConfig, FacsimileLayerConfig, TextLayer, Layer, FacsimileLayer, SerializedLayer, SerializedTextLayer, SerializedFacsimileLayer } from './types'
+import type { DocereConfig, LayerConfig, PageConfig, TextLayerConfig, FacsimileLayerConfig, TextLayer, Layer, FacsimileLayer, SerializedLayer, SerializedTextLayer, SerializedFacsimileLayer, ActiveEntities } from './types'
 
 export function getTextPanelLeftSpacing(settings: DocereConfig['entrySettings']) {
 	let width = DEFAULT_SPACING
@@ -14,12 +14,12 @@ export function getTextPanelLeftSpacing(settings: DocereConfig['entrySettings'])
 	return width
 }
 
-export function getTextPanelRightSpacing(settings: DocereConfig['entrySettings'], activeNote: Note, activeEntity: Entity) {
+export function getTextPanelRightSpacing(settings: DocereConfig['entrySettings'], activeEntities: ActiveEntities) {
 	let width = DEFAULT_SPACING
 
 	const asideActive = (
 		!settings['panels.text.openPopupAsTooltip'] &&
-		(activeNote != null || activeEntity != null)
+		activeEntities.size > 0
 	)
 
 	// Add extra width if the aside is active
@@ -31,9 +31,9 @@ export function getTextPanelRightSpacing(settings: DocereConfig['entrySettings']
 	return width
 }
 
-export function getTextPanelWidth(settings: DocereConfig['entrySettings'], activeNote: Note, activeEntity: Entity) {
+export function getTextPanelWidth(settings: DocereConfig['entrySettings'], activeEntities: ActiveEntities) {
 	const left = getTextPanelLeftSpacing(settings)
-	const right = getTextPanelRightSpacing(settings, activeNote, activeEntity)
+	const right = getTextPanelRightSpacing(settings, activeEntities)
 
 	return left + TEXT_PANEL_TEXT_WIDTH + right
 }

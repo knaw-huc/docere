@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { ProjectContext, PANEL_HEADER_HEIGHT, FacsimileLayer } from '@docere/common'
+import { ProjectContext, PANEL_HEADER_HEIGHT, FacsimileLayer, ActiveEntities, Facsimile } from '@docere/common'
 
 import useAreaRenderer, { AreaRenderer } from './use-area-renderer'
 import PanelHeader from '../header'
@@ -98,15 +98,21 @@ function useOpenSeadragon(): [any, any] {
 	return OpenSeadragon
 }
 
-function useActiveFacsimileAreas(activeFacsimileAreas: FacsimileArea[], areaRenderer: AreaRenderer) {
+function useActiveFacsimileAreas(activeEntities: ActiveEntities, areaRenderer: AreaRenderer) {
 	React.useEffect(() => {
 		if (areaRenderer == null) return
-		areaRenderer.activate(activeFacsimileAreas)
-	}, [activeFacsimileAreas, areaRenderer])
+		const areas = Array.from(activeEntities.values())
+			.reduce((agg, entity) => {
+				return Array.isArray(entity.facsimileAreas) ?
+					agg.concat(entity.facsimileAreas) :
+					agg
+			}, [] as FacsimileArea[])
+		areaRenderer.activate(areas)
+	}, [activeEntities, areaRenderer])
 }
 
 function useActiveFacsimile(
-	activeFacsimile: Props['activeFacsimile'],
+	activeFacsimile: Facsimile,
 	projectId: DocereConfig['slug'],
 	areaRenderer: AreaRenderer,
 	osd: any
@@ -116,6 +122,7 @@ function useActiveFacsimile(
 		// const facsimile = this.props.facsimiles.find(f => f.id === this.props.activeFacsimilePath)
 		// TODO acativeFacsimilePath should be activeFacsimileID
 		// TODO find the paths in this.props.facsimiles with activeFacsimileID
+
 		let path = activeFacsimile.versions[0].path as any
 		
 		// TODO Move logic to vangogh facsimileExtractor (path should be a string of a tileSource)
@@ -133,7 +140,6 @@ function useActiveFacsimile(
 		
 		osd.open(path)
 	}, [areaRenderer, activeFacsimile])
-
 }
 
 const Container = styled.div`
@@ -145,7 +151,7 @@ const Container = styled.div`
 `
 
 type Props =
-	Pick<EntryState, 'activeFacsimile' | 'activeFacsimileAreas' | 'entrySettings'> & {
+	Pick<EntryState, 'activeEntities' | 'entrySettings'> & {
 		entryDispatch: React.Dispatch<EntryStateAction>
 		layer: FacsimileLayer
 	}
@@ -155,8 +161,8 @@ function FacsimilePanel(props: Props) {
 	const [osd, OpenSeadragon] = useOpenSeadragon()
 	const areaRenderer = useAreaRenderer(osd, OpenSeadragon, props.entryDispatch)
 
-	useActiveFacsimile(props.activeFacsimile, config.slug, areaRenderer, osd)
-	useActiveFacsimileAreas(props.activeFacsimileAreas, areaRenderer)
+	useActiveFacsimile(props.layer.activeFacsimile, config.slug, areaRenderer, osd)
+	useActiveFacsimileAreas(props.activeEntities, areaRenderer)
 
 	return (
 		<Wrapper className="facsimile-panel">
@@ -177,7 +183,6 @@ function FacsimilePanel(props: Props) {
 			{
 				props.layer.facsimiles.length > 1 &&
 				<CollectionNavigator2
-					activeFacsimile={props.activeFacsimile}
 					entryDispatch={props.entryDispatch}
 					layer={props.layer}
 				/>

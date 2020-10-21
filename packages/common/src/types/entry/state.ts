@@ -1,14 +1,14 @@
 import type { DocereConfig } from '../config-data/config'
-import type { Note, FacsimileArea, Entity, ActiveFacsimile } from '../config-data/functions'
+import type { Entity, ActiveFacsimile } from '../config-data/functions'
 import type { Entry, EntryLookup } from '.'
 import { AsideTab } from '../../enum'
 import { Layer } from '../config-data/layer'
 
+export type ActiveEntities = Map<string, Entity>
+export type ActiveFacsimiles = Map<string, ActiveFacsimile>
 export interface EntryState {
-	activeEntity: Entity,
-	activeFacsimile: ActiveFacsimile
-	activeFacsimileAreas: FacsimileArea[]
-	activeNote: Note,
+	activeEntities: ActiveEntities
+	activeFacsimiles: ActiveFacsimiles
 	asideTab: AsideTab
 	projectConfig: DocereConfig
 	entry: Entry
@@ -22,7 +22,7 @@ interface ProjectChanged {
 	config: DocereConfig,
 }
 
-interface EntryChanged extends Pick<EntryState, 'activeEntity' | 'activeFacsimile' | 'activeNote' | 'entry' | 'layers'> {
+interface EntryChanged extends Pick<EntryState, 'activeEntities' | 'activeFacsimiles' | 'entry' | 'layers'> {
 	type: "ENTRY_CHANGED",
 	lookup: EntryState['lookup']
 }
@@ -50,28 +50,10 @@ interface SetEntity {
 	id: string
 }
 
-interface UnsetEntity {
-	type: 'UNSET_ENTITY'
-}
-
-interface SetNote {
-	type: 'SET_NOTE'
-	id: string
-}
-
-interface UnsetNote {
-	type: 'UNSET_NOTE'
-}
-
-interface SetActiveFacsimile {
+interface SetFacsimile {
 	id: string
 	triggerLayer: Layer
-	type: 'SET_ACTIVE_FACSIMILE'
-}
-
-interface ESA_Set_Active_Facsimile_Areas {
-	type: 'SET_ACTIVE_FACSIMILE_AREAS'
-	ids: string[]
+	type: 'SET_FACSIMILE'
 }
 
 interface ESA_Toggle_Settings_Property {
@@ -84,11 +66,7 @@ export type EntryStateAction =
 	ProjectChanged |
 	EntryChanged |
 	ToggleTab |
-	SetActiveFacsimile |
+	SetFacsimile |
 	SetEntity |
-	UnsetEntity |
-	ESA_Set_Active_Facsimile_Areas |
-	SetNote |
-	UnsetNote |
 	ESA_Toggle_Layer | 
 	ESA_Toggle_Settings_Property

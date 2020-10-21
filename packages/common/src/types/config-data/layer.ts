@@ -1,7 +1,7 @@
 import { LayerType } from '../../enum'
 import { BaseConfig, DocereConfig } from './config'
-import { ConfigEntry } from '../entry'
-import { Facsimile, Entity, Note } from './functions'
+import { ConfigEntry, ActiveFacsimiles } from '../entry'
+import { Facsimile, Entity } from './functions'
 
 // Config
 export interface LayerConfig extends BaseConfig {
@@ -10,7 +10,6 @@ export interface LayerConfig extends BaseConfig {
 	type?: LayerType.Facsimile | LayerType.Text
 	filterEntities?: (entry: ConfigEntry) => (entity: Entity) => boolean
 	filterFacsimiles?: (entry: ConfigEntry) => (facsimile: Facsimile) => boolean
-	filterNotes?: (entry: ConfigEntry) => (note: Note) => boolean
 }
 
 // Base
@@ -46,6 +45,7 @@ export interface FacsimileLayerConfig extends LayerConfig {
 }
 
 export interface FacsimileLayer extends SerializedFacsimileLayer, BaseLayer {
+	activeFacsimile: Facsimile
 	facsimiles: Facsimile[]
 }
 
@@ -55,7 +55,6 @@ export type ExtractedLayer = Pick<Layer, 'id'> & Partial<Layer>
 interface LayerEntities {
 	facsimiles: Facsimile[]
 	entities: Entity[]
-	notes: Note[]
 }
 
 // Serialized layer
@@ -72,6 +71,18 @@ export type SerializedFacsimileLayer = SerializedBaseLayer
 
 export type SerializedLayer = SerializedTextLayer | SerializedFacsimileLayer
 
+// Find the first active facsimile in the layer. There can be more active
+// facsimiles in other layers.
+export function getFirstActiveFacsimileFromLayer(activeFacsimiles: ActiveFacsimiles, layer: Layer) {
+	if (activeFacsimiles == null) return null
+
+	return Array.from(activeFacsimiles.values())
+		.find(activeFacsimile =>
+			layer.facsimiles.find(f =>
+				f.id === activeFacsimile.id
+			)
+		)
+}
 // export type ClientTextLayer = ClientBaseLayer & {
 // 	content: string
 // }

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import debounce from 'lodash.debounce'
-import { isTextLayer, ProjectContext, useComponents, DEFAULT_SPACING, TEXT_PANEL_TEXT_WIDTH, DocereComponentContainer, getTextPanelLeftSpacing, PANEL_HEADER_HEIGHT } from '@docere/common'
+import { isTextLayer, ProjectContext, useComponents, DEFAULT_SPACING, TEXT_PANEL_TEXT_WIDTH, DocereComponentContainer, getTextPanelLeftSpacing, PANEL_HEADER_HEIGHT, getFirstActiveFacsimileFromLayer } from '@docere/common'
 import { SearchContext } from '@docere/search'
 import DocereTextView from '@docere/text'
 
@@ -49,7 +49,7 @@ export const Text = styled.div`
 	position: relative;
 `
 
-type TextPanelBaseProps = Pick<PanelsProps, 'activeEntity' | 'activeNote' | 'activeFacsimile' | 'activeFacsimileAreas' | 'appDispatch' | 'entryDispatch' | 'entry' | 'entrySettings'>
+type TextPanelBaseProps = Pick<PanelsProps, 'activeEntities' | 'activeFacsimiles' | 'appDispatch' | 'entryDispatch' | 'entry' | 'entrySettings'>
 interface TextPanelProps extends TextPanelBaseProps {
 	layer: TextLayer
 }
@@ -90,10 +90,8 @@ function TextPanel(props: TextPanelProps) {
 	}, [props.entrySettings['panels.text.showMinimap']])
 
 	const customProps: DocereComponentProps = {
-		activeFacsimileAreas: props.activeFacsimileAreas,
-		activeFacsimile: props.activeFacsimile,
-		activeEntity: props.activeEntity,
-		activeNote: props.activeNote,
+		activeFacsimiles: props.activeFacsimiles,
+		activeEntities: props.activeEntities,
 		appDispatch: props.appDispatch,
 		components,
 		config,
@@ -105,15 +103,17 @@ function TextPanel(props: TextPanelProps) {
 	}
 
 	React.useEffect(() => {
+		const activeFacsimile = getFirstActiveFacsimileFromLayer(props.activeFacsimiles, props.layer)
 		if (
 			textWrapperRef.current == null ||
-			props.activeFacsimile == null ||
-			props.layer === props.activeFacsimile.triggerLayer
+			activeFacsimile == null ||
+			props.layer === activeFacsimile.triggerLayer
 		) return
+
 		textWrapperRef.current
-			.querySelector(`[data-facsimile-id="${props.activeFacsimile.id}"]`)
+			.querySelector(`[data-facsimile-id="${activeFacsimile.id}"]`)
 			?.scrollIntoView({ behavior: 'smooth' })
-	}, [props.activeFacsimile])
+	}, [props.activeFacsimiles])
 
 	if (components == null) return null
 

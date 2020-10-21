@@ -54,6 +54,7 @@ export default function handleDocumentApi(app: Express, puppenv: Puppenv) {
 
 		const { projectId } = req.params
 
+		console.log(req.query)
 		addRemoteFiles(projectId, projectId, puppenv, {
 			force: req.query.force === '',
 			maxPerDir: castUrlQueryToNumber(req.query.max_per_dir as string),

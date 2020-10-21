@@ -1,30 +1,30 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import { Colors } from '@docere/common'
-import type { DocereConfig, EntryStateAction, DocereComponentProps } from '@docere/common'
-import { getPb, Lb, getEntity } from '@docere/text-components'
+import type { DocereConfig, DocereComponentProps } from '@docere/common'
+import { getPb, Lb, getEntity, PopupBodyProps } from '@docere/text-components'
 
-function setActiveFacsimileArea(dispatch: React.Dispatch<EntryStateAction>, ids: string[]) {
-	dispatch({
-		type: 'SET_ACTIVE_FACSIMILE_AREAS',
-		ids,
-	})
-}
+// function setActiveFacsimileArea(dispatch: React.Dispatch<EntryStateAction>, ids: string[]) {
+// 	dispatch({
+// 		type: 'SET_ACTIVE_FACSIMILE_AREAS',
+// 		ids,
+// 	})
+// }
 
-function useActive(props: DocereComponentProps): [boolean, (ev: any) => void] {
-	const [active, setActive] = React.useState<boolean>(false)
+// function useActive(props: DocereComponentProps): [boolean, (ev: any) => void] {
+// 	const [active, setActive] = React.useState<boolean>(false)
 
-	React.useEffect(() => {
-		setActive(props.activeFacsimileAreas?.some(fa => props.attributes.id === fa.id))
-	}, [props.activeFacsimileAreas])
+// 	React.useEffect(() => {
+// 		setActive(props.activeFacsimileAreas?.some(fa => props.attributes.id === fa.id))
+// 	}, [props.activeFacsimileAreas])
 
-	const handleClick = React.useCallback(ev => {
-		ev.stopPropagation()
-		setActiveFacsimileArea(props.entryDispatch, [props.attributes.id])
-	}, [props.attributes.id, active])
+// 	const handleClick = React.useCallback(ev => {
+// 		ev.stopPropagation()
+// 		setActiveFacsimileArea(props.entryDispatch, [props.attributes.id])
+// 	}, [props.attributes.id, active])
 
-	return [active, handleClick]
-}
+// 	return [active, handleClick]
+// }
 
 const BlockWrapper = styled.div`
 	& > div {
@@ -52,13 +52,16 @@ const BlockWrapper = styled.div`
 	}
 `
 
+// TODO fix useActive
 function block(props: DocereComponentProps) {
-	const [active, handleClick] = useActive(props)
+	// const [active, handleClick] = useActive(props)
 	return (
 		<BlockWrapper
-			active={active}
+			// active={active}
+			active={false}
 		>
-			<div onClick={handleClick}>
+			{/* <div onClick={handleClick}> */}
+			<div>
 				□
 			</div>
 			<section>{props.children}</section>
@@ -82,24 +85,25 @@ const EntityBodyWrapper = styled.div`
 	}
 `
 
-function EntityBody(props: DocereComponentProps) {
-	const rect = props.attributes.area?.split('_').join(',')
-
+function EntityBody(props: PopupBodyProps) {
+	const { attributes } = props.docereComponentProps
+	const rect = attributes.area?.split('_').join(',')
+	const activeFacsimile = props.docereComponentProps.activeFacsimiles.values().next().value
 
 	return (
 		<EntityBodyWrapper>
 			{
 				rect != null &&
 				<img
-					src={props.activeFacsimile.versions[0].path.replace('info.json', `${rect}/240,/0/default.jpg`)}
+					src={activeFacsimile.versions[0].path.replace('info.json', `${rect}/240,/0/default.jpg`)}
 					width="100%"
 				/>
 			}
 			{
-				props.attributes.suggestion != null && 
+				attributes.suggestion != null && 
 				<div className="suggestion">
 					<label>suggestion</label>
-					<div>{props.attributes.suggestion}</div>
+					<div>{attributes.suggestion}</div>
 				</div>
 			}
 		</EntityBodyWrapper>
@@ -154,13 +158,15 @@ const TextLineWrapper = styled(Lb)`
 	}
 `
 
+// TODO fix useActive
 function line(props: DocereComponentProps) {
-	const [active, handleClick] = useActive(props)
+	// const [active, handleClick] = useActive(props)
 
 	return (
 		<TextLineWrapper
-			active={active}
-			onClick={handleClick}
+			// active={active}
+			active={false}
+			// onClick={handleClick}
 			{...props}
 			// entrySettings={props.entrySettings}
 		>

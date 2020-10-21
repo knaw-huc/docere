@@ -25,10 +25,5 @@ export default function prepareDocument(entry: ConfigEntry) {
 	pb.setAttribute('path', `${jpgPath}.jpg`)
 	entry.document.documentElement.prepend(pb)
 
-	for (const el of entry.document.querySelectorAll('String')) {
-		el.textContent = el.getAttribute('CONTENT') + ' '
-		el.removeAttribute('CONTENT')
-	}
-
 	return entry.document.documentElement
 }

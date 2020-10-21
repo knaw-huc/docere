@@ -1,5 +1,5 @@
-import { Entry, MetadataItem, GetEntryProps, GetPartProps, ConfigEntry, SerializedEntry } from '@docere/common'
-import { FacsimileArea, Facsimile, LayerType, TextData, DocereConfig, setTitle } from '@docere/common'
+import { Entry, MetadataItem, GetEntryProps, GetPartProps, ConfigEntry, SerializedEntry, Entity, ExtractedEntity, EntityConfig } from '@docere/common'
+import { Facsimile, LayerType, DocereConfig, setTitle } from '@docere/common'
 import { isTextLayerConfig, isSerializedTextLayer } from '@docere/common'
 import { SerializedLayer } from '@docere/common'
 
@@ -13,16 +13,15 @@ export function getDefaultEntry(id: string): ConfigEntry {
 		id,
 		layers: null,
 		metadata: null,
-		notes: null,
 		parts: null,
 	}
 }
 
-const defaultFacsimileArea: Pick<FacsimileArea, 'showOnHover' | 'target' | 'unit'> = {
-	showOnHover: true,
-	target: null,
-	unit: 'px'
-}
+// const defaultFacsimileArea: Pick<FacsimileArea, 'showOnHover' | 'target' | 'unit'> = {
+// 	showOnHover: true,
+// 	target: null,
+// 	unit: 'px'
+// }
 
 function extendFacsimile(facsimile: Facsimile) {
 	facsimile.versions = facsimile.versions.map(version => {
@@ -31,7 +30,7 @@ function extendFacsimile(facsimile: Facsimile) {
 			return version
 		}
 
-		version.areas = version.areas.map(area => ({ ...defaultFacsimileArea, ...area }))	
+		// version.areas = version.areas.map(area => ({ ...defaultFacsimileArea, ...area }))	
 
 		return version
 	})
@@ -39,7 +38,7 @@ function extendFacsimile(facsimile: Facsimile) {
 	return facsimile
 }
 
-function addCount(prev: Map<string, TextData>, curr: TextData) {
+function addCount(prev: Map<string, Entity>, curr: Entity) {
 	if (prev.has(curr.id)) prev.get(curr.id).count += 1
 	else prev.set(curr.id, { ...curr, count: 1 })
 	return prev
@@ -59,14 +58,12 @@ function extractLayers(entry: ConfigEntry, parent: ConfigEntry, config: DocereCo
 		.map(layer => {
 			const filterEntities = layer.filterEntities != null ? layer.filterEntities : () => () => true
 			const filterFacsimiles = layer.filterFacsimiles != null ? layer.filterFacsimiles : () => () => true
-			const filterNotes = layer.filterNotes != null ? layer.filterNotes : () => () => true
 
 			const textLayer: SerializedLayer = {
 				active: layer.active != null ? layer.active : true,
 				entities: parent.entities?.filter(filterEntities(entry)),
 				facsimiles: parent.facsimiles?.filter(filterFacsimiles(entry)),
 				id: layer.id,
-				notes: parent.notes?.filter(filterNotes(entry)),
 				pinned: layer.pinned != null ? layer.pinned : false,
 				type: layer.type != null ? layer.type : LayerType.Text,
 				title: layer.title,
@@ -81,25 +78,28 @@ function extractLayers(entry: ConfigEntry, parent: ConfigEntry, config: DocereCo
 		})
 }
 
-function extractEntities(entry: ConfigEntry, config: DocereConfig) {
-	const entities: Map<string, TextData> = config.entities
-		.reduce((prev, curr) => {
-			const extracted = curr.extract(entry, config)
-				.map(x => ({ ...x, config: curr }))
-			return prev.concat(extracted)
-		}, [])
-		.reduce(addCount, new Map<string, TextData>())
-
-	return Array.from(entities.values())
+function toEntity(config: EntityConfig) {
+	const { extract, id, ...configRest } = config
+	return function (extractedEntity: ExtractedEntity): Entity {
+		// TODO fix typings (move facet config to .facet prop?)
+		// @ts-ignore
+		return ({
+			configId: id,
+			...configRest,
+			...extractedEntity,
+		})
+	}
 }
 
-function extractNotes(entry: ConfigEntry, config: DocereConfig) {
-	return config.notes
+function extractEntities(entry: ConfigEntry, config: DocereConfig) {
+	const entities: Map<string, Entity> = config.entities
 		.reduce((prev, curr) => {
-			const extracted = curr.extract(entry, config)
-				.map(x => ({ ...x, config: curr }))
-			return prev.concat(extracted)
-		}, [])
+			const entities = curr.extract(entry, config).map(toEntity(curr))
+			return prev.concat(entities)
+		}, [] as Entity[])
+		.reduce(addCount, new Map<string, Entity>())
+
+	return Array.from(entities.values())
 }
 
 export function extractEntryData(entry: ConfigEntry, config: DocereConfig) {
@@ -107,7 +107,6 @@ export function extractEntryData(entry: ConfigEntry, config: DocereConfig) {
 
 	entry.facsimiles = config.facsimiles?.extract(entry, config).map(extendFacsimile)
 	entry.entities = extractEntities(entry, config)
-	entry.notes = extractNotes(entry, config)
 
 	// Extraction of layers depends on entry.facsimiles, entry.entities and entry.notes
 	entry.layers = extractLayers(entry, entry, config)

@@ -6,6 +6,7 @@ import { NoOp } from '../../utils'
 export default function getComponents(_config: DocereConfig) {
 	return async function(_container: DocereComponentContainer, _id: string) {
 		return {
+			teiHeader: NoOp,
 			'section.footnotes': NoOp,
 			head: NoOp,
 			header: NoOp,

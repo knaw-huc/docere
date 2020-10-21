@@ -43,13 +43,14 @@ export enum LayerType {
 	XML = 'xml'
 }
 
-export enum RsType {
+export enum EntityType {
 	Artwork = 'artwork',
 	Date = 'date',
 	EntryLink = 'entry_link',
 	Line = 'line',
 	Location = 'location',
 	None = 'unknown',
+	Note = 'note',
 	NoteLink = 'note_link',
 	PagePart = 'page_part',
 	Person = 'person',

@@ -1,7 +1,7 @@
-import { RsType } from '../../enum'
+import { EntityType } from '../../enum'
 import type { FacetConfig } from '../search/facets'
 import { PageConfig } from '../page'
-import { ExtractedTextData, Facsimile, ExtractedNote } from './functions'
+import { Facsimile, ExtractedEntity } from './functions'
 import { TextLayerConfig, FacsimileLayerConfig } from './layer'
 import { ConfigEntry } from '../entry'
 
@@ -16,7 +16,7 @@ export interface DocereConfig {
 	facsimiles?: FacsimileConfig
 	layers?: (TextLayerConfig | FacsimileLayerConfig)[]
 	metadata?: MetadataConfig[]
-	notes?: NoteConfig[]
+	// notes?: NoteConfig[]
 	pages?: PageConfig[]
 	plainText?: (entry: ConfigEntry, config: DocereConfig) => string
 	prepare?: (entry: ConfigEntry, config: DocereConfig) => Element
@@ -56,20 +56,22 @@ export type MetadataConfig = TmpConfig & {
 	extract: (entry: ConfigEntry, config?: DocereConfig) => string | number | string[] | number[] | boolean
 }
 
-export type ExtractTextData = (entry: ConfigEntry, config?: DocereConfig) => ExtractedTextData[]
+// export type ExtractTextData = (entry: ConfigEntry, config?: DocereConfig) => ExtractedTextData[]
 
+// export type EntityConfig = TmpConfig & {
+// 	color?: string
+// 	extract: ExtractTextData
+// }
+
+export type ExtractEntity = (entry: ConfigEntry, config?: DocereConfig) => ExtractedEntity[]
+// TODO rename to NoteConfig
 export type EntityConfig = TmpConfig & {
 	color?: string
-	extract: ExtractTextData
+	extract: ExtractEntity
 	revealOnHover?: boolean
-	type?: RsType | string
+	type?: EntityType | string
 }
 
-// TODO rename to NoteConfig
-export interface NoteConfig extends BaseConfig {
-	color?: string
-	extract: (entry: ConfigEntry, config?: DocereConfig) => ExtractedNote[]
-}
 // export interface NotesConfig extends BaseConfig {
 
 interface FacsimileConfig {

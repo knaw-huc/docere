@@ -1,7 +1,7 @@
 import React from 'react'
 import DocereTextView from '@docere/text'
 import styled from 'styled-components'
-import { TEXT_PANEL_TEXT_WIDTH, DEFAULT_SPACING, getTextPanelLeftSpacing } from '@docere/common'
+import { TEXT_PANEL_TEXT_WIDTH, DEFAULT_SPACING, getTextPanelLeftSpacing, Entity } from '@docere/common'
 
 import Tooltip, { TooltipBody } from './tooltip'
 
@@ -41,13 +41,17 @@ const Body = styled.div`
 	padding: 1rem;
 `
 
-interface Props {
+export interface PopupBodyProps {
+	entity: Entity
 	docereComponentProps: DocereComponentProps
+}
+
+interface Props {
 	active: boolean
-	color: string
+	docereComponentProps: DocereComponentProps
+	entity: Entity
 	openToAside: boolean
-	PopupBody?: React.FC<DocereComponentProps>
-	title: string
+	PopupBody?: React.FC<PopupBodyProps>
 	xml?: string
 }
 export function Popup(props: Props) {
@@ -56,18 +60,17 @@ export function Popup(props: Props) {
 
 	return (
 		<Wrapper
-			activeEntity={props.docereComponentProps.activeEntity}
-			activeNote={props.docereComponentProps.activeNote}
-			color={props.color}
+			activeEntities={props.docereComponentProps.activeEntities}
+			entity={props.entity}
 			settings={props.docereComponentProps.entrySettings}
 		>
 			{
-				props.title != null &&
+				props.entity.title != null &&
 				<PopupHeader
-					color={props.color}
+					color={props.entity.color}
 				>
 					<span></span>
-					<span>{props.title}</span>
+					<span>{props.entity.title}</span>
 					<span></span>
 				</PopupHeader>
 			}
@@ -81,7 +84,10 @@ export function Popup(props: Props) {
 								xml={props.xml}
 							/>
 						</Body> :
-						<props.PopupBody {...props.docereComponentProps} /> :
+						<props.PopupBody
+							docereComponentProps={props.docereComponentProps}
+							entity={props.entity}
+						/> :
 					null
 			}
 		</Wrapper>

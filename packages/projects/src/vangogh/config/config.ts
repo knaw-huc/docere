@@ -1,4 +1,4 @@
-import { LayerType, RsType, Colors } from '@docere/common'
+import { LayerType, EntityType, Colors } from '@docere/common'
 import type { DocereConfig } from '@docere/common'
 import extractFacsimiles from './facsimiles'
 import prepare from './prepare'
@@ -8,7 +8,8 @@ const config: DocereConfig = {
 	slug: 'vangogh',
 	title: 'Van Gogh Letters',
 	metadata,
-	notes: [
+	pages: [],
+	entities: [
 		{
 			color: Colors.BlueBright,
 			id: 'textual',
@@ -20,6 +21,7 @@ const config: DocereConfig = {
 					title: `Note ${el.getAttribute('n')}`,
 				})),
 			title: "Textual notes",
+			type: EntityType.Note,
 		},
 		{
 			color: Colors.BlueBright,
@@ -32,41 +34,39 @@ const config: DocereConfig = {
 					title: `Note ${el.getAttribute('n')}`,
 				})),
 			title: "Editor notes",
+			type: EntityType.Note,
 		},
-	],
-	pages: [],
-	entities: [
 		{
 			color: '#fd7a7a',
 			extract: entry => Array.from(entry.document.querySelectorAll('div[type="translation"] rs[type="pers"]'))
 				.map(el => ({
 					id: el.getAttribute('key'),
-					value: el.textContent
+					content: el.textContent
 				})),
 			id: 'pers',
 			showInAside: true,
 			title: 'Persons',
-			type: RsType.Person,
+			type: EntityType.Person,
 		},
 		{
 			color: Colors.Orange,
 			extract: entry => Array.from(entry.document.querySelectorAll('ref[target][type="entry-link"]'))
 				.map(el => ({
 					id: el.getAttribute('target').replace(/\.xml$/, ''),
-					value: el.textContent,
+					content: el.textContent,
 				})),
 			id: 'entry-link',
-			type: RsType.EntryLink,
+			type: EntityType.EntryLink,
 		},
 		{
 			color: Colors.Brown,
 			extract: entry => Array.from(entry.document.querySelectorAll('ref[target][type="note-link"]'))
 				.map(el => ({
 					id: el.getAttribute('target'),
-					value: el.textContent,
+					content: el.textContent,
 				})),
 			id: 'note-link',
-			type: RsType.NoteLink,
+			type: EntityType.NoteLink,
 		},
 		// {
 		// 	id: 'lb',

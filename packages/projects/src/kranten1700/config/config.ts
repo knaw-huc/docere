@@ -1,4 +1,4 @@
-import { EsDataType, LayerType, Colors, ExtractedTextData } from '@docere/common'
+import { EsDataType, LayerType, Colors } from '@docere/common'
 import { DocereConfig } from '@docere/common'
 import { extractLayerElement } from '../../utils'
 import prepare from './prepare'
@@ -66,9 +66,9 @@ const config: DocereConfig = {
 		{
 			color: Colors.Pink,
 			extract: entry => Array.from(entry.document.querySelectorAll('w'))
-				.map((el): ExtractedTextData => ({
+				.map(el  => ({
 					id: el.getAttribute('pos'),
-					value: el.getAttribute('pos'),
+					content: el.getAttribute('value'),
 				})),
 			id: 'pos',
 			title: 'Part-of-speech tagging'

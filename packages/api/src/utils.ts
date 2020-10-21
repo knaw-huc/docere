@@ -176,9 +176,9 @@ export function getElasticSearchDocument(extractedEntry: SerializedEntry | Docer
 
 	const entities = Object.values(lookup.entities)
 		.reduce((agg, entity) => {
-			agg[entity.config.id] = (agg.hasOwnProperty(entity.config.id)) ?
-				agg[entity.config.id].concat(entity.value) :
-				[entity.value]
+			agg[entity.configId] = (agg.hasOwnProperty(entity.configId)) ?
+				agg[entity.configId].concat(entity.content) :
+				[entity.content]
 			return agg
 		}, {} as Record<string, string[]>)
 

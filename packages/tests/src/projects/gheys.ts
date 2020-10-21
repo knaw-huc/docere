@@ -1,9 +1,10 @@
-import { SerializedEntry, isFacsimileLayer, isTextLayer, EsDataType } from '../../../common/src'
+import { SerializedEntry, isFacsimileLayer, isTextLayer, EsDataType, Colors } from '../../../common/src'
 import { fetchEntry, fetchMapping } from '../utils'
 import { Mapping } from '../../../api/src/types'
 
 const projectId = 'gheys'
-const documentId = 'NAN_disk1/7746/NL-HaNA_1.04.02_7746_0007'
+// const documentId = 'NAN_disk1/7746/NL-HaNA_1.04.02_7746_0007'
+const documentId = 'NAN_disk2/8749/NL-HaNA_1.04.02_8749_0011'
 
 export function gheysTests() {
 	let entry: SerializedEntry
@@ -75,11 +76,11 @@ export function gheysTests() {
 		const layers = entry.layers.filter(isTextLayer)
 		expect(layers).toHaveLength(1)
 		expect(layers[0].id).toBe('text')
-		expect(layers[0].content).toHaveLength(19146)
+		expect(layers[0].content).toHaveLength(21521)
 	})
 
-	it('Should be a letter from August Allebe', () => {
-		expect(entry.content.slice(102, 173)).toBe('register batavia april secunen opperhoofd maij borssum gesz aprie princ')
+	it('Should be a letter with keywords', () => {
+		expect(entry.content.slice(102, 162)).toBe('brief papier edelen india agtb raad dtschip pacque edel sijd')
 	})
 
 	it('Should have 1 facsimile on each layer', () => {
@@ -87,13 +88,28 @@ export function gheysTests() {
 		expect(entry.layers[1].facsimiles).toHaveLength(1)
 	})
 
-	it('Should have 26 entities on each layer', () => {
-		expect(entry.layers[0].entities).toHaveLength(26)
-		expect(entry.layers[1].entities).toHaveLength(26)
+	it('Should have 73 entities on each layer', () => {
+		expect(entry.layers[0].entities).toHaveLength(73)
+		expect(entry.layers[1].entities).toHaveLength(73)
 	})
 
-	it('Should have no notes', () => {
-		expect(entry.layers[0].notes).toHaveLength(0)
-		expect(entry.layers[1].notes).toHaveLength(0)
+	it('Should have 45 suggestions on each layer', () => {
+		const suggestions = entry.layers[0].entities.filter(e => e.configId === 'suggestion')
+		expect(suggestions).toHaveLength(45)
+		expect(suggestions[0].color).toBe(Colors.Red)
+	})
+
+	it('Should have 21 persons, 1 location, 2 jobs and 4 goods', () => {
+		const entities = entry.layers[0].entities
+		expect(entities.filter(e => e.configId === 'person')).toHaveLength(21)
+		expect(entities.filter(e => e.configId === 'location')).toHaveLength(1)
+		expect(entities.filter(e => e.configId === 'job')).toHaveLength(2)
+		expect(entities.filter(e => e.configId === 'good')).toHaveLength(4)
+	})
+
+	it('Should have orange color on location config', () => {
+		const entities = entry.layers[0].entities.filter(e => e.configId === 'location')
+		expect(entities[0].color).toBe(Colors.Orange)
+
 	})
 }

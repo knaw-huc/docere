@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { DocereComponentProps, Note } from '@docere/common'
+import { DocereComponentProps, Entity } from '@docere/common'
 import { Popup } from './popup'
 
 interface NAProps { active: boolean, color: string, openToAside: boolean }
@@ -25,11 +25,11 @@ const Wrapper = styled.div`
 `
 
 function useNote(extractNoteId: ExtractNoteId, props: DocereComponentProps) {
-	const [note, setNote] = React.useState<Note>(null)
+	const [note, setNote] = React.useState<Entity>(null)
 
 	React.useEffect(() => {
 		const noteId = extractNoteId(props)
-		const note = props.layer.notes.find(x => x.id === noteId)
+		const note = props.layer.entities.find(x => x.id === noteId)
 		setNote(note)
 	}, [props.entry.id])
 
@@ -40,20 +40,18 @@ type ExtractNoteId = (props: DocereComponentProps) => string
 
 export default function getNote(extractNoteId: ExtractNoteId) {
 	return function Note(props: DocereComponentProps) {
-
 		if (
-			!props.entrySettings['panels.text.showNotes'] ||
-			props.layer.notes == null
+			!props.entrySettings['panels.text.showNotes']
 		) return <span>{props.children}</span>
 
 		const note = useNote(extractNoteId, props)
 
-		const active = note != null && note.id === props.activeNote?.id
+		const active = props.activeEntities.has(note.id)
 		const openToAside = active && !props.entrySettings['panels.text.openPopupAsTooltip']
 
 		const handleClick = React.useCallback(() => {
 			props.entryDispatch({
-				type: 'SET_NOTE',
+				type: 'SET_ENTITY',
 				id: active ? null : note.id
 			})
 		}, [note, active])
@@ -64,7 +62,7 @@ export default function getNote(extractNoteId: ExtractNoteId) {
 			<Wrapper
 				active={active}
 				className="note"
-				color={note.config.color}
+				color={note.color}
 				id={note.id}
 				onClick={handleClick}
 				openToAside={openToAside}
@@ -72,10 +70,9 @@ export default function getNote(extractNoteId: ExtractNoteId) {
 				{note.n}
 				<Popup
 					active={active}
-					color={note.config.color}
 					docereComponentProps={props}
+					entity={note}
 					openToAside={openToAside}
-					title={note.title}
 					xml={note.content}
 				/>
 			</Wrapper>

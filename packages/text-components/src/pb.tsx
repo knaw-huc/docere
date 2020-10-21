@@ -65,14 +65,15 @@ export default function getPb(extractPbId: ExtractPbId): React.FC<DocereComponen
 		const onClick = React.useCallback((ev) => {
 			const { facsimileId } = ev.target.dataset
 
-			if (facsimileId !== props.activeFacsimile.id) {
+			// TODO is if necessary?
+			if (!props.activeFacsimiles.has(facsimileId)) {
 				props.entryDispatch({
 					id: facsimileId,
 					triggerLayer: props.layer,
-					type: 'SET_ACTIVE_FACSIMILE',
+					type: 'SET_FACSIMILE',
 				})
 			}
-		}, [props.activeFacsimile, props.layer])
+		}, [props.activeFacsimiles, props.layer])
 
 		return (
 			<Wrapper>
@@ -80,7 +81,7 @@ export default function getPb(extractPbId: ExtractPbId): React.FC<DocereComponen
 					{
 						facsimiles.map(facsimile => {
 							const src = facsimile.versions[0].path
-							const active = props.activeFacsimile?.id === facsimile.id
+							const active = props.activeFacsimiles.has(facsimile.id)
 							return (
 								<Img
 									active={active}

@@ -1,8 +1,8 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import { DocereComponentContainer } from '@docere/common'
-import type { DocereComponentProps, DocereConfig, DocereComponents } from '@docere/common'
-import { getEntity } from '@docere/text-components'
+import type { DocereConfig, DocereComponents } from '@docere/common'
+import { getEntity, PopupBodyProps } from '@docere/text-components'
 
 const Dl = styled.dl`
 	line-height: 1rem;
@@ -29,30 +29,31 @@ const Dl = styled.dl`
 	}
 `
 
-function RsBody(props: DocereComponentProps) {
+function RsBody(props: PopupBodyProps) {
+	const { attributes } = props.docereComponentProps
 	return (
 		<Dl>
 			<div>
 				<dt>Origineel</dt>
-				<dd>{props.attributes.value}</dd>
+				<dd>{attributes.value}</dd>
 			</div>
 			<div>
 				<dt>Contemporain</dt>
-				<dd>{props.attributes.contemporary}</dd>
+				<dd>{attributes.contemporary}</dd>
 			</div>
 			<div>
 				<dt>pos</dt>
-				<dd>{props.attributes.pos}</dd>
+				<dd>{attributes.pos}</dd>
 			</div>
 			<div>
 				<dt>pos sub</dt>
-				<dd>{props.attributes.possub}</dd>
+				<dd>{attributes.possub}</dd>
 			</div>
 			{
-				props.attributes.type &&
+				attributes.type &&
 				<div>
 					<dt>NER type</dt>
-					<dd>{props.attributes.type}</dd>
+					<dd>{attributes.type}</dd>
 				</div>
 			}
 		</Dl>

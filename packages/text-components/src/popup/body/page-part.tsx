@@ -4,11 +4,12 @@ import DocereTextView from '@docere/text'
 
 import { PopupBodyLink, PopupBodyWrapper } from './index'
 
-import type { DocereComponentProps, UrlObject, Entity } from '@docere/common'
+import type { UrlObject, Entity } from '@docere/common'
+import type { PopupBodyProps } from '..'
 
 
 interface PageLinkProps {
-	activeEntity: Entity
+	entity: Entity
 	children: React.ReactNode
 }
 function PageLink(props: PageLinkProps) {
@@ -17,15 +18,16 @@ function PageLink(props: PageLinkProps) {
 	const goToPage = React.useCallback((ev: React.MouseEvent) => {
 		ev.stopPropagation()
 
-		const urlObject: UrlObject = { pageId: props.activeEntity.config.id }
-		if (props.activeEntity.id != null) urlObject.query = { entityId: props.activeEntity.id }
+		const urlObject: UrlObject = { pageId: props.entity.configId }
+		if (props.entity.id != null) urlObject.query = { entityId: [props.entity.id] }
 
+		// TODO Use dispatch? props.docereComponentProps.entryDispatch
 		navigate(urlObject)
-	}, [props.activeEntity])
+	}, [props.entity])
 
 	return (
 		<PopupBodyLink
-			entityConfig={props.activeEntity.config}
+			entity={props.entity}
 			onClick={goToPage}
 		>
 			{props.children}
@@ -33,10 +35,8 @@ function PageLink(props: PageLinkProps) {
 	)
 }
 
-export default function PagePartPopupBody(props: DocereComponentProps) {
-	if (props.activeEntity == null) return null
-
-	const page = usePage(props.activeEntity.config.id)
+export default function PagePartPopupBody(props: PopupBodyProps) {
+	const page = usePage(props.entity.configId)
 	const components = useComponents(DocereComponentContainer.Page, page?.id)
 
 	if (page == null) return null
@@ -45,10 +45,10 @@ export default function PagePartPopupBody(props: DocereComponentProps) {
 		<PopupBodyWrapper>
 			<DocereTextView
 				components={components}
-				node={page.parts.get(props.activeEntity.id)}
+				node={page.parts.get(props.entity.id)}
 			/>
 			<PageLink
-				activeEntity={props.activeEntity}
+				entity={props.entity}
 			>
 				Go to {page.title}
 			</PageLink>

@@ -3,16 +3,16 @@ import { useLocation, useParams } from "react-router-dom"
 import { UrlObject } from './navigate'
 
 export interface UrlQuery {
-	entityId?: string		/* ei = person, location, gloss */
-	noteId?: string			/* ni */
-	facsimileId?: string	/* fi = pb */
-	lineId?: string			/* li = lb */
-	blockId?: string		/* bi = p, ab, div */
+	entityId?: string[]		/* ei = person, location, gloss */
+	// noteId?: string			/* ni */
+	facsimileId?: string[]	/* fi = pb */
+	lineId?: string[]			/* li = lb */
+	blockId?: string[]		/* bi = p, ab, div */
 }
 
 const urlQueryMap: Record<string, keyof UrlQuery> = {
 	ei: 'entityId',
-	ni: 'noteId',
+	// ni: 'noteId',
 	fi: 'facsimileId',
 	li: 'lineId',
 	bi: 'blockId',
@@ -27,6 +27,8 @@ const urlQueryMap: Record<string, keyof UrlQuery> = {
 // 	}
 // }
 
+
+// Turn the URL into an URL object
 export function useUrlObject() {
 	const location = useLocation()
 	const { projectId, entryId, pageId } = useParams()
@@ -34,12 +36,12 @@ export function useUrlObject() {
 
 	React.useEffect(() => {
 		const nextQuery: UrlQuery = {}
-		for (const [key, value] of new URLSearchParams(location.search)) {
-			if (!urlQueryMap.hasOwnProperty(key)) continue
-
-			// See interface UrlQuery for key (ei, ni, fi, ...) descriptions
-			nextQuery[urlQueryMap[key]] = value
-		}
+	
+		const searchParams = new URLSearchParams(location.search)
+		Object.keys(urlQueryMap).forEach(key => {
+			const value = searchParams.getAll(key)
+			nextQuery[urlQueryMap[key]] = value.length ? value : null
+		})
 
 		const nextPayload: UrlObject = {
 			projectId,

@@ -1,6 +1,5 @@
 import React from 'react'
 import { Entity, DocereComponentProps } from '@docere/common'
-import type { EntityConfig } from '@docere/common'
 import IconsByType from './icons'
 
 export type ExtractEntityType = (props: DocereComponentProps) => string
@@ -16,6 +15,7 @@ export function useEntity(
 	React.useEffect(() => {
 		const entityId = extractEntityId(props)
 		const _entity = props.layer.entities?.find(x => x.id === entityId)
+		if (entityId === 'puzosxmyry') console.log(entityId, _entity)
 		setEntity(_entity)
 	}, [])
 
@@ -24,17 +24,17 @@ export function useEntity(
 
 // To prevent a wrap between the icon and the first word the first word is extracted.
 // The icon and the first word are placed inside a span with white-space: nowrap.
-export function useChildren(entityValue: React.ReactNode, config: EntityConfig): [React.ReactNode[], React.ReactNode, string] {
+export function useChildren(entityValue: React.ReactNode, entity: Entity): [React.ReactNode[], React.ReactNode, string] {
 	const [children, setChildren] = React.useState<React.ReactNode[]>(entityValue as any)
 	const [firstWord, setFirstWord] = React.useState<React.ReactNode>(null)
 	const [restOfFirstChild, setRestOfFirstChild] = React.useState<string>(null)
 
 	React.useEffect(() => {
-		if (config == null) return
+		if (entity == null) return
 		const children = React.Children.toArray(entityValue)
 		let firstWord: React.ReactNode = entityValue
 		let restOfFirstChild: string
-		if (IconsByType.hasOwnProperty(config?.type) && children.length && typeof children[0] === 'string') {
+		if (IconsByType.hasOwnProperty(entity.type) && children.length && typeof children[0] === 'string') {
 			const [fw, ...rofc] = children[0].split(/\s/)
 			firstWord = fw
 			restOfFirstChild = rofc.length ? ' '.concat(rofc.join(' ')) : ''
@@ -43,7 +43,7 @@ export function useChildren(entityValue: React.ReactNode, config: EntityConfig):
 		setChildren(children)
 		setFirstWord(firstWord)
 		setRestOfFirstChild(restOfFirstChild)
-	}, [entityValue, config])
+	}, [entityValue, entity])
 
 	return [children, firstWord, restOfFirstChild]
 }

@@ -1,6 +1,6 @@
 import { BooleanFacetConfig, ListFacetConfig, HierarchyFacetConfig, RangeFacetConfig, DateFacetConfig } from '../search'
 import { SerializedLayer, Layer } from '../config-data/layer'
-import type { Entity, Note, Facsimile } from '../config-data/functions'
+import type { Entity, Facsimile } from '../config-data/functions'
 import { DocereConfig } from '../config-data/config'
 
 export * from './state'
@@ -24,7 +24,6 @@ export type ConfigEntry = Omit<Entry, 'layers'> & {
 	entities: Entity[]
 	facsimiles: Facsimile[]
 	layers: SerializedLayer[]
-	notes: Note[]
 	parent?: ConfigEntry
 	parts?: EntryParts
 }
@@ -52,15 +51,13 @@ export interface GetPartProps extends GetEntryProps {
 export interface EntryLookup {
 	facsimiles: Record<string, Facsimile>
 	entities: Record<string, Entity>
-	notes: Record<string, Note>
 }
 export function createLookup<T extends SerializedLayer[]>(layers: T) {
 	return layers.reduce((agg, layer) => {
 		layer.facsimiles?.forEach(l => { agg.facsimiles[l.id] = l; })
 		layer.entities?.forEach(e => { agg.entities[e.id] = e; })
-		layer.notes?.forEach(n => { agg.notes[n.id] = n; })
 		return agg
-	}, { facsimiles: {}, notes: {}, entities: {} } as EntryLookup)
+	}, { facsimiles: {}, entities: {} } as EntryLookup)
 }
 // export function extractIdsFromElasticSearchId(elasticSearchId: string) {
 // 	return elasticSearchId.split('__part__')

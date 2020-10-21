@@ -26,19 +26,12 @@ function Entry(props: EntryProps) {
 				entryDispatch={entryDispatch}
 			/>
 			<Aside
-				activeEntity={entryState.activeEntity}
-				activeNote={entryState.activeNote}
-				activeFacsimile={entryState.activeFacsimile}
-				activeFacsimileAreas={entryState.activeFacsimileAreas}
 				appDispatch={props.appDispatch}
 				asideTab={entryState.asideTab}
 				entryDispatch={entryDispatch}
 				entry={entryState.entry}
-				layers={entryState.layers}
-				entrySettings={entryState.entrySettings}
 			/>
 			<Footer
-				activeFacsimile={entryState.activeFacsimile}
 				appDispatch={props.appDispatch}
 				asideTab={entryState.asideTab}
 				entryDispatch={entryDispatch}

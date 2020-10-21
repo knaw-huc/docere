@@ -13,11 +13,9 @@
 - Add <new-project-id> to `projects/src/index.ts`
 
 ## Fill the index
-- $ cd <docere-root>/packages/projects
-- $ npm run dist
 - $ docker restart docere_api_1
-- $ curl localhost/api/indexer/<new-project-id>
-- $ curl localhost/api/indexer/<new-project-id>/status | jq .
+- $ curl -X POST localhost/api/projects/<new-project-id>/init
+- $ curl -X POST localhost/api/projects/<new-project-id>/xml
 
 ## Adding facsimiles
 - $ cp <other-project-id>/facsimiles.ts <new-project-id>

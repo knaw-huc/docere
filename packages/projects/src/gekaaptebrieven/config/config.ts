@@ -1,15 +1,15 @@
-import { EsDataType, RsType, LayerType, ExtractTextData, ExtractedTextData } from '@docere/common'
+import { EsDataType, EntityType, LayerType, ExtractEntity } from '@docere/common'
 import { DocereConfig } from '@docere/common'
 import extractFacsimiles from './facsimiles'
 import prepare from './prepare'
 import { extractLanguages, extractTextTypes } from './metadata'
 
-function extractEntity(name: string): ExtractTextData {
+function extractEntity(name: string): ExtractEntity {
 	return entry =>
 		Array.from(entry.document.querySelectorAll(`ner[type~=${name}]`))
-			.map((element): ExtractedTextData => ({
+			.map(element => ({
 				id: element.textContent,
-				value: element.textContent
+				content: element.textContent
 			}))
 }
 
@@ -127,35 +127,35 @@ const config: DocereConfig = {
 			extract: extractEntity('per'),
 			id: 'per',
 			showInAside: true,
-			type: RsType.Person
+			type: EntityType.Person
 		}, {
 			color: '#5fb53f',
 			extract: extractEntity('org'),
 			id: 'org',
 			showInAside: true,
 			title: 'Organisation',
-			type: RsType.None
+			type: EntityType.None
 		}, {
 			color: 'orange',
 			extract: extractEntity('loc'),
 			id: 'loc',
 			showInAside: true,
 			title: 'Location',
-			type: RsType.Location
+			type: EntityType.Location
 		}, {
 			color: '#8080ff',
 			extract: extractEntity('misc'),
 			id: 'misc',
 			showInAside: true,
 			title: 'Miscellaneous',
-			type: RsType.None
+			type: EntityType.None
 		}, {
 			color: '#8080ff',
 			extract: extractEntity('pro'),
 			id: 'pro',
 			showInAside: true,
 			title: 'Products',
-			type: RsType.None
+			type: EntityType.None
 		}
 	],
 	facsimiles: {

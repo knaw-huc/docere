@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { DEFAULT_SPACING, LayerType } from '@docere/common'
-import type { EntryStateAction, Layer, Facsimile } from '@docere/common'
+import { DEFAULT_SPACING, LayerType, isFacsimileLayer, FacsimileLayer } from '@docere/common'
+import type { EntryStateAction, Layer } from '@docere/common'
 
 const LiWrapper = styled.li`
 	color: ${(p: PIWProps) => p.active ? '#EEE' : '#444'};
@@ -81,13 +81,13 @@ function Li(props: PIProps) {
 }
 
 interface P {
-	activeFacsimile: Facsimile
-	layer: Layer
+	layer: FacsimileLayer
 }
 const LiFacs = styled(Li)`
 	${(p: P) => {
-		const path = p.activeFacsimile != null ?
-			p.activeFacsimile.versions[0].path.replace('info.json', `full/!100,100/0/default.jpg`) :
+		const { activeFacsimile } = p.layer
+		const path = activeFacsimile != null ?
+			activeFacsimile.versions[0].path.replace('info.json', `full/!100,100/0/default.jpg`) :
 			''
 
 		return `& > div:first-of-type {
@@ -122,7 +122,6 @@ const Ul = styled.ul`
 
 interface Props {
 	active: boolean
-	activeFacsimile: Facsimile
 	dispatch: React.Dispatch<EntryStateAction>
 	layers: Layer[]
 }
@@ -132,9 +131,8 @@ function Layers(props: Props) {
 			<Ul>
 				{
 					props.layers.map(tl =>
-						tl.type === LayerType.Facsimile ?
+						isFacsimileLayer(tl) ?
 							<LiFacs
-								activeFacsimile={props.activeFacsimile}
 								dispatch={props.dispatch}
 								key={tl.id}
 								layer={tl}

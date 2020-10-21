@@ -1,4 +1,4 @@
-import { extendConfigData, EsDataType, Colors, RsType, LayerType } from '@docere/common'
+import { extendConfigData, EsDataType, Colors, EntityType, LayerType } from '@docere/common'
 import { extractLayerElement, useAll } from '../../utils'
 import extractFacsimiles from './facsimiles'
 
@@ -46,32 +46,45 @@ export default extendConfigData({
 		{
 			color: Colors.Blue,
 			id: 'biblio',
-			type: RsType.PagePart,
+			type: EntityType.PagePart,
 			extract: entry => Array.from(entry.document.querySelectorAll('ref[target^="biblio.xml#"]'))
 				.map(x => ({
 					id: x.getAttribute('target').split('#')[1],
-					value: x.textContent,
+					content: x.textContent,
 				})),
 		},
 		{
 			color: Colors.Green,
 			id: 'bio',
-			type: RsType.PagePart,
+			type: EntityType.PagePart,
 			extract: entry => Array.from(entry.document.querySelectorAll('ref[target^="bio.xml#"]'))
 				.map(x => ({
 					id: x.getAttribute('target').split('#')[1],
-					value: x.textContent,
+					content: x.textContent,
 				})),
 		},
 		{
 			color: Colors.Green,
 			id: 'rkd-artwork-link',
-			type: RsType.Artwork,
+			type: EntityType.Artwork,
 			extract: entry => Array.from(entry.document.querySelectorAll('rs[type="artwork-m"]'))
 				.map(x => ({
 					id: x.getAttribute('key'),
-					value: x.textContent,
+					content: x.textContent,
 				})),
+		},
+		{
+			color: Colors.Blue,
+			id: 'editor',
+			extract: entry =>
+				Array.from(entry.document.querySelectorAll('div[type="notes"] > note'))
+					.map((el, index) => ({
+						content: el.outerHTML,
+						id: el.getAttribute('xml:id'),
+						n: (index + 1).toString(),
+						title: 'Note',
+					})),
+			type: EntityType.Note,
 		}
 	],
 	layers: [
@@ -90,20 +103,6 @@ export default extendConfigData({
 			extract: extractLayerElement('div[type="translation"]'),
 			filterFacsimiles: useAll,
 			type: LayerType.Text,
-		}
-	],
-	notes: [
-		{
-			color: Colors.Blue,
-			id: 'editor',
-			extract: entry =>
-				Array.from(entry.document.querySelectorAll('div[type="notes"] > note'))
-					.map((el, index) => ({
-						content: el.outerHTML,
-						id: el.getAttribute('xml:id'),
-						n: (index + 1).toString(),
-						title: 'Note',
-					}))
 		}
 	],
 	pages: [

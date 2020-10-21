@@ -1,10 +1,12 @@
 import React from 'react'
 import styled from 'styled-components'
-import { DocereComponentProps, EntityConfig } from '@docere/common'
+import { DocereComponentProps, Entity } from '@docere/common'
 
 import { Popup } from '../popup'
 import { useEntity, useChildren, ExtractEntityKey, ExtractEntityValue } from './hooks'
 import IconsByType from './icons'
+
+import type { PopupBodyProps } from '../popup'
 
 interface NWProps { openToAside: boolean }
 const NoWrap = styled.span`
@@ -14,17 +16,17 @@ const NoWrap = styled.span`
 `
 
 const EntityWrapper = styled.span`
-	background-color: ${(props: { config: EntityConfig, active: boolean }) => {
-		return props.active ? props.config.color : 'rgba(0, 0, 0, 0)'
+	background-color: ${(props: { entity: Entity, active: boolean }) => {
+		return props.active ? props.entity.color : 'rgba(0, 0, 0, 0)'
 	}};
 	${props => 
 		props.active ?
-			`border-bottom: 3px solid ${props.config.color};` :
-			props.config.revealOnHover ?
+			`border-bottom: 3px solid ${props.color};` :
+			props.entity.revealOnHover ?
 				`&:hover {
-					border-bottom: 3px solid ${props.config.color};
+					border-bottom: 3px solid ${props.entity.color};
 				}` :
-				`border-bottom: 3px solid ${props.config.color};`
+				`border-bottom: 3px solid ${props.entity.color};`
 	}
 	color: ${props => props.active ? 'white' : 'inherit'};
 	cursor: pointer;
@@ -43,9 +45,9 @@ const defaultPreProps: Omit<PreProps, 'extractType'> = {
 
 interface PreProps {
 	// extractType: ExtractEntityType
-	extractKey?: ExtractEntityKey
-	extractValue?: ExtractEntityValue
-	PopupBody?: React.FC<DocereComponentProps>
+	extractKey?: ExtractEntityKey // Extract the entity ID 
+	extractValue?: ExtractEntityValue // Extract the entity text content (not the note body!)
+	PopupBody?: React.FC<PopupBodyProps>
 }
 
 export default function getEntity(preProps?: PreProps) {
@@ -56,7 +58,7 @@ export default function getEntity(preProps?: PreProps) {
 		if (!props.entrySettings['panels.text.showEntities']) return <span>{entityValue}</span>
 
 		const entity = useEntity(preProps.extractKey, props)
-		const [children, firstWord, restOfFirstChild] = useChildren(entityValue, entity?.config)
+		const [children, firstWord, restOfFirstChild] = useChildren(entityValue, entity)
 
 		// The entity can be active, but without the need to show the tooltip.
 		// In case there are several entities with the same ID, we only want to 
@@ -66,10 +68,13 @@ export default function getEntity(preProps?: PreProps) {
 		const [active, setActive] = React.useState(false)
 
 		React.useEffect(() => {
-			const nextActive = entity != null && props.activeEntity != null && props.activeEntity.id === entity.id
-			setActive(nextActive)
+			if (entity == null) return
+			// const nextActive = entity != null && props.activeEntity != null && props.activeEntity.id === entity.id
+			const nextActive = props.activeEntities?.has(entity.id)
+			if (nextActive) console.log(nextActive, entity.id, showTooltip)
+			setActive(nextActive === true)
 			if (!nextActive && showTooltip) setShowTooltip(false)
-		}, [entity, props.activeEntity])
+		}, [entity, props.activeEntities])
 
 		const handleClick = React.useCallback(ev => {
 			ev.stopPropagation()
@@ -84,14 +89,14 @@ export default function getEntity(preProps?: PreProps) {
 
 		if (entity == null) return null
 
-		const Icon = IconsByType[entity.config.type]
+		const Icon = IconsByType[entity.type]
 
 		const openToAside = active && !props.entrySettings['panels.text.openPopupAsTooltip']
 
 		return (
 			<EntityWrapper
 				active={active}
-				config={entity.config}
+				entity={entity}
 				onClick={handleClick}
 			>
 				<NoWrap
@@ -101,17 +106,16 @@ export default function getEntity(preProps?: PreProps) {
 						Icon != null &&
 						<Icon
 							active={active}
-							config={entity.config}
+							entity={entity}
 						/>
 					}
 					{firstWord}
 					<Popup
 						active={active && showTooltip}
-						color={entity.config.color}
 						docereComponentProps={props}
+						entity={entity}
 						openToAside={openToAside}
 						PopupBody={preProps.PopupBody}
-						title={entity.config.title}
 					/>
 				</NoWrap>
 				{restOfFirstChild}

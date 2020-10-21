@@ -125,11 +125,11 @@ export async function addXmlToDb(content: string, projectId: string, fileName: s
 
 async function addDocumentToDb(props: {
 	client: PoolClient,
-	fileName: string,
-	xml_id: string,
-	order_number: number,
-	entry: SerializedEntry,
 	content: string
+	entry: SerializedEntry,
+	fileName: string,
+	order_number: number,
+	xml_id: string,
 }) {
 	const { plainText, parts, content, ...dbEntry } = props.entry
 

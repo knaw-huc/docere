@@ -1,7 +1,7 @@
 import styled from "styled-components"
 import { DEFAULT_SPACING } from '@docere/common'
 
-import type { EntityConfig } from '@docere/common'
+import type { Entity } from '@docere/common'
 
 export { default as EntryLinkPopupBody } from './entry-link'
 export { default as PagePartPopupBody } from './page-part'
@@ -17,10 +17,10 @@ export const PopupBodyWrapper = styled.div`
 `
 
 interface LinkProps {
-	entityConfig: EntityConfig
+	entity: Entity
 }
 export const PopupBodyLink = styled.button`
-	background: ${(props: LinkProps) => props.entityConfig.color}11;
+	background: ${(props: LinkProps) => props.entity.color}11;
 	border: none;
 	border-top: 1px solid gray;
 	color: gray;

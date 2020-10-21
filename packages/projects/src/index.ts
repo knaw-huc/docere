@@ -6,9 +6,17 @@ const projectList: ProjectList = {
 		config: async function() { return await import('./achterdeschermen/config') },
 		getTextComponents: async function() { return await import('./achterdeschermen/text-components') },
 	},
+	ecodicesnl: {
+		config: async function() { return await import('./ecodicesnl/config') },
+		getTextComponents: async function() { return { default: () => async () => ({}) } },
+	},
 	'encyclopaedia-britannica': {
 		config: async function() { return await import('./encyclopaedia-britannica/config') },
 		getTextComponents: async function() { return await import('./encyclopaedia-britannica/text-components') },
+	},
+	florariumtemporum: {
+		config: async function() { return await import('./florariumtemporum/config') },
+		getTextComponents: async function() { return await import('./suriano/text-components') }
 	},
 	gheys: {
 		config: async function() { return await import('./gheys/config') },

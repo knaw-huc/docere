@@ -19,7 +19,7 @@ const config: DocereConfig = {
 				.map((el: Element) => ({
 					element: el,
 					id: el.getAttribute('ID'),
-					value: el.getAttribute('VALUE'),
+					content: el.getAttribute('VALUE'),
 				})),
 			id: 'string',
 			revealOnHover: true,

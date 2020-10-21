@@ -1,4 +1,4 @@
-import { extendConfigData, LayerType, Colors, Facsimile, ConfigEntry } from '@docere/common'
+import { extendConfigData, LayerType, Colors, Facsimile, ConfigEntry, EntityType } from '@docere/common'
 import { extractEntryPartElementsFromMilestone } from '../../utils'
 import extractFacsimiles from './facsimiles'
 import prepare from './prepare'
@@ -39,8 +39,8 @@ export default extendConfigData({
 	layers: [
 		{
 			active: true,
+			filterEntities: () => () => false,
 			filterFacsimiles,
-			filterNotes: () => () => false,
 			id: 'facsimile',
 			type: LayerType.Facsimile,
 		},
@@ -48,14 +48,14 @@ export default extendConfigData({
 			id: 'text',
 			type: LayerType.Text,
 			filterFacsimiles,
-			filterNotes: entry => {
+			filterEntities: entry => {
 				const noteIds = Array.from(entry.element.querySelectorAll('a.footnote-ref'))
 					.map(a => a.getAttribute('href').slice(1))
 				return note => noteIds.indexOf(note.id) > -1
 			}
 		},
 	],
-	notes: [
+	entities: [
 		{
 			color: Colors.BlueBright,
 			id: 'note',
@@ -67,6 +67,7 @@ export default extendConfigData({
 					title: `Note ${el.id.slice(2)}`,
 				})),
 			title: "Notes",
+			type: EntityType.Note,
 		},
 	],
 	parts: {

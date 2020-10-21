@@ -4,7 +4,7 @@ import Layers from './layers'
 import Settings from './settings'
 import Downloads from './downloads'
 import { FOOTER_HEIGHT, FOOTER_HANDLE_HEIGHT, FooterTab, SearchTab, AsideTab, AppStateAction, AppState, Colors, useNavigate } from '@docere/common'
-import type { Facsimile, EntryState, EntryStateAction, Entry, DocereConfig } from '@docere/common'
+import type { EntryState, EntryStateAction, Entry, DocereConfig } from '@docere/common'
 
 const Wrapper = styled.footer`
 	background: ${Colors.Grey};
@@ -65,7 +65,6 @@ function isEmpty(obj: Object | Array<any>) {
 
 
 interface Props {
-	activeFacsimile: Facsimile
 	appDispatch: React.Dispatch<AppStateAction>
 	footerTab: AppState['footerTab']
 	asideTab: EntryState['asideTab']
@@ -168,7 +167,6 @@ function Footer(props: Props) {
 			<Body>
 				<Layers
 					active={props.footerTab === FooterTab.Layers}
-					activeFacsimile={props.activeFacsimile}
 					dispatch={props.entryDispatch}
 					layers={props.layers}
 				/>

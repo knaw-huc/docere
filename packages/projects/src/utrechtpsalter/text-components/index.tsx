@@ -11,15 +11,16 @@ export default function getComponents(_config: DocereConfig) {
 		return {
 			block: styled.span`color: #444; margin-bottom: 1rem;`,
 			text: styled.span`white-space: pre-wrap;`,
-			coords: (props: DocereComponentProps) => {
-				const { x, y, w, h } = props.attributes
+			coords: (_props: DocereComponentProps) => {
+				// const { x, y, w, h } = props.attributes
 				return (
 					<Coords
 						onClick={() =>
-							props.entryDispatch({
-								type: 'SET_ACTIVE_FACSIMILE_AREAS',
-								ids: [x + y + w + h]
-							})
+							console.error("[error] not implemented dispatch SET_ENTITY")
+							// props.entryDispatch({
+							// 	type: 'SET_ACTIVE_FACSIMILE_AREAS',
+							// 	ids: [x + y + w + h]
+							// })
 						}
 					>
 						⚃

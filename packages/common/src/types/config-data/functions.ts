@@ -1,6 +1,6 @@
-import type { EntityConfig, BaseConfig, NoteConfig } from "./config"
-import { AsideTab } from '../../enum'
-import { Layer } from './layer'
+import type { Layer } from './layer'
+import type { EntityConfig } from "./config"
+
 // import { Entry } from '../entry'
 
 
@@ -11,26 +11,32 @@ import { Layer } from './layer'
 // 	prepareDocument: (entry: Entry, config: DocereConfig) => Element
 // }
 
-export interface ExtractedTextData extends BaseConfig {
-	value?: string
-}
+// export interface ExtractedTextData extends BaseConfig {
+// 	facsimileAreas?: FacsimileArea[]
+// 	// TODO rename to content and merge with ExtractedNote?
+// 	value?: string 
+// }
 
 // Data extracted from the text: entities, notes, ...
-export interface TextData extends ExtractedTextData {
-	config: EntityConfig
+export interface ExtractedEntity extends Omit<EntityConfig, 'extract'> {
 	count?: number
-}
-
-export type Entity = TextData
-
-export interface ExtractedNote extends BaseConfig {
 	content: string
+	facsimileAreas?: FacsimileArea[]
 	n?: string
 }
 
-export interface Note extends ExtractedNote {
-	config: NoteConfig
+export interface Entity extends Required<ExtractedEntity> {
+	configId: string
 }
+
+// export type Entity = TextData
+
+// export interface ExtractedNote extends BaseConfig {
+// }
+
+// export interface Note extends ExtractedNote {
+// 	config: NoteConfig
+// }
 
 // EXTRACT ENTITIES
 // export interface Entity extends TextData {
@@ -63,15 +69,15 @@ export interface Note extends ExtractedNote {
 // TODO an entry has facsimiles with accompanying areas?
 export interface FacsimileArea {
 	h: number
-	id: string
-	note?: Record<string, string>
-	showOnHover?: boolean
-	target?: {
-		asideTab?: AsideTab
-		color?: string,
-		id: string,
-		listId?: string,
-	}
+	facsimileId: string
+	// note?: Record<string, string>
+	// showOnHover?: boolean
+	// target?: {
+	// 	asideTab?: AsideTab
+	// 	color?: string,
+	// 	id: string,
+	// 	listId?: string,
+	// }
 	unit?: 'px' | 'perc'
 	w: number
 	x: number

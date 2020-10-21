@@ -1,6 +1,6 @@
 import * as es from '@elastic/elasticsearch'
 
-import { EsDataType, SerializedEntry } from '../../../common/src'
+import { EsDataType, SerializedEntry, isHierarchyFacetConfig } from '../../../common/src'
 import { getType, isError, getElasticSearchDocument, getProjectConfig } from '../utils'
 
 import type { Mapping, DocereApiError } from '../types'
@@ -36,9 +36,6 @@ export async function getProjectIndexMapping(projectId: string): Promise<Mapping
 	if (isError(config)) return config
 	
 	const properties: Mapping['mappings']['properties'] = {
-		// notes: {
-		// 	type: EsDataType.Text
-		// },
 		text_suggest: {
 			type: EsDataType.Completion,
 			analyzer: "simple",
@@ -52,13 +49,12 @@ export async function getProjectIndexMapping(projectId: string): Promise<Mapping
 		.forEach(md => {
 			const type = getType(md.id, config)
 			if (type != null) {
-				if (md.datatype === EsDataType.Hierarchy) {
+				if (isHierarchyFacetConfig(md)) {
 					let level = md.levels - 1
 					while (level >= 0) {
 						properties[`${md.id}_level${level}`] = { type }
 						level--
 					}
-
 				} else {
 					properties[md.id] = { type }
 				}

@@ -1,4 +1,4 @@
-import { DocereConfig, EsDataType, SortBy, SortDirection, LayerType, ExtractedNote, Colors } from '@docere/common'
+import { DocereConfig, EsDataType, SortBy, SortDirection, LayerType, Colors, EntityType } from '@docere/common'
 import { extractLayerElement } from '../../utils'
 import extractFacsimiles from './facsimiles'
 
@@ -60,16 +60,17 @@ const config: DocereConfig = {
 			order: 20,
 		},
 	],
-	notes: [
+	entities: [
 		{
 			color: Colors.BlueBright,
 			id: 'editor',
 			extract: entry => Array.from(entry.document.querySelectorAll('note'))
-				.map((element, index): ExtractedNote => ({
+				.map((element, index) => ({
 					content: element.outerHTML,
 					id: element.id,
 					n: (index + 1).toString(),
-				}))
+				})),
+			type: EntityType.Note,
 		}
 	],
 	facsimiles: {

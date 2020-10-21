@@ -55,7 +55,6 @@ const Container = styled.div`
 `
 
 interface Props {
-	activeFacsimile: Facsimile
 	entryDispatch: React.Dispatch<EntryStateAction>
 	layer: FacsimileLayer
 }
@@ -64,7 +63,7 @@ function CollectionNavigator(props: Props) {
 		props.entryDispatch({
 			id,
 			triggerLayer: props.layer,
-			type: "SET_ACTIVE_FACSIMILE",
+			type: "SET_FACSIMILE",
 		})	
 	}, [])
 
@@ -73,7 +72,7 @@ function CollectionNavigator(props: Props) {
 		handleClick,
 	)
 
-	useActiveFacsimile(controller, props.activeFacsimile)
+	useActiveFacsimile(controller, props.layer.activeFacsimile)
 
 	return (
 		<Container

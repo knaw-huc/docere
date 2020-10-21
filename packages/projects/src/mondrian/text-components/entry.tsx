@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { getNote, getPb, Lb, Hi, Paragraph, getEntity, PagePartPopupBody, PopupBodyWrapper, PopupBodyLink } from '@docere/text-components'
 import { Colors, DEFAULT_SPACING } from '@docere/common'
 
+import type { PopupBodyProps } from '@docere/text-components'
 import type { DocereComponentProps, DocereConfig } from '@docere/common'
 
 function xml2json(xml: string) {
@@ -72,9 +73,8 @@ const Wrapper = styled.div`
 	}
 `
 
-function RkdArtworkPopupBody(props: DocereComponentProps) {
-	if (props.activeEntity == null) return null
-	const rkdImage = useRkdImage(props.activeEntity.id)
+function RkdArtworkPopupBody(props: PopupBodyProps) {
+	const rkdImage = useRkdImage(props.entity.id)
 	if (rkdImage == null) return null
 
 	return (
@@ -87,10 +87,11 @@ function RkdArtworkPopupBody(props: DocereComponentProps) {
 					<div>{rkdImage.coverage}</div>
 				</div>
 			</Wrapper>
-			<PopupBodyLink entityConfig={props.activeEntity.config}>
+			<PopupBodyLink entity={props.entity}>
 				<a
-					href={`https://rkd.nl/en/explore/images/${props.activeEntity.id}`} target="_blank"
+					href={`https://rkd.nl/en/explore/images/${props.entity.id}`}
 					onClick={ev => ev.stopPropagation()}
+					target="_blank"
 				>
 					source: RKD.nl
 				</a>

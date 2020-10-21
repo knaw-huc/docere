@@ -44,6 +44,11 @@ export type BooleanFacetValues = [
 ]
 
 // HIERARCHY FACET
+
+export function isHierarchyFacetConfig(config: FacetConfigBase): config is HierarchyFacetConfig {
+	return config.datatype === EsDataType.Hierarchy
+}
+
 export interface HierarchyFacetConfig extends FacetConfigBase {
 	readonly datatype: EsDataType.Hierarchy
 	readonly size?: number

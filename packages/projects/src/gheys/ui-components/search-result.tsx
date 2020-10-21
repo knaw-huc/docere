@@ -43,14 +43,10 @@ function formatList(items: string[], label: string) {
 }
 
 function GekaapteBrievenResultBody(props: DocereResultBodyProps) {
-	let locations: any[] = []
-	if (Array.isArray(props.result.loc)) locations = locations.concat(props.result.loc)
-	if (Array.isArray(props.result.locactions)) locations = locations.concat(props.result.locations)
-
 	const small = [`${props.result.blocks} blocks`, `${props.result.chars} characters`]
 	const normal = [
 		formatList(props.result.person, 'person'),
-		formatList(locations, 'location'),
+		formatList(props.result.location, 'location'),
 		formatList(props.result.job, 'job'),
 		formatList(props.result.good, 'good'),
 		formatList(props.result.ship, 'ship'),

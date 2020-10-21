@@ -1,13 +1,11 @@
 import * as React from 'react'
-import { ProjectContext, isTextLayer, AsideTab, getTextPanelWidth, LayerType, DEFAULT_SPACING, defaultEntrySettings, useUrlObject, useEntry, isFacsimileLayer, useNavigate, createLookup } from '@docere/common'
+import { ProjectContext, isTextLayer, AsideTab, getTextPanelWidth, LayerType, DEFAULT_SPACING, defaultEntrySettings, useUrlObject, useEntry, isFacsimileLayer, useNavigate, createLookup, getFirstActiveFacsimileFromLayer } from '@docere/common'
 
 import type { EntryState, EntryStateAction } from '@docere/common'
 
 const initialEntryState: EntryState = {
-	activeEntity: null,
-	activeFacsimile: null,
-	activeFacsimileAreas: null,
-	activeNote: null,
+	activeEntities: null,
+	activeFacsimiles: null,
 	asideTab: null,
 	entrySettings: defaultEntrySettings,
 	projectConfig: null,
@@ -15,7 +13,6 @@ const initialEntryState: EntryState = {
 	layers: [],
 	lookup: {
 		facsimiles: {},
-		notes: {},
 		entities: {},
 	}
 }
@@ -40,67 +37,39 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 			}
 		}
 
-		case 'SET_ENTITY': {
-			// let activeFacsimileAreas = entryState.entry.facsimiles?.reduce((prev, curr) => {
-			// 	curr.versions.forEach(version => {
-			// 		version.areas.forEach(area => {
-			// 			if (area.target?.id === action.id) {
-			// 				if (!Array.isArray(prev)) prev = []
-			// 				prev.push(area)
-			// 			}
-			// 		})
-			// 	})
-			// 	return prev
-			// }, null as FacsimileArea[])
+		// case 'SET_ENTITY': {
+		// 	// let activeFacsimileAreas = entryState.entry.facsimiles?.reduce((prev, curr) => {
+		// 	// 	curr.versions.forEach(version => {
+		// 	// 		version.areas.forEach(area => {
+		// 	// 			if (area.target?.id === action.id) {
+		// 	// 				if (!Array.isArray(prev)) prev = []
+		// 	// 				prev.push(area)
+		// 	// 			}
+		// 	// 		})
+		// 	// 	})
+		// 	// 	return prev
+		// 	// }, null as FacsimileArea[])
 
-			// const activeEntity = entryState.entry.entities?.find(e => e.id === action.id)
-			// if (entity == null) entity = { id: action.id, type: null, value: null }
-			let activeEntity = entryState.lookup.entities[action.id]
+		// 	// const activeEntity = entryState.entry.entities?.find(e => e.id === action.id)
+		// 	// if (entity == null) entity = { id: action.id, type: null, value: null }
+		// 	let activeEntity = entryState.lookup.entities[action.id]
 
-			// const config = entryState.projectConfig.entities.find(x => x.id === entity.type)
-			// let activeEntity = { ...entity, config }
-			if (activeEntity == null) {
-				console.error(`[SET_ENTITY] entity not found for '${entryState.projectConfig.slug}' with ID: ${activeEntity.id}`)
-				return entryState
-			}
+		// 	// const config = entryState.projectConfig.entities.find(x => x.id === entity.type)
+		// 	// let activeEntity = { ...entity, config }
+		// 	if (activeEntity == null) {
+		// 		console.error(`[SET_ENTITY] entity not found for '${entryState.projectConfig.slug}' with ID: ${activeEntity.id}`)
+		// 		return entryState
+		// 	}
 
-			if (entryState.activeEntity?.id === activeEntity.id) activeEntity = null
+		// 	if (entryState.activeEntity?.id === activeEntity.id) activeEntity = null
 			
-			return {
-				...entryState,
-				activeEntity,
-				// activeFacsimileAreas,
-				layers: updatePanels(entryState.layers, { activeEntity, activeNote: entryState.activeNote, entrySettings: entryState.entrySettings })
-			}
-		}
-
-		case 'UNSET_ENTITY': {
-			return {
-				...entryState,
-				activeEntity: null,
-				activeFacsimileAreas: null,
-				layers: updatePanels(entryState.layers, { activeEntity: null, activeNote: entryState.activeNote, entrySettings: entryState.entrySettings })
-			}
-		}
-
-		case 'SET_NOTE': {
-			const activeNote = entryState.lookup.notes[action.id]
-			return {
-				...entryState,
-				activeNote,
-				layers: updatePanels(entryState.layers, { activeEntity: entryState.activeEntity, activeNote, entrySettings: entryState.entrySettings })
-			}
-		}
-
-		// TODO remove and use SET_NOTE with activeNote = null
-		case 'UNSET_NOTE': {
-			return {
-				...entryState,
-				activeNote: null,
-				layers: updatePanels(entryState.layers, { activeEntity: entryState.activeEntity, activeNote: null, entrySettings: entryState.entrySettings })
-			}
-
-		}
+		// 	return {
+		// 		...entryState,
+		// 		activeEntity,
+		// 		// activeFacsimileAreas,
+		// 		layers: updatePanels(entryState.layers, { activeEntity, activeNote: entryState.activeNote, entrySettings: entryState.entrySettings })
+		// 	}
+		// }
 
 		case 'TOGGLE_TAB': {
 			const asideTab: AsideTab = (entryState.asideTab === action.tab) ? null : action.tab
@@ -110,38 +79,42 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 			}
 		}
 
-		case 'SET_ACTIVE_FACSIMILE': {
+		case 'SET_ENTITY': {
+			if (entryState.activeEntities.has(action.id)) {
+				entryState.activeEntities.delete(action.id)
+			} else {
+				entryState.activeEntities.set(action.id, entryState.lookup.entities[action.id])
+			}
+			
+			const activeEntities = new Map(entryState.activeEntities)
+
 			return {
 				...entryState,
-				activeFacsimile: {
-					...entryState.lookup.facsimiles[action.id],
-					triggerLayer: action.triggerLayer
-				},
-				activeFacsimileAreas: null
+				activeEntities,
+		 		layers: updatePanels(entryState.layers, { activeEntities, entrySettings: entryState.entrySettings })
 			}
 		}
 
-		case 'SET_ACTIVE_FACSIMILE_AREAS': {
-			// let activeFacsimileAreas = entryState.entry.facsimiles
-			// 	.reduce((prev, curr) => {
-			// 		curr.versions.forEach(version => {
-			// 			version.areas.forEach(area => {
-			// 				if (action.ids.indexOf(area.id) > -1) prev.push(area)
-			// 			})
-			// 		})
-			// 		return prev
-			// 	}, [] as FacsimileArea[])
-			
-			// if (JSON.stringify(action.ids) === JSON.stringify(entryState.activeFacsimileAreas?.map(afa => afa.id))) {
-			// 	activeFacsimileAreas = null
-			// }
+		case 'SET_FACSIMILE': {
+			if (entryState.activeFacsimiles.has(action.id)) {
+				entryState.activeFacsimiles.delete(action.id)
+			} else {
+				entryState.activeFacsimiles.set(action.id, {
+					...entryState.lookup.facsimiles[action.id],
+					triggerLayer: action.triggerLayer
+				})
+			}
+
+			const activeFacsimiles = new Map(entryState.activeFacsimiles)
 
 			return {
 				...entryState,
-				// activeFacsimileAreas,
-				activeEntity: null,
-				activeNote: null,
-				asideTab: null
+				activeFacsimiles, 
+				layers: entryState.layers.map(l => {
+					if (!isFacsimileLayer(l)) return l
+					l.activeFacsimile = getFirstActiveFacsimileFromLayer(activeFacsimiles, l)
+					return l
+				})
 			}
 		}
 
@@ -184,8 +157,7 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 				entrySettings,
 				layers: updatePanels(
 					entryState.layers, {
-						activeEntity: entryState.activeEntity,
-						activeNote: entryState.activeNote,
+						activeEntities: entryState.activeEntities,
 						entrySettings
 					}
 				)
@@ -207,15 +179,15 @@ export default function useEntryState() {
 	const navigate = useNavigate()
 
 	React.useEffect(() => {
-		if (x[0].activeFacsimile == null) return
+		if (x[0].activeFacsimiles == null) return
 
 		navigate({
 			entryId,
 			query: {
-				facsimileId: x[0].activeFacsimile.id
+				facsimileId: Array.from(x[0].activeFacsimiles?.keys())
 			}
 		})	
-	}, [x[0].activeFacsimile])
+	}, [x[0].activeFacsimiles])
 
 	React.useEffect(() => {
 		// If entry is not defined, there cannot be an active note,
@@ -225,23 +197,10 @@ export default function useEntryState() {
 		navigate({
 			entryId,
 			query: {
-				noteId: x[0].activeNote?.id
+				entityId: Array.from(x[0].activeEntities?.keys())
 			}
 		})	
-	}, [x[0].entry, x[0].activeNote])
-
-	React.useEffect(() => {
-		// If entry is not defined, there cannot be an active note,
-		// activeNote can be null to deselect the note
-		if (x[0].entry == null) return
-
-		navigate({
-			entryId,
-			query: {
-				entityId: x[0].activeEntity?.id
-			}
-		})	
-	}, [x[0].entry, x[0].activeEntity])
+	}, [x[0].entry, x[0].activeEntities])
 
 	React.useEffect(() => {
 		if (entry == null || entry === x[0].entry) return
@@ -262,23 +221,33 @@ export default function useEntryState() {
 		
 		const lookup = createLookup(entry.layers)
 
-		const activeEntity = lookup.entities[query.entityId]
-		const activeNote = lookup.notes[query.noteId]
+		const activeEntities = new Map()
+		query.entityId?.forEach(id =>
+			activeEntities.set(id, lookup.entities[id])
+		)
 
-		let activeFacsimile = lookup.facsimiles[query.facsimileId]
-		if (activeFacsimile == null) {
-			const facsimiles = entry.layers.find(isFacsimileLayer)?.facsimiles
+		const activeFacsimiles = new Map()
+		query.facsimileId?.forEach(id =>
+			activeFacsimiles.set(id, lookup.facsimiles[id])
+		)
+
+		const facsimileLayer = entry.layers.find(isFacsimileLayer)
+		if (activeFacsimiles.size === 0 && facsimileLayer != null) {
+			const facsimiles = facsimileLayer.facsimiles
 			if (Array.isArray(facsimiles) && facsimiles.length) {
-				activeFacsimile = facsimiles[0]
+				activeFacsimiles.set(facsimiles[0].id, facsimiles[0])
 			}
+		}
+
+		if (activeFacsimiles.size > 0 && facsimileLayer != null) {
+			facsimileLayer.activeFacsimile = activeFacsimiles.values().next().value
 		}
 
 		// TODO activeFacsimile is a state of layer, not the entry
 		// x[1] = dispatch
 		x[1]({
-			activeEntity,
-			activeFacsimile,
-			activeNote,
+			activeEntities,
+			activeFacsimiles,
 			entry,
 			layers: updatePanels(nextLayers, x[0]),
 			lookup,
@@ -301,12 +270,11 @@ export default function useEntryState() {
 function updatePanels(
 	layers: EntryState['layers'],
 	{
-		activeEntity,
-		activeNote,
+		activeEntities,
 		entrySettings
-	}: Pick<EntryState, 'activeEntity' | 'activeNote' | 'entrySettings'>
+	}: Pick<EntryState, 'activeEntities' | 'entrySettings'>
 ) {
-	const tpw = getTextPanelWidth(entrySettings, activeNote, activeEntity)
+	const tpw = getTextPanelWidth(entrySettings, activeEntities)
 	const activeLayers = layers.filter(l => l.active)
 	const hasFacsimile = activeLayers.some(l => l.type === LayerType.Facsimile && !l.pinnable)
 

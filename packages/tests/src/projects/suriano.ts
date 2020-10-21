@@ -3,6 +3,7 @@ import { isSerializedTextLayer, isSerializedFacsimileLayer } from '../../../comm
 
 import type { SerializedEntry } from '../../../common/src'
 import { fetchEntry } from '../utils'
+import { EntityType } from '@docere/common'
 
 export const surianoTests = () => {
 	let entry: SerializedEntry
@@ -53,15 +54,14 @@ export const surianoTests = () => {
 
 		describe('Layers', () => {
 			it('Should have 16 notes on the text layer', () => {
-				expect(part4.layers[1].notes).toHaveLength(16)
-			})
-
-			it('Should have content in the first note', () => {
-				expect(part4.layers[1].notes[0].content.slice(0, 184)).toBe('<li xmlns="http://www.w3.org/1999/xhtml" id="fn10" role="doc-endnote"><p><span class="span1"><sup xmlns="http://www.w3.org/1999/xhtml"><a href="#section0002.xhtml#calledF2">a</a></sup>')
+				const notes = part4.layers[1].entities.filter(e => e.type === EntityType.Note)
+				expect(notes).toHaveLength(16)
+				expect(notes[0].content.slice(0, 184)).toBe('<li xmlns="http://www.w3.org/1999/xhtml" id="fn10" role="doc-endnote"><p><span class="span1"><sup xmlns="http://www.w3.org/1999/xhtml"><a href="#section0002.xhtml#calledF2">a</a></sup>')
 			})
 
 			it('Should have no notes on the facsimile layer', () => {
-				expect(part4.layers[0].notes).toHaveLength(0)
+				const notes = part4.layers[0].entities.filter(e => e.type === EntityType.Note)
+				expect(notes).toHaveLength(0)
 			})
 
 			it('Should have facsimile 145r as the first facsimile on the text layer', () => {

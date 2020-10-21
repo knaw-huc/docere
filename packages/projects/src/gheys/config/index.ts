@@ -1,15 +1,22 @@
-import { EsDataType, LayerType, RsType, Colors, ExtractedTextData, extendConfigData } from '@docere/common'
-import type { ExtractTextData } from '@docere/common'
+import { EsDataType, LayerType, EntityType, Colors, extendConfigData, ExtractEntity } from '@docere/common'
 import extractFacsimiles from './facsimiles'
 import { extractNormalisedDates, hasDate } from './metadata'
 import prepare from './prepare'
 
-function extractEntity(name: string): ExtractTextData {
+function extractSuggestions(): ExtractEntity {
+	return entry => Array.from(entry.document.querySelectorAll(`string[suggestion]`))
+		.map(element => ({
+			id: element.id,
+			content: element.getAttribute('suggestion'),
+		}))
+}
+
+function extractEntities(type: string): ExtractEntity {
 	return entry => 
-		Array.from(entry.document.querySelectorAll(`entity[type~=${name}]`))
-			.map((element): ExtractedTextData => ({
+		Array.from(entry.document.querySelectorAll(`entity[type~=${type}]`))
+			.map(element => ({
 				id: element.id,
-				value: element.getAttribute('content'),
+				content: element.getAttribute('content'),
 			}))
 }
 
@@ -94,56 +101,56 @@ export default extendConfigData({
 	entities: [
 		{
 			color: Colors.Blue,
-			extract: extractEntity('person'),
+			extract: extractEntities('person'),
 			id: 'person',
 			order: 500,
-			title: 'Persons',
-			type: RsType.Person
+			title: 'Person',
+			type: EntityType.Person
 		},
 		{
 			color: Colors.Orange,
-			extract: extractEntity('location'),
+			extract: extractEntities('location'),
 			id: 'location',
 			order: 510,
-			type: RsType.Location,
+			type: EntityType.Location,
 		},
+		// {
+		// 	color: Colors.Orange,
+		// 	extract: extractEntities('loc'),
+		// 	id: 'loc',
+		// 	order: 520,
+		// 	title: 'Location',
+		// 	type: RsType.Location,
+		// },
 		{
-			color: Colors.Orange,
-			extract: extractEntity('loc'),
-			id: 'loc',
-			order: 520,
-			title: 'Location',
-			type: RsType.Location,
-		},
-		{
-			extract: extractEntity('job'),
+			extract: extractEntities('job'),
 			id: 'job',
 			order: 530,
 		},
 		{
-			extract: extractEntity('notary'),
+			extract: extractEntities('notary'),
 			id: 'notary',
 			order: 540,
 		},
 		{
-			extract: extractEntity('ship'),
+			extract: extractEntities('ship'),
 			id: 'ship',
 			order: 545,
 		},
 		{
-			extract: extractEntity('good'),
+			extract: extractEntities('good'),
 			id: 'good',
 			order: 550,
 		},
 		{
-			extract: extractEntity('date'),
+			extract: extractEntities('date'),
 			id: 'date',
 			showAsFacet: false
 		},
 		{
 			color: Colors.Red,
-			extract: extractEntity('string'),
-			id: 'string',
+			extract: extractSuggestions(),
+			id: 'suggestion',
 			showAsFacet: false,
 			showInAside: false,
 		}

@@ -28,7 +28,7 @@ services:
     build:
       context: ../../
       dockerfile: ./packages/api/Dockerfile
-    command: ["npx", "nodemon", "./packages/api", "-w", "./packages/api/build/api", "-w", "./packages/api/build.puppenv.utils/bundle.js"]
+    command: ["npx", "nodemon", "./packages/api", "-w", "./packages/api/build/api", "-w", "./packages/api/build.puppenv.data"]
     env_file:
       - ../../.env.dev
     networks:

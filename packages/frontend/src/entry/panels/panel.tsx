@@ -1,24 +1,22 @@
 import React from 'react'
 import FacsimilePanel from './facsimile'
 import TextPanel from './text'
-// import XmlPanel from './xml'
 
-import { LayerType, isTextLayer } from '@docere/common'
+import { isTextLayer, isFacsimileLayer } from '@docere/common'
 
 import type { Layer } from '@docere/common'
 import type { PanelsProps } from '.'
 
 
 export default function Panel(props: PanelsProps & { layer: Layer }) {
-	if (props.layer.type === LayerType.Facsimile) {
+	if (isFacsimileLayer(props.layer)) {
 		return (
 			<FacsimilePanel
-				activeFacsimile={props.activeFacsimile}
-				activeFacsimileAreas={props.activeFacsimileAreas}
+				activeEntities={props.activeEntities}
 				entryDispatch={props.entryDispatch}
+				entrySettings={props.entrySettings}
 				key={props.layer.id}
 				layer={props.layer}
-				entrySettings={props.entrySettings}
 			/>
 		)
 	}
@@ -26,28 +24,17 @@ export default function Panel(props: PanelsProps & { layer: Layer }) {
 	if (isTextLayer(props.layer)) {
 		return (
 			<TextPanel
-				activeFacsimileAreas={props.activeFacsimileAreas}
-				activeFacsimile={props.activeFacsimile}
-				activeEntity={props.activeEntity}
-				activeNote={props.activeNote}
+				activeEntities={props.activeEntities}
+				activeFacsimiles={props.activeFacsimiles}
 				appDispatch={props.appDispatch}
-				entryDispatch={props.entryDispatch}
 				entry={props.entry}
-				key={props.layer.id}
+				entryDispatch={props.entryDispatch}
 				entrySettings={props.entrySettings}
+				key={props.layer.id}
 				layer={props.layer}
 			/>
 		)
 	}
-
-	// if (isXmlLayer(props.layer)) {
-	// 	return (
-	// 		<XmlPanel
-	// 			doc={props.entry.doc}
-	// 			key={props.layer.id}
-	// 		/>
-	// 	)
-	// }
 }
 
 
