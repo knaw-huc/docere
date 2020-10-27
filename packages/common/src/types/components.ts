@@ -13,7 +13,7 @@ export interface ComponentProps {
 
 export type DocereComponentProps =
 	ComponentProps &
-	Pick<EntryState, 'activeEntities' | 'activeFacsimiles' | 'entry'> &
+	Pick<EntryState, 'activeEntities' | 'entry'> &
 	{
 		appDispatch: React.Dispatch<AppStateAction>
 		components: DocereComponents

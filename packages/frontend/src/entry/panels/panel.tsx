@@ -19,13 +19,12 @@ export default function Panel(props: PanelsProps & { layer: Layer }) {
 				layer={props.layer}
 			/>
 		)
-	}
+	} 
 
 	if (isTextLayer(props.layer)) {
 		return (
 			<TextPanel
 				activeEntities={props.activeEntities}
-				activeFacsimiles={props.activeFacsimiles}
 				appDispatch={props.appDispatch}
 				entry={props.entry}
 				entryDispatch={props.entryDispatch}

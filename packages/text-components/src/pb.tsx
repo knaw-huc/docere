@@ -52,7 +52,6 @@ function useFacsimiles(extractPbId: ExtractPbId, props: DocereComponentProps) {
 	return facsimiles
 }
 
-
 export default function getPb(extractPbId: ExtractPbId): React.FC<DocereComponentProps> {
 	return function Pb(props: DocereComponentProps) {
 		if (
@@ -62,39 +61,65 @@ export default function getPb(extractPbId: ExtractPbId): React.FC<DocereComponen
 
 		const facsimiles = useFacsimiles(extractPbId, props)
 
-		const onClick = React.useCallback((ev) => {
-			const { facsimileId } = ev.target.dataset
-
-			// TODO is if necessary?
-			if (!props.activeFacsimiles.has(facsimileId)) {
-				props.entryDispatch({
-					id: facsimileId,
-					triggerLayer: props.layer,
-					type: 'SET_FACSIMILE',
-				})
-			}
-		}, [props.activeFacsimiles, props.layer])
-
 		return (
 			<Wrapper>
 				<div>
 					{
-						facsimiles.map(facsimile => {
-							const src = facsimile.versions[0].path
-							const active = props.activeFacsimiles.has(facsimile.id)
-							return (
-								<Img
-									active={active}
-									data-facsimile-id={facsimile.id}
-									key={facsimile.id}
-									onClick={onClick}
-									src={src.slice(-10) === '/info.json' ? src.replace('/info.json', '/full/,32/0/default.jpg') : src}
-								/>
-							)
-						})
+						facsimiles.map(facsimile =>
+							<FacsimileThumb
+								entryDispatch={props.entryDispatch}
+								facsimile={facsimile}
+								key={facsimile.id}
+								layer={props.layer}
+							/>	
+						)
 					}
 				</div>
 			</Wrapper>
 		)
 	}
+}
+
+interface FacsimileThumbProps {
+	entryDispatch: DocereComponentProps['entryDispatch'] 
+	facsimile: Facsimile
+	layer: DocereComponentProps['layer']
+}
+function FacsimileThumb(props: FacsimileThumbProps) {
+	const imgRef = React.useRef<HTMLImageElement>()
+
+	const onClick = React.useCallback((ev) => {
+		const { facsimileId } = ev.target.dataset
+
+		props.entryDispatch({
+			id: facsimileId,
+			triggerLayer: props.layer,
+			type: 'SET_FACSIMILE',
+		})
+	}, [props.layer])
+
+	const src = props.facsimile.versions[0].path
+	const active = props.layer.activeFacsimile?.id === props.facsimile.id
+
+	React.useEffect(() => {
+		if (
+			active &&
+			props.layer.activeFacsimile.triggerLayer?.id !== props.layer.id
+		) {
+			setTimeout(() => {
+				imgRef.current.scrollIntoView({ behavior: 'smooth' })
+			}, 0)
+		}
+	}, [active])
+
+	return (
+		<Img
+			active={active}
+			data-facsimile-id={props.facsimile.id}
+			key={props.facsimile.id}
+			onClick={onClick}
+			ref={imgRef}
+			src={src.slice(-10) === '/info.json' ? src.replace('/info.json', '/full/,32/0/default.jpg') : src}
+		/>
+	)
 }

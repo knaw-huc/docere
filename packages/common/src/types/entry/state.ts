@@ -8,7 +8,6 @@ export type ActiveEntities = Map<string, Entity>
 export type ActiveFacsimiles = Map<string, ActiveFacsimile>
 export interface EntryState {
 	activeEntities: ActiveEntities
-	activeFacsimiles: ActiveFacsimiles
 	asideTab: AsideTab
 	projectConfig: DocereConfig
 	entry: Entry
@@ -22,7 +21,7 @@ interface ProjectChanged {
 	config: DocereConfig,
 }
 
-interface EntryChanged extends Pick<EntryState, 'activeEntities' | 'activeFacsimiles' | 'entry' | 'layers'> {
+interface EntryChanged extends Pick<EntryState, 'activeEntities' | 'entry' | 'layers'> {
 	type: "ENTRY_CHANGED",
 	lookup: EntryState['lookup']
 }
@@ -50,7 +49,7 @@ interface SetEntity {
 	id: string
 }
 
-interface SetFacsimile {
+export interface SetFacsimile {
 	id: string
 	triggerLayer: Layer
 	type: 'SET_FACSIMILE'

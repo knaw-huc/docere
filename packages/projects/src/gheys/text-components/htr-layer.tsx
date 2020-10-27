@@ -88,14 +88,14 @@ const EntityBodyWrapper = styled.div`
 function EntityBody(props: PopupBodyProps) {
 	const { attributes } = props.docereComponentProps
 	const rect = attributes.area?.split('_').join(',')
-	const activeFacsimile = props.docereComponentProps.activeFacsimiles.values().next().value
+	const activeFacsimile = props.docereComponentProps.layer.activeFacsimile //s.values().next().value
 
 	return (
 		<EntityBodyWrapper>
 			{
 				rect != null &&
 				<img
-					src={activeFacsimile.versions[0].path.replace('info.json', `${rect}/240,/0/default.jpg`)}
+					src={activeFacsimile?.versions[0].path.replace('info.json', `${rect}/240,/0/default.jpg`)}
 					width="100%"
 				/>
 			}

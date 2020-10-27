@@ -1,7 +1,7 @@
 import { LayerType } from '../../enum'
 import { BaseConfig, DocereConfig } from './config'
 import { ConfigEntry, ActiveFacsimiles } from '../entry'
-import { Facsimile, Entity } from './functions'
+import { Facsimile, Entity, ActiveFacsimile } from './functions'
 
 // Config
 export interface LayerConfig extends BaseConfig {
@@ -14,6 +14,7 @@ export interface LayerConfig extends BaseConfig {
 
 // Base
 interface BaseLayer {
+	activeFacsimile: ActiveFacsimile
 	columnWidth?: string /* Width of the grid column, ie minmax(480px, 1fr) */
 	pinnable?: boolean /* Can the layer be pinned, ie made sticky? */
 	width?: number /* Width of the layer content */
@@ -31,6 +32,7 @@ export interface TextLayerConfig extends LayerConfig {
 export interface TextLayer extends SerializedTextLayer, BaseLayer {
 	// element: Element
 	content: string
+	type: LayerType.Text
 }
 
 	// element: Element
@@ -45,8 +47,7 @@ export interface FacsimileLayerConfig extends LayerConfig {
 }
 
 export interface FacsimileLayer extends SerializedFacsimileLayer, BaseLayer {
-	activeFacsimile: Facsimile
-	facsimiles: Facsimile[]
+	type: LayerType.Facsimile
 }
 
 // Layer

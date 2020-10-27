@@ -1,11 +1,10 @@
 import * as React from 'react'
-import { ProjectContext, isTextLayer, AsideTab, getTextPanelWidth, LayerType, DEFAULT_SPACING, defaultEntrySettings, useUrlObject, useEntry, isFacsimileLayer, useNavigate, createLookup, getFirstActiveFacsimileFromLayer } from '@docere/common'
+import { ProjectContext, isTextLayer, AsideTab, getTextPanelWidth, LayerType, DEFAULT_SPACING, defaultEntrySettings, useUrlObject, useEntry, useNavigate, createLookup, Layer } from '@docere/common'
 
 import type { EntryState, EntryStateAction } from '@docere/common'
 
 const initialEntryState: EntryState = {
 	activeEntities: null,
-	activeFacsimiles: null,
 	asideTab: null,
 	entrySettings: defaultEntrySettings,
 	projectConfig: null,
@@ -37,40 +36,6 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 			}
 		}
 
-		// case 'SET_ENTITY': {
-		// 	// let activeFacsimileAreas = entryState.entry.facsimiles?.reduce((prev, curr) => {
-		// 	// 	curr.versions.forEach(version => {
-		// 	// 		version.areas.forEach(area => {
-		// 	// 			if (area.target?.id === action.id) {
-		// 	// 				if (!Array.isArray(prev)) prev = []
-		// 	// 				prev.push(area)
-		// 	// 			}
-		// 	// 		})
-		// 	// 	})
-		// 	// 	return prev
-		// 	// }, null as FacsimileArea[])
-
-		// 	// const activeEntity = entryState.entry.entities?.find(e => e.id === action.id)
-		// 	// if (entity == null) entity = { id: action.id, type: null, value: null }
-		// 	let activeEntity = entryState.lookup.entities[action.id]
-
-		// 	// const config = entryState.projectConfig.entities.find(x => x.id === entity.type)
-		// 	// let activeEntity = { ...entity, config }
-		// 	if (activeEntity == null) {
-		// 		console.error(`[SET_ENTITY] entity not found for '${entryState.projectConfig.slug}' with ID: ${activeEntity.id}`)
-		// 		return entryState
-		// 	}
-
-		// 	if (entryState.activeEntity?.id === activeEntity.id) activeEntity = null
-			
-		// 	return {
-		// 		...entryState,
-		// 		activeEntity,
-		// 		// activeFacsimileAreas,
-		// 		layers: updatePanels(entryState.layers, { activeEntity, activeNote: entryState.activeNote, entrySettings: entryState.entrySettings })
-		// 	}
-		// }
-
 		case 'TOGGLE_TAB': {
 			const asideTab: AsideTab = (entryState.asideTab === action.tab) ? null : action.tab
 			return {
@@ -96,25 +61,9 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 		}
 
 		case 'SET_FACSIMILE': {
-			if (entryState.activeFacsimiles.has(action.id)) {
-				entryState.activeFacsimiles.delete(action.id)
-			} else {
-				entryState.activeFacsimiles.set(action.id, {
-					...entryState.lookup.facsimiles[action.id],
-					triggerLayer: action.triggerLayer
-				})
-			}
-
-			const activeFacsimiles = new Map(entryState.activeFacsimiles)
-
 			return {
 				...entryState,
-				activeFacsimiles, 
-				layers: entryState.layers.map(l => {
-					if (!isFacsimileLayer(l)) return l
-					l.activeFacsimile = getFirstActiveFacsimileFromLayer(activeFacsimiles, l)
-					return l
-				})
+				layers: activateFacsimile(entryState.layers, action.id, action.triggerLayer)
 			}
 		}
 
@@ -179,34 +128,42 @@ export default function useEntryState() {
 	const navigate = useNavigate()
 
 	React.useEffect(() => {
-		if (x[0].activeFacsimiles == null) return
-
-		navigate({
-			entryId,
-			query: {
-				facsimileId: Array.from(x[0].activeFacsimiles?.keys())
-			}
-		})	
-	}, [x[0].activeFacsimiles])
-
-	React.useEffect(() => {
-		// If entry is not defined, there cannot be an active note,
-		// activeNote can be null to deselect the note
 		if (x[0].entry == null) return
 
+		const activeFacsimileIds = x[0].layers
+			.filter(l => l.activeFacsimile != null)
+			.map(l => l.activeFacsimile.id)
+			.filter((value, index, array) => array.indexOf(value) === index)
+
 		navigate({
 			entryId,
 			query: {
-				entityId: Array.from(x[0].activeEntities?.keys())
+				...query,
+				facsimileId: activeFacsimileIds
 			}
 		})	
-	}, [x[0].entry, x[0].activeEntities])
+	}, [x[0].entry, x[0].layers, query])
+
+	// React.useEffect(() => {
+	// 	// If entry is not defined, there cannot be an active note,
+	// 	// activeNote can be null to deselect the note
+	// 	if (x[0].entry == null) return
+
+	// 	console.log('trigger nav 2')
+	// 	navigate({
+	// 		entryId,
+	// 		query: {
+	// 			...query,
+	// 			entityId: Array.from(x[0].activeEntities?.keys())
+	// 		}
+	// 	})	
+	// }, [x[0].entry, x[0].activeEntities, query])
 
 	React.useEffect(() => {
 		if (entry == null || entry === x[0].entry) return
 
 		// Copy current state of active and pinned layers to keep interface consistent between entry changes
-		const nextLayers = entry.layers.map(layer => {
+		let nextLayers = entry.layers.map(layer => {
 			const stateLayer = x[0].layers.find(l => l.id === layer.id)
 
 			// Return layer as is if it did not exist on previous entry
@@ -226,28 +183,37 @@ export default function useEntryState() {
 			activeEntities.set(id, lookup.entities[id])
 		)
 
-		const activeFacsimiles = new Map()
-		query.facsimileId?.forEach(id =>
-			activeFacsimiles.set(id, lookup.facsimiles[id])
-		)
+		// console.log(query)
+		// const activeFacsimiles = new Map()
+		// query.facsimileId?.forEach(id =>
+		// 	activeFacsimiles.set(id, lookup.facsimiles[id])
+		// )
 
-		const facsimileLayer = entry.layers.find(isFacsimileLayer)
-		if (activeFacsimiles.size === 0 && facsimileLayer != null) {
-			const facsimiles = facsimileLayer.facsimiles
-			if (Array.isArray(facsimiles) && facsimiles.length) {
-				activeFacsimiles.set(facsimiles[0].id, facsimiles[0])
-			}
-		}
+		// const facsimileLayer = entry.layers.find(isFacsimileLayer)
+		// if (activeFacsimiles.size === 0 && facsimileLayer != null) {
+		// 	const facsimiles = facsimileLayer.facsimiles
+		// 	if (Array.isArray(facsimiles) && facsimiles.length) {
+		// 		activeFacsimiles.set(facsimiles[0].id, facsimiles[0])
+		// 	}
+		// }
 
-		if (activeFacsimiles.size > 0 && facsimileLayer != null) {
-			facsimileLayer.activeFacsimile = activeFacsimiles.values().next().value
-		}
+		// if (activeFacsimiles.size > 0 && facsimileLayer != null) {
+		// 	facsimileLayer.activeFacsimile = activeFacsimiles.values().next().value
+		// }
+
+		query.facsimileId?.forEach(id => {
+			nextLayers = activateFacsimile(nextLayers, id)
+		})
+
+		nextLayers.forEach(l => {
+			if (!l.facsimiles.length) return
+			if (l.activeFacsimile == null) l.activeFacsimile = l.facsimiles[0]
+		})
 
 		// TODO activeFacsimile is a state of layer, not the entry
 		// x[1] = dispatch
 		x[1]({
 			activeEntities,
-			activeFacsimiles,
 			entry,
 			layers: updatePanels(nextLayers, x[0]),
 			lookup,
@@ -302,4 +268,25 @@ function updatePanels(
 
 			return layer
 		})
+}
+
+function activateFacsimile(
+	layers: EntryState['layers'],
+	activeFacsimileId: string,
+	triggerLayer?: Layer
+): Layer[] {
+	return layers.map(l => {
+		const activeFacsimile = l.facsimiles.find(f => f.id === activeFacsimileId)
+		if (activeFacsimile != null) {
+			return {
+				...l,
+				activeFacsimile: {
+					...activeFacsimile,
+					triggerLayer: triggerLayer
+				},
+			}
+		}
+
+		return l
+	})
 }

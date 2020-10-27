@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import debounce from 'lodash.debounce'
-import { isTextLayer, ProjectContext, useComponents, DEFAULT_SPACING, TEXT_PANEL_TEXT_WIDTH, DocereComponentContainer, getTextPanelLeftSpacing, PANEL_HEADER_HEIGHT, getFirstActiveFacsimileFromLayer } from '@docere/common'
+import { isTextLayer, ProjectContext, useComponents, DEFAULT_SPACING, TEXT_PANEL_TEXT_WIDTH, DocereComponentContainer, getTextPanelLeftSpacing, PANEL_HEADER_HEIGHT } from '@docere/common'
 import { SearchContext } from '@docere/search'
 import DocereTextView from '@docere/text'
 
@@ -39,8 +39,8 @@ interface TextProps {
 export const Text = styled.div`
 	color: #222;
 	counter-reset: linenumber notenumber;
-	font-family: EB Garamond, serif;
-	font-size: 1.33rem;
+	font-family: Merriweather, serif;
+	font-size: 1.1rem;
 	font-weight: 400;
 	display: grid;
 	grid-template-columns: ${TEXT_PANEL_TEXT_WIDTH}px auto;
@@ -49,7 +49,7 @@ export const Text = styled.div`
 	position: relative;
 `
 
-type TextPanelBaseProps = Pick<PanelsProps, 'activeEntities' | 'activeFacsimiles' | 'appDispatch' | 'entryDispatch' | 'entry' | 'entrySettings'>
+type TextPanelBaseProps = Pick<PanelsProps, 'activeEntities' | 'appDispatch' | 'entryDispatch' | 'entry' | 'entrySettings'>
 interface TextPanelProps extends TextPanelBaseProps {
 	layer: TextLayer
 }
@@ -90,7 +90,6 @@ function TextPanel(props: TextPanelProps) {
 	}, [props.entrySettings['panels.text.showMinimap']])
 
 	const customProps: DocereComponentProps = {
-		activeFacsimiles: props.activeFacsimiles,
 		activeEntities: props.activeEntities,
 		appDispatch: props.appDispatch,
 		components,
@@ -102,20 +101,23 @@ function TextPanel(props: TextPanelProps) {
 		layer: props.layer,
 	}
 
-	React.useEffect(() => {
-		const activeFacsimile = getFirstActiveFacsimileFromLayer(props.activeFacsimiles, props.layer)
-		if (
-			textWrapperRef.current == null ||
-			activeFacsimile == null ||
-			props.layer === activeFacsimile.triggerLayer
-		) return
+	// React.useEffect(() => {
+	// 	console.log(docereTextViewReady)
+	// 	if (
+	// 		textWrapperRef.current == null ||
+	// 		!docereTextViewReady ||
+	// 		props.layer.activeFacsimile == null ||
+	// 		props.layer.activeFacsimile.triggerLayer?.id === props.layer.id
+	// 	) return
 
-		textWrapperRef.current
-			.querySelector(`[data-facsimile-id="${activeFacsimile.id}"]`)
-			?.scrollIntoView({ behavior: 'smooth' })
-	}, [props.activeFacsimiles])
+	// 	const pb = textWrapperRef.current
+	// 		.querySelector(`[data-facsimile-id="${props.layer.activeFacsimile.id}"]`)
 
-	if (components == null) return null
+	// 	setTimeout(() => {
+	// 		pb?.scrollIntoView({ behavior: 'smooth' })
+			
+	// 	}, 600);
+	// }, [props.layer.activeFacsimile, docereTextViewReady])
 
 	return (
 		<Wrapper className="text-panel">
