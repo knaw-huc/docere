@@ -83,7 +83,9 @@ export default extendConfigData({
 						id: el.getAttribute('xml:id'),
 						n: (index + 1).toString(),
 						title: 'Note',
-					})),
+					}))
+					// Remove empty notes (<note />)
+					.filter(n => n.id != null),
 			type: EntityType.Note,
 		}
 	],

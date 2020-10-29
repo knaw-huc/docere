@@ -1,5 +1,6 @@
 import { SerializedEntry, isFacsimileLayer, isTextLayer } from '../../../common/src'
 import { fetchEntry } from '../utils'
+import { EntityType } from '@docere/common'
 
 const projectId = 'mondrian'
 const briefId = 'brieven/18931007_PM_ALLE_5004'
@@ -53,6 +54,14 @@ export function mondrianTests() {
 		it('Should not have facsimiles', () => {
 			const facsimileCount = brief.layers.reduce((p, c) => p + c.facsimiles.length, 0)
 			expect(facsimileCount).toBe(0)
+		})
+
+		it('Should have 2 notes', () => {
+			expect(brief.layers.find(isTextLayer).entities.filter(e => e.type === EntityType.Note)).toHaveLength(2)
+		})
+
+		it('Should have notes with IDs', () => {
+			expect(brief.layers.find(isTextLayer).entities.filter(e => e.id == null)).toHaveLength(0)
 		})
 	})
 
