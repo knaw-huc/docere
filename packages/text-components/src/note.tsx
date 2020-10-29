@@ -46,7 +46,7 @@ export default function getNote(extractNoteId: ExtractNoteId) {
 
 		const note = useNote(extractNoteId, props)
 
-		const active = props.activeEntities.has(note.id)
+		const active = props.activeEntities.has(note?.id)
 		const openToAside = active && !props.entrySettings['panels.text.openPopupAsTooltip']
 
 		const handleClick = React.useCallback(() => {
