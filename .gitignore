@@ -1,6 +1,7 @@
 node_modules
 lerna-debug.log
 build
+build.puppenv.data
 dist
 tsconfig.tsbuildinfo
 DEPLOY.md

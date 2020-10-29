@@ -183,24 +183,6 @@ export default function useEntryState() {
 			activeEntities.set(id, lookup.entities[id])
 		)
 
-		// console.log(query)
-		// const activeFacsimiles = new Map()
-		// query.facsimileId?.forEach(id =>
-		// 	activeFacsimiles.set(id, lookup.facsimiles[id])
-		// )
-
-		// const facsimileLayer = entry.layers.find(isFacsimileLayer)
-		// if (activeFacsimiles.size === 0 && facsimileLayer != null) {
-		// 	const facsimiles = facsimileLayer.facsimiles
-		// 	if (Array.isArray(facsimiles) && facsimiles.length) {
-		// 		activeFacsimiles.set(facsimiles[0].id, facsimiles[0])
-		// 	}
-		// }
-
-		// if (activeFacsimiles.size > 0 && facsimileLayer != null) {
-		// 	facsimileLayer.activeFacsimile = activeFacsimiles.values().next().value
-		// }
-
 		query.facsimileId?.forEach(id => {
 			nextLayers = activateFacsimile(nextLayers, id)
 		})
