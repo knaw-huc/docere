@@ -1,19 +1,18 @@
-import type { DocereConfig } from '../config-data/config'
-import type { Entity, ActiveFacsimile } from '../config-data/functions'
-import type { Entry, EntryLookup } from '.'
 import { AsideTab } from '../../enum'
-import { Layer } from '../config-data/layer'
 
-export type ActiveEntities = Map<string, Entity>
-export type ActiveFacsimiles = Map<string, ActiveFacsimile>
+import type { ID, StatefulLayer } from '../config-data/layer'
+import type { DocereConfig } from '../config-data/config'
+import type { Entry } from './index'
+import type { ActiveEntity, ActiveFacsimile } from '../config-data/functions'
+
 export interface EntryState {
-	activeEntities: ActiveEntities
+	activeEntities: Map<ID, ActiveEntity>
+	activeFacsimiles: Map<ID, ActiveFacsimile>
 	asideTab: AsideTab
-	projectConfig: DocereConfig
 	entry: Entry
 	entrySettings: DocereConfig['entrySettings']
-	layers: Layer[]
-	lookup: EntryLookup
+	layers: Map<ID, StatefulLayer>
+	projectConfig: DocereConfig
 }
 
 interface ProjectChanged {
@@ -21,19 +20,18 @@ interface ProjectChanged {
 	config: DocereConfig,
 }
 
-interface EntryChanged extends Pick<EntryState, 'activeEntities' | 'entry' | 'layers'> {
+interface EntryChanged extends Pick<EntryState, 'activeEntities' | 'activeFacsimiles' | 'entry' | 'layers'> {
 	type: "ENTRY_CHANGED",
-	lookup: EntryState['lookup']
 }
 
 interface ESA_Toggle_Layer {
 	type: 'TOGGLE_LAYER'
-	id: string
+	id: ID
 }
 
 interface PinPanel {
 	type: 'PIN_PANEL',
-	id: string
+	id: ID
 }
 
 interface ToggleAsideTab {
@@ -45,13 +43,16 @@ interface ToggleAsideTab {
 type ToggleTab = ToggleAsideTab
 
 interface SetEntity {
+	id: ID
+	layerId: ID
+	triggerLayerId: ID
 	type: 'SET_ENTITY'
-	id: string
 }
 
 export interface SetFacsimile {
-	id: string
-	triggerLayer: Layer
+	id: ID
+	layerId: ID
+	triggerLayerId: ID
 	type: 'SET_FACSIMILE'
 }
 

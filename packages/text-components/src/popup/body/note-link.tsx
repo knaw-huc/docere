@@ -20,7 +20,7 @@ function NoteLink(props: NoteLinkProps) {
 
 		const payload: UrlObject = {
 			entryId: props.entryId,
-			query: { entityId: [props.entity.id] }
+			query: { entityId: new Set(props.entity.id) }
 		}
 
 		navigate(payload)

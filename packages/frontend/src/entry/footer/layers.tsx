@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { DEFAULT_SPACING, LayerType, isFacsimileLayer, FacsimileLayer } from '@docere/common'
+import { DEFAULT_SPACING, LayerType, isFacsimileLayer, FacsimileLayer, Entry, EntryState } from '@docere/common'
 import type { EntryStateAction, Layer } from '@docere/common'
 
 const LiWrapper = styled.li`
@@ -81,14 +81,16 @@ function Li(props: PIProps) {
 }
 
 interface P {
+	entry: Entry
 	layer: FacsimileLayer
 }
 const LiFacs = styled(Li)`
 	${(p: P) => {
-		const { activeFacsimile } = p.layer
-		const path = activeFacsimile != null ?
-			activeFacsimile.versions[0].path.replace('info.json', `full/!100,100/0/default.jpg`) :
-			''
+		// const activeFacsimile = p.entry.textData.facsimiles.get(p.layer.activeFacsimileId)
+		// const path = activeFacsimile != null ?
+		// 	activeFacsimile.versions[0].path.replace('info.json', `full/!100,100/0/default.jpg`) :
+		// 	''
+		const path = ''
 
 		return `& > div:first-of-type {
 			display: block;
@@ -123,17 +125,19 @@ const Ul = styled.ul`
 interface Props {
 	active: boolean
 	dispatch: React.Dispatch<EntryStateAction>
-	layers: Layer[]
+	entry: Entry
+	layers: EntryState['layers']
 }
 function Layers(props: Props) {
 	return (
 		<BottomTabWrapper active={props.active}>
 			<Ul>
 				{
-					props.layers.map(tl =>
+					Array.from(props.layers.values()).map(tl =>
 						isFacsimileLayer(tl) ?
 							<LiFacs
 								dispatch={props.dispatch}
+								entry={props.entry}
 								key={tl.id}
 								layer={tl}
 							/> :

@@ -1,4 +1,4 @@
-import type { Layer } from './layer'
+import type { ID } from './layer'
 import type { EntityConfig } from "./config"
 
 // import { Entry } from '../entry'
@@ -19,6 +19,8 @@ import type { EntityConfig } from "./config"
 
 // Data extracted from the text: entities, notes, ...
 export interface ExtractedEntity extends Omit<EntityConfig, 'extract'> {
+	// TODO
+	// count?: Record<ID, number> /* Count can differ per layer */
 	count?: number
 	content: string
 	facsimileAreas?: FacsimileArea[]
@@ -27,6 +29,16 @@ export interface ExtractedEntity extends Omit<EntityConfig, 'extract'> {
 
 export interface Entity extends Required<ExtractedEntity> {
 	configId: string
+}
+
+export interface ActiveEntity {
+	layerId: ID
+	triggerLayerId: ID
+}
+
+export interface ActiveFacsimile {
+	layerId: ID
+	triggerLayerId: ID
 }
 
 // export type Entity = TextData
@@ -91,8 +103,4 @@ interface FacsimileVersion {
 export interface Facsimile {
 	id: string
 	versions: FacsimileVersion[]
-}
-
-export interface ActiveFacsimile extends Facsimile {
-	triggerLayer?: Layer
 }

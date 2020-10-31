@@ -2,7 +2,7 @@ import { EntityType } from '../../enum'
 import type { FacetConfig } from '../search/facets'
 import { PageConfig } from '../page'
 import { Facsimile, ExtractedEntity } from './functions'
-import { TextLayerConfig, FacsimileLayerConfig } from './layer'
+import { TextLayerConfig, FacsimileLayerConfig, ID } from './layer'
 import { ConfigEntry } from '../entry'
 
 // TODO rename to ProjectConfig
@@ -22,7 +22,7 @@ export interface DocereConfig {
 	prepare?: (entry: ConfigEntry, config: DocereConfig) => Element
 	private?: boolean
 	searchResultCount?: number
-	slug: string
+	slug: ID
 	parts?: {
 		extract: ExtractEntryPartElements
 		keepSource?: boolean /* Keep the source document and store as an entry */
@@ -43,7 +43,7 @@ interface EntrySettings {
 }
 
 export interface BaseConfig {
-	id: string
+	id: ID
 	title?: string
 }
 

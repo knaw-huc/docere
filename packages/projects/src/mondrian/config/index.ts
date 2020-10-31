@@ -12,22 +12,27 @@ export default extendConfigData({
 			extract: entry => entry.document.querySelector('correspAction[type="sent"] > date')?.getAttribute('when'),
 			id: 'date',
 			interval: 'y',
+			order: 10,
 		},
 		{
 			extract: entry => entry.document.querySelector('correspAction[type="sent"] > name')?.textContent,
 			id: 'author',
+			order: 20,
 		},
 		{
 			id: 'addressee',
 			extract: entry => entry.document.querySelector('correspAction[type="received"] > name')?.textContent,
+			order: 30,
 		},
 		{
 			extract: entry => entry.document.querySelector('correspAction[type="sent"] > placeName')?.textContent,
 			id: 'place',
+			order: 40,
 		},
 		{
 			extract: entry => entry.id.slice(0, 7) === 'brieven' ? 'brief' : 'geschrift',
 			id: 'type',
+			order: 15,
 		},
 		{
 			extract: entry => entry.document.querySelectorAll('div[type="notes"] > note').length,
@@ -52,6 +57,7 @@ export default extendConfigData({
 					id: x.getAttribute('target').split('#')[1],
 					content: x.textContent,
 				})),
+			order: 90,
 		},
 		{
 			color: Colors.Green,
@@ -62,6 +68,7 @@ export default extendConfigData({
 					id: x.getAttribute('target').split('#')[1],
 					content: x.textContent,
 				})),
+			order: 70,
 		},
 		{
 			color: Colors.Green,
@@ -72,6 +79,7 @@ export default extendConfigData({
 					id: x.getAttribute('key'),
 					content: x.textContent,
 				})),
+			order: 80,
 		},
 		{
 			color: Colors.Blue,
@@ -87,6 +95,7 @@ export default extendConfigData({
 					// Remove empty notes (<note />)
 					.filter(n => n.id != null),
 			type: EntityType.Note,
+			showAsFacet: false
 		}
 	],
 	layers: [

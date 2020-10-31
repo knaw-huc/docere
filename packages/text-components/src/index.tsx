@@ -23,11 +23,12 @@ const Lb = styled.span`
 
 	&:before {
 		box-sizing: border-box;
-		color: #666;
+		color: #888;
 		content: counter(linenumber);
 		counter-increment: linenumber;
 		display: ${(props) => props.entrySettings['panels.text.showLineBeginnings'] ? 'block' : 'none' };
-		font-size: .8em;
+		font-family: RobotoMono;
+		font-size: .66em;
 		position: absolute;
 		text-align: right;
 		width: 42px;

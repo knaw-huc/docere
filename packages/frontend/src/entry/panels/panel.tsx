@@ -7,12 +7,13 @@ import { isTextLayer, isFacsimileLayer } from '@docere/common'
 import type { Layer } from '@docere/common'
 import type { PanelsProps } from '.'
 
-
 export default function Panel(props: PanelsProps & { layer: Layer }) {
 	if (isFacsimileLayer(props.layer)) {
 		return (
 			<FacsimilePanel
 				activeEntities={props.activeEntities}
+				activeFacsimiles={props.activeFacsimiles}
+				entry={props.entry}
 				entryDispatch={props.entryDispatch}
 				entrySettings={props.entrySettings}
 				key={props.layer.id}
@@ -25,6 +26,7 @@ export default function Panel(props: PanelsProps & { layer: Layer }) {
 		return (
 			<TextPanel
 				activeEntities={props.activeEntities}
+				activeFacsimiles={props.activeFacsimiles}
 				appDispatch={props.appDispatch}
 				entry={props.entry}
 				entryDispatch={props.entryDispatch}

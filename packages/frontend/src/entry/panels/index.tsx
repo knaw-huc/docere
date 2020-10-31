@@ -1,17 +1,17 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { DEFAULT_SPACING, Colors, FooterTab, FOOTER_HANDLE_HEIGHT, ProjectContext, ActiveEntities } from '@docere/common'
+import { DEFAULT_SPACING, Colors, FooterTab, FOOTER_HANDLE_HEIGHT, ProjectContext, StatefulLayer } from '@docere/common'
 
 import LayersFooterTab from '../footer/layers'
 import Panel from './panel'
 import CollectionNavigator from './collection-navigator'
 
-import type { DocereConfig, Layer, EntryState, EntryStateAction } from '@docere/common'
+import type { DocereConfig, EntryState, EntryStateAction } from '@docere/common'
 import type { EntryProps } from '..'
 
 interface WProps {
 	hasCollection: boolean
-	pinnedLayers: Layer[]
+	pinnedLayers: StatefulLayer[]
 }
 const Wrapper = styled.div`
 	background: ${Colors.GreyLight};
@@ -44,8 +44,7 @@ const PanelsCommon = styled.div`
 `
 
 interface PWProps {
-	activeEntities: ActiveEntities
-	activeLayers: Layer[]
+	activeLayers: StatefulLayer[]
 	settings: DocereConfig['entrySettings']
 }
 const ActivePanels = styled(PanelsCommon)`
@@ -103,8 +102,10 @@ export type PanelsProps = EntryProps & EntryState & {
 function Panels(props: PanelsProps) {
 	const context = React.useContext(ProjectContext)
 
-	const activeLayers = props.layers.filter(layer => layer.active && !layer.pinned)
-	const pinnedLayers = props.layers.filter(layer => layer.pinned)
+	// TODO move to useEffect and useState or does it not matter because of React.memo?
+	const layers = Array.from(props.layers.values())
+	const activeLayers = layers.filter(l => l.active && !l.pinned)
+	const pinnedLayers = layers.filter(l => l.pinned)
 
 	return (
 		<Wrapper
@@ -133,7 +134,6 @@ function Panels(props: PanelsProps) {
 				activeLayers.length > 0 &&
 				<ActivePanels
 					activeLayers={activeLayers}
-					activeEntities={props.activeEntities}
 					id="active-panels"
 					settings={props.entrySettings}
 				>
@@ -168,6 +168,7 @@ function Panels(props: PanelsProps) {
 						<LayersFooterTab
 							active={true}
 							dispatch={props.entryDispatch}
+							entry={props.entry}
 							layers={props.layers}
 						/>
 					}

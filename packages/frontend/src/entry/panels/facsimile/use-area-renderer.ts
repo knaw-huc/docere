@@ -17,8 +17,11 @@ export class AreaRenderer {
 	private overlays: Overlay[] = []
 	// private lastClick: string
 
-	constructor(private osd: any, private OpenSeadragon: any, private entryDispatch: React.Dispatch<EntryStateAction>) {
-	}
+	constructor(
+		private osd: any,
+		private OpenSeadragon: any,
+		private handleAreaClick: (ev: any) => void
+	) {}
 
 	private deactivate() {
 		this.overlays
@@ -93,13 +96,17 @@ export class AreaRenderer {
 		this.imgHeight = this.osd.world._contentSize.y
 	}
 
-	private handleAreaClick = (ev: any) => {
-		const { area } = ev.userData
-		// this.lastClick = area.id
-		// area.target != null ?
-		this.entryDispatch({ type: 'SET_ENTITY', id: area.target.id }) //:
-		// this.entryDispatch({ type: 'SET_ACTIVE_FACSIMILE_AREAS', ids: [area.id] })
-	}
+	// private handleAreaClick = (ev: any) => {
+	// 	const { area } = ev.userData
+	// 	// this.lastClick = area.id
+	// 	// area.target != null ?
+	// 	this.entryDispatch({
+	// 		type: 'SET_ENTITY',
+	// 		id: area.target.id,
+	// 		triggerLayerId: 
+	// 	}) //:
+	// 	// this.entryDispatch({ type: 'SET_ACTIVE_FACSIMILE_AREAS', ids: [area.id] })
+	// }
 
 	private createOverlay(area: FacsimileArea) {
 		let { x, y, w, h, unit } = area

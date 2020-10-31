@@ -47,12 +47,13 @@ export default class TiledImages {
 
 	// Set the active options from this.entry.facsimiles. Used to calculate this.startIndex and this.highlightActive
 	setActiveOptions() {
-		const facsimilePaths = this.entry.layers.find(isFacsimileLayer).facsimiles.reduce((prev, curr) => {
-			const ps = curr.versions.map(v => v.path)
-			return prev.concat(ps)
-		}, [] as string[])
+		const facsimilePaths = this.entry.layers.find(isFacsimileLayer).facsimiles
+		// .reduce((prev, curr) => {
+		// 	const ps = curr.versions.map(v => v.path)
+		// 	return prev.concat(ps)
+		// }, [] as string[])
 
-		this.activeTileOptions = this.tileOptions.filter(option => facsimilePaths.indexOf(option.tileSource) > -1)
+		this.activeTileOptions = this.tileOptions.filter(option => facsimilePaths.has(option.userData.id))
 	}
 
 	// Set a new entry. When this.highlightActive returns false, not all tiles of that entry are loaded.

@@ -69,9 +69,7 @@ export default function getEntity(preProps?: PreProps) {
 
 		React.useEffect(() => {
 			if (entity == null) return
-			// const nextActive = entity != null && props.activeEntity != null && props.activeEntity.id === entity.id
 			const nextActive = props.activeEntities?.has(entity.id)
-			if (nextActive) console.log(nextActive, entity.id, showTooltip)
 			setActive(nextActive === true)
 			if (!nextActive && showTooltip) setShowTooltip(false)
 		}, [entity, props.activeEntities])
@@ -80,8 +78,10 @@ export default function getEntity(preProps?: PreProps) {
 			ev.stopPropagation()
 
 			props.entryDispatch({
+				id: entity.id,
+				layerId: null,
+				triggerLayerId: props.layer.id,
 				type: 'SET_ENTITY',
-				id: entity.id
 			})
 
 			setShowTooltip(true)

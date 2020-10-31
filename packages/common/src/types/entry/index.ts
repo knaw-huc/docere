@@ -1,9 +1,10 @@
 import { BooleanFacetConfig, ListFacetConfig, HierarchyFacetConfig, RangeFacetConfig, DateFacetConfig } from '../search'
-import { SerializedLayer, Layer } from '../config-data/layer'
+import { SerializedLayer, Layer, ID } from '../config-data/layer'
 import type { Entity, Facsimile } from '../config-data/functions'
 import { DocereConfig } from '../config-data/config'
 
 export * from './state'
+export * from './use-entry'
 
 export type ListMetadata = ListFacetConfig & { value: string | string[] }
 export type HierarchyMetadata = HierarchyFacetConfig & { value: string[] }
@@ -12,13 +13,19 @@ export type RangeMetadata = RangeFacetConfig & { value: number | number[] }
 export type DateMetadata = DateFacetConfig & { value: number | number[] } 
 export type MetadataItem = ListMetadata | HierarchyMetadata | BooleanMetadata | RangeMetadata | DateMetadata
 
-export interface Entry {
-	id: string
-	layers: Layer[]
-	metadata: MetadataItem[]
+export interface EntryTextData {
+	facsimiles: Map<ID, Facsimile>
+	entities: Map<ID, Entity>
 }
 
-export type ConfigEntry = Omit<Entry, 'layers'> & {
+export interface Entry {
+	id: ID
+	layers: Layer[]
+	metadata: MetadataItem[]
+	textData: EntryTextData
+}
+
+export type ConfigEntry = Omit<Entry, 'layers' | 'textData'> & {
 	document: XMLDocument
 	element: Element
 	entities: Entity[]
@@ -31,33 +38,24 @@ export type ConfigEntry = Omit<Entry, 'layers'> & {
 export type EntryParts = Map<string, ConfigEntry>
 
 export interface SerializedEntry extends Pick<ConfigEntry, 'layers' | 'id' | 'metadata'> {
+	content: string
 	parts: SerializedEntry[]
 	plainText: string
-	content: string
+	textData: {
+		entities: [ID, Entity][]
+		facsimiles: [ID, Facsimile][]
+	}
 }
 
 export interface GetEntryProps {
 	config: DocereConfig
 	document: XMLDocument
 	element: Element
-	id: string
+	id: ID
 }
 
 export interface GetPartProps extends GetEntryProps {
 	parent: ConfigEntry
-}
-
-
-export interface EntryLookup {
-	facsimiles: Record<string, Facsimile>
-	entities: Record<string, Entity>
-}
-export function createLookup<T extends SerializedLayer[]>(layers: T) {
-	return layers.reduce((agg, layer) => {
-		layer.facsimiles?.forEach(l => { agg.facsimiles[l.id] = l; })
-		layer.entities?.forEach(e => { agg.entities[e.id] = e; })
-		return agg
-	}, { facsimiles: {}, entities: {} } as EntryLookup)
 }
 // export function extractIdsFromElasticSearchId(elasticSearchId: string) {
 // 	return elasticSearchId.split('__part__')

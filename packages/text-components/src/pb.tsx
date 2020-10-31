@@ -1,5 +1,5 @@
 import React from 'react'
-import { Colors, DEFAULT_SPACING, Facsimile } from '@docere/common'
+import { Colors, DEFAULT_SPACING, Facsimile, EntryState } from '@docere/common'
 import styled from 'styled-components'
 
 import type { DocereComponentProps } from '@docere/common'
@@ -43,8 +43,8 @@ function useFacsimiles(extractPbId: ExtractPbId, props: DocereComponentProps) {
 		if (!Array.isArray(ids)) ids = [ids]
 
 		const _facsimiles = ids
-			.map(id => props.layer.facsimiles.find(f => f.id === id))
-			.filter(facsimile => facsimile != null)
+			.map(id => props.entry.textData.facsimiles.get(id))
+			.filter(x => x != null)
 
 		setFacsimiles(_facsimiles)
 	}, [props.entry.id])
@@ -67,6 +67,7 @@ export default function getPb(extractPbId: ExtractPbId): React.FC<DocereComponen
 					{
 						facsimiles.map(facsimile =>
 							<FacsimileThumb
+								activeFacsimiles={props.activeFacsimiles}
 								entryDispatch={props.entryDispatch}
 								facsimile={facsimile}
 								key={facsimile.id}
@@ -81,6 +82,7 @@ export default function getPb(extractPbId: ExtractPbId): React.FC<DocereComponen
 }
 
 interface FacsimileThumbProps {
+	activeFacsimiles: EntryState['activeFacsimiles']
 	entryDispatch: DocereComponentProps['entryDispatch'] 
 	facsimile: Facsimile
 	layer: DocereComponentProps['layer']
@@ -93,18 +95,19 @@ function FacsimileThumb(props: FacsimileThumbProps) {
 
 		props.entryDispatch({
 			id: facsimileId,
-			triggerLayer: props.layer,
+			layerId: null,
+			triggerLayerId: props.layer.id,
 			type: 'SET_FACSIMILE',
 		})
 	}, [props.layer])
 
 	const src = props.facsimile.versions[0].path
-	const active = props.layer.activeFacsimile?.id === props.facsimile.id
+	const active = props.activeFacsimiles.has(props.facsimile.id)
 
 	React.useEffect(() => {
 		if (
 			active &&
-			props.layer.activeFacsimile.triggerLayer?.id !== props.layer.id
+			props.activeFacsimiles.get(props.facsimile.id).triggerLayerId !== props.layer.id
 		) {
 			setTimeout(() => {
 				imgRef.current.scrollIntoView({ behavior: 'smooth' })

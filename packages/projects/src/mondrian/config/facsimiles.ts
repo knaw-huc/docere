@@ -12,6 +12,7 @@ export default function extractFacsimiles(entry: ConfigEntry) {
 			const fileName = graphic.getAttribute('url')
 			if (!fileName.length) return null
 			const imgPath = fileName.slice(0, fileName.indexOf('_')) + '/' + fileName
+			console.log(imgPath)
 			const path = `/iiif/mondrian/${imgPath}.jpg/info.json`
 			return { id: surfaceId, versions: [{ path }] }
 		})

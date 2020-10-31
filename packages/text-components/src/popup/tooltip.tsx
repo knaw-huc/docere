@@ -1,8 +1,8 @@
 import * as React from "react"
 import styled from "styled-components"
-import { DEFAULT_POPUP_BG_COLOR, getTextPanelWidth, Entity } from '@docere/common'
+import { DEFAULT_POPUP_BG_COLOR, getTextPanelWidth, Entity, TextLayer, EntryState } from '@docere/common'
 
-import type { DocereConfig, ActiveEntities } from '@docere/common'
+import type { DocereConfig } from '@docere/common'
 
 interface P { offset: number }
 const Wrapper = styled.div`
@@ -42,10 +42,11 @@ const Svg = styled.svg`
 
 // type Orientation = "top" | "right" | "bottom" | "left"
 interface Props {
-	activeEntities: ActiveEntities
+	activeEntities: EntryState['activeEntities']
 	bodyStyle?: React.CSSProperties
 	children: React.ReactNode
 	entity: Entity
+	layer: TextLayer
 	settings: DocereConfig['entrySettings']
 }
 function Tooltip(props: Props) {		

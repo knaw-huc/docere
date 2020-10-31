@@ -168,6 +168,7 @@ function Footer(props: Props) {
 				<Layers
 					active={props.footerTab === FooterTab.Layers}
 					dispatch={props.entryDispatch}
+					entry={props.entry}
 					layers={props.layers}
 				/>
 				<Settings

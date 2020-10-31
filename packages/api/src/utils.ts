@@ -6,7 +6,7 @@ import { EsDataType, PageConfig } from '@docere/common'
 
 import type { DocereApiError, ElasticSearchDocument } from './types'
 import type { DocereConfig, MetadataItem, SerializedEntry } from '@docere/common'
-import { createLookup } from '../../common/src/types/entry'
+// import { createLookup } from '../../common/src/types/entry'
 
 // const projects = require('esm')(module)(path.resolve(process.cwd(), './packages/projects')).default
 import projects from '@docere/projects'
@@ -172,18 +172,18 @@ export async function getProjectPageConfig(projectId: string, pageId: string): P
 export function getElasticSearchDocument(extractedEntry: SerializedEntry | DocereApiError): ElasticSearchDocument | DocereApiError {
 	if (isError(extractedEntry)) return extractedEntry
 
-	const lookup = createLookup(extractedEntry.layers)
+	// const lookup = createLookup(extractedEntry.layers)
 
-	const entities = Object.values(lookup.entities)
-		.reduce((agg, entity) => {
+	const entities = Object.values(extractedEntry.textData.entities)
+		.reduce((agg, [_id, entity]) => {
 			agg[entity.configId] = (agg.hasOwnProperty(entity.configId)) ?
 				agg[entity.configId].concat(entity.content) :
 				[entity.content]
 			return agg
 		}, {} as Record<string, string[]>)
 
-	const facsimiles: string[] = Object.values(lookup.facsimiles)
-		.reduce((agg, facsimile) => {
+	const facsimiles: string[] = Object.values(extractedEntry.textData.facsimiles)
+		.reduce((agg, [_id, facsimile]) => {
 			return agg.concat(facsimile.versions.map(v => v.path))
 		}, [])
 

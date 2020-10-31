@@ -1,7 +1,8 @@
 import React from 'react'
 
-import { Entry, useUrlObject } from '..'
-import { fetchJson } from '../utils'
+import { Entry } from './index'
+import { fetchJson } from '../../utils'
+import { useUrlObject } from '../../url/query'
 
 const entryCache = new Map<string, Entry>()
 
@@ -17,8 +18,11 @@ export function useEntry(id: string) {
 			setEntry(entry)
 		} else {
 			fetchJson(`/api/projects/${projectId}/documents/${encodeURIComponent(entryId)}`)
-				.then(entry => {
+				.then((entry: Entry) => {
+					if (entry == null) return
 					entryCache.set(entry.id, entry)
+					entry.textData.entities = new Map(entry.textData.entities)
+					entry.textData.facsimiles = new Map(entry.textData.facsimiles)
 					setEntry(entry)
 				})
 		}

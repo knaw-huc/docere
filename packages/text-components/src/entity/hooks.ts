@@ -14,8 +14,7 @@ export function useEntity(
 
 	React.useEffect(() => {
 		const entityId = extractEntityId(props)
-		const _entity = props.layer.entities?.find(x => x.id === entityId)
-		if (entityId === 'puzosxmyry') console.log(entityId, _entity)
+		const _entity = props.entry.textData.entities.get(entityId)
 		setEntity(_entity)
 	}, [])
 

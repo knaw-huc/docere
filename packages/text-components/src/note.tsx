@@ -29,7 +29,7 @@ function useNote(extractNoteId: ExtractNoteId, props: DocereComponentProps) {
 
 	React.useEffect(() => {
 		const noteId = extractNoteId(props)
-		const note = props.layer.entities.find(x => x.id === noteId)
+		const note = props.entry.textData.entities.get(noteId)
 		setNote(note)
 	}, [props.entry.id])
 
@@ -51,8 +51,10 @@ export default function getNote(extractNoteId: ExtractNoteId) {
 
 		const handleClick = React.useCallback(() => {
 			props.entryDispatch({
+				id: note.id,
+				layerId: null,
+				triggerLayerId: props.layer.id,
 				type: 'SET_ENTITY',
-				id: active ? null : note.id
 			})
 		}, [note, active])
 

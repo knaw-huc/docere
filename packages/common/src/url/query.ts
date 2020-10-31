@@ -1,13 +1,14 @@
 import React from 'react'
 import { useLocation, useParams } from "react-router-dom"
 import { UrlObject } from './navigate'
+import { ID } from '../types/config-data/layer'
 
 export interface UrlQuery {
-	entityId?: string[]		/* ei = person, location, gloss */
+	entityId?: Set<ID>
 	// noteId?: string			/* ni */
-	facsimileId?: string[]	/* fi = pb */
-	lineId?: string[]			/* li = lb */
-	blockId?: string[]		/* bi = p, ab, div */
+	facsimileId?: Set<ID>	/* fi = pb */
+	lineId?: Set<ID>			/* li = lb */
+	blockId?: Set<ID>		/* bi = p, ab, div */
 }
 
 const urlQueryMap: Record<string, keyof UrlQuery> = {
@@ -16,7 +17,7 @@ const urlQueryMap: Record<string, keyof UrlQuery> = {
 	fi: 'facsimileId',
 	li: 'lineId',
 	bi: 'blockId',
-}
+} as const
 
 // function defaultPayload(): UrlObject {
 // 	return {
@@ -40,7 +41,7 @@ export function useUrlObject() {
 		const searchParams = new URLSearchParams(location.search)
 		Object.keys(urlQueryMap).forEach(key => {
 			const value = searchParams.getAll(key)
-			nextQuery[urlQueryMap[key]] = value.length ? value : null
+			nextQuery[urlQueryMap[key]] = value.length ? new Set(value) : null
 		})
 
 		const nextPayload: UrlObject = {

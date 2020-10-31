@@ -1,17 +1,11 @@
 import React from 'react'
-import { DocereComponentContainer, DocereComponentProps, isFacsimileLayer } from '@docere/common'
+import { DocereComponentContainer, DocereComponentProps } from '@docere/common'
 import type { DocereConfig, DocereComponents } from '@docere/common'
 import styled from 'styled-components'
 import { getPb, getNote } from '@docere/text-components'
 
 function Transcriptie(props: DocereComponentProps) {
-	// This is overkill and only useful when generalised. Plakaatboek Guyana
-	// only has 1 facsimile layer
-	const Pb = getPb(() => {
-		return props.entry.layers
-			.filter(isFacsimileLayer)
-			.reduce((prev, curr) => prev.concat(curr.facsimiles.map(f => f.id)), [])
-	})
+	const Pb = getPb(() => Array.from(props.layer.facsimiles))
 
 	return (
 		<div>

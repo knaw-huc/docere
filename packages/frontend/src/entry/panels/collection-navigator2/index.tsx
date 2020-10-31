@@ -1,11 +1,12 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Facsimile, EntryStateAction, FacsimileLayer } from '@docere/common'
+import { Facsimile, EntryStateAction, FacsimileLayer, Entry, EntryState } from '@docere/common'
 
 import CollectionNavigatorController from './controller'
 
 function useOpenSeadragonController(
-	facsimiles: Facsimile[],
+	entry: Entry,
+	layer: FacsimileLayer,
 	handleClick: (id: string) => void
 ) {
 	const [controller, setController] = React.useState<any>(null)
@@ -26,7 +27,7 @@ function useOpenSeadragonController(
 					showZoomControl: false,
 				})
 
-				const collectionNavigatorController = new CollectionNavigatorController(viewer, facsimiles, handleClick)
+				const collectionNavigatorController = new CollectionNavigatorController(viewer, entry, layer, handleClick)
 				setController(collectionNavigatorController)
 			})
 
@@ -34,7 +35,7 @@ function useOpenSeadragonController(
 			controller?.viewer.destroy()
 			controller?.destroy()
 		}
-	}, [facsimiles])
+	}, [entry, layer])
 
 	return controller
 }
@@ -55,6 +56,8 @@ const Container = styled.div`
 `
 
 interface Props {
+	activeFacsimiles: EntryState['activeFacsimiles']
+	entry: Entry
 	entryDispatch: React.Dispatch<EntryStateAction>
 	layer: FacsimileLayer
 }
@@ -62,17 +65,19 @@ function CollectionNavigator(props: Props) {
 	const handleClick = React.useCallback(id => {
 		props.entryDispatch({
 			id,
-			triggerLayer: props.layer,
+			layerId: null,
+			triggerLayerId: props.layer.id,
 			type: "SET_FACSIMILE",
 		})	
 	}, [])
 
 	const controller = useOpenSeadragonController(
-		props.layer.facsimiles,
+		props.entry,
+		props.layer,
 		handleClick,
 	)
 
-	useActiveFacsimile(controller, props.layer.activeFacsimile)
+	useActiveFacsimile(controller, props.activeFacsimiles.values().next().value)
 
 	return (
 		<Container

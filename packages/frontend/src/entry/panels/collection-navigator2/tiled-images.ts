@@ -1,6 +1,6 @@
 import OpenSeadragon from 'openseadragon';
 
-import type { Facsimile } from '@docere/common';
+import { Facsimile, Entry, FacsimileLayer, indexOfSet } from '@docere/common';
 
 interface TiledImageOptions {
 	bounds: OpenSeadragon.Rect
@@ -32,7 +32,8 @@ export default class TiledImages {
 	// TODO activeFacsimile should/could be present at loading TiledImages
 	constructor(
 		private viewer: OpenSeadragon.Viewer,
-		private facsimiles: Facsimile[],
+		private entry: Entry,
+		private layer: FacsimileLayer
 		// private activeFacsimile: Facsimile
 	) {
 		// Add event handlers
@@ -105,7 +106,8 @@ export default class TiledImages {
 		// start = index of the current tiled image / first active facsimile
 		this.startIndex = this.activeFacsimile == null ?
 			0 :
-			this.facsimiles.findIndex(f => f.id === this.activeFacsimile.id)
+			indexOfSet(this.layer.facsimiles, this.activeFacsimile.id)
+			// this.facsimiles.findIndex(f => f.id === this.activeFacsimile.id)
 
 		// current = alternates between the left and right index
 		this.currentIndex = this.startIndex
@@ -171,18 +173,18 @@ export default class TiledImages {
 	// The options are build prior to loading thumbs, because the order of the
 	// thumbs needs to be known in advance.
 	private setOptions() {
-		this.tileOptions = this.facsimiles.map((facsimile, index) =>
-			({
+		this.tileOptions = []
+		let index = 0
+		for (const facsimileId of this.layer.facsimiles) {
+			const facsimile = this.entry.textData.facsimiles.get(facsimileId)
+			this.tileOptions.push({
 				bounds: null,
 				index,
 				tileSource: facsimile.versions[0].path,
 				userData: facsimile
 			})
-		)
-			// curr.forEach((f: string) => {
-			// })
-			// return prev
-		// }, [] as TiledImageOptions[])
+			index++
+		}
 	}
 
 	// If an animation is finished (pan, zoom, etc) check if thumbs have to be loaded.

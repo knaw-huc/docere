@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { DEFAULT_SPACING, PANEL_HEADER_HEIGHT, Colors } from '@docere/common'
+import { DEFAULT_SPACING, PANEL_HEADER_HEIGHT, Colors, StatefulLayer } from '@docere/common'
 import type { EntryStateAction, Layer } from '@docere/common'
 
 const Header = styled.header`
@@ -55,7 +55,7 @@ const Close = styled.div`
 interface Props {
 	children: React.ReactNode
 	entryDispatch: React.Dispatch<EntryStateAction>,
-	layer: Layer
+	layer: StatefulLayer
 }
 export default function PanelHeader(props: Props) {
 	const togglePanel = React.useCallback(() => {
@@ -93,7 +93,7 @@ export default function PanelHeader(props: Props) {
 						L341.589,355.917L247.027,450.496z"/>
 				</Svg>
 			}
-			<Close onClick={togglePanel}>✖</Close>
+			<Close onClick={togglePanel}>✕</Close>
 		</Header>
 	)
 }

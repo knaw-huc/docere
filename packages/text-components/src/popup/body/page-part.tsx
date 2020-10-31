@@ -19,7 +19,7 @@ function PageLink(props: PageLinkProps) {
 		ev.stopPropagation()
 
 		const urlObject: UrlObject = { pageId: props.entity.configId }
-		if (props.entity.id != null) urlObject.query = { entityId: [props.entity.id] }
+		if (props.entity.id != null) urlObject.query = { entityId: new Set(props.entity.id) }
 
 		// TODO Use dispatch? props.docereComponentProps.entryDispatch
 		navigate(urlObject)

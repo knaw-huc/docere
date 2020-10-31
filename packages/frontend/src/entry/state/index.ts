@@ -1,20 +1,20 @@
 import * as React from 'react'
-import { ProjectContext, isTextLayer, AsideTab, getTextPanelWidth, LayerType, DEFAULT_SPACING, defaultEntrySettings, useUrlObject, useEntry, useNavigate, createLookup, Layer } from '@docere/common'
+import { ProjectContext, isTextLayer, AsideTab, getTextPanelWidth, LayerType, DEFAULT_SPACING, defaultEntrySettings, useUrlObject, useEntry, useNavigate } from '@docere/common'
 
 import type { EntryState, EntryStateAction } from '@docere/common'
 
 const initialEntryState: EntryState = {
-	activeEntities: null,
+	activeEntities: new Map(),
+	activeFacsimiles: new Map(),
+	layers: new Map(),
 	asideTab: null,
 	entrySettings: defaultEntrySettings,
 	projectConfig: null,
 	entry: null,
-	layers: [],
-	lookup: {
-		facsimiles: {},
-		entities: {},
-	}
 }
+
+// @ts-ignore
+window.DEBUG =true
 
 function entryStateReducer(entryState: EntryState, action: EntryStateAction): EntryState {
 	if ((window as any).DEBUG) console.log('[EntryState]', action)
@@ -48,50 +48,55 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 			if (entryState.activeEntities.has(action.id)) {
 				entryState.activeEntities.delete(action.id)
 			} else {
-				entryState.activeEntities.set(action.id, entryState.lookup.entities[action.id])
+				entryState.activeEntities.set(action.id, {
+					...entryState.entry.textData.entities.get(action.id),
+					layerId: action.layerId,
+					triggerLayerId: action.triggerLayerId,
+				})
 			}
-			
-			const activeEntities = new Map(entryState.activeEntities)
 
 			return {
 				...entryState,
-				activeEntities,
-		 		layers: updatePanels(entryState.layers, { activeEntities, entrySettings: entryState.entrySettings })
+				activeEntities: new Map(entryState.activeEntities)
 			}
 		}
 
 		case 'SET_FACSIMILE': {
 			return {
 				...entryState,
-				layers: activateFacsimile(entryState.layers, action.id, action.triggerLayer)
+				activeFacsimiles: new Map().set(action.id, {
+					...entryState.entry.textData.facsimiles.get(action.id),
+					layerId: action.layerId,
+					triggerLayerId: action.triggerLayerId,
+
+				})
 			}
 		}
 
 		case 'TOGGLE_LAYER': {
-			const nextLayers = entryState.layers.map(l => {
-				if (l.id === action.id) {
-					l.active = !l.active
-					if (!l.active) l.pinned = false
-				}
-				return l
+			const layer = entryState.layers.get(action.id)
+			const nextLayers = entryState.layers.set(action.id, {
+				...layer,
+				active: !layer.active,
+				pinned: !layer.active ? false : layer.pinned,
 			})
 
 			return {
 				...entryState,
-				layers: updatePanels(nextLayers, entryState)
+				layers: updateLayers(nextLayers, entryState.entrySettings, entryState.activeEntities)
 			}
 		}
 
 		case 'PIN_PANEL': {
-			const nextLayers = entryState.layers.map(l => {
-				if (l.id === action.id) l.pinned = !l.pinned
-				else l.pinned = false
-				return l
+			const layer = entryState.layers.get(action.id)
+			const nextLayers = entryState.layers.set(action.id, {
+				...layer,
+				pinned: !layer.pinned
 			})
 
 			return {
 				...entryState,
-				layers: updatePanels(nextLayers, entryState)
+				layers: updateLayers(nextLayers, entryState.entrySettings, entryState.activeEntities)
 			}
 		}
 
@@ -104,11 +109,10 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 			return {
 				...entryState,
 				entrySettings,
-				layers: updatePanels(
-					entryState.layers, {
-						activeEntities: entryState.activeEntities,
-						entrySettings
-					}
+				layers: updateLayers(
+					entryState.layers,
+					entrySettings,
+					entryState.activeEntities
 				)
 			}
 		}
@@ -130,75 +134,58 @@ export default function useEntryState() {
 	React.useEffect(() => {
 		if (x[0].entry == null) return
 
-		const activeFacsimileIds = x[0].layers
-			.filter(l => l.activeFacsimile != null)
-			.map(l => l.activeFacsimile.id)
-			.filter((value, index, array) => array.indexOf(value) === index)
-
 		navigate({
 			entryId,
 			query: {
 				...query,
-				facsimileId: activeFacsimileIds
+				facsimileId: new Set(x[0].activeFacsimiles.keys()),
+				entityId: new Set(x[0].activeEntities.keys()),
 			}
 		})	
-	}, [x[0].entry, x[0].layers, query])
-
-	// React.useEffect(() => {
-	// 	// If entry is not defined, there cannot be an active note,
-	// 	// activeNote can be null to deselect the note
-	// 	if (x[0].entry == null) return
-
-	// 	console.log('trigger nav 2')
-	// 	navigate({
-	// 		entryId,
-	// 		query: {
-	// 			...query,
-	// 			entityId: Array.from(x[0].activeEntities?.keys())
-	// 		}
-	// 	})	
-	// }, [x[0].entry, x[0].activeEntities, query])
+	}, [x[0].activeFacsimiles, x[0].activeEntities, query])
 
 	React.useEffect(() => {
 		if (entry == null || entry === x[0].entry) return
 
 		// Copy current state of active and pinned layers to keep interface consistent between entry changes
-		let nextLayers = entry.layers.map(layer => {
-			const stateLayer = x[0].layers.find(l => l.id === layer.id)
+		const nextLayers = new Map()
+		entry.layers.forEach(layer => {
+			// const stateLayer = x[0].layers.find(l => l.id === layer.id)
+			const prevLayer = x[0].layers.get(layer.id)
 
-			// Return layer as is if it did not exist on previous entry
-			if (!stateLayer) return layer
+			// Copy state if prev layer existed
+			if (prevLayer) {
+				layer.active = prevLayer.active 
+				layer.pinned = prevLayer.pinned
+			}
 
-			// Copy state
-			layer.active = stateLayer.active 
-			layer.pinned = stateLayer.pinned
-
-			return layer
+			nextLayers.set(layer.id, layer)
 		})
 		
-		const lookup = createLookup(entry.layers)
-
 		const activeEntities = new Map()
 		query.entityId?.forEach(id =>
-			activeEntities.set(id, lookup.entities[id])
+			activeEntities.set(id, entry.textData.entities.get(id))
 		)
 
+		const activeFacsimiles = new Map()
 		query.facsimileId?.forEach(id => {
-			nextLayers = activateFacsimile(nextLayers, id)
+			activeFacsimiles.set(id, entry.textData.facsimiles.get(id))
 		})
 
-		nextLayers.forEach(l => {
-			if (!l.facsimiles.length) return
-			if (l.activeFacsimile == null) l.activeFacsimile = l.facsimiles[0]
-		})
+		// If the layer doesn't have an active facsimile, add the first
+		// nextLayers.forEach(l => {
+		// 	if (l.facsimiles.size && l.activeFacsimileId == null) {
+		// 		l.activeFacsimileId = l.facsimiles.values().next().value
+		// 	}
+		// })
 
 		// TODO activeFacsimile is a state of layer, not the entry
 		// x[1] = dispatch
 		x[1]({
 			activeEntities,
+			activeFacsimiles,
 			entry,
-			layers: updatePanels(nextLayers, x[0]),
-			lookup,
+			layers: updateLayers(nextLayers, x[0].entrySettings, activeEntities),
 			type: 'ENTRY_CHANGED',
 		})
 	}, [entry, query])
@@ -215,22 +202,24 @@ export default function useEntryState() {
 	return x
 }
 
-function updatePanels(
-	layers: EntryState['layers'],
-	{
-		activeEntities,
-		entrySettings
-	}: Pick<EntryState, 'activeEntities' | 'entrySettings'>
+function updateLayers(
+	nextLayers: EntryState['layers'],
+	nextSettings: EntryState['entrySettings'],
+	nextEntities: EntryState['activeEntities']
 ) {
-	const tpw = getTextPanelWidth(entrySettings, activeEntities)
-	const activeLayers = layers.filter(l => l.active)
-	const hasFacsimile = activeLayers.some(l => l.type === LayerType.Facsimile && !l.pinnable)
+	const allLayers = Array.from(nextLayers.values())
+	const activeLayers = allLayers.filter(l => l.active)
+	const hasFacsimile = activeLayers.some(l => l.active && l.type === LayerType.Facsimile && !l.pinnable)
 
-	return layers
-		.map(layer => {
+	let hasChange = false
+
+	nextLayers
+		.forEach(layer => {
 			if (!layer.active) return layer
 
-			const width = isTextLayer(layer) ? tpw : DEFAULT_SPACING * 10
+			const width = isTextLayer(layer) ?
+				getTextPanelWidth(nextSettings, nextEntities) :
+				DEFAULT_SPACING * 10
 
 			const columnWidth = isTextLayer(layer) ?
 				(hasFacsimile || layer.pinned) ? `${width}px` : `minmax(${width}px, 1fr)` :
@@ -240,35 +229,15 @@ function updatePanels(
 
 			// If column width or pinnable change, create a new layer object
 			if (layer.columnWidth !== columnWidth || layer.pinnable !== pinnable) {
-				return {
+				hasChange = true
+				nextLayers.set(layer.id, {
 					...layer,
 					columnWidth,
 					pinnable,
-					width
-				}
+					width,
+				})
 			}
-
-			return layer
 		})
-}
 
-function activateFacsimile(
-	layers: EntryState['layers'],
-	activeFacsimileId: string,
-	triggerLayer?: Layer
-): Layer[] {
-	return layers.map(l => {
-		const activeFacsimile = l.facsimiles.find(f => f.id === activeFacsimileId)
-		if (activeFacsimile != null) {
-			return {
-				...l,
-				activeFacsimile: {
-					...activeFacsimile,
-					triggerLayer: triggerLayer
-				},
-			}
-		}
-
-		return l
-	})
+	return hasChange ? new Map(nextLayers) : nextLayers
 }

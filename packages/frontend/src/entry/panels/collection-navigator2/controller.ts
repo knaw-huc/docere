@@ -1,4 +1,4 @@
-import { Facsimile } from '@docere/common'
+import { Facsimile, FacsimileLayer, Entry } from '@docere/common'
 import OpenSeadragon from 'openseadragon';
 import TiledImages from './tiled-images'
 
@@ -11,13 +11,14 @@ export default class CollectionNavigatorController {
 
 	constructor(
 		private viewer: OpenSeadragon.Viewer,
-		facsimiles: Facsimile[],
+		entry: Entry,
+		layer: FacsimileLayer,
 		private handleClick: (id: string) => void
 	) {
 		this.viewer.addHandler('canvas-click', this.canvasClickHandler)
 		this.viewer.addHandler('full-screen', this.fullScreenHandler)
 
-	 	this.tiledImages = new TiledImages(this.viewer, facsimiles)
+	 	this.tiledImages = new TiledImages(this.viewer, entry, layer)
 	}
 
 	destroy() {

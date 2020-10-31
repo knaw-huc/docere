@@ -61,8 +61,8 @@ function extractLayers(entry: ConfigEntry, parent: ConfigEntry, config: DocereCo
 
 			const textLayer: SerializedLayer = {
 				active: layer.active != null ? layer.active : true,
-				entities: parent.entities?.filter(filterEntities(entry)),
-				facsimiles: parent.facsimiles?.filter(filterFacsimiles(entry)),
+				entities: parent.entities?.filter(filterEntities(entry)).map(e => e.id),
+				facsimiles: parent.facsimiles?.filter(filterFacsimiles(entry)).map(e => e.id),
 				id: layer.id,
 				pinned: layer.pinned != null ? layer.pinned : false,
 				type: layer.type != null ? layer.type : LayerType.Text,
@@ -170,6 +170,10 @@ export function serializeEntry(entry: ConfigEntry, config: DocereConfig): Serial
 			serializeEntry(part[1], config))
 		),
 		plainText: config.plainText(entry, config),
+		textData: {
+			entities: entry.entities.map(e => ([e.id, e])),
+			facsimiles: entry.facsimiles.map(f => ([f.id, f]))
+		}
 	}
 }
 

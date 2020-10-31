@@ -60,8 +60,8 @@ export function Popup(props: Props) {
 
 	return (
 		<Wrapper
-			activeEntities={props.docereComponentProps.activeEntities}
 			entity={props.entity}
+			layer={props.docereComponentProps.layer}
 			settings={props.docereComponentProps.entrySettings}
 		>
 			{

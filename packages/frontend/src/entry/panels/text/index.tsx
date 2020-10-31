@@ -1,14 +1,14 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import debounce from 'lodash.debounce'
-import { isTextLayer, ProjectContext, useComponents, DEFAULT_SPACING, TEXT_PANEL_TEXT_WIDTH, DocereComponentContainer, getTextPanelLeftSpacing, PANEL_HEADER_HEIGHT } from '@docere/common'
+import { isTextLayer, ProjectContext, useComponents, DEFAULT_SPACING, TEXT_PANEL_TEXT_WIDTH, DocereComponentContainer, getTextPanelLeftSpacing, PANEL_HEADER_HEIGHT, StatefulTextLayer } from '@docere/common'
 import { SearchContext } from '@docere/search'
 import DocereTextView from '@docere/text'
 
 import PanelHeader from '../header'
 import Minimap from './minimap'
 
-import type { DocereComponentProps, DocereConfig, TextLayer } from '@docere/common'
+import type { DocereComponentProps, DocereConfig } from '@docere/common'
 import type { PanelsProps } from '..'
 
 const Wrapper = styled.div`
@@ -49,9 +49,9 @@ export const Text = styled.div`
 	position: relative;
 `
 
-type TextPanelBaseProps = Pick<PanelsProps, 'activeEntities' | 'appDispatch' | 'entryDispatch' | 'entry' | 'entrySettings'>
+type TextPanelBaseProps = Pick<PanelsProps, 'activeEntities' | 'activeFacsimiles' | 'appDispatch' | 'entryDispatch' | 'entry' | 'entrySettings'>
 interface TextPanelProps extends TextPanelBaseProps {
-	layer: TextLayer
+	layer: StatefulTextLayer
 }
 
 function TextPanel(props: TextPanelProps) {
@@ -91,6 +91,7 @@ function TextPanel(props: TextPanelProps) {
 
 	const customProps: DocereComponentProps = {
 		activeEntities: props.activeEntities,
+		activeFacsimiles: props.activeFacsimiles,
 		appDispatch: props.appDispatch,
 		components,
 		config,

@@ -1,9 +1,9 @@
 import { DEFAULT_SPACING, TEXT_PANEL_ASIDE_WIDTH, TEXT_PANEL_MINIMAP_WIDTH, TEXT_PANEL_TEXT_WIDTH } from './constants'
 import { LayerType } from './enum'
 
-import type { DocereConfig, LayerConfig, PageConfig, TextLayerConfig, FacsimileLayerConfig, TextLayer, Layer, FacsimileLayer, SerializedLayer, SerializedTextLayer, SerializedFacsimileLayer, ActiveEntities } from './types'
+import type { LayerConfig, PageConfig, TextLayerConfig, FacsimileLayerConfig, TextLayer, Layer, FacsimileLayer, SerializedLayer, SerializedTextLayer, SerializedFacsimileLayer, ID, EntryState } from './types'
 
-export function getTextPanelLeftSpacing(settings: DocereConfig['entrySettings']) {
+export function getTextPanelLeftSpacing(settings: EntryState['entrySettings']) {
 	let width = DEFAULT_SPACING
 
 	if (settings['panels.text.showLineBeginnings']) width += 2 * DEFAULT_SPACING
@@ -14,7 +14,7 @@ export function getTextPanelLeftSpacing(settings: DocereConfig['entrySettings'])
 	return width
 }
 
-export function getTextPanelRightSpacing(settings: DocereConfig['entrySettings'], activeEntities: ActiveEntities) {
+export function getTextPanelRightSpacing(settings: EntryState['entrySettings'], activeEntities: EntryState['activeEntities']) {
 	let width = DEFAULT_SPACING
 
 	const asideActive = (
@@ -31,7 +31,7 @@ export function getTextPanelRightSpacing(settings: DocereConfig['entrySettings']
 	return width
 }
 
-export function getTextPanelWidth(settings: DocereConfig['entrySettings'], activeEntities: ActiveEntities) {
+export function getTextPanelWidth(settings: EntryState['entrySettings'], activeEntities: EntryState['activeEntities']) {
 	const left = getTextPanelLeftSpacing(settings)
 	const right = getTextPanelRightSpacing(settings, activeEntities)
 
@@ -175,4 +175,18 @@ export function compareProps(prevProps: any, nextProps: any) {
 	)
 	console.log('=-=-=-=-=-=-=-=')
 	return false
+}
+
+// Get the index of an item inside a Set<ID | number>, just like Array.indexOf
+export function indexOfSet(set: Set<ID | number>, item: string | number) {
+	const values = set.values()
+
+	let count = 0
+	let next = values.next()
+	while(next.value !== item && !next.done) {
+		next = values.next()
+		count++
+	}
+
+	return next.done ? null : count
 }
