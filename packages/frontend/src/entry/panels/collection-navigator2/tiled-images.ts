@@ -1,6 +1,6 @@
 import OpenSeadragon from 'openseadragon';
 
-import { Facsimile, Entry, FacsimileLayer, indexOfSet } from '@docere/common';
+import { Facsimile, Entry, FacsimileLayer, indexOfIterator } from '@docere/common';
 
 interface TiledImageOptions {
 	bounds: OpenSeadragon.Rect
@@ -106,7 +106,7 @@ export default class TiledImages {
 		// start = index of the current tiled image / first active facsimile
 		this.startIndex = this.activeFacsimile == null ?
 			0 :
-			indexOfSet(this.layer.facsimiles, this.activeFacsimile.id)
+			indexOfIterator(this.layer.facsimiles, this.activeFacsimile.id)
 			// this.facsimiles.findIndex(f => f.id === this.activeFacsimile.id)
 
 		// current = alternates between the left and right index

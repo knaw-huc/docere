@@ -1,7 +1,7 @@
 import React from 'react'
 import DocereTextView from '@docere/text'
 import styled from 'styled-components'
-import { TEXT_PANEL_TEXT_WIDTH, DEFAULT_SPACING, getTextPanelLeftSpacing, Entity } from '@docere/common'
+import { TEXT_PANEL_TEXT_WIDTH, DEFAULT_SPACING, getTextPanelLeftSpacing, Entity, indexOfIterator } from '@docere/common'
 
 import Tooltip, { TooltipBody } from './tooltip'
 
@@ -63,6 +63,7 @@ export function Popup(props: Props) {
 			entity={props.entity}
 			layer={props.docereComponentProps.layer}
 			settings={props.docereComponentProps.entrySettings}
+			zIndexOffset={indexOfIterator(props.docereComponentProps.activeEntities, props.entity.id)}
 		>
 			{
 				props.entity.title != null &&

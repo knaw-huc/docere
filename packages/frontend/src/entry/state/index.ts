@@ -13,9 +13,6 @@ const initialEntryState: EntryState = {
 	entry: null,
 }
 
-// @ts-ignore
-window.DEBUG =true
-
 function entryStateReducer(entryState: EntryState, action: EntryStateAction): EntryState {
 	if ((window as any).DEBUG) console.log('[EntryState]', action)
 

@@ -177,14 +177,18 @@ export function compareProps(prevProps: any, nextProps: any) {
 	return false
 }
 
-// Get the index of an item inside a Set<ID | number>, just like Array.indexOf
-export function indexOfSet(set: Set<ID | number>, item: string | number) {
-	const values = set.values()
+// Get the index of an item inside a
+// Set<ID | number> or a key of a Map<ID | number, any>,
+// just like Array.indexOf
+export function indexOfIterator(collection: Map<ID | number, any>, item: string | number): number
+export function indexOfIterator(collection: Set<ID | number>, item: string | number): number
+export function indexOfIterator(collection: Set<ID | number> | Map<ID | number, any>, item: string | number): number {
+	const iterator = collection.keys()
 
 	let count = 0
-	let next = values.next()
+	let next = iterator.next()
 	while(next.value !== item && !next.done) {
-		next = values.next()
+		next = iterator.next()
 		count++
 	}
 

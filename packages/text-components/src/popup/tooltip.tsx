@@ -4,7 +4,7 @@ import { DEFAULT_POPUP_BG_COLOR, getTextPanelWidth, Entity, TextLayer, EntryStat
 
 import type { DocereConfig } from '@docere/common'
 
-interface P { offset: number }
+interface P { offset: number, zIndexOffset?: number }
 const Wrapper = styled.div`
 	margin-left: calc(50% - 160px + ${(p: P) => { return p.offset ? p.offset : 0}}px);
 	margin-top: 1rem;
@@ -14,7 +14,7 @@ const Wrapper = styled.div`
 	text-align: left;
 	width: 320px;
 	white-space: normal; ${/* Tooltip can be a child of a white-space wrapped element */''}
-	z-index: 999;
+	z-index: ${p => p.zIndexOffset != null ? 999 + p.zIndexOffset : 999};
 `
 
 export const TooltipBody = styled.div`
@@ -48,6 +48,7 @@ interface Props {
 	entity: Entity
 	layer: TextLayer
 	settings: DocereConfig['entrySettings']
+	zIndexOffset?: number
 }
 function Tooltip(props: Props) {		
 	const wrapperRef: React.RefObject<HTMLDivElement> = React.useRef()
@@ -73,6 +74,7 @@ function Tooltip(props: Props) {
 		<Wrapper
 			offset={offset}
 			ref={wrapperRef}
+			zIndexOffset={props.zIndexOffset}
 		>
 			<TooltipBody
 				entity={props.entity}

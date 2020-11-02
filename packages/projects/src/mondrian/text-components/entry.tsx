@@ -49,8 +49,7 @@ function useRkdImage(id: string) {
 
 const Wrapper = styled.div`
 	display: grid;
-	grid-template-rows: 32px auto;
-	grid-template-columns: fit-content(0) auto;
+	grid-template-columns: ${DEFAULT_SPACING * 3}px auto;
 	grid-column-gap: 1rem;
 	grid-row-gap: .5rem;
 	padding: 1rem;
