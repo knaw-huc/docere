@@ -23,6 +23,10 @@ export function useEntry(id: string) {
 					entryCache.set(entry.id, entry)
 					entry.textData.entities = new Map(entry.textData.entities)
 					entry.textData.facsimiles = new Map(entry.textData.facsimiles)
+					entry.layers.forEach(l => {
+						l.entities = new Set(l.entities)
+						l.facsimiles = new Set(l.facsimiles)
+					})
 					setEntry(entry)
 				})
 		}
