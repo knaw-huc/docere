@@ -6,13 +6,13 @@ import fetch from 'node-fetch'
 import { SerializedEntry, XmlDirectoryStructure } from '../../../common/src'
 
 import { isError, getDocumentIdFromRemoteXmlFilePath } from '../utils'
-import { xmlToStandoff } from '../api/standoff'
 import Puppenv from '../puppenv'
 
-import { getPool, tryQuery } from './index'
+import { getPool, transactionQuery } from './index'
 import { indexDocument } from '../es'
+import { DocereConfig, ID } from '@docere/common'
 
-interface AddRemoteFilesOptions {
+type AddRemoteFilesOptions = {
 	force?: boolean
 	maxPerDir?: number
 	maxPerDirOffset?: number
@@ -31,7 +31,13 @@ async function xmlExists(fileName: string, content: string, client: PoolClient) 
 	return existsResult.rows[0].exists
 }
 
-export async function addRemoteFiles(remotePath: string, projectId: string, puppenv: Puppenv, options?: AddRemoteFilesOptions) {
+export async function addRemoteFiles(
+	remotePath: string,
+	projectId: string,
+	puppenv: Puppenv,
+	projectConfig: DocereConfig,
+	options?: AddRemoteFilesOptions
+) {
 	options = { ...defaultAddRemoteFilesOptions, ...options }
 	if (remotePath.charAt(0) === '/') remotePath = remotePath.slice(1)
 
@@ -52,7 +58,7 @@ export async function addRemoteFiles(remotePath: string, projectId: string, pupp
 		files = files.slice(maxPerDirOffset, maxPerDirOffset + options.maxPerDir)
 	}
 	for (const filePath of files) {
-		const entryId = getDocumentIdFromRemoteXmlFilePath(filePath, projectId)
+		const entryId = getDocumentIdFromRemoteXmlFilePath(filePath, remotePath, projectConfig.documents.stripRemoteDirectoryFromDocumentId)
 		const result = await fetch(`${process.env.DOCERE_XML_URL}${filePath}`)
 		const content = await result.text()	
 		await addXmlToDb(content, projectId, entryId, puppenv, options.force)
@@ -60,22 +66,22 @@ export async function addRemoteFiles(remotePath: string, projectId: string, pupp
 
 	// Recursively add sub dirs
 	for (const dirPath of dirStructure.directories) {
-		await addRemoteFiles(dirPath, projectId, puppenv, options)
+		await addRemoteFiles(dirPath, projectId, puppenv, projectConfig, options)
 	}
 }
 
-export async function addXmlToDb(content: string, projectId: string, fileName: string, puppenv: Puppenv, force = false) {
+export async function addXmlToDb(content: string, projectId: string, documentId: string, puppenv: Puppenv, force = false) {
 	const pool = await getPool(projectId)
 	const client = await pool.connect()
 	
-	const isUpdate = await xmlExists(fileName, content, client)
+	const isUpdate = await xmlExists(documentId, content, client)
 	if (isUpdate && !force) {
-		console.log(`[${projectId}] document '${fileName}' exists`)
+		console.log(`[${projectId}] document '${documentId}' exists`)
 		client.release()
 		return
 	}
 
-	const prepareAndExtractOutput = await puppenv.prepareAndExtract(content, projectId, fileName)
+	const prepareAndExtractOutput = await puppenv.prepareAndExtract(content, projectId, documentId)
 	if (isError(prepareAndExtractOutput)) {
 		// TODO log error
 		client.release()
@@ -85,40 +91,37 @@ export async function addXmlToDb(content: string, projectId: string, fileName: s
 	const [serializedEntry, extractedXml] = prepareAndExtractOutput
 
 	const esClient = new es.Client({ node: 'http://es01:9200' })
-	const standoff = await xmlToStandoff(content)
 
-	await tryQuery(client, 'BEGIN')
+	await transactionQuery(client, 'BEGIN')
 
-	const { rows } = await tryQuery(
+	const { rows } = await transactionQuery(
 		client,
 		`INSERT INTO xml
-			(name, hash, content, standoff_text, standoff_annotations, updated)
+			(name, hash, content, updated)
 		VALUES
-			($1, md5($2), $2, $3, $4, NOW())
+			($1, md5($2), $2, NOW())
 		ON CONFLICT (name) DO UPDATE
 		SET
 			hash=md5($2),
 			content=$2,
-			standoff_text=$3,
-			standoff_annotations=$4,
 			updated=NOW()
 		RETURNING id;`,
-		[fileName, extractedXml.original, standoff.text, JSON.stringify(standoff.annotations)]
+		[documentId, extractedXml.original]
 	)
 	const xml_id = rows[0].id
 
-	await addDocumentToDb({ client, fileName, xml_id, order_number: null, entry: serializedEntry, content: extractedXml.prepared })
+	await addDocumentToDb({ client, documentId, xml_id, order_number: null, entry: serializedEntry, content: extractedXml.prepared })
 	await indexDocument(projectId, serializedEntry, esClient)
 
 	let i = 0
 	for (const part of serializedEntry.parts) {
-		await addDocumentToDb({ client, fileName: part.id, xml_id, order_number: i++, entry: part, content: part.content })
+		await addDocumentToDb({ client, documentId: part.id, xml_id, order_number: i++, entry: part, content: part.content })
 		await indexDocument(projectId, part, esClient)
 	}
 
-	await tryQuery(client, 'COMMIT')
+	await transactionQuery(client, 'COMMIT')
 
-	console.log(`[${projectId}] ${isUpdate ? 'Updated' : 'Added'}: '${fileName}'`)
+	console.log(`[${projectId}] ${isUpdate ? 'Updated' : 'Added'}: '${documentId}'`)
 
 	client.release()
 }
@@ -127,13 +130,13 @@ async function addDocumentToDb(props: {
 	client: PoolClient,
 	content: string
 	entry: SerializedEntry,
-	fileName: string,
+	documentId: ID,
 	order_number: number,
-	xml_id: string,
+	xml_id: ID,
 }) {
 	const { plainText, parts, content, ...dbEntry } = props.entry
 
-	await tryQuery(
+	await transactionQuery(
 		props.client,
 		`INSERT INTO document
 			(name, xml_id, order_number, content, json, updated)
@@ -147,6 +150,6 @@ async function addDocumentToDb(props: {
 			json=$5,
 			updated=NOW()
 		RETURNING id;`,
-		[props.fileName, props.xml_id, props.order_number, props.content, JSON.stringify(dbEntry)]
+		[props.documentId, props.xml_id, props.order_number, props.content, JSON.stringify(dbEntry)]
 	)
 }

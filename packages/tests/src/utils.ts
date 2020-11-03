@@ -1,8 +1,8 @@
 import fetch from 'node-fetch'
 import { prepareAndExtract } from '../../api/src/puppenv/prepare-and-extract'
 import { isError } from '../../api/src/utils'
-import { SerializedEntry } from '../../common/src'
 import { Mapping } from '../../api/src/types'
+import { SerializedEntry } from '@docere/common'
 
 export async function fetchEntry(projectId: string, documentId: string): Promise<SerializedEntry> {
 	const fetchResult = await fetch(`http://localhost/api/projects/${projectId}/xml/${encodeURIComponent(documentId)}`)

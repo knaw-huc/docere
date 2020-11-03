@@ -5,6 +5,7 @@ import { DocereConfig } from '../config-data/config'
 
 export * from './state'
 export * from './use-entry'
+export * from './layer/serialize'
 
 export type ListMetadata = ListFacetConfig & { value: string | string[] }
 export type HierarchyMetadata = HierarchyFacetConfig & { value: string[] }

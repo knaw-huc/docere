@@ -1,11 +1,10 @@
-import { SerializedEntry, isFacsimileLayer, isTextLayer } from '../../../common/src'
+import { SerializedEntry } from '../../../common/src'
 import { fetchEntry } from '../utils'
-import { EntityType } from '@docere/common'
+import { isSerializedTextLayer, isSerializedFacsimileLayer } from '@docere/common'
 
 const projectId = 'mondrian'
-const briefId = 'brieven/18931007_PM_ALLE_5004'
-const geschriftId = 'geschriften/1917_NieuweBeeldingInSchilderkunst_STIJL'
-// const documentId = 'brieven/18920227_HMKR_0001'
+const briefId = '18931007_PM_ALLE_5004'
+const geschriftId = '1917_NieuweBeeldingInSchilderkunst_STIJL'
 
 export function mondrianTests() {
 	let brief: SerializedEntry
@@ -22,19 +21,19 @@ export function mondrianTests() {
 	})
 
 	it('Should have a facsimile layer', () => {
-		expect(brief.layers.filter(isFacsimileLayer)).toHaveLength(1)
-		expect(geschrift.layers.filter(isFacsimileLayer)).toHaveLength(1)
+		expect(brief.layers.filter(isSerializedFacsimileLayer)).toHaveLength(1)
+		expect(geschrift.layers.filter(isSerializedFacsimileLayer)).toHaveLength(1)
 	})
 
 	it("Should have a filled 'original' text layers and undefined 'translation' layer", () => {
-		const blayers = brief.layers.filter(isTextLayer)
+		const blayers = brief.layers.filter(isSerializedTextLayer)
 		expect(blayers).toHaveLength(2)
 		expect(blayers[0].id).toBe('original')
 		expect(blayers[0].content).toHaveLength(1994)
 		expect(blayers[1].id).toBe('translation')
 		expect(blayers[1].content).toBeNull()
 
-		const glayers = geschrift.layers.filter(isTextLayer)
+		const glayers = geschrift.layers.filter(isSerializedTextLayer)
 		expect(glayers).toHaveLength(2)
 		expect(glayers[0].id).toBe('original')
 		expect(glayers[0].content).toHaveLength(233402)
@@ -48,7 +47,7 @@ export function mondrianTests() {
 		})
 
 		it('Should be a letter from August Allebe', () => {
-			expect(brief.content.slice(458, 537)).toBe('Brief van August Allebé aan Piet Mondriaan. Amsterdam, zaterdag 7 oktober 1893.')
+			expect(brief.content.slice(458, 560)).toBe('Brief van <rs type="person">August Allebé</rs> aan Piet Mondriaan. Amsterdam, zaterdag 7 oktober 1893.')
 		})
 
 		it('Should not have facsimiles', () => {
@@ -57,11 +56,9 @@ export function mondrianTests() {
 		})
 
 		it('Should have 2 notes', () => {
-			expect(brief.layers.find(isTextLayer).entities.filter(e => e.type === EntityType.Note)).toHaveLength(2)
-		})
-
-		it('Should have notes with IDs', () => {
-			expect(brief.layers.find(isTextLayer).entities.filter(e => e.id == null)).toHaveLength(0)
+			const textLayer = brief.layers.find(isSerializedTextLayer)
+			const entities = new Map(textLayer.entities)
+			expect(entities.get('note')).toHaveLength(2)
 		})
 	})
 

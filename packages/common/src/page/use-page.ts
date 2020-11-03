@@ -1,16 +1,19 @@
 import React from 'react'
-import { fetchPageXml, fetchPageConfig } from '../utils'
+import { fetchPageXml } from '../utils'
 
-import type { DocereConfig, Page } from '../types'
 import { ProjectContext } from '../context'
+
+import type { Page } from './index'
+import type { DocereConfig } from '../types/config-data/config'
+import type { ID } from '../types/config-data/layer'
 
 const pageCache = new Map<string, Page>()
 
-async function getPage(id: string, config: DocereConfig): Promise<Page> {
+async function getPage(id: ID, config: DocereConfig): Promise<Page> {
 	if (pageCache.has(id)) return pageCache.get(id)
 
 	const doc = await fetchPageXml(config.slug, id)
-	const pageConfig = await fetchPageConfig(config.slug, id)
+	const pageConfig = config.pages.find(p => p.id === id)
 
 	let parts: Map<string, Element>
 	if (pageConfig.split != null) {
@@ -26,7 +29,7 @@ async function getPage(id: string, config: DocereConfig): Promise<Page> {
 	return pageCache.get(id)
 }
 
-export function usePage(pageId: string) {
+export function usePage(pageId: ID) {
 	const projectContext = React.useContext(ProjectContext)
 	const [page, setPage] = React.useState<Page>(null)
 

@@ -116,9 +116,16 @@ export default extendConfigData({
 			type: LayerType.Text,
 		}
 	],
+	documents: {
+		remoteDirectories: [
+			'mondrian/editie-conversie/geschriften',
+			'mondrian/editie-conversie/brieven/04_Transcriptie_DEF'
+		],
+	},
 	pages: [
 		{
 			id: 'biblio',
+			remotePath: 'mondrian/editie/apparaat/biblio.xml',
 			split: {
 				extractId: (el) => el.getAttribute('xml:id'),
 				selector: 'bibl',
@@ -127,6 +134,7 @@ export default extendConfigData({
 		},
 		{
 			id: 'bio',
+			remotePath: 'mondrian/editie/apparaat/bio.xml',
 			split: {
 				extractId: (el) => el.getAttribute('xml:id'),
 				selector: 'person',

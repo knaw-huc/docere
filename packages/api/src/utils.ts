@@ -40,16 +40,21 @@ export function getEntryIdFromFilePath(xmlFilePath: string, projectId: string) {
 	return `${dir}/${base}`.replace(/^\//, '')
 }
 
-export function getDocumentIdFromRemoteXmlFilePath(filePath: string, projectId: string) {
-	const withoutExtension = path.resolve(path.dirname(filePath), path.basename(filePath, '.xml'))
+export function getDocumentIdFromRemoteXmlFilePath(filePath: string, remoteDir: string, stripRemoteDir: boolean) {
+	let documentId = path.resolve(path.dirname(filePath), path.basename(filePath, '.xml'))
 
 	// Return null if withoutExtension and filePath are equal,
 	// which means it's a dir or not an XML file
-	if (withoutExtension === filePath) return null
+	if (documentId === filePath) return null
 
-	const re = new RegExp(`^/?${projectId}/?`)
-	const withoutProjectDir = withoutExtension.replace(re, '')
-	return withoutProjectDir.length ? withoutProjectDir : null
+	if (stripRemoteDir) {
+		const re = new RegExp(`^/?${remoteDir}/?`)
+		documentId = documentId.replace(re, '')
+	}
+
+	if (documentId.charAt(0) === '/') documentId = documentId.slice(1)
+
+	return documentId.length ? documentId : null
 }
 
 export function readFileContents(filePath: string) {

@@ -1,6 +1,6 @@
 import { EntityType } from '../../enum'
 import type { FacetConfig } from '../search/facets'
-import { PageConfig } from '../page'
+import { PageConfig } from '../../page'
 import { Facsimile, ExtractedEntity } from './functions'
 import { TextLayerConfig, FacsimileLayerConfig, ID } from './layer'
 import { ConfigEntry } from '../entry'
@@ -8,15 +8,40 @@ import { ConfigEntry } from '../entry'
 // TODO rename to ProjectConfig
 // TODO rename slug to id
 // TODO move entities, layers, notes, split, metadata, etc under 'entry' and create EntryConfig interface
+/**
+ * Project configuration
+ * 
+ * @interface
+ */
 export interface DocereConfig {
 	collection?: { metadataId: string, sortBy: string } /* true if whole project is one collection, MetadataConfig.id if project consists of multiple collections */
 	data?: Record<string, any>
+
+	/** Options for the project documents */
+	documents?: {
+		/** 
+		 * Paths to project document dirs on the remote server
+		 * 
+		 * @default [<project ID>]
+		 */
+		remoteDirectories?: string[]
+
+		/**
+		 * By default the root directory to a document (not the sub directories!)
+		 * is removed from the ID. To disable this default behavior set this
+		 * option to false.
+		 * 
+		 * @default true
+		 * @example if remote directory is a/b and the file is in a/b/c/d/e.xml, the ID will be c/d/e.xml
+		 */
+		stripRemoteDirectoryFromDocumentId?: boolean
+	}
+
 	entities?: EntityConfig[]
 	entrySettings?: EntrySettings
 	facsimiles?: FacsimileConfig
 	layers?: (TextLayerConfig | FacsimileLayerConfig)[]
 	metadata?: MetadataConfig[]
-	// notes?: NoteConfig[]
 	pages?: PageConfig[]
 	plainText?: (entry: ConfigEntry, config: DocereConfig) => string
 	prepare?: (entry: ConfigEntry, config: DocereConfig) => Element

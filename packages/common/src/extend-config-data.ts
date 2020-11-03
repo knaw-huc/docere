@@ -2,8 +2,8 @@ import { Colors, EsDataType, EntityType } from './enum'
 
 import type { FacetConfigBase } from './types/search/facets'
 import type { DocereConfig, MetadataConfig, EntityConfig } from './types/config-data/config'
-import type { PageConfig } from './types/page'
 import { isTextLayerConfig } from './utils'
+import { PageConfig } from './page'
 
 export const defaultEntrySettings: DocereConfig['entrySettings'] = {
 	'panels.showHeaders': true,
@@ -63,8 +63,15 @@ export function setTitle<T extends FacetConfigBase>(entityConfig: T): T & { titl
 	}
 }
 
+function extendPage(page: PageConfig) {
+	if (Array.isArray(page.children)) {
+		page.children = page.children.map(p => setTitle(setPath(p)))
+	}
+	return setTitle(setPath(page))
+}
+
 function setPath(page: PageConfig) {
-	if (page.path == null) page.path = `${page.id}.xml`
+	if (page.remotePath == null) page.remotePath = `${page.id}.xml`
 	return page
 }
 
@@ -77,6 +84,12 @@ function extendEntities<T extends EntityConfig>(td: T) {
 export function extendConfigData(configDataRaw: DocereConfig): DocereConfig {
 	const config = { ...defaultConfig, ...configDataRaw }
 	if (config.title == null) config.title = config.slug.charAt(0).toUpperCase() + config.slug.slice(1)
+
+	config.documents = {
+		remoteDirectories: [config.slug],
+		stripRemoteDirectoryFromDocumentId: true,
+		...(config.documents || {})
+	}
 
 	config.entrySettings = { ...defaultEntrySettings, ...config.entrySettings }
 	config.layers = config.layers.map(layer => {
@@ -93,12 +106,7 @@ export function extendConfigData(configDataRaw: DocereConfig): DocereConfig {
 
 	config.entities = config.entities.map(extendEntities)
 
-	config.pages = config.pages.map(page => {
-		if (Array.isArray(page.children)) {
-			page.children = page.children.map(p => setTitle(setPath(p)))
-		}
-		return setTitle(setPath(page))
-	})
+	config.pages = config.pages.map(extendPage)
 
 	if (config.parts != null) {
 		config.parts = {

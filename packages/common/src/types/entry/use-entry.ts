@@ -3,6 +3,8 @@ import React from 'react'
 import { Entry } from './index'
 import { fetchJson } from '../../utils'
 import { useUrlObject } from '../../url/query'
+import { SerializedEntry } from '..'
+import { deserializeEntry } from './deserialize'
 
 const entryCache = new Map<string, Entry>()
 
@@ -18,15 +20,10 @@ export function useEntry(id: string) {
 			setEntry(entry)
 		} else {
 			fetchJson(`/api/projects/${projectId}/documents/${encodeURIComponent(entryId)}`)
-				.then((entry: Entry) => {
-					if (entry == null) return
-					entryCache.set(entry.id, entry)
-					entry.textData.entities = new Map(entry.textData.entities)
-					entry.textData.facsimiles = new Map(entry.textData.facsimiles)
-					entry.layers.forEach(l => {
-						l.entities = new Set(l.entities)
-						l.facsimiles = new Set(l.facsimiles)
-					})
+				.then((serializedEntry: SerializedEntry) => {
+					if (serializedEntry == null) return
+					const entry = deserializeEntry(serializedEntry)
+					entryCache.set(serializedEntry.id, entry)
 					setEntry(entry)
 				})
 		}

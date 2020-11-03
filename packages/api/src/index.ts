@@ -58,8 +58,8 @@ async function main() {
 
 	app.get('/api/projects', (_req, res) => sendJson(listProjects(), res))
 
-	projectApi(app)
-	documentApi(app, puppenv)
+	projectApi(app, puppenv)
+	documentApi(app)
 	dtsApi(app)
 	otherApi(app)
 

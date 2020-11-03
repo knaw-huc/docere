@@ -1,6 +1,6 @@
 import { SerializedEntry } from '../../../common/src'
 import { fetchEntry } from '../utils'
-import { isFacsimileLayer } from '@docere/common'
+import { isSerializedFacsimileLayer } from '@docere/common'
 
 const projectId = 'gekaaptebrieven'
 const documentId = '1150'
@@ -17,7 +17,7 @@ export function gekaaptebrievenTests() {
 	})
 
 	it(`Should have facs IDs: ${documentId}`, () => {
-		expect(entry.layers.find(isFacsimileLayer).facsimiles.map(x => x.id))
+		expect(entry.layers.find(isSerializedFacsimileLayer).facsimiles)
 			.toEqual(
 				[
 					"hca30-749/2/nl-hana_hca30-749_2_0029",

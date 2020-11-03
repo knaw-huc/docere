@@ -1,7 +1,8 @@
-import { Entry, MetadataItem, GetEntryProps, GetPartProps, ConfigEntry, SerializedEntry, Entity, ExtractedEntity, EntityConfig } from '@docere/common'
-import { Facsimile, LayerType, DocereConfig, setTitle } from '@docere/common'
-import { isTextLayerConfig, isSerializedTextLayer } from '@docere/common'
-import { SerializedLayer } from '@docere/common'
+import { serializeLayer, xmlToString } from '@docere/common'
+
+import type { Facsimile, DocereConfig, SerializedLayer, Entry, MetadataItem, GetEntryProps, GetPartProps, ConfigEntry, SerializedEntry, Entity, ExtractedEntity, EntityConfig } from '@docere/common'
+
+export { xmlToString }
 
 export type GetDefaultEntry = (id: string) => ConfigEntry
 export function getDefaultEntry(id: string): ConfigEntry {
@@ -54,28 +55,7 @@ function extractMetadata(entry: ConfigEntry, config: DocereConfig): Entry['metad
 }
 
 function extractLayers(entry: ConfigEntry, parent: ConfigEntry, config: DocereConfig): SerializedLayer[] {
-	return config.layers
-		.map(layer => {
-			const filterEntities = layer.filterEntities != null ? layer.filterEntities : () => () => true
-			const filterFacsimiles = layer.filterFacsimiles != null ? layer.filterFacsimiles : () => () => true
-
-			const textLayer: SerializedLayer = {
-				active: layer.active != null ? layer.active : true,
-				entities: parent.entities?.filter(filterEntities(entry)).map(e => e.id),
-				facsimiles: parent.facsimiles?.filter(filterFacsimiles(entry)).map(e => e.id),
-				id: layer.id,
-				pinned: layer.pinned != null ? layer.pinned : false,
-				type: layer.type != null ? layer.type : LayerType.Text,
-				title: layer.title,
-			}
-
-			if (isSerializedTextLayer(textLayer) && isTextLayerConfig(layer)) {
-				const extractContent = layer.extract == null ? (entry: ConfigEntry) => entry.element : layer.extract
-				textLayer.content = xmlToString(extractContent(entry, config))
-			}
-
-			return setTitle(textLayer)
-		})
+	return config.layers.map(serializeLayer(entry, parent, config))
 }
 
 function toEntity(config: EntityConfig) {
@@ -141,12 +121,6 @@ function getPartSync(props: GetPartProps) {
 	entry.layers = extractLayers(entry, props.parent, props.config)
 
 	return entry
-}
-
-export type XmlToString = (xml: XMLDocument | Element) => string
-export function xmlToString(xml: XMLDocument | Element) {
-	if (xml == null) return null
-	return new XMLSerializer().serializeToString(xml)
 }
 
 export type GetEntrySync = (props: GetEntryProps) => ConfigEntry

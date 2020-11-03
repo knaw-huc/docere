@@ -7,12 +7,13 @@ import { Facsimile, Entity } from './functions'
 export interface LayerConfig extends BaseConfig {
 	active?: boolean
 	pinned?: boolean
-	type?: LayerType.Facsimile | LayerType.Text
+	type: LayerType.Facsimile | LayerType.Text
 	filterEntities?: (entry: ConfigEntry) => (entity: Entity) => boolean
 	filterFacsimiles?: (entry: ConfigEntry) => (facsimile: Facsimile) => boolean
 }
 
 export type ID = string
+export type Type = string
 // export type ActiveEntities = Set<ID>
 // Base
 interface BaseLayer {
@@ -38,7 +39,7 @@ export interface TextLayerConfig extends LayerConfig {
 
 export interface TextLayer extends Omit<SerializedTextLayer, 'facsimiles' | 'entities'>, LayerTextData {
 	// element: Element
-	content: string
+	// content: string
 	type: LayerType.Text
 }
 
@@ -53,7 +54,7 @@ export interface FacsimileLayerConfig extends LayerConfig {
 	type: LayerType.Facsimile
 }
 
-export interface FacsimileLayer extends Omit<SerializedTextLayer, 'facsimiles' | 'entities'>, LayerTextData {
+export interface FacsimileLayer extends Omit<SerializedBaseLayer, 'facsimiles' | 'entities'>, LayerTextData {
 	type: LayerType.Facsimile
 }
 
@@ -62,11 +63,11 @@ export type Layer = TextLayer | FacsimileLayer
 export type ExtractedLayer = Pick<Layer, 'id'> & Partial<Layer>
 interface SerializedLayerTextData {
 	facsimiles: ID[]
-	entities: ID[]
+	entities: [Type, ID[]][]
 }
 interface LayerTextData {
 	facsimiles: Set<ID>
-	entities: Set<ID>
+	entities: Map<Type, Set<ID>>
 }
 
 // Serialized layer
@@ -77,9 +78,12 @@ export type SerializedBaseLayer =
 
 export type SerializedTextLayer = SerializedBaseLayer & {
 	content: string
+	type: LayerType.Text
 }
 
-export type SerializedFacsimileLayer = SerializedBaseLayer
+export type SerializedFacsimileLayer = SerializedBaseLayer & {
+	type: LayerType.Facsimile
+}
 
 export type SerializedLayer = SerializedTextLayer | SerializedFacsimileLayer
 

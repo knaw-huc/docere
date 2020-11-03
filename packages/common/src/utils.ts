@@ -1,7 +1,7 @@
 import { DEFAULT_SPACING, TEXT_PANEL_ASIDE_WIDTH, TEXT_PANEL_MINIMAP_WIDTH, TEXT_PANEL_TEXT_WIDTH } from './constants'
 import { LayerType } from './enum'
 
-import type { LayerConfig, PageConfig, TextLayerConfig, FacsimileLayerConfig, TextLayer, Layer, FacsimileLayer, SerializedLayer, SerializedTextLayer, SerializedFacsimileLayer, ID, EntryState } from './types'
+import type { LayerConfig, TextLayerConfig, FacsimileLayerConfig, TextLayer, Layer, FacsimileLayer, SerializedLayer, SerializedTextLayer, SerializedFacsimileLayer, ID, EntryState } from './types'
 
 export function getTextPanelLeftSpacing(settings: EntryState['entrySettings']) {
 	let width = DEFAULT_SPACING
@@ -90,17 +90,10 @@ export function isSearchPage() {
 	return analyzeWindowLocation().documentType === 'search'
 }
 
-// function getProjectDir(projectId: string) {
-// 	return `/node_modules/@docere/projects/src/${projectId}`
-// } 
-
-// export function getPageXmlPath(projectSlug: string, page: PageConfig) {
-// 	return `${getProjectDir(projectSlug)}/pages/${page.path}`
+// export async function fetchPageConfig(projectId: string, pageId: string): Promise<PageConfig> {
+// 	const endpoint = `/api/projects/${projectId}/pages/${pageId}/config`
+// 	return await fetchJson(endpoint)
 // }
-export async function fetchPageConfig(projectId: string, pageId: string): Promise<PageConfig> {
-	const endpoint = `/api/projects/${projectId}/pages/${pageId}/config`
-	return await fetchJson(endpoint)
-}
 
 export async function fetchPageXml(projectSlug: string, pageId: string) {
 	const endpoint = `/api/projects/${projectSlug}/pages/${pageId}`
@@ -115,18 +108,18 @@ export async function fetchPageXml(projectSlug: string, pageId: string) {
 	return doc
 }
 
-export async function fetchEntryXml(projectSlug: string, documentId: string) {
-	const endpoint = `/api/projects/${projectSlug}/documents/${documentId}/original`
+// export async function fetchEntryXml(projectSlug: string, documentId: string) {
+// 	const endpoint = `/api/projects/${projectSlug}/documents/${documentId}/original`
 
-	let doc: XMLDocument
-	try {
-		doc = await fetchXml(endpoint)
-	} catch (err) {
-		doc = null			
-	}
+// 	let doc: XMLDocument
+// 	try {
+// 		doc = await fetchXml(endpoint)
+// 	} catch (err) {
+// 		doc = null			
+// 	}
 
-	return doc
-}
+// 	return doc
+// }
 
 export function fetchXml(url: string): Promise<XMLDocument> {
 	return new Promise((resolve, reject) => {
@@ -193,4 +186,10 @@ export function indexOfIterator(collection: Set<ID | number> | Map<ID | number, 
 	}
 
 	return next.done ? null : count
+}
+
+export type XmlToString = (xml: XMLDocument | Element) => string
+export function xmlToString(xml: XMLDocument | Element) {
+	if (xml == null) return null
+	return new XMLSerializer().serializeToString(xml)
 }

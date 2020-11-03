@@ -1,6 +1,6 @@
 import type { PrepareAndExtractOutput, DocereApiError } from '../types'
-import type { SerializeEntry, GetEntrySync, GetDefaultEntry, XmlToString } from './utils'
-import type { ProjectList, DocereConfig } from '@docere/common'
+import type { SerializeEntry, GetEntrySync, GetDefaultEntry } from './utils'
+import type { ProjectList, DocereConfig, XmlToString } from '@docere/common'
 
 declare global {
 	// const DocereProjects: any

@@ -26,7 +26,7 @@ export async function getPool(projectId: string) {
 	return poolCache.get(projectId)
 }
 
-export async function tryQuery(client: PoolClient, query: string, values?: (string | number)[]) {
+export async function transactionQuery(client: PoolClient, query: string, values?: (string | number)[]) {
 	let result
 	try {
 		result = await client.query(query, values)
