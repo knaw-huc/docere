@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { DEFAULT_SPACING, MAINHEADER_HEIGHT, Colors, ProjectContext, getPagePath, useUrlObject } from '@docere/common'
+import { DEFAULT_SPACING, MAINHEADER_HEIGHT, Colors, ProjectContext, getPagePath, ID } from '@docere/common'
 
 import type { PageConfig } from '@docere/common'
 import { Link } from 'react-router-dom'
@@ -80,14 +80,12 @@ const PageLink = styled(Link)`
 	}
 `
 
-type PageMenuItemProps = { pageConfig: PageConfig }
+type PageMenuItemProps = { pageConfig: PageConfig, projectId: ID }
 function PageMenuItem(props: PageMenuItemProps) {
-	const { projectId } = useUrlObject()
-
 	return (
 		<li>
 			<PageLink
-				to={getPagePath({ projectId, pageId: props.pageConfig.id })}
+				to={getPagePath({ projectId: props.projectId, pageId: props.pageConfig.id })}
 			>
 				{props.pageConfig.title}
 			</PageLink>
@@ -111,15 +109,16 @@ export default React.memo(function PagesMenu() {
 										<PageMenuItem
 											key={child.id}
 											pageConfig={child}
+											projectId={config.slug}
 										/>
 									)
 								}
 							</ul>
-							
 						</li> :
 						<PageMenuItem
 							key={page.id}
 							pageConfig={page}
+							projectId={config.slug}
 						/>
 				)
 			}
