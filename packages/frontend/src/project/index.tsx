@@ -59,7 +59,7 @@ interface Props {
 	config: DocereConfig
 }
 function RealProject(props: Props) {
-	const match = useRouteMatch()
+	const { path } = useRouteMatch()
 	const [appState, appDispatch] = useAppState()
 
 	const facetsConfig = useFacetsConfig(props.config)
@@ -68,7 +68,7 @@ function RealProject(props: Props) {
 	return (
 		<SearchContext.Provider value={{ state, dispatch }}>
 			<ProjectHeader />
-			<Route path={`${match.path}/pages/:pageId`}>
+			<Route path={`${path}/pages/:pageId`}>
 				<PageView />
 			</Route>
 			<EntrySelector

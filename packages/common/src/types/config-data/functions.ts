@@ -96,9 +96,16 @@ export interface FacsimileArea {
 	y: number
 }
 
+export enum FacsimileType {
+	IIIF = 'iiif',
+	Image = 'image',
+}
+
 interface FacsimileVersion {
-	areas?: FacsimileArea[]
+	// areas?: FacsimileArea[]
 	path: string
+	thumbnailPath?: string
+	type?: FacsimileType
 }
 export interface Facsimile {
 	id: string

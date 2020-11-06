@@ -30,7 +30,6 @@ export default function handleProjectApi(app: Express, puppenv: Puppenv) {
 	app.get(`${PROJECT_BASE_PATH}pages/:pageId`, async (req, res) => {
 		const pool = await getPool(req.params.projectId)
 		const { rows } = await pool.query(`SELECT content FROM page WHERE name=$1;`, [req.params.pageId])
-		console.log(rows)
 		if (!rows.length) res.sendStatus(404)
 		else res.send(rows[0].content)
 	})

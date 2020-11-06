@@ -42,7 +42,7 @@ function useOpenSeadragonController(
 
 function useActiveFacsimile(controller: CollectionNavigatorController, activeFacsimile: Facsimile) {
 	React.useEffect(() => {
-		if (controller == null) return
+		if (controller == null || activeFacsimile == null) return
 		controller.setActiveFacsimile(activeFacsimile)
 	}, [controller, activeFacsimile])
 }

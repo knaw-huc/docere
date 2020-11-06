@@ -5,6 +5,7 @@ import { utrechtpsalterTests } from './utrechtpsalter'
 import { mondrianTests } from './mondrian'
 import { gheysTests } from './gheys'
 import { gekaaptebrievenTests } from './gekaaptebrieven'
+import { vangoghTests } from './vangogh'
 
 describe('Projects', () => {
 	beforeAll(async () => {
@@ -23,4 +24,5 @@ describe('Projects', () => {
 	describe('Suriano', surianoTests)
 	describe('Utrecht psalter', utrechtpsalterTests)
 	describe('Gekaapte brieven', gekaaptebrievenTests)
+	describe('Van Gogh', vangoghTests)
 })

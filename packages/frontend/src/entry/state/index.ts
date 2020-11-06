@@ -121,6 +121,9 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 	return entryState
 }
 
+// @ts-ignore
+// window.DEBUG = true
+
 export default function useEntryState() {
 	const { config } = React.useContext(ProjectContext)
 	const { entryId, query } = useUrlObject()
@@ -139,7 +142,7 @@ export default function useEntryState() {
 				entityId: new Set(x[0].activeEntities.keys()),
 			}
 		})	
-	}, [x[0].activeFacsimiles, x[0].activeEntities, query])
+	}, [x[0].activeFacsimiles, x[0].activeEntities])
 
 	React.useEffect(() => {
 		if (entry == null || entry === x[0].entry) return
@@ -168,6 +171,11 @@ export default function useEntryState() {
 		query.facsimileId?.forEach(id => {
 			activeFacsimiles.set(id, entry.textData.facsimiles.get(id))
 		})
+
+		if (!activeFacsimiles.size) {
+			const firstFacsimile = entry.textData.facsimiles.values().next().value
+			activeFacsimiles.set(firstFacsimile.id, entry.textData.facsimiles.get(firstFacsimile.id))
+		}
 
 		// If the layer doesn't have an active facsimile, add the first
 		// nextLayers.forEach(l => {

@@ -1,12 +1,14 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { ProjectContext, PANEL_HEADER_HEIGHT, FacsimileLayer, Facsimile, Entry } from '@docere/common'
+import { PANEL_HEADER_HEIGHT, FacsimileLayer, Facsimile, Entry } from '@docere/common'
 
 import useAreaRenderer, { AreaRenderer } from './use-area-renderer'
 import PanelHeader from '../header'
 
-import type { DocereConfig, EntryState, EntryStateAction } from '@docere/common'
+import type { EntryState, EntryStateAction } from '@docere/common'
 import CollectionNavigator2 from '../collection-navigator2'
+
+import { formatTileSource } from './utils'
 
 // TODO change facsimile when user scroll past a <pb />
 
@@ -116,34 +118,29 @@ function useActiveFacsimileAreas(activeEntities: EntryState['activeEntities'], a
 }
 
 function useActiveFacsimile(
-	activeFacsimile: Facsimile,
-	projectId: DocereConfig['slug'],
+	facsimile: Facsimile,
 	areaRenderer: AreaRenderer,
 	osd: any
 ) {
 	React.useEffect(() => {
-		if (areaRenderer == null || activeFacsimile == null) return
+		if (areaRenderer == null || facsimile == null || osd == null) return
 		// const facsimile = this.props.facsimiles.find(f => f.id === this.props.activeFacsimilePath)
 		// TODO acativeFacsimilePath should be activeFacsimileID
 		// TODO find the paths in this.props.facsimiles with activeFacsimileID
 
-		let path = activeFacsimile.versions[0].path as any
 		
-		// TODO Move logic to vangogh facsimileExtractor (path should be a string of a tileSource)
-		if (projectId === 'vangogh') {
-			path = { tileSource: { type: 'image', url: path.slice(0, -5).concat('f.png'), buildPyramid: false } }
-		}
 
 		function openHandler() {
 			// renderFacsimileAreas(osd, , OpenSeadragon, entryDispatch)
-			areaRenderer.render(activeFacsimile.versions[0].areas)
+			// areaRenderer.render(activeFacsimile.versions[0].areas)
 			osd.removeHandler('open', openHandler)
 		}
 
 		osd.addHandler('open', openHandler)
+
+		osd.open(formatTileSource(facsimile))
 		
-		osd.open(path)
-	}, [areaRenderer, activeFacsimile])
+	}, [areaRenderer, facsimile])
 }
 
 const Container = styled.div`
@@ -164,7 +161,6 @@ type Props = {
 }
 
 function FacsimilePanel(props: Props) {
-	const { config } = React.useContext(ProjectContext)
 	const [osd, OpenSeadragon] = useOpenSeadragon()
 
 	const handleAreaClick = React.useCallback((ev: any) => {
@@ -178,7 +174,7 @@ function FacsimilePanel(props: Props) {
 	const areaRenderer = useAreaRenderer(osd, OpenSeadragon, handleAreaClick)
 
 	// TODO do not just use the first facsimile, check the layer, etc.
-	useActiveFacsimile(props.activeFacsimiles.values().next().value, config.slug, areaRenderer, osd)
+	useActiveFacsimile(props.activeFacsimiles.values().next().value, areaRenderer, osd)
 	useActiveFacsimileAreas(props.activeEntities, areaRenderer)
 
 	return (

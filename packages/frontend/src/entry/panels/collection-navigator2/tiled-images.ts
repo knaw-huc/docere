@@ -1,21 +1,22 @@
 import OpenSeadragon from 'openseadragon';
 
 import { Facsimile, Entry, FacsimileLayer, indexOfIterator } from '@docere/common';
+import { formatTileSource } from '../facsimile/utils';
 
 interface TiledImageOptions {
 	bounds: OpenSeadragon.Rect
 	index: number
-	tileSource: string
+	tileSource: string | Record<string, any>
 	userData: any
 }
 
 export default class TiledImages {
 	private activeFacsimile: Facsimile
 
-	// The bounds of the currently loaded thumbs
+	/** The bounds of the currently loaded thumbs */
 	private loadedBounds = new OpenSeadragon.Rect(0, 0, 0, 0)
 
-	// Map of options for OpenSeadragon.TiledImage
+	/** Map of options for OpenSeadragon.TiledImage */
 	private tileOptions: TiledImageOptions[] = []
 	private activeTileOptions: TiledImageOptions[] = []
 
@@ -59,7 +60,10 @@ export default class TiledImages {
 
 	// Set the active options from this.entry.facsimiles. Used to calculate this.startIndex and this.highlightActive
 	setActiveOptions() {
-		this.activeTileOptions = this.tileOptions.filter(option => option.tileSource === this.activeFacsimile.versions[0].path)
+		this.activeTileOptions = this.tileOptions
+			.filter(option =>
+				option.tileSource === formatTileSource(this.activeFacsimile) //.versions[0].path
+			)
 	}
 
 	// Set a new entry. When this.highlightActive returns false, not all tiles of that entry are loaded.
@@ -123,7 +127,9 @@ export default class TiledImages {
 		this.addTiledImage()
 	}
 
-	// Add the highlight overlay
+	/**
+	 * Add the highlight overlay
+	 */
 	private addHighlightOverlay() {
 		this.viewer.clearOverlays()
 
@@ -140,10 +146,12 @@ export default class TiledImages {
 		})
 	}
 
-	// Highlights the active tiled images. If need be, wait for the tiles to be loaded
-	// Returns true when the highlight is directly set and false when via event listener,
-	// this is used to determine if a new TiledImages object needs to be created from
-	// the controller (see this.setEntry). 
+	/**
+	 * Highlights the active tiled images. If need be, wait for the tiles to be loaded
+	 * Returns true when the highlight is directly set and false when via event listener,
+	 * this is used to determine if a new TiledImages object needs to be created from
+	 * the controller (see this.setEntry). 
+	 */
 	private highlightActiveTiles = () => {
 		// Remove the handler is present, it is being re-created everytime one of 
 		// the tiles is not loaded yet
@@ -158,7 +166,9 @@ export default class TiledImages {
 		return true
 	}
 
-	// Remove tiles currently loaded in OpenSeadragon.World
+	/**
+	 * Remove tiles currently loaded in OpenSeadragon.World
+	 */
 	private removeTiledImages() {
 		const count = this.viewer.world.getItemCount();
 		for (let i = count; i > 0; i--) {
@@ -167,45 +177,64 @@ export default class TiledImages {
 		}
 	}
 
-	// Set the tiled image options. Every entry (_source) can have multiple
-	// facsimiles, which means there can be more thumbs than entries.
-	// The search result (hits) is 'reduced' to tiled image options.
-	// The options are build prior to loading thumbs, because the order of the
-	// thumbs needs to be known in advance.
+	/**
+	 * Set the tiled image options. Every entry (_source) can have multiple
+	 * facsimiles, which means there can be more thumbs than entries.
+	 * The search result (hits) is 'reduced' to tiled image options.
+	 * The options are build prior to loading thumbs, because the order of the
+	 * thumbs needs to be known in advance.
+	 */
 	private setOptions() {
 		this.tileOptions = []
 		let index = 0
 		for (const facsimileId of this.layer.facsimiles) {
 			const facsimile = this.entry.textData.facsimiles.get(facsimileId)
+			let tileSource = formatTileSource(facsimile)
+
+			// @ts-ignore
+			if (tileSource.hasOwnProperty('tileSource')) tileSource = tileSource.tileSource
+
 			this.tileOptions.push({
 				bounds: null,
 				index,
-				tileSource: facsimile.versions[0].path,
+				tileSource, //.versions[0].path,
 				userData: facsimile
 			})
 			index++
 		}
 	}
 
-	// If an animation is finished (pan, zoom, etc) check if thumbs have to be loaded.
-	// When images are already being loaded, flag there is a queue, otherwise check if 
-	// new thumbs should be loaded
+	/**
+	 * If an animation is finished (pan, zoom, etc) check if thumbs have to be loaded.
+	 * When images are already being loaded, flag there is a queue, otherwise check if 
+	 * new thumbs should be loaded
+	 */
 	private animationFinishHandler = () => {
 		if (this.isLoadingTiles) this.hasQueue = true
 		else this.addTiledImage()
 	}
 
-	// Calculate if there is space on the left and/or right side of this.loadedBounds to
-	// add more thumbs
+	/**
+	 * Calculate if there is space on the left and/or right side of this.loadedBounds to
+	 * add more thumbs
+	 * 
+	 * @param viewportBounds
+	 * @return [number, number]
+	 */
 	private hasSpace(viewportBounds: OpenSeadragon.Rect) {
 		const right = this.loadedBounds.x + this.loadedBounds.width < viewportBounds.x + viewportBounds.width * 2
 		const left = this.loadedBounds.x > viewportBounds.x - viewportBounds.width
 		return [left, right]
 	}
 
-	// Handler for when a new tile is added to OpenSeadragon.World.
-	// The tile is placed at Point(0,0) so it has to be moved to the 
-	// available space on the left or right side of the current thumbs
+	/**
+	 * 
+	 * Handler for when a new tile is added to OpenSeadragon.World.
+	 * The tile is placed at Point(0,0) so it has to be moved to the 
+	 * available space on the left or right side of the current thumbs
+	 * 
+	 * @param ev
+	 */
 	private addItemHandler = (ev: OpenSeadragon.WorldEvent) => {
 		const tiledImage = ev.item as OpenSeadragon.TiledImage
 		tiledImage.setHeight(1)
@@ -250,10 +279,12 @@ export default class TiledImages {
 		this.addTiledImage()
 	}
 
-	// Initiate a new tile, either on the left or the right side of the start index,
-	// depending on if there is space (ie the required thumbs aren't already loaded),
-	// which tile (left or right) was loaded last and of course if there are more
-	// tiles to load (0 < index < options.length)
+	/**
+	 * Initiate a new tile, either on the left or the right side of the start index,
+	 * depending on if there is space (ie the required thumbs aren't already loaded),
+	 * which tile (left or right) was loaded last and of course if there are more
+	 * tiles to load (0 < index < options.length)
+	 */
 	private addTiledImage = () => {
 		this.isLoadingTiles = true
 		const viewportBounds = this.viewer.viewport.getBounds()

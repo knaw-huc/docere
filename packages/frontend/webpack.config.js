@@ -21,6 +21,11 @@ module.exports = {
 				target: 'http://localhost:9200',
 				pathRewrite: {'^/search': ''}
 			},
+			'/iiif/vangogh': {
+				changeOrigin: true,
+				target: 'http://vangoghletters.org/vg/facsimiles',
+				pathRewrite: {'^/iiif/vangogh': ''}
+			},
 			'/iiif/encyclopaedia-britannica': {
 				changeOrigin: true,
 				target: 'https://view.nls.uk/iiif',

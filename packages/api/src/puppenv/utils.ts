@@ -1,6 +1,7 @@
 import { serializeLayer, xmlToString } from '@docere/common'
 
 import type { Facsimile, DocereConfig, SerializedLayer, Entry, MetadataItem, GetEntryProps, GetPartProps, ConfigEntry, SerializedEntry, Entity, ExtractedEntity, EntityConfig } from '@docere/common'
+import { FacsimileType } from '@docere/common/src'
 
 export { xmlToString }
 
@@ -26,13 +27,7 @@ export function getDefaultEntry(id: string): ConfigEntry {
 
 function extendFacsimile(facsimile: Facsimile) {
 	facsimile.versions = facsimile.versions.map(version => {
-		if (!Array.isArray(version.areas)) {
-			version.areas = []
-			return version
-		}
-
-		// version.areas = version.areas.map(area => ({ ...defaultFacsimileArea, ...area }))	
-
+		if (version.type == null) version.type = FacsimileType.IIIF
 		return version
 	})
 
