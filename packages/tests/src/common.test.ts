@@ -1,5 +1,4 @@
-import { getQueryString, getPath } from "@docere/common"
-import { indexOfIterator } from '@docere/common/src/utils'
+import { indexOfIterator, getQueryString, getPath, getRectoVersoSequence } from "@docere/common"
 
 describe('Common', () => {
 	describe('URL', () => {
@@ -30,7 +29,7 @@ describe('Common', () => {
 	})
 
 	describe('Utils', () => {
-		it('Should get the index of an iterable (Set or keys of Map)', () => {
+		it('[indexOfIterator] Should get the index of an iterable (Set or keys of Map)', () => {
 			const set = new Set([1, 2, 3, 4])
 			expect(indexOfIterator(set, 1)).toBe(0)
 			expect(indexOfIterator(set, 2)).toBe(1)
@@ -48,6 +47,19 @@ describe('Common', () => {
 			expect(indexOfIterator(map, 'a0')).toBe(null)
 			expect(indexOfIterator(map, 'a5')).toBe(null)
 			expect(indexOfIterator(map, null)).toBe(null)
+		})
+
+		it('[getRectoVersoSequence]', () => {
+			expect(getRectoVersoSequence('2v-1r')).toHaveLength(0)
+			expect(getRectoVersoSequence('1v-1r')).toHaveLength(0)
+			expect(getRectoVersoSequence(null)).toHaveLength(0)
+			expect(getRectoVersoSequence('1r')).toEqual(['1r'])
+			expect(getRectoVersoSequence('1r-1v')).toEqual(['1r', '1v'])
+			expect(getRectoVersoSequence('1r-v')).toEqual(['1r', '1v'])
+			expect(getRectoVersoSequence('1r-2r')).toEqual(['1r', '1v', '2r'])
+			expect(getRectoVersoSequence('1v-2r')).toEqual(['1v', '2r'])
+			expect(getRectoVersoSequence('1v-4r')).toEqual(['1v', '2r', '2v', '3r', '3v', '4r'])
+			expect(getRectoVersoSequence('1r-4v')).toEqual(['1r', '1v', '2r', '2v', '3r', '3v', '4r', '4v'])
 		})
 	})
 })

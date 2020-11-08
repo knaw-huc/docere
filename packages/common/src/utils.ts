@@ -193,3 +193,40 @@ export function xmlToString(xml: XMLDocument | Element) {
 	if (xml == null) return null
 	return new XMLSerializer().serializeToString(xml)
 }
+
+export function getRectoVersoSequence(x: string) {
+	if (x == null) return []
+	const [start, end] = x.split('-')
+	const [,startNoString, startVersorecto] = /(\d+)(r|v)/.exec(start)
+	const startNo = parseInt(startNoString, 10)
+
+	const regExpExecArray = /(\d+)(r|v)/.exec(end)
+	if (end === 'v') {
+		return [`${startNo}${startVersorecto}`, `${startNo}v`]
+	} else if (end == null || regExpExecArray == null) {
+		return [`${startNo}${startVersorecto}`]
+	}
+
+	const [,endNoString, endVersorecto] = regExpExecArray
+	const endNo = parseInt(endNoString, 10)
+
+	const rvString = `${startNo}${startVersorecto}-${endNo}${endVersorecto}`
+
+	if (endNo < startNo) return []
+	if (startNo === endNo && startVersorecto === 'v' && endVersorecto === 'r') return []
+
+	let no = startNo
+	let versorecto = startVersorecto
+	const seq = []
+	while (`${seq[0]}-${seq[seq.length - 1]}` !== rvString) {
+		seq.push(`${no}${versorecto}`)
+		if (versorecto === 'v') {
+			no = no + 1
+			versorecto = 'r'
+		} else {
+			versorecto = 'v'
+		}
+	}
+
+	return seq
+}

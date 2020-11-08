@@ -127,31 +127,31 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 export default function useEntryState() {
 	const { config } = React.useContext(ProjectContext)
 	const { entryId, query } = useUrlObject()
-	const x = React.useReducer(entryStateReducer, initialEntryState)
+	const [entryState, entryDispatch] = React.useReducer(entryStateReducer, initialEntryState)
 	const entry = useEntry(entryId)
 	const navigate = useNavigate()
 
 	React.useEffect(() => {
-		if (x[0].entry == null) return
+		if (entryState.entry == null) return
 
 		navigate({
 			entryId,
 			query: {
 				...query,
-				facsimileId: new Set(x[0].activeFacsimiles.keys()),
-				entityId: new Set(x[0].activeEntities.keys()),
+				facsimileId: new Set(entryState.activeFacsimiles.keys()),
+				entityId: new Set(entryState.activeEntities.keys()),
 			}
 		})	
-	}, [x[0].activeFacsimiles, x[0].activeEntities])
+	}, [entryState.activeFacsimiles, entryState.activeEntities])
 
 	React.useEffect(() => {
-		if (entry == null || entry === x[0].entry) return
+		if (entry == null || entry === entryState.entry) return
 
 		// Copy current state of active and pinned layers to keep interface consistent between entry changes
 		const nextLayers = new Map()
 		entry.layers.forEach(layer => {
-			// const stateLayer = x[0].layers.find(l => l.id === layer.id)
-			const prevLayer = x[0].layers.get(layer.id)
+			// const stateLayer = entryState.layers.find(l => l.id === layer.id)
+			const prevLayer = entryState.layers.get(layer.id)
 
 			// Copy state if prev layer existed
 			if (prevLayer) {
@@ -172,39 +172,30 @@ export default function useEntryState() {
 			activeFacsimiles.set(id, entry.textData.facsimiles.get(id))
 		})
 
+		/** If the layer doesn't have an active facsimile, add the first */
 		if (!activeFacsimiles.size) {
 			const firstFacsimile = entry.textData.facsimiles.values().next().value
 			activeFacsimiles.set(firstFacsimile.id, entry.textData.facsimiles.get(firstFacsimile.id))
 		}
 
-		// If the layer doesn't have an active facsimile, add the first
-		// nextLayers.forEach(l => {
-		// 	if (l.facsimiles.size && l.activeFacsimileId == null) {
-		// 		l.activeFacsimileId = l.facsimiles.values().next().value
-		// 	}
-		// })
-
-		// TODO activeFacsimile is a state of layer, not the entry
-		// x[1] = dispatch
-		x[1]({
+		entryDispatch({
 			activeEntities,
 			activeFacsimiles,
 			entry,
-			layers: updateLayers(nextLayers, x[0].entrySettings, activeEntities),
+			layers: updateLayers(nextLayers, entryState.entrySettings, activeEntities),
 			type: 'ENTRY_CHANGED',
 		})
 	}, [entry, query])
 
 	React.useEffect(() => {
-		// x[1] = dispatch
-		x[1]({
+		entryDispatch({
 			config,
 			type: 'PROJECT_CHANGED',
 		})
 		
 	}, [config.slug])
 
-	return x
+	return [entryState, entryDispatch] 
 }
 
 function updateLayers(
