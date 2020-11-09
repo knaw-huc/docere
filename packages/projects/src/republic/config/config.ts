@@ -7,19 +7,21 @@ const config: DocereConfig = {
 	slug: 'republic',
 	title: 'Republic',
 	collection: {
-		metadataId: 'order',
-		sortBy: 'order',
+		metadataId: 'date',
+		sortBy: 'date',
 	},
 	metadata: [
 		{
-			datatype: EsDataType.Integer,
-			extract: entry => {
-				const num = /\d+$/.exec(entry.id.replace(/\.jpg\.page$/, ''))
-				return parseInt(num[0], 10)
-			},
-			id: 'order',
-			range: 1000,
-			showAsFacet: false,
+			datatype: EsDataType.Date,
+			extract: entry =>
+				entry.document.querySelector('meta[key="meeting_date"]')?.getAttribute('value'),
+			id: 'date',
+			interval: 'y'
+		},
+		{
+			extract: entry =>
+				entry.document.querySelector('meta[key="inventory_num"]')?.getAttribute('value'),
+			id: 'inventory_num',
 		}	
 	],
 	entities: [],

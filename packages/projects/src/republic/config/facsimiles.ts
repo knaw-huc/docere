@@ -2,17 +2,16 @@ import { ConfigEntry } from '@docere/common'
 import type { Facsimile } from '@docere/common'
 
 export default function extractFacsimiles(entry: ConfigEntry) {
-	const facsimiles: Facsimile[] = []
-
-	const id = `https://images.diginfra.net/iiif/${entry.id.replace(/\.page$/, '')}`
-
-	facsimiles.push({
-		id,
-		versions: [{
-			// areas: extractFacsimileAreas(entry.document, config),
-			path: `${id}/info.json`,
-		}]
-	})
+	const facsimiles: Facsimile[] = Array.from(entry.document.querySelectorAll('column[facs]'))
+		.map(column => {
+			const id = column.getAttribute('facs')
+			return {
+				id,
+				versions: [{
+					path: `https://images.diginfra.net/iiif/${id}/info.json`
+				}]
+			}
+		})
 
 	return facsimiles
 }
