@@ -49,7 +49,7 @@ export const Text = styled.div`
 	position: relative;
 `
 
-type TextPanelBaseProps = Pick<PanelsProps, 'activeEntities' | 'activeFacsimiles' | 'appDispatch' | 'entryDispatch' | 'entry' | 'entrySettings'>
+type TextPanelBaseProps = Pick<PanelsProps, 'activeEntities' | 'activeFacsimiles' | 'entryDispatch' | 'entry' | 'entrySettings'>
 interface TextPanelProps extends TextPanelBaseProps {
 	layer: StatefulTextLayer
 }
@@ -92,7 +92,6 @@ function TextPanel(props: TextPanelProps) {
 	const customProps: DocereComponentProps = {
 		activeEntities: props.activeEntities,
 		activeFacsimiles: props.activeFacsimiles,
-		appDispatch: props.appDispatch,
 		components,
 		config,
 		entry: props.entry,

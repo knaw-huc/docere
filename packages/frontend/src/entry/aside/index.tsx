@@ -7,7 +7,6 @@ import MetadataAside from './metadata/index'
 // import TextDataAside from './text-data'
 
 import type { EntryState, EntryStateAction } from '@docere/common'
-import type { EntryProps } from '..';
 
 const Wrapper = styled.aside`
 	background-color: ${Colors.Grey};
@@ -23,7 +22,6 @@ const Wrapper = styled.aside`
 `
 
 type EntryAsideProps =
-	Pick<EntryProps, 'appDispatch'> &
 	Pick<EntryState, 'asideTab' | 'entry'> &
 	{
 		entryDispatch: React.Dispatch<EntryStateAction>
@@ -37,7 +35,6 @@ function Aside(props: EntryAsideProps) {
 				props.asideTab === AsideTab.Metadata &&
 				<MetadataAside
 					active={props.asideTab === AsideTab.Metadata}
-					appDispatch={props.appDispatch}
 					metadata={props.entry.metadata}
 				/>
 			}

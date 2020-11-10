@@ -1,6 +1,6 @@
 import { SearchTab, Viewport, FooterTab } from '../../enum'
 
-export interface AppState {
+export interface ProjectUIState {
 	footerTab: FooterTab
 	searchTab: SearchTab
 	viewport: Viewport
@@ -15,13 +15,13 @@ interface ASA_Project_Changed {
 interface ToggleFooterTab {
 	type: 'TOGGLE_TAB',
 	tabType: 'footer'
-	tab: AppState['footerTab']
+	tab: ProjectUIState['footerTab']
 }
 
 interface ToggleSearchTab {
 	type: 'TOGGLE_TAB',
 	tabType: 'search'
-	tab: AppState['searchTab']
+	tab: ProjectUIState['searchTab']
 }
 
 type ToggleTab = ToggleFooterTab | ToggleSearchTab
@@ -31,7 +31,7 @@ interface ASA_Set_Viewport {
 	viewport: Viewport
 }
 
-export type AppStateAction = 
+export type ProjectUIAction = 
 	ToggleTab |
 	ASA_Project_Changed |
 	ASA_Set_Viewport

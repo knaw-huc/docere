@@ -27,7 +27,6 @@ export default function Panel(props: PanelsProps & { layer: Layer }) {
 			<TextPanel
 				activeEntities={props.activeEntities}
 				activeFacsimiles={props.activeFacsimiles}
-				appDispatch={props.appDispatch}
 				entry={props.entry}
 				entryDispatch={props.entryDispatch}
 				entrySettings={props.entrySettings}

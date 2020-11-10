@@ -3,8 +3,9 @@ import styled from 'styled-components'
 import Layers from './layers'
 import Settings from './settings'
 import Downloads from './downloads'
-import { FOOTER_HEIGHT, FOOTER_HANDLE_HEIGHT, FooterTab, SearchTab, AsideTab, AppStateAction, AppState, Colors, useNavigate } from '@docere/common'
+import { FOOTER_HEIGHT, FOOTER_HANDLE_HEIGHT, FooterTab, SearchTab, AsideTab, Colors, useNavigate } from '@docere/common'
 import type { EntryState, EntryStateAction, Entry, DocereConfig } from '@docere/common'
+import { ProjectUIContext } from '../../project/ui-context'
 
 const Wrapper = styled.footer`
 	background: ${Colors.Grey};
@@ -65,16 +66,14 @@ function isEmpty(obj: Object | Array<any>) {
 
 
 interface Props {
-	appDispatch: React.Dispatch<AppStateAction>
-	footerTab: AppState['footerTab']
 	asideTab: EntryState['asideTab']
 	layers: EntryState['layers']
 	entryDispatch: React.Dispatch<EntryStateAction>
 	entry: Entry
 	entrySettings: DocereConfig['entrySettings']
-	searchTab: AppState['searchTab']
 }
 function Footer(props: Props) {
+	const { state, dispatch } = React.useContext(ProjectUIContext)
 	const navigate = useNavigate()
 
 	const handleTabClick = React.useCallback(ev => {
@@ -84,7 +83,7 @@ function Footer(props: Props) {
 		} else if (type === 'aside') {
 			props.entryDispatch({ type: 'TOGGLE_TAB', tabType: type, tab })			
 		} else if (type === 'search' || type === 'footer') {
-			props.appDispatch({ type: 'TOGGLE_TAB', tabType: type, tab })
+			dispatch({ type: 'TOGGLE_TAB', tabType: type, tab })
 		}
 	}, [])
 
@@ -94,14 +93,14 @@ function Footer(props: Props) {
 			<MenuItems onClick={handleTabClick}>
 				<div className="search-tabs">
 					<Button
-						active={props.searchTab === SearchTab.Search}
+						active={state.searchTab === SearchTab.Search}
 						data-tab={SearchTab.Search}
 						data-type="search"
 					>
 							Search
 					</Button>
 					<Button
-						active={props.searchTab === SearchTab.Results}
+						active={state.searchTab === SearchTab.Results}
 						data-tab={SearchTab.Results}
 						data-type="search"
 					>
@@ -110,21 +109,21 @@ function Footer(props: Props) {
 				</div>
 				<div className="footer-tabs">
 					<Button
-						active={props.footerTab === FooterTab.Layers}
+						active={state.footerTab === FooterTab.Layers}
 						data-tab={FooterTab.Layers}
 						data-type="footer"
 					>
 						Layers
 					</Button>
 					<Button
-						active={props.footerTab === FooterTab.Settings}
+						active={state.footerTab === FooterTab.Settings}
 						data-tab={FooterTab.Settings}
 						data-type="footer"
 					>
 							Settings
 					</Button>
 					<Button
-						active={props.footerTab === FooterTab.API}
+						active={state.footerTab === FooterTab.API}
 						data-tab={FooterTab.API}
 						data-type="footer"
 					>
@@ -166,18 +165,18 @@ function Footer(props: Props) {
 			</MenuItems>
 			<Body>
 				<Layers
-					active={props.footerTab === FooterTab.Layers}
+					active={state.footerTab === FooterTab.Layers}
 					dispatch={props.entryDispatch}
 					entry={props.entry}
 					layers={props.layers}
 				/>
 				<Settings
-					active={props.footerTab === FooterTab.Settings}
+					active={state.footerTab === FooterTab.Settings}
 					dispatch={props.entryDispatch}
 					entrySettings={props.entrySettings}
 				/>
 				<Downloads
-					active={props.footerTab === FooterTab.API}
+					active={state.footerTab === FooterTab.API}
 					entry={props.entry}
 				/>
 

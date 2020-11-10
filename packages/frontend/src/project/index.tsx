@@ -7,7 +7,7 @@ import EntrySelector from '../entry-selector'
 import { ProjectHeader } from '../header'
 import Entry from '../entry'
 import PageView from '../page'
-import useAppState from './state'
+import { ProjectUIProvider } from './ui-context'
 
 import useFacetsConfig from '../entry-selector/use-fields'
 import { Route, useRouteMatch } from 'react-router-dom'
@@ -60,28 +60,20 @@ interface Props {
 }
 function RealProject(props: Props) {
 	const { path } = useRouteMatch()
-	const [appState, appDispatch] = useAppState()
 
 	const facetsConfig = useFacetsConfig(props.config)
 	const [state, dispatch] = useSearchReducer(facetsConfig)
 
 	return (
-		<SearchContext.Provider value={{ state, dispatch }}>
-			<ProjectHeader />
-			<Route path={`${path}/pages/:pageId`}>
-				<PageView />
-			</Route>
-			<EntrySelector
-				appDispatch={appDispatch}
-				footerTab={appState.footerTab}
-				searchTab={appState.searchTab}
-				viewport={appState.viewport}
-			/>
-			<Entry 
-				appDispatch={appDispatch}
-				footerTab={appState.footerTab}
-				searchTab={appState.searchTab}
-			/>
-		</SearchContext.Provider>
+		<ProjectUIProvider>
+			<SearchContext.Provider value={{ state, dispatch }}>
+				<ProjectHeader />
+				<Route path={`${path}/pages/:pageId`}>
+					<PageView />
+				</Route>
+				<EntrySelector />
+				<Entry />
+			</SearchContext.Provider>
+		</ProjectUIProvider>
 	)
 }

@@ -4,10 +4,10 @@ import Panels from './panels'
 import Aside from './aside'
 import Footer from './footer'
 import useEntryState from './state'
-import { AppState, AppStateAction } from '@docere/common'
+import { ProjectUIContext } from '../project/ui-context'
 
-export type EntryProps = Pick<AppState, 'footerTab' | 'searchTab'> & { appDispatch: React.Dispatch<AppStateAction> }
-function Entry(props: EntryProps) {
+function Entry() {
+	const { state } = React.useContext(ProjectUIContext)
 	const [entryState, entryDispatch] = useEntryState()
 
 	if (entryState.entry == null) return null
@@ -16,29 +16,24 @@ function Entry(props: EntryProps) {
 		<Main
 			asideTab={entryState.asideTab}
 			id="entry-container"
-			footerTab={props.footerTab}
-			searchTab={props.searchTab}
+			footerTab={state.footerTab}
+			searchTab={state.searchTab}
 		>
 			<Panels
-				{...props}
 				{...entryState}
 				entryDispatch={entryDispatch}
 			/>
 			<Aside
-				appDispatch={props.appDispatch}
 				asideTab={entryState.asideTab}
 				entryDispatch={entryDispatch}
 				entry={entryState.entry}
 			/>
 			<Footer
-				appDispatch={props.appDispatch}
 				asideTab={entryState.asideTab}
 				entryDispatch={entryDispatch}
 				entry={entryState.entry}
 				entrySettings={entryState.entrySettings}
-				footerTab={props.footerTab}
 				layers={entryState.layers}
-				searchTab={props.searchTab}
 			/>
 		</Main>
 	)

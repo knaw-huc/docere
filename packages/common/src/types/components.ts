@@ -1,10 +1,9 @@
 import type { EntryStateAction } from './entry/state'
-import type { AppStateAction } from './app'
 import type { DocereConfig } from './config-data/config'
 import type { TextLayer } from './config-data/layer'
 import type { Entry, EntryState } from './entry'
 
-export type ReactComponent = React.FunctionComponent<any>
+export type ReactComponent = React.FunctionComponent<DocereComponentProps>
 export type DocereComponents = Record<string, ReactComponent>
 
 export interface ComponentProps {
@@ -17,7 +16,6 @@ export type DocereComponentProps =
 	{
 		activeEntities: EntryState['activeEntities']
 		activeFacsimiles: EntryState['activeFacsimiles']
-		appDispatch: React.Dispatch<AppStateAction>
 		components: DocereComponents
 		config: DocereConfig
 		entry: Entry

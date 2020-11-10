@@ -7,7 +7,7 @@ import Panel from './panel'
 import CollectionNavigator from './collection-navigator'
 
 import type { DocereConfig, EntryState, EntryStateAction } from '@docere/common'
-import type { EntryProps } from '..'
+import { ProjectUIContext } from '../../project/ui-context'
 
 interface WProps {
 	hasCollection: boolean
@@ -95,11 +95,12 @@ const SelectLayer = styled.div`
 	}
 `
 
-export type PanelsProps = EntryProps & EntryState & {
+export type PanelsProps = EntryState & {
 	entryDispatch: React.Dispatch<EntryStateAction>
 }
 
 function Panels(props: PanelsProps) {
+	const { state } = React.useContext(ProjectUIContext)
 	const context = React.useContext(ProjectContext)
 
 	// TODO move to useEffect and useState or does it not matter because of React.memo?
@@ -152,7 +153,6 @@ function Panels(props: PanelsProps) {
 			{
 				(context.config.collection != null) &&
 				<CollectionNavigator
-					// appDispatch={props.appDispatch}
 					config={context.config.collection}
 					entry={props.entry}
 					searchUrl={context.searchUrl}
@@ -164,7 +164,7 @@ function Panels(props: PanelsProps) {
 				<SelectLayer>
 					<span>Select a panel</span>
 					{
-						props.footerTab !== FooterTab.Layers &&
+						state.footerTab !== FooterTab.Layers &&
 						<LayersFooterTab
 							active={true}
 							dispatch={props.entryDispatch}

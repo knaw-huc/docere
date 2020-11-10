@@ -1,12 +1,12 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { isSearchPage, TOP_OFFSET, SEARCH_RESULT_ASIDE_WIDTH, Viewport, SearchTab, FOOTER_HEIGHT, FOOTER_HANDLE_HEIGHT } from '@docere/common'
+import { isSearchPage, TOP_OFFSET, SEARCH_RESULT_ASIDE_WIDTH, Viewport, SearchTab, FOOTER_HEIGHT, FOOTER_HANDLE_HEIGHT, ProjectUIState } from '@docere/common'
 
 import Delayed from './delayed'
 
-import type { AppState, AppStateAction } from '@docere/common'
+import { ProjectUIContext } from '../project/ui-context'
 
-type WProps = Pick<FileExplorerProps, 'footerTab' | 'searchTab' | 'viewport'>
+type WProps = Pick<ProjectUIState, 'footerTab' | 'searchTab' | 'viewport'>
 const Wrapper = styled.div`
 	bottom: ${(props => 
 		props.viewport === Viewport.EntrySelector ?
@@ -36,20 +36,22 @@ const Wrapper = styled.div`
 	}
 `
 
-export type FileExplorerProps = Pick<AppState, 'footerTab' | 'searchTab' | 'viewport'> & {
-	appDispatch: React.Dispatch<AppStateAction>
-}
-export default function wrapAsFileExplorer(FileExplorer: React.FC<FileExplorerProps>) {
-	return function FileExplorerWrapper(props: FileExplorerProps) {
+// export type FileExplorerProps = Pick<ProjectState, 'footerTab' | 'searchTab' | 'viewport'> & {
+// 	appDispatch: React.Dispatch<ProjectStateAction>
+// }
+export default function wrapAsFileExplorer(FileExplorer: React.FC<{}>) {
+	return function FileExplorerWrapper() {
+		const { state } = React.useContext(ProjectUIContext)
+
 		return (
 			<Delayed condition={!isSearchPage()} milliseconds={2000}>
 				<Wrapper
 					id="search-container"
-					footerTab={props.footerTab}
-					searchTab={props.searchTab}
-					viewport={props.viewport}
+					footerTab={state.footerTab}
+					searchTab={state.searchTab}
+					viewport={state.viewport}
 				>
-					<FileExplorer {...props} />
+					<FileExplorer />
 				</Wrapper>
 			</Delayed>
 		)

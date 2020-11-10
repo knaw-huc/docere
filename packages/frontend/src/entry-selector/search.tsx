@@ -3,11 +3,11 @@ import styled from 'styled-components'
 import HucFacetedSearch  from '@docere/search'
 import { ProjectContext, useUIComponent, UIComponentType, Viewport, Language, getPath, useUrlObject } from '@docere/common'
 
-import { FileExplorerProps } from './wrap-as-file-explorer'
 import useAutoSuggest from './use-auto-suggest'
 
 import type { Hit } from '@docere/common'
 import { useHistory } from 'react-router-dom'
+import { ProjectUIContext } from '../project/ui-context'
 
 const FS = styled(HucFacetedSearch)`
 	background: white;
@@ -19,15 +19,15 @@ const FS = styled(HucFacetedSearch)`
 
 const excludeResultFields = ['text', 'text_suggest']
 
-function Search(props: FileExplorerProps) {
+function Search() {
 	const history = useHistory()
 	const { config, searchUrl } = React.useContext(ProjectContext)
+	const { state } = React.useContext(ProjectUIContext)
 	const autoSuggest = useAutoSuggest(searchUrl)
 	const ResultBodyComponent = useUIComponent(UIComponentType.SearchResult)
 	const { projectId, entryId } = useUrlObject()
 
 	const onClickResult = React.useCallback((result: Hit) => {
-		// const [entryId, partId] = extractIdsFromElasticSearchId(result.id)
 		history.push(getPath({ projectId, entryId: result.id }))
 	}, [projectId])
 
@@ -40,10 +40,10 @@ function Search(props: FileExplorerProps) {
 			ResultBodyComponent={ResultBodyComponent}
 			resultBodyProps={{
 				activeId: entryId, //createElasticSearchIdFromIds(entryId, query?.partId),
-				searchTab: props.searchTab,
+				searchTab: state.searchTab,
 			}}
 			resultsPerPage={config.searchResultCount}
-			small={props.viewport !== Viewport.EntrySelector}
+			small={state.viewport !== Viewport.EntrySelector}
 			url={searchUrl}
 		/>
 	)

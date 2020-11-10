@@ -4,7 +4,7 @@ import { DEFAULT_SPACING, TOP_OFFSET, MetadataItem } from '@docere/common'
 
 import MetadataItemComp from './get-metadata-value'
 
-import type { AppStateAction, Entry } from '@docere/common'
+import type { Entry } from '@docere/common'
 
 interface WProps { active: boolean }
 const Wrapper = styled.ul`
@@ -21,7 +21,6 @@ const Wrapper = styled.ul`
 `
 
 interface Props extends WProps {
-	appDispatch: React.Dispatch<AppStateAction>
 	metadata: Entry['metadata']
 }
 function MetadataAside(props: Props) {
