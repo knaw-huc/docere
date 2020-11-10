@@ -72,6 +72,7 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 
 		case 'TOGGLE_LAYER': {
 			const layer = entryState.layers.get(action.id)
+			console.log('TL', layer.id, layer.active)
 			const nextLayers = entryState.layers.set(action.id, {
 				...layer,
 				active: !layer.active,
@@ -207,7 +208,7 @@ function updateLayers(
 	const activeLayers = allLayers.filter(l => l.active)
 	const hasFacsimile = activeLayers.some(l => l.active && l.type === LayerType.Facsimile && !l.pinnable)
 
-	let hasChange = false
+	// let hasChange = false
 
 	nextLayers
 		.forEach(layer => {
@@ -225,7 +226,7 @@ function updateLayers(
 
 			// If column width or pinnable change, create a new layer object
 			if (layer.columnWidth !== columnWidth || layer.pinnable !== pinnable) {
-				hasChange = true
+				// hasChange = true
 				nextLayers.set(layer.id, {
 					...layer,
 					columnWidth,
@@ -235,5 +236,6 @@ function updateLayers(
 			}
 		})
 
-	return hasChange ? new Map(nextLayers) : nextLayers
+	// return hasChange ? new Map(nextLayers) : nextLayers
+	return new Map(nextLayers)
 }
