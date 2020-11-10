@@ -124,7 +124,7 @@ function entryStateReducer(entryState: EntryState, action: EntryStateAction): En
 // @ts-ignore
 // window.DEBUG = true
 
-export default function useEntryState() {
+export default function useEntryState(): [EntryState, React.Dispatch<EntryStateAction>] {
 	const { config } = React.useContext(ProjectContext)
 	const { entryId, query } = useUrlObject()
 	const [entryState, entryDispatch] = React.useReducer(entryStateReducer, initialEntryState)
