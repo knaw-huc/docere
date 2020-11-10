@@ -72,7 +72,7 @@ const initialProjectUIContext: ProjectUIContextValue = {
 export const ProjectUIContext = React.createContext(initialProjectUIContext)
 
 // let historyNavigator: HistoryNavigator
-export function ProjectUIProvider(props: any) {
+export function ProjectUIProvider(props: { children: React.ReactNode }) {
 	const [state, dispatch] = React.useReducer(projectUIReducer, initialProjectUIState)
 	const { entryId } = useUrlObject()
 

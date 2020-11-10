@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { EsDataType } from '@docere/common'
+import { EsDataType, ProjectContext } from '@docere/common'
 
-import type { DocereConfig, FacetsConfig, MetadataConfig } from '@docere/common'
+import type { FacetsConfig, MetadataConfig } from '@docere/common'
 
 function filterNonFacets(field: MetadataConfig) {
 	// Do not show facets if config says so
@@ -20,7 +20,8 @@ function sortByOrder(f1: MetadataConfig, f2: MetadataConfig) {
 	return f1.order - f2.order
 }
 
-export default function useFacetsConfig(config: DocereConfig) {
+export default function useFacetsConfig() {
+	const { config } = React.useContext(ProjectContext)
 	const [fields, setFields] = React.useState<FacetsConfig>({})
 
 	React.useEffect(() => {
