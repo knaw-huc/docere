@@ -3,13 +3,13 @@ import { SearchContext, useSearchReducer } from '@docere/search'
 import { ProjectContext, useUrlObject, DocereConfig } from '@docere/common'
 import configs from '@docere/projects'
 
-import EntrySelector from '../entry-selector'
+import Search from '../search'
 import { ProjectHeader } from '../header'
 import Entry from '../entry'
 import PageView from '../page'
 import { ProjectUIProvider } from './ui-context'
 
-import useFacetsConfig from '../entry-selector/use-fields'
+import useFacetsConfig from '../search/use-fields'
 import { Route, useRouteMatch } from 'react-router-dom'
 
 function useProjectData() {
@@ -71,7 +71,7 @@ function RealProject(props: Props) {
 				<Route path={`${path}/pages/:pageId`}>
 					<PageView />
 				</Route>
-				<EntrySelector />
+				<Search />
 				<Entry />
 			</SearchContext.Provider>
 		</ProjectUIProvider>

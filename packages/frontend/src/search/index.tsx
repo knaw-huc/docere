@@ -2,7 +2,7 @@ import * as React from 'react'
 import styled from 'styled-components'
 import { isSearchPage, TOP_OFFSET, SEARCH_RESULT_ASIDE_WIDTH, Viewport, SearchTab, FOOTER_HEIGHT, FOOTER_HANDLE_HEIGHT, ProjectUIState } from '@docere/common'
 
-import Search from './search'
+import FacetedSearch from './search'
 import Delayed from './delayed'
 
 import { ProjectUIContext } from '../project/ui-context'
@@ -37,7 +37,7 @@ const Wrapper = styled.div`
 	}
 `
 
-export default function FileExplorerWrapper() {
+export default function Search() {
 	const { state } = React.useContext(ProjectUIContext)
 
 	return (
@@ -48,7 +48,7 @@ export default function FileExplorerWrapper() {
 				searchTab={state.searchTab}
 				viewport={state.viewport}
 			>
-				<Search />
+				<FacetedSearch />
 			</Wrapper>
 		</Delayed>
 	)

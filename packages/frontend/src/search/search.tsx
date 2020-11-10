@@ -1,12 +1,12 @@
-import * as React from 'react'
+import React from 'react'
 import styled from 'styled-components'
+import { useHistory } from 'react-router-dom'
 import HucFacetedSearch  from '@docere/search'
 import { ProjectContext, useUIComponent, UIComponentType, Viewport, Language, getPath, useUrlObject } from '@docere/common'
 
 import useAutoSuggest from './use-auto-suggest'
 
 import type { Hit } from '@docere/common'
-import { useHistory } from 'react-router-dom'
 import { ProjectUIContext } from '../project/ui-context'
 
 const FS = styled(HucFacetedSearch)`
