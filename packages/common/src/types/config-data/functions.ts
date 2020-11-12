@@ -31,12 +31,7 @@ export interface Entity extends Required<ExtractedEntity> {
 	configId: string
 }
 
-export interface ActiveEntity {
-	layerId: ID
-	triggerLayerId: ID
-}
-
-export interface ActiveFacsimile {
+export interface ActiveEntity extends Entity {
 	layerId: ID
 	triggerLayerId: ID
 }
@@ -110,4 +105,9 @@ interface FacsimileVersion {
 export interface Facsimile {
 	id: string
 	versions: FacsimileVersion[]
+}
+
+export interface ActiveFacsimile extends Facsimile {
+	layerId: ID
+	triggerLayerId: ID
 }

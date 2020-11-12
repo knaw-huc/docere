@@ -1,9 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
 import { getEntity, Lb, PopupBodyProps } from '@docere/text-components'
-import { Colors } from '@docere/common'
+import { Colors, FacsimileContext } from '@docere/common'
 
-import type { DocereComponentProps, DocereComponents } from '@docere/common'
+import type { DocereComponents } from '@docere/common'
 
 // TODO move alto to text-components, see duplication in gheys/htr-layers
 
@@ -56,14 +56,14 @@ const TextLineWrapper = styled(Lb)`
 `
 
 // TODO fix useActive
-function TextLine(props: DocereComponentProps) {
+function TextLine(props: { children: React.ReactNode }) {
 	// const [active, handleClick] = useActive(props)
 
 	return (
 		<TextLineWrapper
 			active={false}
 			// onClick={handleClick}
-			{...props}
+			// {...props}
 		>
 			{props.children}
 		</TextLineWrapper>
@@ -78,7 +78,8 @@ const EntityThumb = styled.img`
 function EntityPopupBody(props: PopupBodyProps) {
 	const { HPOS, VPOS, WIDTH, HEIGHT } = props.docereComponentProps.attributes
 	const rect = `${HPOS},${VPOS},${WIDTH},${HEIGHT}`
-	const activeFacsimile = props.docereComponentProps.activeFacsimiles.values().next().value
+	// const activeFacsimile = props.docereComponentProps.activeFacsimiles.values().next().value
+	const { activeFacsimile } = React.useContext(FacsimileContext)
 
 	return (
 		<EntityThumb

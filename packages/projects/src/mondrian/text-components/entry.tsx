@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
-import { getNote, getPb, Lb, Hi, Paragraph, getEntity, PagePartPopupBody, PopupBodyWrapper, PopupBodyLink } from '@docere/text-components'
-import { Colors, DEFAULT_SPACING } from '@docere/common'
+import { getNote, Pb, Lb, Hi, Paragraph, getEntity, PagePartPopupBody, PopupBodyWrapper, PopupBodyLink } from '@docere/text-components'
+import { Colors, DEFAULT_SPACING, EntrySettingsContext } from '@docere/common'
 
 import type { PopupBodyProps } from '@docere/text-components'
 import type { DocereComponentProps, DocereConfig } from '@docere/common'
@@ -100,11 +100,12 @@ function RkdArtworkPopupBody(props: PopupBodyProps) {
 }
 
 function MondrianLb(props: DocereComponentProps) {
+	const { settings } = React.useContext(EntrySettingsContext)
 	return (
 		<>
-			<Lb {...props} />
+			<Lb />
 			{
-				props.entrySettings['panels.text.showLineBeginnings'] &&
+				settings['panels.text.showLineBeginnings'] &&
 				props.attributes.rend?.indexOf('indent') > -1 &&
 				<span>&nbsp;&nbsp;</span>
 			}
@@ -112,19 +113,41 @@ function MondrianLb(props: DocereComponentProps) {
 	)
 }
 
+const AddWrapper = styled.span`
+	color: ${(props: { hasLb: boolean }) => props.hasLb ? Colors.Green : 'initial'};
+`
+function Add(props: { children: React.ReactNode }) {
+	const { settings } = React.useContext(EntrySettingsContext)
+	return (
+		<AddWrapper hasLb={settings["panels.text.showLineBeginnings"]}>
+			{props.children}
+		</AddWrapper>
+	)
+}
+
+const DelWrapper = styled.span`
+	color: ${Colors.Red};
+	display: ${(props: { hasLb: boolean }) => props.hasLb ? 'inline' : 'none'};
+`
+function Del(props: { children: React.ReactNode} ) {
+	const { settings } = React.useContext(EntrySettingsContext)
+
+	return (
+		<DelWrapper hasLb={settings["panels.text.showLineBeginnings"]}>
+			{props.children}
+		</DelWrapper>
+	)
+}
+
 export default async function entryComponents(_config: DocereConfig) {
 	return {
 		// Show <add> in green in the diplomatic version and in default color in the read version
-		add: styled.span`
-			color: ${(props: DocereComponentProps) => props.entrySettings['panels.text.showLineBeginnings'] ? Colors.Green : 'initial'};
-		`,
+		add: Add,
 		// Show <del> in red in the diplomatic version and hide in the read version
-		del: styled.span`
-			color: ${Colors.Red};
-			display: ${(props: DocereComponentProps) => props.entrySettings['panels.text.showLineBeginnings'] ? 'inline' : 'none'};
-		`,
+		del: Del,
 		lb: MondrianLb,
-		pb: getPb(props => props.attributes.facs?.slice(1)),
+		// pb: getPb(props => props.attributes.facs?.slice(1)),
+		pb: Pb,
 		ptr: getNote(props => props.attributes.target.slice(1)),
 		hi: Hi,
 		p: Paragraph,

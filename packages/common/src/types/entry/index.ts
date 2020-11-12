@@ -3,9 +3,9 @@ import { SerializedLayer, Layer, ID } from '../config-data/layer'
 import type { Entity, Facsimile } from '../config-data/functions'
 import { DocereConfig } from '../config-data/config'
 
-export * from './state'
-export * from './use-entry'
 export * from './layer/serialize'
+export * from './deserialize'
+export * from './use-entry'
 
 export type ListMetadata = ListFacetConfig & { value: string | string[] }
 export type HierarchyMetadata = HierarchyFacetConfig & { value: string[] }

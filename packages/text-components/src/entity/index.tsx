@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { DocereComponentProps, Entity } from '@docere/common'
+import { DocereComponentProps, Entity, EntrySettingsContext, EntitiesContext } from '@docere/common'
 
 import { Popup } from '../popup'
 import { useEntity, useChildren, ExtractEntityKey, ExtractEntityValue } from './hooks'
@@ -54,8 +54,10 @@ export default function getEntity(preProps?: PreProps) {
 	preProps = {...defaultPreProps, ...preProps}
 
 	return function Entity(props: DocereComponentProps) {
+		const { activeEntities, addActiveEntity } = React.useContext(EntitiesContext)
+		const { settings } = React.useContext(EntrySettingsContext)
 		const entityValue = preProps.extractValue(props)
-		if (!props.entrySettings['panels.text.showEntities']) return <span>{entityValue}</span>
+		if (!settings['panels.text.showEntities']) return <span>{entityValue}</span>
 
 		const entity = useEntity(preProps.extractKey, props)
 		const [children, firstWord, restOfFirstChild] = useChildren(entityValue, entity)
@@ -69,20 +71,15 @@ export default function getEntity(preProps?: PreProps) {
 
 		React.useEffect(() => {
 			if (entity == null) return
-			const nextActive = props.activeEntities?.has(entity.id)
+			const nextActive = activeEntities?.has(entity.id)
 			setActive(nextActive === true)
 			if (!nextActive && showTooltip) setShowTooltip(false)
-		}, [entity, props.activeEntities])
+		}, [entity, activeEntities])
 
 		const handleClick = React.useCallback(ev => {
 			ev.stopPropagation()
 
-			props.entryDispatch({
-				id: entity.id,
-				layerId: null,
-				triggerLayerId: props.layer.id,
-				type: 'SET_ENTITY',
-			})
+			addActiveEntity(entity.id, props.layer.id, null)
 
 			setShowTooltip(true)
 		}, [entity?.id])
@@ -91,7 +88,7 @@ export default function getEntity(preProps?: PreProps) {
 
 		const Icon = IconsByType[entity.type]
 
-		const openToAside = active && !props.entrySettings['panels.text.openPopupAsTooltip']
+		const openToAside = active && !settings['panels.text.openPopupAsTooltip']
 
 		return (
 			<EntityWrapper

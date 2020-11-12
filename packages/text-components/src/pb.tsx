@@ -1,5 +1,5 @@
 import React from 'react'
-import { Colors, DEFAULT_SPACING, Facsimile, EntryState } from '@docere/common'
+import { Colors, DEFAULT_SPACING, Facsimile, EntrySettingsContext, EntryContext, FacsimileContext } from '@docere/common'
 import styled from 'styled-components'
 
 import type { DocereComponentProps } from '@docere/common'
@@ -32,81 +32,78 @@ const Img = styled.img`
 	}}
 `
 
-type ExtractPbId = (props: DocereComponentProps) => string | string[]
+// type ExtractPbId = (props: DocereComponentProps) => string | string[]
 
-function useFacsimiles(extractPbId: ExtractPbId, props: DocereComponentProps) {
+function useFacsimiles(ids: string) {
+	const entry = React.useContext(EntryContext)
 	const [facsimiles, setFacsimiles] = React.useState<Facsimile[]>([])
 
 	React.useEffect(() => {
-		let ids = extractPbId(props)
 		if (ids == null) return
-		if (!Array.isArray(ids)) ids = [ids]
 
-		const _facsimiles = ids
-			.map(id => props.entry.textData.facsimiles.get(id))
+		const _facsimiles = ids.split(' ')
+			.map(id => entry.textData.facsimiles.get(id))
 			.filter(x => x != null)
 
 		setFacsimiles(_facsimiles)
-	}, [props.entry.id])
+	}, [entry])
 
 	return facsimiles
 }
 
-export default function getPb(extractPbId: ExtractPbId): React.FC<DocereComponentProps> {
-	return function Pb(props: DocereComponentProps) {
-		if (
-			!props.entrySettings['panels.text.showPageBeginnings'] ||
-			props.layer.facsimiles == null
-		) return null
+// export default function getPb(extractPbId: ExtractPbId): React.FC<DocereComponentProps> {
+export function Pb(props: DocereComponentProps) {
+	const { settings } = React.useContext(EntrySettingsContext)
 
-		const facsimiles = useFacsimiles(extractPbId, props)
+	if (
+		!settings['panels.text.showPageBeginnings'] ||
+		props.layer.facsimiles == null
+	) return null
 
-		return (
-			<Wrapper>
-				<div>
-					{
-						facsimiles.map(facsimile =>
-							<FacsimileThumb
-								activeFacsimiles={props.activeFacsimiles}
-								entryDispatch={props.entryDispatch}
-								facsimile={facsimile}
-								key={facsimile.id}
-								layer={props.layer}
-							/>	
-						)
-					}
-				</div>
-			</Wrapper>
-		)
-	}
+	// TODO implement docere:id
+	const facsimiles = useFacsimiles(props.attributes['docere:id'])
+
+	return (
+		<Wrapper>
+			<div>
+				{
+					facsimiles.map(facsimile =>
+						<FacsimileThumb
+							// activeFacsimiles={props.activeFacsimiles}
+							// entryDispatch={props.entryDispatch}
+							facsimile={facsimile}
+							key={facsimile.id}
+							layer={props.layer}
+						/>	
+					)
+				}
+			</div>
+		</Wrapper>
+	)
 }
+// }
 
 interface FacsimileThumbProps {
-	activeFacsimiles: EntryState['activeFacsimiles']
-	entryDispatch: DocereComponentProps['entryDispatch'] 
+	// activeFacsimiles: EntryState['activeFacsimiles']
+	// entryDispatch: DocereComponentProps['entryDispatch'] 
 	facsimile: Facsimile
 	layer: DocereComponentProps['layer']
 }
 function FacsimileThumb(props: FacsimileThumbProps) {
+	const { activeFacsimile, setActiveFacsimile } = React.useContext(FacsimileContext)
+
 	const imgRef = React.useRef<HTMLImageElement>()
 
 	const onClick = React.useCallback((ev) => {
 		const { facsimileId } = ev.target.dataset
-
-		props.entryDispatch({
-			id: facsimileId,
-			layerId: null,
-			triggerLayerId: props.layer.id,
-			type: 'SET_FACSIMILE',
-		})
+		setActiveFacsimile(facsimileId, props.layer.id, null)
 	}, [props.layer])
 
 	const version = props.facsimile.versions[0]
 	const src = version.thumbnailPath != null ? version.thumbnailPath : version.path
-	const active = props.activeFacsimiles.has(props.facsimile.id)
+	const active = activeFacsimile.id === props.facsimile.id
 
 	React.useEffect(() => {
-		const activeFacsimile = props.activeFacsimiles.get(props.facsimile.id)
 		if (
 			active &&
 			activeFacsimile.triggerLayerId !== props.layer.id &&

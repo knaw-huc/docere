@@ -8,6 +8,7 @@ import { deserializeEntry } from './deserialize'
 
 const entryCache = new Map<string, Entry>()
 
+// TODO this is used in text-components/../../note-link.tsx, but refactor?
 export function useEntry(id: string) {
 	const [entry, setEntry] = React.useState<Entry>(null)
 	const { projectId, entryId } = useUrlObject()

@@ -1,18 +1,7 @@
 import * as React from 'react'
 import styled, { css } from 'styled-components'
-import { TOP_OFFSET, ASIDE_WIDTH, SEARCH_RESULT_ASIDE_WIDTH, FOOTER_HEIGHT, SearchTab } from '@docere/common'
-import type { EntryState, ProjectUIState } from '@docere/common'
 
 // interface MainProps { asideTab: AsideTab, footerTab: FooterTab, searchTab: SearchTab }
-type MainProps = Pick<EntryState, 'asideTab'> & Pick<ProjectUIState, 'searchTab' | 'footerTab'>
-export const Main = styled.div`
-	bottom: ${(props: MainProps) => props.footerTab != null ? `${FOOTER_HEIGHT}px` : 0};
-	left: ${props => props.searchTab === SearchTab.Results ? `${SEARCH_RESULT_ASIDE_WIDTH}px` : 0};
-	position: fixed;
-	right: ${props => props.asideTab != null ? `${ASIDE_WIDTH}px` : 0};
-	top: ${TOP_OFFSET}px;
-	transition: all 300ms;
-`
 
 export const Menu = styled.div`
 	background-color: white;

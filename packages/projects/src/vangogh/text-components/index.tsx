@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { getNote, getPb, getEntity, Lb, EntryLinkPopupBody, NoteLinkPopupBody } from '@docere/text-components'
+import { getNote, Pb, getEntity, Lb, EntryLinkPopupBody, NoteLinkPopupBody } from '@docere/text-components'
 import { DocereComponentContainer, DocereConfig } from '@docere/common'
 
 export default function getComponents(_config: DocereConfig) {
@@ -20,7 +20,8 @@ export default function getComponents(_config: DocereConfig) {
 			// 	/>, 
 			// lb: (props: DocereComponentProps) => <Lb showLineBeginnings={props.entrySettings['panels.text.showLineBeginnings']} />,
 			lb: Lb,
-			pb: getPb(props => props.attributes.facs.slice(1)),
+			// pb: getPb(props => props.attributes.facs.slice(1)),
+			pb: Pb,
 			// ref,
 			'ref[target][type="entry-link"]': getEntity({
 				// extractType: () => 'entry-link',

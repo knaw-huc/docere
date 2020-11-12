@@ -57,7 +57,7 @@ export interface DocereConfig {
 
 export type ExtractEntryPartElements = (entry: ConfigEntry, config: DocereConfig) => Map<string, Element>
 
-interface EntrySettings {
+export interface EntrySettings {
 	'panels.showHeaders'?: boolean
 	'panels.text.openPopupAsTooltip'?: boolean
 	'panels.text.showMinimap'?: boolean

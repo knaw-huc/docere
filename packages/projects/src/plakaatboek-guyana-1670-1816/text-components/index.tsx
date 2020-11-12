@@ -2,10 +2,10 @@ import React from 'react'
 import { DocereComponentContainer, DocereComponentProps } from '@docere/common'
 import type { DocereConfig, DocereComponents } from '@docere/common'
 import styled from 'styled-components'
-import { getPb, getNote } from '@docere/text-components'
+import { Pb, getNote } from '@docere/text-components'
 
 function Transcriptie(props: DocereComponentProps) {
-	const Pb = getPb(() => Array.from(props.layer.facsimiles))
+	// const Pb = getPb(() => Array.from(props.layer.facsimiles))
 
 	return (
 		<div>

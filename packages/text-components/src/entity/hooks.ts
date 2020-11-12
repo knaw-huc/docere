@@ -1,5 +1,5 @@
 import React from 'react'
-import { Entity, DocereComponentProps } from '@docere/common'
+import { Entity, DocereComponentProps, EntryContext } from '@docere/common'
 import IconsByType from './icons'
 
 export type ExtractEntityType = (props: DocereComponentProps) => string
@@ -10,13 +10,14 @@ export function useEntity(
 	extractEntityId: ExtractEntityKey,
 	props: DocereComponentProps
 ) {
+	const entry = React.useContext(EntryContext)
 	const [entity, setEntity] = React.useState<Entity>(null)
 
 	React.useEffect(() => {
 		const entityId = extractEntityId(props)
-		const _entity = props.entry.textData.entities.get(entityId)
+		const _entity = entry.textData.entities.get(entityId)
 		setEntity(_entity)
-	}, [])
+	}, [entry])
 
 	return entity
 }

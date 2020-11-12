@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import debounce from 'lodash.debounce'
-import { isTextLayer, ProjectContext, useComponents, DEFAULT_SPACING, TEXT_PANEL_TEXT_WIDTH, DocereComponentContainer, getTextPanelLeftSpacing, PANEL_HEADER_HEIGHT, StatefulTextLayer } from '@docere/common'
+import { isTextLayer, useComponents, DEFAULT_SPACING, TEXT_PANEL_TEXT_WIDTH, DocereComponentContainer, getTextPanelLeftSpacing, PANEL_HEADER_HEIGHT, StatefulTextLayer, EntrySettingsContext, EntryContext } from '@docere/common'
 import { SearchContext } from '@docere/search'
 import DocereTextView from '@docere/text'
 
@@ -9,19 +9,18 @@ import PanelHeader from '../header'
 import Minimap from './minimap'
 
 import type { DocereComponentProps, DocereConfig } from '@docere/common'
-import type { PanelsProps } from '..'
 
 const Wrapper = styled.div`
 	background: white;
 	position: relative;
 `
 
-type TWProps = Pick<TextPanelProps, 'layer' | 'entrySettings'>
+type TWProps = Props & { showHeaders: boolean }
 const TextWrapper = styled.div`
 	box-sizing: border-box;
 	display: grid;
 	grid-template-columns: auto ${(props: TWProps) => props.layer.width}px auto;
-	height: ${props => props.entrySettings['panels.showHeaders'] ? `calc(100% - ${PANEL_HEADER_HEIGHT}px)` : '100%'};
+	height: ${props => props.showHeaders ? `calc(100% - ${PANEL_HEADER_HEIGHT}px)` : '100%'};
 	overflow-y: auto;
 	overflow-x: hidden; ${/* Hide overflow because a vertical scrollbar could add a horizontal scrollbar */''}
 	position: relative;
@@ -49,13 +48,13 @@ export const Text = styled.div`
 	position: relative;
 `
 
-type TextPanelBaseProps = Pick<PanelsProps, 'activeEntities' | 'activeFacsimiles' | 'entryDispatch' | 'entry' | 'entrySettings'>
-interface TextPanelProps extends TextPanelBaseProps {
+interface Props {
 	layer: StatefulTextLayer
 }
 
-function TextPanel(props: TextPanelProps) {
-	const { config } = React.useContext(ProjectContext)
+function TextPanel(props: Props) {
+	const entry = React.useContext(EntryContext)
+	const { settings } = React.useContext(EntrySettingsContext)
 	const searchContext = React.useContext(SearchContext)
 
 	const textWrapperRef = React.useRef<HTMLDivElement>()
@@ -64,11 +63,11 @@ function TextPanel(props: TextPanelProps) {
 	const [docereTextViewReady, setDocereTextViewReady] = React.useState(false)
 	const [highlightAreas, setHighlightAreas] = React.useState<number[]>([])
 
-	const layer = props.entry.layers.filter(isTextLayer).find(tl => tl.id === props.layer.id)
+	const layer = entry.layers.filter(isTextLayer).find(tl => tl.id === props.layer.id)
 	const components = useComponents(DocereComponentContainer.Layer, layer.id)
 
 	const handleScroll = React.useCallback(() => {
-		if (!props.entrySettings['panels.text.showMinimap']) return
+		if (!settings['panels.text.showMinimap']) return
 
 		const resetActiveArea = debounce(() => {
 			activeAreaRef.current.classList.remove('active')
@@ -87,44 +86,19 @@ function TextPanel(props: TextPanelProps) {
 		activeAreaRef.current.style.transform = `translateY(${(scrollTop / 10)}px)`
 
 		resetActiveArea()
-	}, [props.entrySettings['panels.text.showMinimap']])
+	}, [settings['panels.text.showMinimap']])
 
 	const customProps: DocereComponentProps = {
-		activeEntities: props.activeEntities,
-		activeFacsimiles: props.activeFacsimiles,
 		components,
-		config,
-		entry: props.entry,
-		entryDispatch: props.entryDispatch,
-		entrySettings: props.entrySettings,
 		insideNote: false,
 		layer: props.layer,
 	}
 
-	// React.useEffect(() => {
-	// 	console.log(docereTextViewReady)
-	// 	if (
-	// 		textWrapperRef.current == null ||
-	// 		!docereTextViewReady ||
-	// 		props.layer.activeFacsimile == null ||
-	// 		props.layer.activeFacsimile.triggerLayer?.id === props.layer.id
-	// 	) return
-
-	// 	const pb = textWrapperRef.current
-	// 		.querySelector(`[data-facsimile-id="${props.layer.activeFacsimile.id}"]`)
-
-	// 	setTimeout(() => {
-	// 		pb?.scrollIntoView({ behavior: 'smooth' })
-			
-	// 	}, 600);
-	// }, [props.layer.activeFacsimile, docereTextViewReady])
-
 	return (
 		<Wrapper className="text-panel">
 			{
-				props.entrySettings['panels.showHeaders'] &&
+				settings['panels.showHeaders'] &&
 				<PanelHeader
-					entryDispatch={props.entryDispatch}
 					layer={props.layer}
 				>
 					{props.layer.title}
@@ -134,10 +108,10 @@ function TextPanel(props: TextPanelProps) {
 				layer={props.layer}
 				onScroll={handleScroll}
 				ref={textWrapperRef}
-				entrySettings={props.entrySettings}
+				showHeaders={settings['panels.showHeaders']}
 			>
 				<Text 
-					settings={props.entrySettings}
+					settings={settings}
 				>
 					<DocereTextView
 						customProps={customProps}
@@ -150,10 +124,10 @@ function TextPanel(props: TextPanelProps) {
 				</Text>
 			</TextWrapper>
 			{
-				props.entrySettings['panels.text.showMinimap'] &&
+				settings['panels.text.showMinimap'] &&
 				<Minimap
 					activeAreaRef={activeAreaRef}
-					hasHeader={props.entrySettings['panels.showHeaders']}
+					hasHeader={settings['panels.showHeaders']}
 					highlightAreas={highlightAreas}
 					isReady={docereTextViewReady}
 					textWrapperRef={textWrapperRef}

@@ -1,6 +1,6 @@
 import * as React from 'react'
 // import { Colors } from '@docere/common'
-import type { FacsimileArea, EntryStateAction } from '@docere/common'
+import type { FacsimileArea } from '@docere/common'
 
 interface Overlay {
 	active: boolean
@@ -166,11 +166,11 @@ export class AreaRenderer {
 	// }
 }
 
-export default function useAreaRenderer(osd: any, OpenSeadragon: any, entryDispatch: React.Dispatch<EntryStateAction>) {
+export default function useAreaRenderer(osd: any, OpenSeadragon: any, handleAreaClick: (ev: any) => void) {
 	const [areaRenderer, setAreaRenderer] = React.useState<AreaRenderer>(null)
 	React.useEffect(() => {
 		if (osd == null) return
-		setAreaRenderer(new AreaRenderer(osd, OpenSeadragon, entryDispatch))
+		setAreaRenderer(new AreaRenderer(osd, OpenSeadragon, handleAreaClick))
 	}, [osd])
 	return areaRenderer
 }

@@ -1,14 +1,14 @@
 import React from 'react'
 import { DocereConfig, DocereComponentProps } from '@docere/common';
 import styled from 'styled-components';
-import { getPb, Lb } from '@docere/text-components';
+import { Lb, Pb } from '@docere/text-components';
 
 const ColumnWrapper = styled.div`
 	margin-bottom: 1rem;
 `
 
 function Column(props: DocereComponentProps) {
-	const Pb = getPb(props => props.attributes.facs)
+	// const Pb = getPb(props => props.attributes.facs)
 
 	return (
 		<ColumnWrapper>

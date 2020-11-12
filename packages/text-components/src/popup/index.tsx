@@ -1,7 +1,7 @@
 import React from 'react'
 import DocereTextView from '@docere/text'
 import styled from 'styled-components'
-import { TEXT_PANEL_TEXT_WIDTH, DEFAULT_SPACING, getTextPanelLeftSpacing, Entity, indexOfIterator } from '@docere/common'
+import { TEXT_PANEL_TEXT_WIDTH, DEFAULT_SPACING, getTextPanelLeftSpacing, Entity, indexOfIterator, EntrySettingsContext, EntitiesContext } from '@docere/common'
 
 import Tooltip, { TooltipBody } from './tooltip'
 
@@ -55,6 +55,9 @@ interface Props {
 	xml?: string
 }
 export function Popup(props: Props) {
+	const { activeEntities } = React.useContext(EntitiesContext)
+	const { settings } = React.useContext(EntrySettingsContext)
+
 	if (!props.active) return null
 	const Wrapper = props.openToAside ?  PopupAsideWrapper : Tooltip
 
@@ -62,8 +65,8 @@ export function Popup(props: Props) {
 		<Wrapper
 			entity={props.entity}
 			layer={props.docereComponentProps.layer}
-			settings={props.docereComponentProps.entrySettings}
-			zIndexOffset={indexOfIterator(props.docereComponentProps.activeEntities, props.entity.id)}
+			settings={settings}
+			zIndexOffset={indexOfIterator(activeEntities, props.entity.id)}
 		>
 			{
 				props.entity.title != null &&

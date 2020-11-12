@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { getEntryApiPath, Entry, Colors, useUrlObject } from '@docere/common'
+import { getEntryApiPath, Colors, useUrlObject } from '@docere/common'
 
 import { BottomTabWrapper } from './layers'
 
@@ -43,7 +43,6 @@ function ExternalLink(props: { children: React.ReactNode, href: string }) {
 
 interface Props {
 	active: boolean
-	entry: Entry
 }
 function Layers(props: Props) {
 	// const { config } = React.useContext(ProjectContext)

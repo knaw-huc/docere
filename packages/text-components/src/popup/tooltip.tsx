@@ -1,6 +1,6 @@
 import * as React from "react"
 import styled from "styled-components"
-import { DEFAULT_POPUP_BG_COLOR, getTextPanelWidth, Entity, TextLayer, EntryState } from '@docere/common'
+import { DEFAULT_POPUP_BG_COLOR, getTextPanelWidth, Entity, TextLayer, EntitiesContext } from '@docere/common'
 
 import type { DocereConfig } from '@docere/common'
 
@@ -42,7 +42,6 @@ const Svg = styled.svg`
 
 // type Orientation = "top" | "right" | "bottom" | "left"
 interface Props {
-	activeEntities: EntryState['activeEntities']
 	bodyStyle?: React.CSSProperties
 	children: React.ReactNode
 	entity: Entity
@@ -51,6 +50,7 @@ interface Props {
 	zIndexOffset?: number
 }
 function Tooltip(props: Props) {		
+	const { activeEntities } = React.useContext(EntitiesContext)
 	const wrapperRef: React.RefObject<HTMLDivElement> = React.useRef()
 	const [offset, setOffset] = React.useState(null)
 
@@ -64,7 +64,7 @@ function Tooltip(props: Props) {
 		if (tooltipRect.left < textPanelLeft) offset = textPanelLeft - tooltipRect.left
 
 		const textPanelMiddle = textPanelRect.left + (textPanelRect.width / 2)
-		const textPanelRight = textPanelMiddle + (getTextPanelWidth(props.settings, props.activeEntities) / 2) - 32
+		const textPanelRight = textPanelMiddle + (getTextPanelWidth(props.settings, activeEntities) / 2) - 32
 		if (tooltipRect.right > textPanelRight) offset = textPanelRight - tooltipRect.right
 
 		setOffset(offset)

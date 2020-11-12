@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { ProjectContext, Entry, DocereConfig, Colors, useNavigate, useUrlObject } from '@docere/common'
+import { ProjectContext, DocereConfig, Colors, useNavigate, useUrlObject, EntryContext } from '@docere/common'
 
 import CollectionNavigatorController from './controller'
 
@@ -37,7 +37,8 @@ function useOpenSeadragonController(
 	return controller
 }
 
-function useEntry(controller: CollectionNavigatorController, entry: Entry) {
+function useEntry(controller: CollectionNavigatorController) {
+	const entry = React.useContext(EntryContext)
 	React.useEffect(() => {
 		if (controller == null) return
 		controller.setEntry(entry)
@@ -52,7 +53,6 @@ const Container = styled.div`
 
 interface Props {
 	config: ProjectContext['config']['collection']
-	entry: Entry
 	searchUrl: ProjectContext['searchUrl']
 }
 function CollectionNavigator(props: Props) {
@@ -69,7 +69,7 @@ function CollectionNavigator(props: Props) {
 		handleClick,
 	)
 
-	useEntry(controller, props.entry)
+	useEntry(controller)
 
 	return (
 		<Container

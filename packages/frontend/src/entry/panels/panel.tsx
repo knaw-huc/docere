@@ -1,21 +1,17 @@
 import React from 'react'
+import { isTextLayer, isFacsimileLayer } from '@docere/common'
+
 import FacsimilePanel from './facsimile'
 import TextPanel from './text'
 
-import { isTextLayer, isFacsimileLayer } from '@docere/common'
-
 import type { Layer } from '@docere/common'
-import type { PanelsProps } from '.'
 
-export default function Panel(props: PanelsProps & { layer: Layer }) {
+
+
+export default function Panel(props: { layer: Layer }) {
 	if (isFacsimileLayer(props.layer)) {
 		return (
 			<FacsimilePanel
-				activeEntities={props.activeEntities}
-				activeFacsimiles={props.activeFacsimiles}
-				entry={props.entry}
-				entryDispatch={props.entryDispatch}
-				entrySettings={props.entrySettings}
 				key={props.layer.id}
 				layer={props.layer}
 			/>
@@ -25,11 +21,6 @@ export default function Panel(props: PanelsProps & { layer: Layer }) {
 	if (isTextLayer(props.layer)) {
 		return (
 			<TextPanel
-				activeEntities={props.activeEntities}
-				activeFacsimiles={props.activeFacsimiles}
-				entry={props.entry}
-				entryDispatch={props.entryDispatch}
-				entrySettings={props.entrySettings}
 				key={props.layer.id}
 				layer={props.layer}
 			/>

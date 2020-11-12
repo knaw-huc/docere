@@ -1,7 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
-import { DEFAULT_SPACING, PANEL_HEADER_HEIGHT, Colors, StatefulLayer } from '@docere/common'
-import type { EntryStateAction, Layer } from '@docere/common'
+import { DEFAULT_SPACING, PANEL_HEADER_HEIGHT, Colors, StatefulLayer, LayersContext } from '@docere/common'
+
+import type { Layer } from '@docere/common'
 
 const Header = styled.header`
 	background: ${Colors.Grey};
@@ -54,17 +55,18 @@ const Close = styled.div`
 
 interface Props {
 	children: React.ReactNode
-	entryDispatch: React.Dispatch<EntryStateAction>,
 	layer: StatefulLayer
 }
 export default function PanelHeader(props: Props) {
-	const togglePanel = React.useCallback(() => {
-		props.entryDispatch({ type: 'TOGGLE_LAYER' , id: props.layer.id })			
-	}, [])
+	const { pinLayer, activateLayer } = React.useContext(LayersContext)
 
-	const pinPanel = React.useCallback(() => {
-		props.entryDispatch({ type: 'PIN_PANEL' , id: props.layer.id })			
-	}, [])
+	const handleActivatePanel = React.useCallback(() => {
+		activateLayer(props.layer.id)
+	}, [props.layer])
+
+	const handlePinPanel = React.useCallback(() => {
+		pinLayer(props.layer.id)
+	}, [props.layer])
 
 	return (
 		<Header>
@@ -76,7 +78,7 @@ export default function PanelHeader(props: Props) {
 				props.layer.pinnable &&
 				<Svg
 					layer={props.layer}
-					onClick={pinPanel}
+					onClick={handlePinPanel}
 					viewBox="0 0 512.519 512.519"
 				>
 					<path d="M393.846,363.999l111.417-111.417c10.838-10.838,7.051-29.228-7.187-34.902c-59.185-23.587-111.417-27.296-153.314-19.203
@@ -93,7 +95,7 @@ export default function PanelHeader(props: Props) {
 						L341.589,355.917L247.027,450.496z"/>
 				</Svg>
 			}
-			<Close onClick={togglePanel}>✕</Close>
+			<Close onClick={handleActivatePanel}>✕</Close>
 		</Header>
 	)
 }

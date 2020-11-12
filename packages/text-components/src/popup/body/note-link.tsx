@@ -1,5 +1,5 @@
 import React from 'react'
-import { useComponents, DocereComponentContainer, useEntry, Entity, useNavigate } from '@docere/common'
+import { useComponents, DocereComponentContainer, Entity, useNavigate, useEntry } from '@docere/common'
 import DocereTextView from '@docere/text'
 
 import { PopupBodyLink, PopupBodyWrapper } from './index'

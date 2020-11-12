@@ -1,12 +1,11 @@
-import * as React from 'react'
+import React from 'react'
 import styled from 'styled-components'
-import { DEFAULT_SPACING, Colors, FooterTab, FOOTER_HANDLE_HEIGHT, ProjectContext, StatefulLayer } from '@docere/common'
+import { DEFAULT_SPACING, Colors, FooterTab, FOOTER_HANDLE_HEIGHT, ProjectContext, StatefulLayer, LayersContext } from '@docere/common'
 
-import LayersFooterTab from '../footer/layers'
+import LayersFooterTab from '../footer/body/layers'
 import Panel from './panel'
 import CollectionNavigator from './collection-navigator'
 
-import type { DocereConfig, EntryState, EntryStateAction } from '@docere/common'
 import { ProjectUIContext } from '../../project/ui-context'
 
 interface WProps {
@@ -45,7 +44,6 @@ const PanelsCommon = styled.div`
 
 interface PWProps {
 	activeLayers: StatefulLayer[]
-	settings: DocereConfig['entrySettings']
 }
 const ActivePanels = styled(PanelsCommon)`
 	${(p: PWProps) => {
@@ -95,16 +93,13 @@ const SelectLayer = styled.div`
 	}
 `
 
-export type PanelsProps = EntryState & {
-	entryDispatch: React.Dispatch<EntryStateAction>
-}
-
-function Panels(props: PanelsProps) {
+function Panels() {
+	const { layers: layersMap } = React.useContext(LayersContext)
 	const { state } = React.useContext(ProjectUIContext)
 	const context = React.useContext(ProjectContext)
 
 	// TODO move to useEffect and useState or does it not matter because of React.memo?
-	const layers = Array.from(props.layers.values())
+	const layers = Array.from(layersMap.values())
 	const activeLayers = layers.filter(l => l.active && !l.pinned)
 	const pinnedLayers = layers.filter(l => l.pinned)
 
@@ -123,7 +118,6 @@ function Panels(props: PanelsProps) {
 						pinnedLayers
 							.map(layer =>
 								<Panel
-									{...props}
 									key={layer.id}
 									layer={layer}
 								/>
@@ -136,13 +130,11 @@ function Panels(props: PanelsProps) {
 				<ActivePanels
 					activeLayers={activeLayers}
 					id="active-panels"
-					settings={props.entrySettings}
 				>
 					{
 						activeLayers
 							.map(layer =>
 								<Panel
-									{...props}
 									key={layer.id}
 									layer={layer}
 								/>
@@ -154,7 +146,6 @@ function Panels(props: PanelsProps) {
 				(context.config.collection != null) &&
 				<CollectionNavigator
 					config={context.config.collection}
-					entry={props.entry}
 					searchUrl={context.searchUrl}
 				/>
 			}
@@ -165,12 +156,7 @@ function Panels(props: PanelsProps) {
 					<span>Select a panel</span>
 					{
 						state.footerTab !== FooterTab.Layers &&
-						<LayersFooterTab
-							active={true}
-							dispatch={props.entryDispatch}
-							entry={props.entry}
-							layers={props.layers}
-						/>
+						<LayersFooterTab/>
 					}
 				</SelectLayer>
 			}
@@ -178,4 +164,4 @@ function Panels(props: PanelsProps) {
 	)
 }
 
-export default React.memo(Panels)
+export default Panels

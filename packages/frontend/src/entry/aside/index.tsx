@@ -1,12 +1,8 @@
 import * as React from 'react'
 import styled from 'styled-components';
-import { ASIDE_WIDTH, AsideTab, Colors, FOOTER_HANDLE_HEIGHT } from '@docere/common'
+import { ASIDE_WIDTH, AsideTab, Colors, FOOTER_HANDLE_HEIGHT, EntryTabContext } from '@docere/common'
 
 import MetadataAside from './metadata/index'
-// import NotesAside from './notes'
-// import TextDataAside from './text-data'
-
-import type { EntryState, EntryStateAction } from '@docere/common'
 
 const Wrapper = styled.aside`
 	background-color: ${Colors.Grey};
@@ -21,21 +17,16 @@ const Wrapper = styled.aside`
 	z-index: 6000;
 `
 
-type EntryAsideProps =
-	Pick<EntryState, 'asideTab' | 'entry'> &
-	{
-		entryDispatch: React.Dispatch<EntryStateAction>
-	}
-function Aside(props: EntryAsideProps) {
-	if (props.entry == null) return
+function Aside() {
+	const { asideTab } = React.useContext(EntryTabContext)
 
 	return (
 		<Wrapper>
+			{/* TODO remove active check? Let metadata always render if there is metadata? */}
 			{
-				props.asideTab === AsideTab.Metadata &&
+				asideTab === AsideTab.Metadata &&
 				<MetadataAside
-					active={props.asideTab === AsideTab.Metadata}
-					metadata={props.entry.metadata}
+					active={asideTab === AsideTab.Metadata}
 				/>
 			}
 			{/* {
