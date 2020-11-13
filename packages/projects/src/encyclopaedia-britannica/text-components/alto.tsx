@@ -90,7 +90,7 @@ function EntityPopupBody(props: PopupBodyProps) {
 }
 
 function SP() { return <> </> }
-
+//
 const components: DocereComponents = {
 	Description: () => null,
 	String: getEntity(EntityPopupBody),
