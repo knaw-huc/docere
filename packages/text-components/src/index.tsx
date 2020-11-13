@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import type { ComponentProps } from '@docere/common'
 import { Lb } from './lb'
 import { Pb } from './pb'
-import getEntity from './entity'
+import { getEntity } from './entity'
 import getNote from './note'
 
 

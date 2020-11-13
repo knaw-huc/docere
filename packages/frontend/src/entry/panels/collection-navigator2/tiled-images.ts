@@ -35,7 +35,6 @@ export default class TiledImages {
 		private viewer: OpenSeadragon.Viewer,
 		private entry: Entry,
 		private layer: FacsimileLayer
-		// private activeFacsimile: Facsimile
 	) {
 		// Add event handlers
 		this.viewer.world.addHandler('add-item', this.addItemHandler)
@@ -61,9 +60,9 @@ export default class TiledImages {
 	// Set the active options from this.entry.facsimiles. Used to calculate this.startIndex and this.highlightActive
 	setActiveOptions() {
 		this.activeTileOptions = this.tileOptions
-			.filter(option =>
-				option.tileSource === formatTileSource(this.activeFacsimile) //.versions[0].path
-			)
+			.filter(option => {
+				return option.tileSource === formatTileSource(this.activeFacsimile)
+			})
 	}
 
 	// Set a new entry. When this.highlightActive returns false, not all tiles of that entry are loaded.

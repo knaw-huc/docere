@@ -2,11 +2,9 @@ import React from 'react'
 import styled from 'styled-components'
 import { DocereComponentProps, Entity, EntrySettingsContext, EntitiesContext } from '@docere/common'
 
-import { Popup } from '../popup'
-import { useEntity, useChildren, ExtractEntityKey, ExtractEntityValue } from './hooks'
+import { Popup, PopupBodyProps } from '../popup'
+import { useEntity, useChildren } from './hooks'
 import IconsByType from './icons'
-
-import type { PopupBodyProps } from '../popup'
 
 interface NWProps { openToAside: boolean }
 const NoWrap = styled.span`
@@ -38,29 +36,28 @@ const EntityWrapper = styled.span`
 	}
 `
 
-const defaultPreProps: Omit<PreProps, 'extractType'> = {
-	extractKey: (props) => props.attributes.key,
-	extractValue: (props) => props.children
-}
+// const defaultPreProps: Omit<PreProps, 'extractType'> = {
+// 	extractKey: (props) => props.attributes.key,
+// 	extractValue: (props) => props.children
+// }
 
-interface PreProps {
-	// extractType: ExtractEntityType
-	extractKey?: ExtractEntityKey // Extract the entity ID 
-	extractValue?: ExtractEntityValue // Extract the entity text content (not the note body!)
-	PopupBody?: React.FC<PopupBodyProps>
-}
+// interface PreProps {
+// 	// extractType: ExtractEntityType
+// 	extractKey?: ExtractEntityKey // Extract the entity ID 
+// 	extractValue?: ExtractEntityValue // Extract the entity text content (not the note body!)
+// 	PopupBody?: React.FC<PopupBodyProps>
+// }
 
-export default function getEntity(preProps?: PreProps) {
-	preProps = {...defaultPreProps, ...preProps}
-
+export function getEntity(PopupBody?: React.FC<PopupBodyProps>) {
 	return function Entity(props: DocereComponentProps) {
 		const { activeEntities, addActiveEntity } = React.useContext(EntitiesContext)
 		const { settings } = React.useContext(EntrySettingsContext)
-		const entityValue = preProps.extractValue(props)
-		if (!settings['panels.text.showEntities']) return <span>{entityValue}</span>
+		// const entityValue = preProps.extractValue(props)
+		if (!settings['panels.text.showEntities']) return <span>{props.children}</span>
 
-		const entity = useEntity(preProps.extractKey, props)
-		const [children, firstWord, restOfFirstChild] = useChildren(entityValue, entity)
+		const entity = useEntity(props.attributes['docere:id'])
+		console.log('ENT', entity)
+		const [children, firstWord, restOfFirstChild] = useChildren(props.children, entity)
 
 		// The entity can be active, but without the need to show the tooltip.
 		// In case there are several entities with the same ID, we only want to 
@@ -78,9 +75,7 @@ export default function getEntity(preProps?: PreProps) {
 
 		const handleClick = React.useCallback(ev => {
 			ev.stopPropagation()
-
 			addActiveEntity(entity.id, props.layer.id, null)
-
 			setShowTooltip(true)
 		}, [entity?.id])
 
@@ -112,7 +107,7 @@ export default function getEntity(preProps?: PreProps) {
 						docereComponentProps={props}
 						entity={entity}
 						openToAside={openToAside}
-						PopupBody={preProps.PopupBody}
+						PopupBody={PopupBody}
 					/>
 				</NoWrap>
 				{restOfFirstChild}

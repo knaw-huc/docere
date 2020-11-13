@@ -11,7 +11,6 @@ export default extendConfigData({
 	entities: [
 		{
 			color: Colors.BlueBright,
-			id: 'textual',
 			extract: entry => Array.from(entry.document.querySelectorAll('div[type="textualNotes"] > note'))
 				.map(el => ({
 					content: el.outerHTML,
@@ -19,12 +18,12 @@ export default extendConfigData({
 					n: el.getAttribute('n'),
 					title: `Note ${el.getAttribute('n')}`,
 				})),
+			id: 'textual',
 			title: "Textual notes",
 			type: EntityType.Note,
 		},
 		{
 			color: Colors.BlueBright,
-			id: 'editor',
 			extract: entry => Array.from(entry.document.querySelectorAll('div[type="notes"] > note'))
 				.map(el => ({
 					content: el.outerHTML,
@@ -32,6 +31,7 @@ export default extendConfigData({
 					n: el.getAttribute('n'),
 					title: `Note ${el.getAttribute('n')}`,
 				})),
+			id: 'editor',
 			title: "Editor notes",
 			type: EntityType.Note,
 		},
@@ -39,8 +39,8 @@ export default extendConfigData({
 			color: '#fd7a7a',
 			extract: entry => Array.from(entry.document.querySelectorAll('div[type="translation"] rs[type="pers"]'))
 				.map(el => ({
+					content: el.textContent,
 					id: el.getAttribute('key'),
-					content: el.textContent
 				})),
 			id: 'pers',
 			showInAside: true,
@@ -51,8 +51,8 @@ export default extendConfigData({
 			color: Colors.Orange,
 			extract: entry => Array.from(entry.document.querySelectorAll('ref[target][type="entry-link"]'))
 				.map(el => ({
-					id: el.getAttribute('target').replace(/\.xml$/, ''),
 					content: el.textContent,
+					id: el.getAttribute('target').replace(/\.xml$/, ''),
 				})),
 			id: 'entry-link',
 			type: EntityType.EntryLink,
@@ -61,16 +61,12 @@ export default extendConfigData({
 			color: Colors.Brown,
 			extract: entry => Array.from(entry.document.querySelectorAll('ref[target][type="note-link"]'))
 				.map(el => ({
-					id: el.getAttribute('target'),
 					content: el.textContent,
+					id: el.getAttribute('target'),
 				})),
 			id: 'note-link',
 			type: EntityType.NoteLink,
 		},
-		// {
-		// 	id: 'lb',
-		// 	type: RsType.Line
-		// }
 	],
 	facsimiles: {
 		extract: extractFacsimiles,
@@ -78,12 +74,11 @@ export default extendConfigData({
 	layers: [
 		{
 			active: true,
-			// filterFacsimiles: () => () => true,
 			id: 'facsimile',
 			type: LayerType.Facsimile,
 		},
 		{
-			active: false,
+			active: true,
 			extract: entry => entry.document.querySelector('div[type="original"]'),
 			id: 'original',
 			type: LayerType.Text,
