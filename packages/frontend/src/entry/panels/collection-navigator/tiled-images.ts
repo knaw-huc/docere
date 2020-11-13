@@ -1,6 +1,6 @@
 import OpenSeadragon from 'openseadragon';
 
-import { Hit, Entry, isFacsimileLayer } from '@docere/common';
+import { Hit, Entry } from '@docere/common';
 
 interface TiledImageOptions {
 	bounds: OpenSeadragon.Rect
@@ -47,13 +47,9 @@ export default class TiledImages {
 
 	// Set the active options from this.entry.facsimiles. Used to calculate this.startIndex and this.highlightActive
 	setActiveOptions() {
-		const facsimilePaths = this.entry.layers.find(isFacsimileLayer).facsimiles
-		// .reduce((prev, curr) => {
-		// 	const ps = curr.versions.map(v => v.path)
-		// 	return prev.concat(ps)
-		// }, [] as string[])
-
-		this.activeTileOptions = this.tileOptions.filter(option => facsimilePaths.has(option.userData.id))
+		this.activeTileOptions = this.tileOptions.filter(
+			option => this.entry.id === option.userData.id
+		)
 	}
 
 	// Set a new entry. When this.highlightActive returns false, not all tiles of that entry are loaded.
@@ -83,6 +79,7 @@ export default class TiledImages {
 			return prev.union(curr.bounds)
 		}, null as OpenSeadragon.Rect)
 
+		if (bounds == null) return false
 		this.viewer.viewport.fitBounds(bounds)
 
 		return bounds

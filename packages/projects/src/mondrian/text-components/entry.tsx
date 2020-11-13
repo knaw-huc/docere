@@ -151,21 +151,9 @@ export default async function entryComponents(_config: DocereConfig) {
 		ptr: getNote(props => props.attributes.target.slice(1)),
 		hi: Hi,
 		p: Paragraph,
-		'ref[target^="bio.xml#"]': getEntity({
-			// extractType: () => 'bio',
-			extractKey: props => /^bio\.xml#(.*)$/.exec(props.attributes.target)[1],
-			PopupBody: PagePartPopupBody
-		}),
-		'ref[target^="biblio.xml#"]': getEntity({
-			// extractType: () => 'biblio',
-			extractKey: props => /^biblio\.xml#(.*)$/.exec(props.attributes.target)[1],
-			PopupBody: PagePartPopupBody
-		}),
-		'rs[type="artwork-m"][key]': getEntity({
-			// extractType: () => 'rkd-artwork-link',
-			extractKey: props => props.attributes.key,
-			PopupBody: RkdArtworkPopupBody
-		}),
+		'ref[target^="bio.xml#"]': getEntity(PagePartPopupBody),
+		'ref[target^="biblio.xml#"]': getEntity(PagePartPopupBody),
+		'rs[type="artwork-m"][key]': getEntity(RkdArtworkPopupBody),
 	}
 
 }

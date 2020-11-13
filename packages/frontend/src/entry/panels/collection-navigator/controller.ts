@@ -114,8 +114,18 @@ export default class CollectionNavigatorController {
 		return JSON.stringify(payload)
 	}
 
+	/**
+	 * Fetch entries from ElasticSearch and create a new TiledImages object
+	 * 
+	 * @todo move outside controller, when merging with collection-navigator2
+	 * 
+	 * @todo 2 entries can "share" a scan, so disambiguate, but...
+	 * the entry ID has to stay present, because it is needed when a 
+	 * user clicks 
+	 */
 	private async fetchCollectionDocuments() {
 		const data = await fetchPost(this.searchUrl, this.payload)
-		this.tiledImages = new TiledImages(this.viewer, data.hits.hits, this.entry)
+		const entries = data.hits.hits
+		this.tiledImages = new TiledImages(this.viewer, entries, this.entry)
 	}
 }

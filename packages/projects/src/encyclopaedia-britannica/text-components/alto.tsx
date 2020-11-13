@@ -93,12 +93,7 @@ function SP() { return <> </> }
 
 const components: DocereComponents = {
 	Description: () => null,
-	String: getEntity({
-		// extractType: () => 'word',
-		extractKey: props => props.attributes.ID,
-		extractValue: props => props.attributes.CONTENT,
-		PopupBody: EntityPopupBody,
-	}),
+	String: getEntity(EntityPopupBody),
 	SP,
 	TextLine,
 }

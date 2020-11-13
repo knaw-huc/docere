@@ -76,6 +76,7 @@ function RsBody(props: PopupBodyProps) {
 // 	}
 // }
 
+// TODO move <w CONTENT="x"/> to <w>x</w>
 export default function(_config: DocereConfig) {
 	return async function(_container: DocereComponentContainer, _id: string): Promise<DocereComponents> {
 		const components: DocereComponents = {
@@ -92,12 +93,7 @@ export default function(_config: DocereConfig) {
 			`,
 			s: styled.div``,
 			// w: w(config),
-			w: getEntity({
-				// extractType: () => 'word',
-				extractKey: props => props.attributes.pos,
-				extractValue: props => props.attributes.value,
-				PopupBody: RsBody,
-			})
+			w: getEntity(RsBody)
 		}
 		return components
 	}

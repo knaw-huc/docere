@@ -199,6 +199,8 @@ export function indexOfIterator(collection: Set<ID | number> | Map<ID | number, 
 export type XmlToString = (xml: XMLDocument | Element) => string
 export function xmlToString(xml: XMLDocument | Element) {
 	if (xml == null) return null
+	const el = (xml instanceof XMLDocument) ? xml.documentElement : xml
+	el.setAttribute('xmlns:docere', 'https://demo.docere.diginfra.net')
 	return new XMLSerializer().serializeToString(xml)
 }
 

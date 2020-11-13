@@ -144,10 +144,7 @@ function Panels() {
 			}
 			{
 				(context.config.collection != null) &&
-				<CollectionNavigator
-					config={context.config.collection}
-					searchUrl={context.searchUrl}
-				/>
+				<CollectionNavigator/>
 			}
 			{
 				!activeLayers.length &&

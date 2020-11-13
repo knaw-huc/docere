@@ -6,18 +6,14 @@ export type ExtractEntityType = (props: DocereComponentProps) => string
 export type ExtractEntityKey = (props: DocereComponentProps) => string
 export type ExtractEntityValue = (props: DocereComponentProps) => React.ReactNode
 
-export function useEntity(
-	extractEntityId: ExtractEntityKey,
-	props: DocereComponentProps
-) {
+export function useEntity(id: string) {
 	const entry = React.useContext(EntryContext)
 	const [entity, setEntity] = React.useState<Entity>(null)
 
 	React.useEffect(() => {
-		const entityId = extractEntityId(props)
-		const _entity = entry.textData.entities.get(entityId)
+		const _entity = entry.textData.entities.get(id)
 		setEntity(_entity)
-	}, [entry])
+	}, [entry, id])
 
 	return entity
 }

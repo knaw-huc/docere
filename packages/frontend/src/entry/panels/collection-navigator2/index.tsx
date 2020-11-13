@@ -31,10 +31,10 @@ function useOpenSeadragonController(
 				setController(collectionNavigatorController)
 			})
 
-		return () => {
-			controller?.viewer.destroy()
-			controller?.destroy()
-		}
+		// return () => {
+		// 	controller?.viewer.destroy()
+		// 	controller?.destroy()
+		// }
 	}, [entry, layer])
 
 	return controller

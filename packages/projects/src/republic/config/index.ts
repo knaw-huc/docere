@@ -1,12 +1,40 @@
-import config from './config'
 import { extendConfigData } from '@docere/common'
-// import getComponents from './components'
-// import extractMetadata from './metadata'
-// import extractFacsimiles from './facsimiles'
+import { LayerType, EsDataType } from '@docere/common'
+import extractFacsimiles from './facsimiles'
 
-export default extendConfigData(
-	config,
-	// extractFacsimiles,
-	// extractMetadata,
-	// getComponents,
-)
+export default extendConfigData({
+	slug: 'republic',
+	title: 'Republic',
+	collection: {
+		metadataId: 'inventory_num',
+		sortBy: 'inventory_num',
+	},
+	metadata: [
+		{
+			datatype: EsDataType.Date,
+			extract: entry =>
+				entry.document.querySelector('meta[key="meeting_date"]')?.getAttribute('value'),
+			id: 'date',
+			interval: 'y'
+		},
+		{
+			extract: entry =>
+				entry.document.querySelector('meta[key="inventory_num"]')?.getAttribute('value'),
+			id: 'inventory_num',
+		}	
+	],
+	entities: [],
+	facsimiles: {
+		extract: extractFacsimiles,
+	},
+	layers: [
+		{
+			id: 'scan',
+			type: LayerType.Facsimile
+		},
+		{
+			id: 'text',
+			type: LayerType.Text
+		},
+	]
+})

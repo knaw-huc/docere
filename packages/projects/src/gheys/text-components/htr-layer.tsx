@@ -177,6 +177,7 @@ function line(props: DocereComponentProps) {
 	)
 }
 
+const Entity = getEntity(EntityBody)
 
 export default function (_config: DocereConfig) {
 	// const string = entity(config)
@@ -184,16 +185,8 @@ export default function (_config: DocereConfig) {
 	return {
 		block,
 		pb: Pb,
-		'string[suggestion]': getEntity({
-			// extractType: () => 'suggestion',
-			extractKey: props => props.attributes.id,
-			PopupBody: EntityBody,
-		}),
-		'string[type]': getEntity({
-			// extractType: () => 'word',
-			extractKey: props => props.attributes.ref,
-			PopupBody: EntityBody,
-		}),
+		'string[suggestion]': Entity,
+		'string[type]': Entity,
 		line
 	}
 }

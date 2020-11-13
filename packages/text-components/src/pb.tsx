@@ -32,8 +32,6 @@ const Img = styled.img`
 	}}
 `
 
-// type ExtractPbId = (props: DocereComponentProps) => string | string[]
-
 function useFacsimiles(ids: string) {
 	const entry = React.useContext(EntryContext)
 	const [facsimiles, setFacsimiles] = React.useState<Facsimile[]>([])
@@ -46,12 +44,11 @@ function useFacsimiles(ids: string) {
 			.filter(x => x != null)
 
 		setFacsimiles(_facsimiles)
-	}, [entry])
+	}, [entry, ids])
 
 	return facsimiles
 }
 
-// export default function getPb(extractPbId: ExtractPbId): React.FC<DocereComponentProps> {
 export function Pb(props: DocereComponentProps) {
 	const { settings } = React.useContext(EntrySettingsContext)
 
@@ -60,7 +57,6 @@ export function Pb(props: DocereComponentProps) {
 		props.layer.facsimiles == null
 	) return null
 
-	// TODO implement docere:id
 	const facsimiles = useFacsimiles(props.attributes['docere:id'])
 
 	return (
@@ -69,8 +65,6 @@ export function Pb(props: DocereComponentProps) {
 				{
 					facsimiles.map(facsimile =>
 						<FacsimileThumb
-							// activeFacsimiles={props.activeFacsimiles}
-							// entryDispatch={props.entryDispatch}
 							facsimile={facsimile}
 							key={facsimile.id}
 							layer={props.layer}
@@ -81,11 +75,8 @@ export function Pb(props: DocereComponentProps) {
 		</Wrapper>
 	)
 }
-// }
 
 interface FacsimileThumbProps {
-	// activeFacsimiles: EntryState['activeFacsimiles']
-	// entryDispatch: DocereComponentProps['entryDispatch'] 
 	facsimile: Facsimile
 	layer: DocereComponentProps['layer']
 }
