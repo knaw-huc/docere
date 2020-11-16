@@ -56,7 +56,6 @@ export function getEntity(PopupBody?: React.FC<PopupBodyProps>) {
 		if (!settings['panels.text.showEntities']) return <span>{props.children}</span>
 
 		const entity = useEntity(props.attributes['docere:id'])
-		console.log('ENT', entity)
 		const [children, firstWord, restOfFirstChild] = useChildren(props.children, entity)
 
 		// The entity can be active, but without the need to show the tooltip.

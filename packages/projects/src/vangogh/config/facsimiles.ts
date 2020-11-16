@@ -14,7 +14,10 @@ export default function extractFacsimiles(entry: ConfigEntry) {
 			const thumbFileName = fileName.concat('t.jpg')
 			const fullFileName = fileName.concat('f.png')
 
+			const el = entry.document.querySelector(`pb[facs="#${id}"]`)
+
 			return {
+				el,
 				id,
 				versions: [{
 					thumbnailPath: `/iiif/vangogh/${thumbFileName}`,
@@ -23,7 +26,6 @@ export default function extractFacsimiles(entry: ConfigEntry) {
 				}]
 			}
 		})
-		.filter(facs => facs != null)
 }
 
 // const path = `http://vangoghletters.org/vg/facsimiles/${fileName}`

@@ -39,6 +39,7 @@ function useNote(extractNoteId: ExtractNoteId, props: DocereComponentProps) {
 
 type ExtractNoteId = (props: DocereComponentProps) => string
 
+// TODO merge getNote with getEntity
 export default function getNote(extractNoteId: ExtractNoteId) {
 	return function Note(props: DocereComponentProps) {
 		const { activeEntities, addActiveEntity } = React.useContext(EntitiesContext)

@@ -6,7 +6,7 @@ export default function getComponents(_config: DocereConfig) {
 	return async function(_container: DocereComponentContainer, _id: string) {
 		return {
 			ab: styled.div`margin-bottom: 1rem;`,
-			anchor: getNote(props => props.attributes.target),
+			anchor: getNote(props => props.attributes['docere:id']),
 			lb: Lb,
 			pb: Pb,
 			'ref[target][type="entry-link"]': getEntity(EntryLinkPopupBody),

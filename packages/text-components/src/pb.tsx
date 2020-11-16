@@ -51,13 +51,14 @@ function useFacsimiles(ids: string) {
 
 export function Pb(props: DocereComponentProps) {
 	const { settings } = React.useContext(EntrySettingsContext)
+	const facsimiles = useFacsimiles(props.attributes['docere:id'])
+
+	console.log(props.attributes['docere:id'])
 
 	if (
 		!settings['panels.text.showPageBeginnings'] ||
 		props.layer.facsimiles == null
 	) return null
-
-	const facsimiles = useFacsimiles(props.attributes['docere:id'])
 
 	return (
 		<Wrapper>

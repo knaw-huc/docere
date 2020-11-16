@@ -1,7 +1,7 @@
 import { EntityType } from '../../enum'
 import type { FacetConfig } from '../search/facets'
 import { PageConfig } from '../../page'
-import { Facsimile, ExtractedEntity } from './functions'
+import { Facsimile, ExtractedEntity, ExtractedFacsimile } from './functions'
 import { TextLayerConfig, FacsimileLayerConfig, ID } from './layer'
 import { ConfigEntry } from '../entry'
 
@@ -100,5 +100,5 @@ export type EntityConfig = TmpConfig & {
 // export interface NotesConfig extends BaseConfig {
 
 interface FacsimileConfig {
-	extract: (entry: ConfigEntry, config: DocereConfig) => Facsimile[]
+	extract: (entry: ConfigEntry, config: DocereConfig) => ExtractedFacsimile[]
 }

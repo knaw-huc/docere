@@ -52,7 +52,11 @@ export function LayersProvider(props: { children: React.ReactNode }) {
 	React.useEffect(() => {
 		const l: [ID, StatefulLayer][] = entry.layers.map(l => ([l.id, l]))
 		setLayers(updateLayers(new Map(l), settings, activeEntities))
-	}, [entry, settings, activeEntities])
+	}, [entry])
+
+	// React.useEffect(() => {
+	// 	setLayers(updateLayers(layers, settings, activeEntities))
+	// }, [settings, activeEntities])
 
 	const pinLayer = React.useCallback((layerId: string) => {
 		const layer = layers.get(layerId)

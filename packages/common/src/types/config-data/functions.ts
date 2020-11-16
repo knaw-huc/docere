@@ -23,6 +23,7 @@ export interface ExtractedEntity extends Omit<EntityConfig, 'extract'> {
 	// count?: Record<ID, number> /* Count can differ per layer */
 	count?: number
 	content: string
+	el: Element
 	facsimileAreas?: FacsimileArea[]
 	n?: string
 }
@@ -77,14 +78,6 @@ export interface ActiveEntity extends Entity {
 export interface FacsimileArea {
 	h: number
 	facsimileId: string
-	// note?: Record<string, string>
-	// showOnHover?: boolean
-	// target?: {
-	// 	asideTab?: AsideTab
-	// 	color?: string,
-	// 	id: string,
-	// 	listId?: string,
-	// }
 	unit?: 'px' | 'perc'
 	w: number
 	x: number
@@ -105,6 +98,10 @@ interface FacsimileVersion {
 export interface Facsimile {
 	id: string
 	versions: FacsimileVersion[]
+}
+
+export interface ExtractedFacsimile extends Facsimile {
+	el: Element
 }
 
 export interface ActiveFacsimile extends Facsimile {

@@ -1,6 +1,6 @@
-import { serializeLayer, xmlToString } from '@docere/common'
+import { serializeLayer, xmlToString, ExtractedFacsimile } from '@docere/common'
 
-import type { Facsimile, DocereConfig, SerializedLayer, Entry, MetadataItem, GetEntryProps, GetPartProps, ConfigEntry, SerializedEntry, Entity, ExtractedEntity, EntityConfig } from '@docere/common'
+import type { DocereConfig, SerializedLayer, Entry, MetadataItem, GetEntryProps, GetPartProps, ConfigEntry, SerializedEntry, Entity, ExtractedEntity, EntityConfig } from '@docere/common'
 import { FacsimileType } from '@docere/common/src'
 
 export { xmlToString }
@@ -25,15 +25,6 @@ export function getDefaultEntry(id: string): ConfigEntry {
 // 	unit: 'px'
 // }
 
-function extendFacsimile(facsimile: Facsimile) {
-	facsimile.versions = facsimile.versions.map(version => {
-		if (version.type == null) version.type = FacsimileType.IIIF
-		return version
-	})
-
-	return facsimile
-}
-
 function addCount(prev: Map<string, Entity>, curr: Entity) {
 	if (prev.has(curr.id)) prev.get(curr.id).count += 1
 	else prev.set(curr.id, { ...curr, count: 1 })
@@ -49,19 +40,40 @@ function extractMetadata(entry: ConfigEntry, config: DocereConfig): Entry['metad
  		.sort((config1, config2) => config1.order - config2.order)
 }
 
+function extendFacsimile(facsimile: ExtractedFacsimile) {
+	facsimile.el.setAttribute('docere:id', facsimile.id)
+	facsimile.el.setAttribute('docere:type', 'facsimile')
+
+	facsimile.versions = facsimile.versions.map(version => {
+		if (version.type == null) version.type = FacsimileType.IIIF
+		return version
+	})
+
+	return facsimile
+}
+
+function extractFacsimiles(entry: ConfigEntry, config: DocereConfig) {
+	return config.facsimiles?.extract(entry, config)
+		.filter(x => x != null)
+		.map(extendFacsimile)
+}
+
 function extractLayers(entry: ConfigEntry, parent: ConfigEntry, config: DocereConfig): SerializedLayer[] {
 	return config.layers.map(serializeLayer(entry, parent, config))
 }
 
 function toEntity(config: EntityConfig) {
 	const { extract, id, ...configRest } = config
-	return function (extractedEntity: ExtractedEntity): Entity {
+	return function (entity: ExtractedEntity): Entity {
+		entity.el.setAttribute('docere:id', entity.id)
+		entity.el.setAttribute('docere:type', config.id)
+
 		// TODO fix typings (move facet config to .facet prop?)
 		// @ts-ignore
 		return ({
 			configId: id,
 			...configRest,
-			...extractedEntity,
+			...entity,
 		})
 	}
 }
@@ -80,7 +92,7 @@ function extractEntities(entry: ConfigEntry, config: DocereConfig) {
 export function extractEntryData(entry: ConfigEntry, config: DocereConfig) {
 	entry.metadata = extractMetadata(entry, config)
 
-	entry.facsimiles = config.facsimiles?.extract(entry, config).map(extendFacsimile)
+	entry.facsimiles = extractFacsimiles(entry, config)
 	entry.entities = extractEntities(entry, config)
 
 	// Extraction of layers depends on entry.facsimiles, entry.entities and entry.notes
