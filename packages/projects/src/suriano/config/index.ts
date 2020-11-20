@@ -1,12 +1,12 @@
-import { extendConfigData, LayerType, Colors, Facsimile, ConfigEntry, EntityType } from '@docere/common'
+import { extendConfigData, LayerType, Colors, EntityType } from '@docere/common'
 import { extractEntryPartElementsFromMilestone } from '../../utils'
 import extractFacsimiles from './facsimiles'
 import prepare from './prepare'
 
-function filterFacsimiles(entry: ConfigEntry) {
-	const facsimileIds = Array.from(entry.element.querySelectorAll('pb')).map(pb => pb.id)
-	return (facsimile: Facsimile) => facsimileIds.indexOf(facsimile.id) > -1
-}
+// function filterFacsimiles(entry: ConfigEntry) {
+// 	const facsimileIds = Array.from(entry.element.querySelectorAll('pb')).map(pb => pb.id)
+// 	return (facsimile: Facsimile) => facsimileIds.indexOf(facsimile.id) > -1
+// }
 
 export default extendConfigData({
 	collection: {
@@ -16,9 +16,6 @@ export default extendConfigData({
 	slug: 'suriano',
 	title: "Suriano",
 	private: true,
-	facsimiles: {
-		extract: extractFacsimiles,
-	},
 	metadata: [
 		{
 			id: 'parent',
@@ -39,28 +36,30 @@ export default extendConfigData({
 	layers: [
 		{
 			active: true,
-			filterEntities: () => () => false,
-			filterFacsimiles,
+			// filterEntities: () => () => false,
+			// filterFacsimiles,
 			id: 'facsimile',
 			type: LayerType.Facsimile,
 		},
 		{
+			extractFacsimiles,
 			id: 'text',
 			type: LayerType.Text,
-			filterFacsimiles,
-			filterEntities: entry => {
-				const noteIds = Array.from(entry.element.querySelectorAll('a.footnote-ref'))
-					.map(a => a.getAttribute('href').slice(1))
-				return note => noteIds.indexOf(note.id) > -1
-			}
+			// filterFacsimiles,
+			// filterEntities: entry => {
+			// 	const noteIds = Array.from(entry.element.querySelectorAll('a.footnote-ref'))
+			// 		.map(a => a.getAttribute('href').slice(1))
+			// 	return note => noteIds.indexOf(note.id) > -1
+			// }
 		},
 	],
 	entities: [
 		{
 			color: Colors.BlueBright,
 			id: 'note',
-			extract: entry => Array.from(entry.document.querySelectorAll('li[role=doc-endnote]'))
+			extract: layerElement => Array.from(layerElement.querySelectorAll('li[role=doc-endnote]'))
 				.map(el => ({
+					anchors: [el],
 					content: el.outerHTML,
 					id: el.id,
 					n: el.id.slice(2),

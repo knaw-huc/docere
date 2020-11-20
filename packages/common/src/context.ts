@@ -1,7 +1,7 @@
 import React from 'react'
-import type { DocereConfig, GetComponents, GetUIComponent, Entry, ID, ActiveFacsimile, ActiveEntity, StatefulLayer } from './types'
 import { defaultEntrySettings } from './extend-config-data'
 import { AsideTab } from './enum'
+import { DocereConfig, GetComponents, GetUIComponent, Entry, ActiveFacsimile, ID, ActiveEntity, StatefulLayer } from '.'
 
 // Project
 // TODO rename to ProjectContextValue

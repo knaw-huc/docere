@@ -10,8 +10,9 @@ const config: DocereConfig = {
 		{
 			color: Colors.BlueBright,
 			id: 'gloss',
-			extract: entry => Array.from(entry.document.querySelectorAll('gloss[corresp]'))
+			extract: layerElement => Array.from(layerElement.querySelectorAll('gloss[corresp]'))
 				.map(el => ({
+					anchors: [el],
 					content: el.outerHTML,
 					id: el.getAttribute('corresp').slice(1),
 					value: el.textContent,
@@ -19,9 +20,6 @@ const config: DocereConfig = {
 			revealOnHover: true
 		}
 	],
-	facsimiles: {
-		extract: extractFacsimiles,
-	},
 	layers: [
 		{
 			id: 'facsimile',
@@ -29,7 +27,8 @@ const config: DocereConfig = {
 		},
 		{
 			// TODO add this as a default extractor function
-			extract: entry => entry.element,
+			// extractElement: entry => entry.preparedElement,
+			extractFacsimiles,
 			id: 'text',
 			type: LayerType.Text,
 		},

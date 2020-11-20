@@ -1,8 +1,8 @@
 import { DEFAULT_SPACING, TEXT_PANEL_ASIDE_WIDTH, TEXT_PANEL_MINIMAP_WIDTH, TEXT_PANEL_TEXT_WIDTH } from './constants'
 import { LayerType } from './enum'
-
-import type { LayerConfig, TextLayerConfig, FacsimileLayerConfig, TextLayer, Layer, FacsimileLayer, SerializedLayer, SerializedTextLayer, SerializedFacsimileLayer, ID, EntrySettings } from './types'
 import { EntitiesContextValue } from './context'
+
+import type { ExtractedEntity, EntrySettings, ExtractedFacsimile, LayerConfig, TextLayerConfig, Layer, TextLayer, SerializedLayer, SerializedTextLayer, FacsimileLayerConfig, SerializedFacsimileLayer, FacsimileLayer, ID } from '.'
 
 export function getTextPanelLeftSpacing(settings: EntrySettings) {
 	let width = DEFAULT_SPACING
@@ -57,6 +57,10 @@ export function generateId(len = 10) {
 	const tail = [].map.call(arr, byteToHex).join("");
 	const head = String.fromCharCode(97 + Math.floor(Math.random() * 26))
 	return `${head}${tail}`
+}
+
+export function isExtractedEntity(entity: ExtractedEntity | ExtractedFacsimile): entity is ExtractedEntity {
+	return entity.hasOwnProperty('type')
 }
 
 export function isTextLayerConfig(layer: LayerConfig): layer is TextLayerConfig {

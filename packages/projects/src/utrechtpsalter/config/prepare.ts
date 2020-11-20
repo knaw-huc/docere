@@ -1,6 +1,6 @@
-import type { DocereConfig, ConfigEntry } from '@docere/common'
+import type { DocereConfig, ExtractedEntry } from '@docere/common'
 
-export default function prepareDocument(entry: ConfigEntry, config: DocereConfig) {
+export default function prepareDocument(entry: ExtractedEntry, config: DocereConfig) {
 	const page = config.data.pages.find((p: any) => p.id === parseInt(entry.id, 10) - 1)
 
 	if (page != null) {

@@ -1,7 +1,7 @@
-import { Colors, EsDataType, EntityType } from './enum'
+import { EsDataType } from './enum'
 
 import type { FacetConfigBase } from './types/search/facets'
-import type { DocereConfig, MetadataConfig, EntityConfig } from './types/config-data/config'
+import { DocereConfig, MetadataConfig, EntityConfig, defaultEntityConfig } from './types/config-data/config'
 import { isTextLayerConfig } from './utils'
 import { PageConfig } from './page'
 
@@ -28,7 +28,7 @@ const defaultConfig: DocereConfig = {
 	slug: null,
 }
 
-export const defaultMetadata: MetadataConfig = {
+export const defaultMetadata: Required<MetadataConfig> = {
 	datatype: EsDataType.Keyword,
 	extract: () => null,
 	id: null,
@@ -36,14 +36,12 @@ export const defaultMetadata: MetadataConfig = {
 	order: 9999,
 	showAsFacet: true,
 	showInAside: true,
-}
 
-export const defaultEntityConfig: Omit<EntityConfig, 'extract'> = {
-	...defaultMetadata,
-	color: Colors.Blue,
+	// Add defaults, because they are Required<>
+	size: null,
+	sort: null,
 	description: null,
-	revealOnHover: false,
-	type: EntityType.None,
+	title: null,
 }
 
 // const defaultDocereFunctions: DocereConfigFunctions = {
@@ -93,8 +91,8 @@ export function extendConfigData(configDataRaw: DocereConfig): DocereConfig {
 
 	config.entrySettings = { ...defaultEntrySettings, ...config.entrySettings }
 	config.layers = config.layers.map(layer => {
-		if (isTextLayerConfig(layer) && layer.extract == null) {
-			layer.extract = (entry) => entry.element
+		if (isTextLayerConfig(layer) && layer.extractElement == null) {
+			layer.extractElement = (entry) => entry.preparedElement
 		}
 		return setTitle(layer)
 	})
@@ -117,7 +115,7 @@ export function extendConfigData(configDataRaw: DocereConfig): DocereConfig {
 
 	return {
 		prepare: entry => entry.document.documentElement,
-		plainText: entry => entry.element.textContent,
+		plainText: entry => entry.preparedElement.textContent,
 		...config,
 	}
 }

@@ -13,7 +13,6 @@ export async function initProject(projectId: string) {
 			name TEXT UNIQUE,
 			hash TEXT, 
 			content TEXT,
-			prepared TEXT,
 			standoff_text TEXT,
 			standoff_annotations TEXT,
 			updated TIMESTAMP WITH TIME ZONE

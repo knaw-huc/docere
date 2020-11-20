@@ -1,5 +1,5 @@
-import type { Type, ID, SerializedLayer, Layer } from '../config-data'
-import type { SerializedEntry, Entry } from '.'
+import type { Layer, SerializedLayer, ID, Type } from './layer'
+import type { SerializedEntry, Entry } from './index'
 
 function deserializeEntities(entities: SerializedLayer['entities']): Layer['entities'] {
 	const settedEntities: [Type, Set<ID>][] = entities.map(x => [x[0], new Set(x[1])])

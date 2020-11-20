@@ -13,8 +13,8 @@ function extendBooleanFacet(config: BooleanFacetConfig): BooleanFacetConfig {
 
 function extendHierarchyFacet(config: HierarchyFacetConfig): HierarchyFacetConfig {
 	return {
-		size: 10,
 		...config,
+		size: config.size || 10, /* if size is null, default to 10 */
 	}
 }
 
@@ -25,9 +25,9 @@ function extendListFacet(config: ListFacetConfig): ListFacetConfig {
 	}
 
 	return {
-		size: 10,
 		sort,
 		...config,
+		size: config.size || 10, /* if size is null, default to 10 */
 		datatype: EsDataType.Keyword, /* Explicitly set the datatype, for it is the default; facetConfig's without a datatype are converted to ListFacet's */
 	}
 }

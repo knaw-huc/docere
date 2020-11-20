@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { getNote, Pb, Lb, Hi, Paragraph, getEntity, PagePartPopupBody, PopupBodyWrapper, PopupBodyLink } from '@docere/text-components'
+import { getNote, Pb, Lb, Hi, Paragraph, getEntity, PagePartPopupBody, PopupBodyWrapper, PopupBodyLink, Space } from '@docere/text-components'
 import { Colors, DEFAULT_SPACING, EntrySettingsContext } from '@docere/common'
 
 import type { PopupBodyProps } from '@docere/text-components'
@@ -154,6 +154,7 @@ export default async function entryComponents(_config: DocereConfig) {
 		'ref[target^="bio.xml#"]': getEntity(PagePartPopupBody),
 		'ref[target^="biblio.xml#"]': getEntity(PagePartPopupBody),
 		'rs[type="artwork-m"][key]': getEntity(RkdArtworkPopupBody),
+		space: Space,
 	}
 
 }

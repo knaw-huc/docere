@@ -1,13 +1,13 @@
-import { ConfigEntry } from '@docere/common'
-import type { Facsimile } from '@docere/common'
+import { ExtractedFacsimile } from '@docere/common'
 
-export default function extractFacsimiles(entry: ConfigEntry) {
-	const facsimiles: Facsimile[] = Array.from(entry.document.querySelectorAll('column[facs]'))
+export default function extractFacsimiles(layerElement: Element) {
+	const facsimiles: ExtractedFacsimile[] = Array.from(layerElement.querySelectorAll('column[facs]'))
 		.reduce((prev, column) => {
 			const id = column.getAttribute('facs')
-			column.setAttribute('docere:id', id)
+			// column.setAttribute('docere:id', id)
 			if (!prev.some(p => p.id === id)) {
 				prev.push({
+					anchors: [column],
 					id,
 					versions: [{
 						path: `https://images.diginfra.net/iiif/${id}/info.json`

@@ -1,23 +1,8 @@
-import { serializeLayer, xmlToString, ExtractedFacsimile } from '@docere/common'
+import { extractEntry, ExtractEntry, GetDefaultExtractedEntry, XmlToString, getDefaultExtractedEntry } from '@docere/common'
+import { xmlToString, serializeEntry, SerializeEntry } from '@docere/common'
 
-import type { DocereConfig, SerializedLayer, Entry, MetadataItem, GetEntryProps, GetPartProps, ConfigEntry, SerializedEntry, Entity, ExtractedEntity, EntityConfig } from '@docere/common'
-import { FacsimileType } from '@docere/common/src'
-
-export { xmlToString }
-
-export type GetDefaultEntry = (id: string) => ConfigEntry
-export function getDefaultEntry(id: string): ConfigEntry {
-	return {
-		document: null,
-		element: null,
-		entities: null,
-		facsimiles: null,
-		id,
-		layers: null,
-		metadata: null,
-		parts: null,
-	}
-}
+export { getDefaultExtractedEntry, xmlToString, serializeEntry, extractEntry }
+export type { ExtractEntry, GetDefaultExtractedEntry, SerializeEntry, XmlToString }
 
 // const defaultFacsimileArea: Pick<FacsimileArea, 'showOnHover' | 'target' | 'unit'> = {
 // 	showOnHover: true,
@@ -25,138 +10,34 @@ export function getDefaultEntry(id: string): ConfigEntry {
 // 	unit: 'px'
 // }
 
-function addCount(prev: Map<string, Entity>, curr: Entity) {
-	if (prev.has(curr.id)) prev.get(curr.id).count += 1
-	else prev.set(curr.id, { ...curr, count: 1 })
-	return prev
-}
+// function addCount(prev: Map<string, Entity>, curr: Entity) {
+// 	if (prev.has(curr.id)) prev.get(curr.id).count += 1
+// 	else prev.set(curr.id, { ...curr, count: 1 })
+// 	return prev
+// }
 
-function extractMetadata(entry: ConfigEntry, config: DocereConfig): Entry['metadata'] {
-	return config.metadata
-		.map(md => ({
-			...md,
-			value: md.extract(entry, config)
-		}) as MetadataItem)
- 		.sort((config1, config2) => config1.order - config2.order)
-}
 
-function extendFacsimile(facsimile: ExtractedFacsimile) {
-	facsimile.el.setAttribute('docere:id', facsimile.id)
-	facsimile.el.setAttribute('docere:type', 'facsimile')
+// function extractFacsimiles(layer: ExtractedLayer, entry: ConfigEntry, config: DocereConfig) {
+// 	return config.facsimiles?.extract(entry, config)
+// 		.filter(x => x != null)
+// 		.map(extendFacsimile)
+// }
 
-	facsimile.versions = facsimile.versions.map(version => {
-		if (version.type == null) version.type = FacsimileType.IIIF
-		return version
-	})
+// function extractLayers(entry: ConfigEntry, parent: ConfigEntry, config: DocereConfig): SerializedLayer[] {
+// 	return config.layers.map(serializeLayer(entry, parent, config))
+// }
 
-	return facsimile
-}
+// function extractEntities(el: Element, layer: TextLayerConfig, entry: ConfigEntry, config: DocereConfig) {
+// 	const entities: Map<string, Entity> = config.entities
+// 		.reduce((prev, curr) => {
+// 			const entities = curr.extract(el, layer, entry, config).map(toEntity(curr))
+// 			return prev.concat(entities)
+// 		}, [] as Entity[])
+// 		.reduce(addCount, new Map<string, Entity>())
 
-function extractFacsimiles(entry: ConfigEntry, config: DocereConfig) {
-	return config.facsimiles?.extract(entry, config)
-		.filter(x => x != null)
-		.map(extendFacsimile)
-}
+// 	return Array.from(entities.values())
+// }
 
-function extractLayers(entry: ConfigEntry, parent: ConfigEntry, config: DocereConfig): SerializedLayer[] {
-	return config.layers.map(serializeLayer(entry, parent, config))
-}
-
-function toEntity(config: EntityConfig) {
-	const { extract, id, ...configRest } = config
-	return function (entity: ExtractedEntity): Entity {
-		entity.el.setAttribute('docere:id', entity.id)
-		entity.el.setAttribute('docere:type', config.id)
-
-		// TODO fix typings (move facet config to .facet prop?)
-		// @ts-ignore
-		return ({
-			configId: id,
-			...configRest,
-			...entity,
-		})
-	}
-}
-
-function extractEntities(entry: ConfigEntry, config: DocereConfig) {
-	const entities: Map<string, Entity> = config.entities
-		.reduce((prev, curr) => {
-			const entities = curr.extract(entry, config).map(toEntity(curr))
-			return prev.concat(entities)
-		}, [] as Entity[])
-		.reduce(addCount, new Map<string, Entity>())
-
-	return Array.from(entities.values())
-}
-
-export function extractEntryData(entry: ConfigEntry, config: DocereConfig) {
-	entry.metadata = extractMetadata(entry, config)
-
-	entry.facsimiles = extractFacsimiles(entry, config)
-	entry.entities = extractEntities(entry, config)
-
-	// Extraction of layers depends on entry.facsimiles, entry.entities and entry.notes
-	entry.layers = extractLayers(entry, entry, config)
-}
-
-export function extractParts(entry: ConfigEntry, config: DocereConfig) {
-	if (config.parts == null) return
-
-	entry.parts = new Map()
-	for (const [partId, partEl] of config.parts.extract(entry, config)) {
-		const part = getPartSync({
-			config,
-			document: entry.document,
-			element: partEl,
-			id: partId,
-			parent: entry,
-		})
-
-		entry.parts.set(partId, part)
-	}
-}
-
-function getPartSync(props: GetPartProps) {
-	const entry = getDefaultEntry(props.id)
-
-	entry.parent = props.parent
-	entry.metadata = extractMetadata(entry, props.config)
-
-	entry.document = props.document
-	entry.element =  props.element
-
-	entry.layers = extractLayers(entry, props.parent, props.config)
-
-	return entry
-}
-
-export type GetEntrySync = (props: GetEntryProps) => ConfigEntry
-export function getEntrySync(props: GetEntryProps) {
-	const entry = getDefaultEntry(props.id)
-	entry.document = props.document
-	entry.element =  props.element
-	extractEntryData(entry, props.config)
-	extractParts(entry, props.config)
-	return entry
-}
-
-export type SerializeEntry = (entry: ConfigEntry, config: DocereConfig) => SerializedEntry
-export function serializeEntry(entry: ConfigEntry, config: DocereConfig): SerializedEntry {
-	return {
-		content: xmlToString(entry.document),
-		id: entry.id,
-		layers: entry.layers,
-		metadata: entry.metadata,
-		parts: Array.from(entry.parts || []).map((part =>
-			serializeEntry(part[1], config))
-		),
-		plainText: config.plainText(entry, config),
-		textData: {
-			entities: entry.entities.map(e => ([e.id, e])),
-			facsimiles: entry.facsimiles.map(f => ([f.id, f]))
-		}
-	}
-}
 
 
 // function extractMetadata(entry: Entry, config: DocereConfig): Entry['metadata'] {

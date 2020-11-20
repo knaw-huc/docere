@@ -16,6 +16,14 @@ const Wrapper = styled.span`
 	}
 `
 
+const ThumbWrapper = styled.div`
+	${(props: { multiple: boolean }) =>
+		props.multiple ?
+			`display: grid;` :
+			''
+	}
+`
+
 const Img = styled.img`
 	border: 3px solid rgba(0, 0, 0, 0);
 	margin-top: 6px;
@@ -53,25 +61,26 @@ export function Pb(props: DocereComponentProps) {
 	const { settings } = React.useContext(EntrySettingsContext)
 	const facsimiles = useFacsimiles(props.attributes['docere:id'])
 
-	console.log(props.attributes['docere:id'])
-
 	if (
 		!settings['panels.text.showPageBeginnings'] ||
-		props.layer.facsimiles == null
+		props.layer.facsimiles == null ||
+		!facsimiles.length
 	) return null
 
 	return (
 		<Wrapper>
 			<div>
-				{
-					facsimiles.map(facsimile =>
-						<FacsimileThumb
-							facsimile={facsimile}
-							key={facsimile.id}
-							layer={props.layer}
-						/>	
-					)
-				}
+				<ThumbWrapper multiple={facsimiles.length > 1}>
+					{
+						facsimiles.map(facsimile =>
+							<FacsimileThumb
+								facsimile={facsimile}
+								key={facsimile.id}
+								layer={props.layer}
+							/>	
+						)
+					}
+				</ThumbWrapper>
 			</div>
 		</Wrapper>
 	)

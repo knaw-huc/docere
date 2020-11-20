@@ -1,5 +1,4 @@
-import { ConfigEntry } from '@docere/common'
-import type { DocereConfig, Facsimile } from '@docere/common'
+import { ExtractedFacsimile } from '@docere/common'
 
 // function parseArea(id: string)  {
 // 	return id
@@ -54,11 +53,12 @@ import type { DocereConfig, Facsimile } from '@docere/common'
 // 	return areas
 // }
 
-export default function extractFacsimiles(entry: ConfigEntry, _config: DocereConfig) {
-	const facsimiles: Facsimile[] = []
-	const pb = entry.document.querySelector('pb')
+export default function extractFacsimiles(layerElement: Element) {
+	const facsimiles: ExtractedFacsimile[] = []
+	const pb = layerElement.querySelector('pb')
 
 	facsimiles.push({
+		anchors: [pb],
 		id: pb.getAttribute('path'),
 		versions: [{
 			// areas: extractFacsimileAreas(entry.document, config),

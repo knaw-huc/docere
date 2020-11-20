@@ -55,6 +55,7 @@ export function getEntity(PopupBody?: React.FC<PopupBodyProps>) {
 		// const entityValue = preProps.extractValue(props)
 		if (!settings['panels.text.showEntities']) return <span>{props.children}</span>
 
+		console.log('HERE', props.attributes)
 		const entity = useEntity(props.attributes['docere:id'])
 		const [children, firstWord, restOfFirstChild] = useChildren(props.children, entity)
 

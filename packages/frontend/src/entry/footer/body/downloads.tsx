@@ -87,12 +87,12 @@ function Layers(props: Props) {
 					</ExternalLink>
 				</li>
 				<li>
-					<ExternalLink href={getEntryApiPath(projectId, entryId, 'original')}>
+					<ExternalLink href={`/api/projects/${projectId}/xml/${encodeURIComponent(entryId)}`}>
 						Original XML
 					</ExternalLink>
 				</li>
 				<li>
-					<ExternalLink href={`/api/projects/${projectId}/xml/${encodeURIComponent(entryId)}`}>
+					<ExternalLink href={`/api/projects/${projectId}/xml_prepared/${encodeURIComponent(entryId)}`}>
 						Prepared XML
 					</ExternalLink>
 				</li>

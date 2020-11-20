@@ -4,15 +4,11 @@ import prepare from './prepare'
 import metadata from './metadata'
 
 export default extendConfigData({
-	slug: 'vangogh',
-	title: 'Van Gogh Letters',
-	metadata,
-	pages: [],
 	entities: [
 		{
 			color: Colors.BlueBright,
 			// extract: entry => Array.from(entry.document.querySelectorAll('div[type="textualNotes"] > note'))
-			extract: entry => Array.from(entry.document.querySelectorAll('anchor'))
+			extract: (layerElement, _layer, entry) => Array.from(layerElement.querySelectorAll('anchor'))
 				.map(anchor => {
 					const id = anchor.getAttribute('xml:id')
 					const n = anchor.getAttribute('n')
@@ -20,7 +16,7 @@ export default extendConfigData({
 					if (note == null) return null
 					return {
 						content: xmlToString(note),
-						el: anchor,
+						anchors: [anchor],
 						id,
 						n,
 						title: `Textual note ${n}`,
@@ -33,11 +29,12 @@ export default extendConfigData({
 		},
 		{
 			color: Colors.BlueBright,
-			extract: entry => Array.from(entry.document.querySelectorAll('div[type="notes"] > note'))
+			// TODO querySelectorAll the anchors (lb)
+			extract: (layerElement) => Array.from(layerElement.querySelectorAll('div[type="notes"] > note'))
 				.map(el => {
 					return {
+						anchors: [el],
 						content: xmlToString(el),
-						el,
 						id: el.getAttribute('xml:id'),
 						n: el.getAttribute('n'),
 						title: `Editor note ${el.getAttribute('n')}`,
@@ -49,10 +46,10 @@ export default extendConfigData({
 		},
 		{
 			color: '#fd7a7a',
-			extract: entry => Array.from(entry.document.querySelectorAll('div[type="translation"] rs[type="pers"]'))
+			extract: (layerElement) => Array.from(layerElement.querySelectorAll('rs[type="pers"]'))
 				.map(el => ({
 					content: el.textContent,
-					el,
+					anchors: [el],
 					id: el.getAttribute('key'),
 				})),
 			id: 'pers',
@@ -62,10 +59,10 @@ export default extendConfigData({
 		},
 		{
 			color: Colors.Orange,
-			extract: entry => Array.from(entry.document.querySelectorAll('ref[target][type="entry-link"]'))
+			extract: (layerElement) => Array.from(layerElement.querySelectorAll('ref[target][type="entry-link"]'))
 				.map(el => ({
+					anchors: [el],
 					content: el.textContent,
-					el,
 					id: el.getAttribute('target').replace(/\.xml$/, ''),
 				})),
 			id: 'entry-link',
@@ -73,10 +70,10 @@ export default extendConfigData({
 		},
 		{
 			color: Colors.Brown,
-			extract: entry => Array.from(entry.document.querySelectorAll('ref[target][type="note-link"]'))
+			extract: (layerElement) => Array.from(layerElement.querySelectorAll('ref[target][type="note-link"]'))
 				.map(el => ({
+					anchors: [el],
 					content: el.textContent,
-					el,
 					id: el.getAttribute('target'),
 				})),
 			id: 'note-link',
@@ -84,7 +81,9 @@ export default extendConfigData({
 		},
 	],
 	facsimiles: {
-		extract: extractFacsimiles,
+		extractFacsimiles,
+		extractFacsimileId: el => el.getAttribute('xml:id'),
+		selector: 'facsimile zone',
 	},
 	layers: [
 		{
@@ -94,16 +93,20 @@ export default extendConfigData({
 		},
 		{
 			active: false,
-			extract: entry => entry.document.querySelector('div[type="original"]'),
+			extractElement: entry => entry.document.querySelector('div[type="original"]'),
 			id: 'original',
 			type: LayerType.Text,
 		},
 		{
 			active: true,
-			extract: entry => entry.document.querySelector('div[type="translation"]'),
+			extractElement: entry => entry.document.querySelector('div[type="translation"]'),
 			id: 'translation',
 			type: LayerType.Text,
 		},
 	],
+	metadata,
+	slug: 'vangogh',
+	title: 'Van Gogh Letters',
+	pages: [],
 	prepare,
 })

@@ -1,11 +1,8 @@
-import { extendConfigData, EsDataType, Colors, EntityType, LayerType } from '@docere/common'
-import { extractLayerElement, useAll } from '../../utils'
+import { extendConfigData, EsDataType, Colors, EntityType, LayerType, xmlToString } from '@docere/common'
+import { extractLayerElement } from '../../utils'
 import extractFacsimiles from './facsimiles'
 
 export default extendConfigData({
-	facsimiles: {
-		extract: extractFacsimiles
-	},
 	metadata: [
 		{
 			datatype: EsDataType.Date,
@@ -45,74 +42,89 @@ export default extendConfigData({
 		{
 			extract: entry => entry.document.querySelectorAll('div[type="typednotes"] > note').length,
 			id: 'typedNoteCount',
+		},
+		{
+			datatype: EsDataType.Boolean,
+			extract: entry => entry.document.querySelector('div[type="translation"]')?.textContent.trim().length > 0,
+			id: 'hasTranslation',
 		}
 	],
 	entities: [
 		{
+			color: Colors.Green,
+			id: 'rkd-artwork-link',
+			type: EntityType.Artwork,
+			extract: ({ entry, entityConfig }) => Array.from(entry.preparedElement.querySelectorAll(entityConfig.selector))
+				.map(x => ({
+					anchors: [x],
+					content: x.textContent,
+				})),
+			extractId: el => el.getAttribute('key'),
+			order: 80,
+			selector: 'rs[type="artwork-m"][key]',
+		},
+		{
 			color: Colors.Blue,
 			id: 'biblio',
 			type: EntityType.PagePart,
-			extract: entry => Array.from(entry.document.querySelectorAll('ref[target^="biblio.xml#"]'))
+			extract: ({ entityConfig, entry }) => Array.from(entry.preparedElement.querySelectorAll(entityConfig.selector))
 				.map(x => ({
-					id: x.getAttribute('target').split('#')[1],
+					anchors: [x],
 					content: x.textContent,
 				})),
+			extractId: el => el.getAttribute('target').split('#')[1],
 			order: 90,
+			selector: 'ref[target^="biblio.xml#"]',
 		},
 		{
 			color: Colors.Green,
 			id: 'bio',
 			type: EntityType.PagePart,
-			extract: entry => Array.from(entry.document.querySelectorAll('ref[target^="bio.xml#"]'))
+			extractId: el => el.getAttribute('target').split('#')[1],
+			extract: ({ entry, entityConfig }) => Array.from(entry.preparedElement.querySelectorAll(entityConfig.selector))
 				.map(x => ({
-					id: x.getAttribute('target').split('#')[1],
+					anchors: [x],
 					content: x.textContent,
 				})),
 			order: 70,
-		},
-		{
-			color: Colors.Green,
-			id: 'rkd-artwork-link',
-			type: EntityType.Artwork,
-			extract: entry => Array.from(entry.document.querySelectorAll('rs[type="artwork-m"]'))
-				.map(x => ({
-					id: x.getAttribute('key'),
-					content: x.textContent,
-				})),
-			order: 80,
+			selector: 'ref[target^="bio.xml#"]',
 		},
 		{
 			color: Colors.Blue,
 			id: 'editor',
-			extract: entry =>
-				Array.from(entry.document.querySelectorAll('div[type="notes"] > note'))
-					.map((el, index) => ({
-						content: el.outerHTML,
-						id: el.getAttribute('xml:id'),
-						n: (index + 1).toString(),
-						title: 'Note',
-					}))
-					// Remove empty notes (<note />)
-					.filter(n => n.id != null),
+			extractId: el => el.getAttribute('target')?.slice(1),
+			extract: ({ layerElement, entry, entityConfig }) =>
+				Array.from(layerElement.querySelectorAll(entityConfig.selector))
+					.map((ptr, index) => {
+						const id = ptr.getAttribute('docere:id')
+						const note = entry.preparedElement.querySelector(`note[*|id="${id}"]`)
+						return {
+							anchors: [ptr],
+							content: xmlToString(note),
+							n: (index + 1).toString(),
+							title: 'Note',
+						}
+					}),
 			type: EntityType.Note,
+			selector: 'ptr[type="note"][target]',
 			showAsFacet: false
 		}
 	],
 	layers: [
 		{
-			filterFacsimiles: useAll,
 			id: 'facsimile',
 			type: LayerType.Facsimile,
 		},
 		{
 			id: 'original',
-			extract: extractLayerElement('div[type="original"]'),
+			extractElement: extractLayerElement('div[type="original"]'),
+			extractFacsimiles,
 			type: LayerType.Text,
 		},
 		{
 			id: 'translation',
-			extract: extractLayerElement('div[type="translation"]'),
-			filterFacsimiles: useAll,
+			extractElement: extractLayerElement('div[type="translation"]'),
+			extractFacsimiles,
 			type: LayerType.Text,
 		}
 	],

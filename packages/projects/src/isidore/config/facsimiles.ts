@@ -1,7 +1,5 @@
-import { ConfigEntry } from '@docere/common'
-
-export default function extractFacsimiles(entry: ConfigEntry) {
-	return Array.from(entry.document.querySelectorAll('facsimile surface'))
+export default function extractFacsimiles(layerElement: Element) {
+	return Array.from(layerElement.querySelectorAll('facsimile surface'))
 		.map(surface => {
 			const surfaceId = surface.getAttribute('xml:id') 
 			const graphic = surface.querySelector('graphic[url]')
@@ -14,7 +12,12 @@ export default function extractFacsimiles(entry: ConfigEntry) {
 			const imgPath = fileName.slice(0, fileName.indexOf('_')) + '/' + fileName
 			const path = `/iiif/isidore/${imgPath}/info.json`
 			// console.log(path)
-			return { id: surfaceId, versions: [{ path }] }
+			return {
+				// TODO find anchors
+				anchors: [],
+				id: surfaceId,
+				versions: [{ path }]
+			}
 		})
 		.filter(facs => facs != null)
 }

@@ -63,7 +63,7 @@ const config: DocereConfig = {
 	],
 	layers: [
 		{
-			extract: extractLayerElement('transcriptie'),
+			extractElement: extractLayerElement('transcriptie'),
 			id: 'transcriptie',
 			type: LayerType.Text,
 		}

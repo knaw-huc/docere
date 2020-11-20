@@ -1,4 +1,4 @@
-import type { Facsimile, ConfigEntry } from '@docere/common'
+import type { ExtractedFacsimile } from '@docere/common'
 
 // function extractFacsimileAreas(doc: XMLDocument) {
 // 	const areas: FacsimileArea[] = []
@@ -26,12 +26,13 @@ import type { Facsimile, ConfigEntry } from '@docere/common'
 // 	return areas
 // }
 
-export default function extractFacsimiles(entry: ConfigEntry) {
-	const facsimiles: Facsimile[] = []
-	const facsimile = entry.document.querySelector('imgLocation')
+export default function extractFacsimiles(layerElement: Element) {
+	const facsimiles: ExtractedFacsimile[] = []
+	const facsimile = layerElement.querySelector('imgLocation')
 
 	if (facsimile) {
 		facsimiles.push({
+			anchors: [facsimile],
 			id: facsimile.textContent,
 			versions: [{
 				// areas: extractFacsimileAreas(entry.document),

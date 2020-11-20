@@ -1,9 +1,9 @@
-import { ConfigEntry } from '@docere/common'
+import { ExtractedEntry } from '@docere/common'
 
 function replacer(_match: string, offset: number) {
 	return `<note id="note_${offset}">`
 }
-export default function prepareDocument(entry: ConfigEntry) {
+export default function prepareDocument(entry: ExtractedEntry) {
 	const transcriptieElement = entry.document.querySelector('transcriptie')
 	transcriptieElement.innerHTML = transcriptieElement.textContent
 		.replace(/{/g, replacer)

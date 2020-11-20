@@ -46,6 +46,13 @@ export default function handleProjectApi(app: Express, puppenv: Puppenv) {
 		else res.send(rows[0].content)
 	})
 
+	app.get(`${PROJECT_BASE_PATH}xml_prepared/:documentId`, async (req, res) => {
+		const pool = await getPool(req.params.projectId)
+		const { rows } = await pool.query(`SELECT document.content FROM document, xml WHERE xml.name=$1 AND xml.id=document.xml_id;`, [req.params.documentId])
+		if (!rows.length) res.sendStatus(404)
+		else res.send(rows[0].content)
+	})
+
 	app.post(`${PROJECT_BASE_PATH}xml`, async (req, res) => {
 		const { projectId } = req.params
 		const config = await getProjectConfig(projectId)

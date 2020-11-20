@@ -65,8 +65,9 @@ const config: DocereConfig = {
 	entities: [
 		{
 			color: Colors.Pink,
-			extract: entry => Array.from(entry.document.querySelectorAll('w'))
+			extract: layerElement => Array.from(layerElement.querySelectorAll('w'))
 				.map(el  => ({
+					anchors: [el],
 					id: el.getAttribute('pos'),
 					content: el.getAttribute('value'),
 				})),
@@ -95,7 +96,7 @@ const config: DocereConfig = {
 	layers: [
 		{
 			active: true,
-			extract: extractLayerElement('text'),
+			extractElement: extractLayerElement('text'),
 			id: 'Origineel',
 			type: LayerType.Text,
 		},

@@ -19,9 +19,6 @@ const config: DocereConfig = {
 	},
 	slug: 'utrechtpsalter',
 	title: 'Utrecht Psalter',
-	facsimiles: {
-		extract: extractFacsimiles,
-	},
 	layers: [
 		{
 			active: true,
@@ -30,28 +27,29 @@ const config: DocereConfig = {
 		},
 		{
 			active: true,
-			extract: extractLayerElement('transcription[lang="la"]'),
+			extractElement: extractLayerElement('transcription[lang="la"]'),
+			extractFacsimiles,
 			id: 'la',
 			title: 'Latin',
 			type: LayerType.Text,
 		},
 		{
 			active: false,
-			extract: extractLayerElement('transcription[lang="nl"]'),
+			extractElement: extractLayerElement('transcription[lang="nl"]'),
 			id: 'nl',
 			title: 'Dutch',
 			type: LayerType.Text,
 		},
 		{
 			active: false,
-			extract: extractLayerElement('transcription[lang="en"]'),
+			extractElement: extractLayerElement('transcription[lang="en"]'),
 			id: 'en',
 			title: 'English',
 			type: LayerType.Text,
 		},
 		{
 			active: false,
-			extract: extractLayerElement('transcription[lang="fr"]'),
+			extractElement: extractLayerElement('transcription[lang="fr"]'),
 			id: 'fr',
 			title: 'French',
 			type: LayerType.Text,
@@ -61,7 +59,6 @@ const config: DocereConfig = {
 		{
 			id: 'n',
 			extract: entry => parseInt(entry.id),
-			// datatype: EsDataType.Integer,
 		}
 	],
 	prepare

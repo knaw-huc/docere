@@ -1,13 +1,13 @@
 import type { PrepareAndExtractOutput, DocereApiError } from '../types'
-import type { SerializeEntry, GetEntrySync, GetDefaultEntry } from './utils'
-import type { ProjectList, DocereConfig, XmlToString } from '@docere/common'
+import type { SerializeEntry, ExtractEntry } from './utils'
+import type { ProjectList, DocereConfig, XmlToString, GetDefaultExtractedEntry } from '@docere/common'
 
 declare global {
 	// const DocereProjects: any
 	const PuppenvData: {
 		utils: {
-			getDefaultEntry: GetDefaultEntry
-			getEntrySync: GetEntrySync
+			getDefaultExtractedEntry: GetDefaultExtractedEntry
+			extractEntry: ExtractEntry
 			serializeEntry: SerializeEntry
 			xmlToString: XmlToString
 		},
@@ -41,29 +41,41 @@ export async function prepareAndExtract(xml: string, documentId: string, project
 		}
 	}
 
-	const entryTmp = PuppenvData.utils.getDefaultEntry(documentId)
+	const entryTmp = PuppenvData.utils.getDefaultExtractedEntry(documentId)
 	entryTmp.document = xmlRoot
 
 	// Prepare document
 	// let doc: XMLDocument
 	try {
-		entryTmp.element = config.prepare(entryTmp, config)
+		entryTmp.preparedElement = config.prepare(entryTmp, config)
 	} catch (err) {
 		return { __error: `Document ${documentId}: Preparation error\n${err.toString()}` }
 	}
 
-	const entry = PuppenvData.utils.getEntrySync({
+	for (const entityConfig of config.entities) {
+		for (const el of entryTmp.preparedElement.querySelectorAll(entityConfig.selector)) {
+			el.setAttribute('docere:id', entityConfig.extractId(el))
+			el.setAttribute('docere:type', entityConfig.id)
+		}
+	}
+
+	for (const el of entryTmp.preparedElement.querySelectorAll(config.facsimiles.selector)) {
+		el.setAttribute('docere:id', config.facsimiles.extractFacsimileId(el))
+		el.setAttribute('docere:type', 'facsimile')
+	}
+
+	const entry = PuppenvData.utils.extractEntry({
 		config,
 		id: entryTmp.id,
 		document: entryTmp.document,
-		element: entryTmp.element,
+		preparedElement: entryTmp.preparedElement,
 	})
 
 	return [
 		PuppenvData.utils.serializeEntry(entry, config),
 		{
 			original: xml,
-			prepared: PuppenvData.utils.xmlToString(entry.document),
+			prepared: PuppenvData.utils.xmlToString(entry.preparedElement),
 		}
 	]
 }

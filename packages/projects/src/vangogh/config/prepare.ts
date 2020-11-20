@@ -1,6 +1,6 @@
-import { ConfigEntry } from '@docere/common'
+import { ExtractedEntry } from '@docere/common'
 
-export default function prepareDocument(entry: ConfigEntry) {
+export default function prepareDocument(entry: ExtractedEntry) {
 	// for (const anchor of entry.document.querySelectorAll(`anchor`)) {
 	// 	anchor.setAttribute('docere:id', anchor.getAttribute('xml:id'))
 	// }

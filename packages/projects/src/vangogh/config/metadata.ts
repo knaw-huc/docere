@@ -1,7 +1,7 @@
 import { EsDataType } from '@docere/common'
-import type { ConfigEntry, DocereConfig } from '@docere/common'
+import type { ExtractedEntry, DocereConfig } from '@docere/common'
 
-function extractMetadata(entry: ConfigEntry, selector: string) {
+function extractMetadata(entry: ExtractedEntry, selector: string) {
 	function nsResolver(prefix: string): string {
 		return prefix === 'vg' ?  "http://www.vangoghletters.org/ns/" : "http://www.tei-c.org/ns/1.0"
 	} 

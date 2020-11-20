@@ -1,6 +1,6 @@
-import { ConfigEntry } from '@docere/common'
+import { ExtractedEntry } from '@docere/common'
 
-export default function prepareDocument(entry: ConfigEntry) {
+export default function prepareDocument(entry: ExtractedEntry) {
 	entry.document.querySelectorAll('ne-start').forEach(el => {
 		const range = new Range()
 		range.setStartAfter(el)

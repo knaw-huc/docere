@@ -1,6 +1,6 @@
-import { ConfigEntry } from '@docere/common'
+import { ExtractedEntry } from '@docere/common'
 
-export default function prepareDocument(entry: ConfigEntry) {
+export default function prepareDocument(entry: ExtractedEntry) {
 	const mainDiv = entry.document.querySelector('text > body > div')
 
 	const mainDivId = mainDiv.getAttribute('xml:id')

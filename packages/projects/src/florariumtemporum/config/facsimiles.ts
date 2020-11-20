@@ -1,10 +1,9 @@
-import { ConfigEntry } from '@docere/common'
-
-export default function extractFacsimiles(entry: ConfigEntry) {
-	const pb = entry.element.querySelector('pb')
+export default function extractFacsimiles(layerElement: Element) {
+	const pb = layerElement.querySelector('pb')
 	const path = pb.getAttribute('path')
 	return [
 		{
+			anchors: [pb],
 			id: path, 
 			versions: [{
 				path

@@ -6,7 +6,7 @@ export interface ProjectUIState {
 	viewport: Viewport
 }
 
-interface ASA_Project_Changed {
+interface ProjectChanged {
 	type: 'PROJECT_CHANGED'
 	entryId: string
 	pageId: string
@@ -26,12 +26,12 @@ interface ToggleSearchTab {
 
 type ToggleTab = ToggleFooterTab | ToggleSearchTab
 
-interface ASA_Set_Viewport {
+interface SetViewport {
 	type: 'SET_VIEWPORT'
 	viewport: Viewport
 }
 
 export type ProjectUIAction = 
 	ToggleTab |
-	ASA_Project_Changed |
-	ASA_Set_Viewport
+	ProjectChanged |
+	SetViewport

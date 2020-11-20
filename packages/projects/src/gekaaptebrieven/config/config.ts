@@ -1,4 +1,4 @@
-import { EsDataType, LayerType, ConfigEntry } from '@docere/common'
+import { EsDataType, LayerType, ExtractedEntry } from '@docere/common'
 import { DocereConfig } from '@docere/common'
 import extractFacsimiles from './facsimiles'
 import prepare from './prepare'
@@ -14,7 +14,7 @@ import { extractLanguages, extractTextTypes } from './metadata'
 // }
 
 function getTextContent(selector: string) {
-	return (entry: ConfigEntry) => entry.document.querySelector(selector)?.textContent	
+	return (entry: ExtractedEntry) => entry.document.querySelector(selector)?.textContent	
 }
 
 
@@ -153,9 +153,6 @@ const config: DocereConfig = {
 	// 		type: EntityType.None
 	// 	}
 	// ],
-	facsimiles: {
-		extract: extractFacsimiles,
-	},
 	layers: [
 		{
 			active: true,
@@ -165,6 +162,7 @@ const config: DocereConfig = {
 		},
 		{
 			active: true,
+			extractFacsimiles,
 			id: 'transcription',
 			title: 'Transcription',
 			type: LayerType.Text,

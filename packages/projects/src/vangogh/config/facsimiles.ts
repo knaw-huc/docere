@@ -1,6 +1,6 @@
-import { ConfigEntry, FacsimileType } from '@docere/common'
+import { FacsimileType, ExtractFacsimiles } from '@docere/common'
 
-export default function extractFacsimiles(entry: ConfigEntry) {
+export default (function extractFacsimiles({ layerElement, layer, entry }) {
 	return Array.from(entry.document.querySelectorAll('facsimile zone'))
 		.map(zone => {
 			const id = zone.getAttribute('xml:id')
@@ -14,11 +14,12 @@ export default function extractFacsimiles(entry: ConfigEntry) {
 			const thumbFileName = fileName.concat('t.jpg')
 			const fullFileName = fileName.concat('f.png')
 
-			const el = entry.document.querySelector(`pb[facs="#${id}"]`)
+			const anchors = Array.from(layerElement.querySelectorAll(`pb[facs="#${id}"]`))
 
 			return {
-				el,
+				anchors,
 				id,
+				layerId: layer.id,
 				versions: [{
 					thumbnailPath: `/iiif/vangogh/${thumbFileName}`,
 					path: `/iiif/vangogh/${fullFileName}`,
@@ -26,6 +27,6 @@ export default function extractFacsimiles(entry: ConfigEntry) {
 				}]
 			}
 		})
-}
+}) as ExtractFacsimiles
 
 // const path = `http://vangoghletters.org/vg/facsimiles/${fileName}`

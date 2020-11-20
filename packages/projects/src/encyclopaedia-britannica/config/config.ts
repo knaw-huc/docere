@@ -15,8 +15,9 @@ const config: DocereConfig = {
 	title: 'Encyclopaedia Britannica',
 	entities: [
 		{
-			extract: entry => Array.from(entry.element.querySelectorAll('String[CONTENT][ID]'))
+			extract: layerElement => Array.from(layerElement.querySelectorAll('String[CONTENT][ID]'))
 				.map((el: Element) => ({
+					anchors: [el],
 					element: el,
 					id: el.getAttribute('ID'),
 					content: el.getAttribute('VALUE'),
@@ -26,9 +27,6 @@ const config: DocereConfig = {
 			// textLayers: ['alto'],
 		}
 	],
-	facsimiles: {
-		extract: extractFacsimiles,
-	},
 	layers: [
 		{
 			id: 'scan',
@@ -37,11 +35,12 @@ const config: DocereConfig = {
 		},
 		{
 			active: false,
-			extract: extractPreparedLayer,
+			extractElement: extractPreparedLayer,
 			id: 'prepared',
 			type: LayerType.Text,
 		},
 		{
+			extractFacsimiles,
 			id: 'alto',
 			type: LayerType.Text,
 		},

@@ -5,7 +5,7 @@ import { ProjectContext } from '../context'
 
 import type { Page } from './index'
 import type { DocereConfig } from '../types/config-data/config'
-import type { ID } from '../types/config-data/layer'
+import type { ID } from '../entry/layer'
 
 const pageCache = new Map<string, Page>()
 

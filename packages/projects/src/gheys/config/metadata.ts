@@ -1,4 +1,4 @@
-import type { ConfigEntry } from '@docere/common'
+import type { ExtractedEntry } from '@docere/common'
 
 function normaliseDate(date: string) {
 	date = date.toString()
@@ -12,12 +12,12 @@ function normaliseDate(date: string) {
 
 	return isNaN(d.getTime()) ? null : d.getTime()
 }
-export function extractNormalisedDates(entry: ConfigEntry) {
+export function extractNormalisedDates(entry: ExtractedEntry) {
 	return entry.document.querySelector('meta[key="date"]').getAttribute('value').split(' ')
 		.map(normaliseDate)
 		.filter(x => x != null)
 }
 
-export function hasDate(entry: ConfigEntry) {
+export function hasDate(entry: ExtractedEntry) {
 	return extractNormalisedDates(entry).length > 0
 }

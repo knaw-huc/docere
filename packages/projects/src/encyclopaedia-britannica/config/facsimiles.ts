@@ -1,4 +1,4 @@
-import type { DocereConfig, Facsimile, ConfigEntry } from '@docere/common'
+import type { ExtractedEntry, ExtractedFacsimile } from '@docere/common'
 
 // function elementToArea(el: Element): FacsimileArea {
 // 	return {
@@ -29,13 +29,17 @@ import type { DocereConfig, Facsimile, ConfigEntry } from '@docere/common'
 // 	return areas
 // }
 
-export default function extractFacsimiles(entry: ConfigEntry, _config: DocereConfig) {
-	const facsimiles: Facsimile[] = []
+export default function extractFacsimiles(layerElement: Element, _x: any, entry: ExtractedEntry ) {
+	const facsimiles: ExtractedFacsimile[] = []
 
 	const [,id2] = entry.id.split('/alto/')
 	const path = id2.slice(0, 4) + '/' + id2.slice(4, 8) + '/' + id2.slice(0, 9) + '.5'
 
+	layerElement
+
 	facsimiles.push({
+		// TODO find anchors
+		anchors: [],
 		id: path,
 		versions: [{
 			// areas: extractFacsimileAreas(entry.document, config),

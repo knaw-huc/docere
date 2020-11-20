@@ -1,9 +1,15 @@
-import { EntityType } from '../../enum'
+import { EntityType, Colors } from '../../enum'
 import type { FacetConfig } from '../search/facets'
 import { PageConfig } from '../../page'
-import { Facsimile, ExtractedEntity, ExtractedFacsimile } from './functions'
-import { TextLayerConfig, FacsimileLayerConfig, ID } from './layer'
-import { ConfigEntry } from '../entry'
+import { FacsimileLayerConfig, TextLayerConfig, ExtractedEntry, ID, ExtractedEntity, defaultMetadata, ExtractedFacsimile } from '../..'
+
+interface ExtractFacsimilesProps {
+	config: DocereConfig
+	entry: ExtractedEntry
+	layer: TextLayerConfig
+	layerElement: Element
+}
+export type ExtractFacsimiles = (props: ExtractFacsimilesProps) => ExtractedFacsimile[]
 
 // TODO rename to ProjectConfig
 // TODO rename slug to id
@@ -39,12 +45,16 @@ export interface DocereConfig {
 
 	entities?: EntityConfig[]
 	entrySettings?: EntrySettings
-	facsimiles?: FacsimileConfig
+	facsimiles?: {
+		extractFacsimileId: (el: Element) => string
+		extractFacsimiles: ExtractFacsimiles
+		selector: string
+	}
 	layers?: (TextLayerConfig | FacsimileLayerConfig)[]
 	metadata?: MetadataConfig[]
 	pages?: PageConfig[]
-	plainText?: (entry: ConfigEntry, config: DocereConfig) => string
-	prepare?: (entry: ConfigEntry, config: DocereConfig) => Element
+	plainText?: (entry: ExtractedEntry, config: DocereConfig) => string
+	prepare?: (entry: ExtractedEntry, config: DocereConfig) => Element
 	private?: boolean
 	searchResultCount?: number
 	slug: ID
@@ -55,7 +65,7 @@ export interface DocereConfig {
 	title?: string
 }
 
-export type ExtractEntryPartElements = (entry: ConfigEntry, config: DocereConfig) => Map<string, Element>
+export type ExtractEntryPartElements = (entry: ExtractedEntry, config: DocereConfig) => Map<string, Element>
 
 export interface EntrySettings {
 	'panels.showHeaders'?: boolean
@@ -78,7 +88,7 @@ type TmpConfig = FacetConfig & {
 }
 
 export type MetadataConfig = TmpConfig & {
-	extract: (entry: ConfigEntry, config?: DocereConfig) => string | number | string[] | number[] | boolean
+	extract: (entry: ExtractedEntry, config?: DocereConfig) => string | number | string[] | number[] | boolean
 }
 
 // export type ExtractTextData = (entry: ConfigEntry, config?: DocereConfig) => ExtractedTextData[]
@@ -87,18 +97,39 @@ export type MetadataConfig = TmpConfig & {
 // 	color?: string
 // 	extract: ExtractTextData
 // }
+	// extractEntities?: (layer: SerializedTextLayer, entry: ConfigEntry, config: DocereConfig) => ExtractedEntity[]
 
-export type ExtractEntity = (entry: ConfigEntry, config?: DocereConfig) => ExtractedEntity[]
-// TODO rename to NoteConfig
+export interface ExtractEntitiesProps {
+	config: DocereConfig
+	entityConfig: EntityConfig
+	entry: ExtractedEntry
+	layer: TextLayerConfig
+	layerElement: Element
+}
+export type ExtractEntities = (props: ExtractEntitiesProps) => ExtractedEntity[]
+type ExtractEntityId = (el: Element) => string
+
 export type EntityConfig = TmpConfig & {
 	color?: string
-	extract: ExtractEntity
+	extractId: ExtractEntityId
+	extract: ExtractEntities
 	revealOnHover?: boolean
+	selector: string
 	type?: EntityType | string
 }
 
+export const defaultEntityConfig: Required<Omit<EntityConfig, 'extract' | 'extractId'>> = {
+	...defaultMetadata,
+	color: Colors.Blue,
+	description: null,
+	revealOnHover: false,
+	selector: null,
+	type: EntityType.None,
+}
+
+
 // export interface NotesConfig extends BaseConfig {
 
-interface FacsimileConfig {
-	extract: (entry: ConfigEntry, config: DocereConfig) => ExtractedFacsimile[]
-}
+// interface FacsimileConfig {
+	// extract: (entry: ConfigEntry, config: DocereConfig) => ExtractedFacsimile[]
+// }

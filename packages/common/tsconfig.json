@@ -12,15 +12,15 @@
 		"noImplicitAny": true,
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
-		"outDir": "./build",
+		"outDir": "build",
 		"removeComments": true,
 		"resolveJsonModule": true,
 		"target": "es6",
 		"types": []
 	},
 	"exclude": [
-		"./build",
-		"./node_modules"
+		"build",
+		"node_modules"
 	],
 	"include": ["./src/index.ts"]
 }

@@ -1,7 +1,7 @@
 import React from 'react'
 import { useLocation, useParams } from "react-router-dom"
 import { UrlObject } from './navigate'
-import { ID } from '../types/config-data/layer'
+import { ID } from '../entry/layer'
 
 export interface UrlQuery {
 	entityId?: Set<ID>

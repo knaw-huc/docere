@@ -1,19 +1,26 @@
-import { ConfigEntry } from '@docere/common'
+import { ExtractedEntry } from '@docere/common'
 
-export default function extractFacsimiles(entry: ConfigEntry) {
-	return Array.from(entry.document.querySelectorAll('facsimile surface'))
-		.map(surface => {
-			const surfaceId = surface.getAttribute('xml:id') 
+export default function extractFacsimiles(layerElement: Element, _layer: any, entry: ExtractedEntry) {
+	return Array.from(layerElement.querySelectorAll('pb[facs]'))
+		.map(pb => {
+			const id = pb.getAttribute('facs')?.slice(1)
+
+			const selector = `facsimile surface[*|id="${id}"]`
+			const surface = entry.document.querySelector(selector)
+			if (surface == null) return
+
 			const graphic = surface.querySelector('graphic[url]')
-			if (graphic == null) {
-				console.log(`Graphic not found: ${surfaceId}`)
-				return null
-			}
+			if (graphic == null) return 
+
 			const fileName = graphic.getAttribute('url')
 			if (!fileName.length) return null
+
 			const imgPath = fileName.slice(0, fileName.indexOf('_')) + '/' + fileName
 			const path = `/iiif/mondrian/${imgPath}.jpg/info.json`
-			return { id: surfaceId, versions: [{ path }] }
+
+			return {
+				anchors: [pb],
+				id,
+				versions: [{ path }] }
 		})
-		.filter(facs => facs != null)
 }

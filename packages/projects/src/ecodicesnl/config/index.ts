@@ -7,7 +7,7 @@ export default extendConfigData({
 	private: true,
 	metadata: keys.map(key => ({
 		id: key,
-		extract: entry => entry.element.querySelector(`meta[key="${key}"]`)?.textContent
+		extract: entry => entry.preparedElement.querySelector(`meta[key="${key}"]`)?.textContent
 	})),
 	layers: [
 	],

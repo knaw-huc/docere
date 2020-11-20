@@ -6,6 +6,10 @@ const projectList: ProjectList = {
 		config: async function() { return await import('./achterdeschermen/config') },
 		getTextComponents: async function() { return await import('./achterdeschermen/text-components') },
 	},
+	bosscheschepenprotocollen: {
+		config: async function() { return await import('./bosscheschepenprotocollen/config') },
+		getTextComponents: async function() { return await import('./bosscheschepenprotocollen/text-components') },
+	},
 	ecodicesnl: {
 		config: async function() { return await import('./ecodicesnl/config') },
 		getTextComponents: async function() { return { default: () => async () => ({}) } },

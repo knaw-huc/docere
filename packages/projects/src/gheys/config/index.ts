@@ -1,20 +1,22 @@
-import { EsDataType, LayerType, EntityType, Colors, extendConfigData, ExtractEntity } from '@docere/common'
+import { EsDataType, LayerType, EntityType, Colors, extendConfigData, ExtractEntities } from '@docere/common'
 import extractFacsimiles from './facsimiles'
 import { extractNormalisedDates, hasDate } from './metadata'
 import prepare from './prepare'
 
-function extractSuggestions(): ExtractEntity {
-	return entry => Array.from(entry.document.querySelectorAll(`string[suggestion]`))
+function extractSuggestions(): ExtractEntities {
+	return layerElement => Array.from(layerElement.querySelectorAll(`string[suggestion]`))
 		.map(element => ({
+			anchors: [element],
 			id: element.id,
 			content: element.getAttribute('suggestion'),
 		}))
 }
 
-function extractEntities(type: string): ExtractEntity {
-	return entry => 
-		Array.from(entry.document.querySelectorAll(`entity[type~=${type}]`))
+function extractEntities(type: string): ExtractEntities {
+	return layerElement => 
+		Array.from(layerElement.querySelectorAll(`entity[type~=${type}]`))
 			.map(element => ({
+				anchors: [element],
 				id: element.id,
 				content: element.getAttribute('content'),
 			}))
@@ -155,15 +157,13 @@ export default extendConfigData({
 			showInAside: false,
 		}
 	],
-	facsimiles: {
-		extract: extractFacsimiles,
-	},
 	layers: [
 		{
 			id: 'scan',
 			type: LayerType.Facsimile
 		},
 		{
+			extractFacsimiles,
 			id: 'text',
 			type: LayerType.Text
 		},

@@ -24,15 +24,13 @@ export default extendConfigData({
 		}	
 	],
 	entities: [],
-	facsimiles: {
-		extract: extractFacsimiles,
-	},
 	layers: [
 		{
 			id: 'scan',
 			type: LayerType.Facsimile
 		},
 		{
+			extractFacsimiles,
 			id: 'text',
 			type: LayerType.Text
 		},
