@@ -24,13 +24,17 @@ export default extendConfigData({
 		}	
 	],
 	entities: [],
+	facsimiles: {
+		extractFacsimileId: el => el.getAttribute('facs'),
+		extractFacsimiles,
+		selector: 'column[facs]'
+	},
 	layers: [
 		{
 			id: 'scan',
 			type: LayerType.Facsimile
 		},
 		{
-			extractFacsimiles,
 			id: 'text',
 			type: LayerType.Text
 		},
