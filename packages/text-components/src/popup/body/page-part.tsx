@@ -5,7 +5,7 @@ import DocereTextView from '@docere/text'
 import { PopupBodyLink, PopupBodyWrapper } from './index'
 
 import type { UrlObject, Entity } from '@docere/common'
-import type { PopupBodyProps } from '..'
+import type { EntityComponentProps } from '..'
 
 
 interface PageLinkProps {
@@ -35,7 +35,7 @@ function PageLink(props: PageLinkProps) {
 	)
 }
 
-export default function PagePartPopupBody(props: PopupBodyProps) {
+export default React.memo(function PagePartPopupBody(props: EntityComponentProps) {
 	const page = usePage(props.entity.configId)
 	const components = useComponents(DocereComponentContainer.Page, page?.id)
 
@@ -54,4 +54,4 @@ export default function PagePartPopupBody(props: PopupBodyProps) {
 			</PageLink>
 		</PopupBodyWrapper>
 	)
-}
+})

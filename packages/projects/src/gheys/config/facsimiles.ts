@@ -1,4 +1,4 @@
-import { ExtractedFacsimile } from '@docere/common'
+import { ExtractedFacsimile, ExtractFacsimiles } from '@docere/common'
 
 // function parseArea(id: string)  {
 // 	return id
@@ -53,7 +53,7 @@ import { ExtractedFacsimile } from '@docere/common'
 // 	return areas
 // }
 
-export default function extractFacsimiles(layerElement: Element) {
+export default (function extractFacsimiles({ layerElement }) {
 	const facsimiles: ExtractedFacsimile[] = []
 	const pb = layerElement.querySelector('pb')
 
@@ -67,5 +67,5 @@ export default function extractFacsimiles(layerElement: Element) {
 	})
 
 	return facsimiles
-}
+}) as ExtractFacsimiles
 

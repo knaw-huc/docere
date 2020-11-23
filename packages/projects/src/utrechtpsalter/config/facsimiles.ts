@@ -1,4 +1,4 @@
-import type { ExtractedFacsimile } from '@docere/common'
+import type { ExtractedFacsimile, ExtractFacsimiles } from '@docere/common'
 
 // function extractFacsimileAreas(doc: XMLDocument) {
 // 	const areas: FacsimileArea[] = []
@@ -26,7 +26,7 @@ import type { ExtractedFacsimile } from '@docere/common'
 // 	return areas
 // }
 
-export default function extractFacsimiles(layerElement: Element) {
+export default (function extractFacsimiles({ layerElement }) {
 	const facsimiles: ExtractedFacsimile[] = []
 	const facsimile = layerElement.querySelector('imgLocation')
 
@@ -42,4 +42,4 @@ export default function extractFacsimiles(layerElement: Element) {
 	}
 
 	return facsimiles
-}
+}) as ExtractFacsimiles

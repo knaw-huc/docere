@@ -153,6 +153,11 @@ const config: DocereConfig = {
 	// 		type: EntityType.None
 	// 	}
 	// ],
+	facsimiles: {
+		extractFacsimileId: el => el.getAttribute('facs'),
+		extractFacsimiles,
+		selector: 'pb[facs]',
+	},
 	layers: [
 		{
 			active: true,
@@ -162,7 +167,6 @@ const config: DocereConfig = {
 		},
 		{
 			active: true,
-			extractFacsimiles,
 			id: 'transcription',
 			title: 'Transcription',
 			type: LayerType.Text,

@@ -64,16 +64,22 @@ const config: DocereConfig = {
 		{
 			color: Colors.BlueBright,
 			id: 'editor',
-			extract: layerElement => Array.from(layerElement.querySelectorAll('note'))
+			extract: ({ layerElement, entityConfig }) => Array.from(layerElement.querySelectorAll(entityConfig.selector))
 				.map((element, index) => ({
 					anchors: [element],
 					content: xmlToString(element),
-					id: element.id,
 					n: (index + 1).toString(),
 				})),
+			extractId: el => el.id,
+			selector: 'note',
 			type: EntityType.Note,
 		}
 	],
+	facsimiles: {
+		extractFacsimileId: el => el.id, /* TODO fix */
+		extractFacsimiles,
+		selector: 'register',
+	},
 	layers: [
 		{
 			active: true,
@@ -83,7 +89,6 @@ const config: DocereConfig = {
 		},
 		{
 			extractElement: extractLayerElement('transcriptie'),
-			extractFacsimiles,
 			id: 'transcriptie',
 			type: LayerType.Text,
 		}

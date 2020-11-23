@@ -1,4 +1,4 @@
-import { ExtractedEntry, ExtractedTextLayer } from '@docere/common'
+import { ExtractFacsimiles } from '@docere/common'
 
 function getRectoVersoSequence(x: string) {
 	const [start, end] = x.split('-')
@@ -31,7 +31,7 @@ function getRectoVersoSequence(x: string) {
 	return seq.map(x => x.padStart(4, '0'))
 }
 
-export default function extractFacsimiles(layerElement: Element, _layer: ExtractedTextLayer, entry: ExtractedEntry) {
+export default (function extractFacsimiles({ layerElement, entry }) {
 	const [region, entryId] = entry.id.split('/')
 
 	const registers = Array.from(layerElement.querySelectorAll('register')).map(k => k.textContent).filter(x => x.length > 0)
@@ -70,4 +70,4 @@ export default function extractFacsimiles(layerElement: Element, _layer: Extract
 	})
 
 	return z
-}
+}) as ExtractFacsimiles

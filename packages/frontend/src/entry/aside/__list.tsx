@@ -2,45 +2,33 @@ import * as React from 'react'
 import styled from 'styled-components'
 import { small } from '../index.components'
 import { DEFAULT_SPACING, Colors } from '@docere/common'
-import type { NotesConfig, TextData } from '@docere/common'
 
-export const Wrapper = styled.div`
-	background: ${Colors.Grey};
-	bottom: 0;
-	height: 100%;
-	left: 0;
-	position: absolute;
-	right: 0;
-	top: 0;
-	z-index: ${(p: Pick<Props, 'active'>) => p.active ? 1 : -1};
-`
+// export function useTextData<T extends TextData>(textData: T[], activeTextData: T): [Map<string, T[]>, string[], string, any] {
+// 	const [textDataByType, setTextDataByType] = React.useState<Map<string, T[]>>(new Map())
+// 	const [types, setTypes] = React.useState<string[]>([])
+// 	const [activeType, setActiveType] = React.useState<string>(null)
 
-export function useTextData<T extends TextData>(textData: T[], activeTextData: T): [Map<string, T[]>, string[], string, any] {
-	const [textDataByType, setTextDataByType] = React.useState<Map<string, T[]>>(new Map())
-	const [types, setTypes] = React.useState<string[]>([])
-	const [activeType, setActiveType] = React.useState<string>(null)
+// 	React.useEffect(() => {
+// 		const tmp = new Map<string, T[]>()
 
-	React.useEffect(() => {
-		const tmp = new Map<string, T[]>()
+// 		for (const entity of textData) {
+// 			const entities = tmp.get(entity.config.id) || []
+// 			tmp.set(entity.config.id, entities.concat(entity))
+// 		}
+// 		const types = Array.from(tmp.keys())
 
-		for (const entity of textData) {
-			const entities = tmp.get(entity.config.id) || []
-			tmp.set(entity.config.id, entities.concat(entity))
-		}
-		const types = Array.from(tmp.keys())
+// 		setTypes(types)
+// 		setActiveType(types[0])
+// 		setTextDataByType(tmp)
+// 	}, [textData])
 
-		setTypes(types)
-		setActiveType(types[0])
-		setTextDataByType(tmp)
-	}, [textData])
+// 	React.useEffect(() => {
+// 		if (activeTextData == null) return
+// 		setActiveType(activeTextData.config.id)
+// 	}, [activeTextData])
 
-	React.useEffect(() => {
-		if (activeTextData == null) return
-		setActiveType(activeTextData.config.id)
-	}, [activeTextData])
-
-	return [textDataByType, types, activeType, setActiveType]
-}
+// 	return [textDataByType, types, activeType, setActiveType]
+// }
 
 const H2Height = DEFAULT_SPACING * 1.25
 
@@ -99,7 +87,7 @@ export const Ul = styled.ul`
 interface Props {
 	active: boolean
 	children: React.ReactNode
-	config: NotesConfig
+	config: EntityConfig
 	containerHeight: number
 	itemCount: number
 	setActiveType: (type: string) => void

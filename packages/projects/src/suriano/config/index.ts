@@ -1,4 +1,4 @@
-import { extendConfigData, LayerType, Colors, EntityType } from '@docere/common'
+import { extendConfigData, LayerType, Colors, EntityType, xmlToString } from '@docere/common'
 import { extractEntryPartElementsFromMilestone } from '../../utils'
 import extractFacsimiles from './facsimiles'
 import prepare from './prepare'
@@ -42,7 +42,6 @@ export default extendConfigData({
 			type: LayerType.Facsimile,
 		},
 		{
-			extractFacsimiles,
 			id: 'text',
 			type: LayerType.Text,
 			// filterFacsimiles,
@@ -57,18 +56,24 @@ export default extendConfigData({
 		{
 			color: Colors.BlueBright,
 			id: 'note',
-			extract: layerElement => Array.from(layerElement.querySelectorAll('li[role=doc-endnote]'))
+			extract: ({ layerElement, entityConfig }) => Array.from(layerElement.querySelectorAll(entityConfig.selector))
 				.map(el => ({
 					anchors: [el],
-					content: el.outerHTML,
-					id: el.id,
+					content: xmlToString(el),
 					n: el.id.slice(2),
 					title: `Note ${el.id.slice(2)}`,
 				})),
+			extractId: el => el.id,
+			selector: 'li[role=doc-endnote]',
 			title: "Notes",
 			type: EntityType.Note,
 		},
 	],
+	facsimiles: {
+		extractFacsimileId: el => el.id,
+		extractFacsimiles,
+		selector: 'pb',
+	},
 	parts: {
 		extract: extractEntryPartElementsFromMilestone('letterStart'),
 	},

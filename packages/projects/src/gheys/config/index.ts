@@ -4,20 +4,18 @@ import { extractNormalisedDates, hasDate } from './metadata'
 import prepare from './prepare'
 
 function extractSuggestions(): ExtractEntities {
-	return layerElement => Array.from(layerElement.querySelectorAll(`string[suggestion]`))
+	return ({ layerElement, entityConfig }) => Array.from(layerElement.querySelectorAll(entityConfig.selector))
 		.map(element => ({
 			anchors: [element],
-			id: element.id,
 			content: element.getAttribute('suggestion'),
 		}))
 }
 
-function extractEntities(type: string): ExtractEntities {
-	return layerElement => 
-		Array.from(layerElement.querySelectorAll(`entity[type~=${type}]`))
+function extractEntities(): ExtractEntities {
+	return ({ layerElement, entityConfig }) => 
+		Array.from(layerElement.querySelectorAll(entityConfig.selector))
 			.map(element => ({
 				anchors: [element],
-				id: element.id,
 				content: element.getAttribute('content'),
 			}))
 }
@@ -103,17 +101,21 @@ export default extendConfigData({
 	entities: [
 		{
 			color: Colors.Blue,
-			extract: extractEntities('person'),
+			extract: extractEntities(),
+			extractId: el => el.id,
 			id: 'person',
 			order: 500,
 			title: 'Person',
-			type: EntityType.Person
+			type: EntityType.Person,
+			selector: `entity[type~="person"]`,
 		},
 		{
 			color: Colors.Orange,
-			extract: extractEntities('location'),
+			extract: extractEntities(),
+			extractId: el => el.id,
 			id: 'location',
 			order: 510,
+			selector: `entity[type~="location"]`,
 			type: EntityType.Location,
 		},
 		// {
@@ -125,45 +127,61 @@ export default extendConfigData({
 		// 	type: RsType.Location,
 		// },
 		{
-			extract: extractEntities('job'),
+			extract: extractEntities(),
+			extractId: el => el.id,
 			id: 'job',
 			order: 530,
+			selector: `entity[type~="job"]`,
 		},
 		{
-			extract: extractEntities('notary'),
+			extract: extractEntities(),
+			extractId: el => el.id,
 			id: 'notary',
 			order: 540,
+			selector: `entity[type~="notary"]`,
 		},
 		{
-			extract: extractEntities('ship'),
+			extract: extractEntities(),
+			extractId: el => el.id,
 			id: 'ship',
 			order: 545,
+			selector: `entity[type~="ship"]`,
 		},
 		{
-			extract: extractEntities('good'),
+			extract: extractEntities(),
+			extractId: el => el.id,
 			id: 'good',
 			order: 550,
+			selector: `entity[type~="good"]`,
 		},
 		{
-			extract: extractEntities('date'),
+			extract: extractEntities(),
+			extractId: el => el.id,
 			id: 'date',
-			showAsFacet: false
+			showAsFacet: false,
+			selector: `entity[type~="date"]`,
 		},
 		{
 			color: Colors.Red,
 			extract: extractSuggestions(),
+			extractId: el => el.id,
 			id: 'suggestion',
+			selector: `string[suggestion]`,
 			showAsFacet: false,
 			showInAside: false,
 		}
 	],
+	facsimiles: {
+		extractFacsimileId: el => el.getAttribute('path'),
+		extractFacsimiles,
+		selector: 'pb[path]'
+	},
 	layers: [
 		{
 			id: 'scan',
 			type: LayerType.Facsimile
 		},
 		{
-			extractFacsimiles,
 			id: 'text',
 			type: LayerType.Text
 		},

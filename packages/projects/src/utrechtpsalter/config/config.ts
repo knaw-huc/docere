@@ -17,6 +17,11 @@ const config: DocereConfig = {
 		"panels.text.showLineBeginnings": false,
 		"panels.text.showPageBeginnings": false
 	},
+	facsimiles: {
+		extractFacsimileId: el => el.textContent,
+		extractFacsimiles,
+		selector: 'imgLocation'
+	},
 	slug: 'utrechtpsalter',
 	title: 'Utrecht Psalter',
 	layers: [
@@ -28,7 +33,6 @@ const config: DocereConfig = {
 		{
 			active: true,
 			extractElement: extractLayerElement('transcription[lang="la"]'),
-			extractFacsimiles,
 			id: 'la',
 			title: 'Latin',
 			type: LayerType.Text,

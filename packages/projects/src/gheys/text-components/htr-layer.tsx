@@ -2,7 +2,7 @@ import * as React from 'react'
 import styled from 'styled-components'
 import { Colors, FacsimileContext } from '@docere/common'
 import type { DocereConfig, DocereComponentProps } from '@docere/common'
-import { Pb, Lb, getEntity, PopupBodyProps } from '@docere/text-components'
+import { Pb, Lb, getEntity, EntityComponentProps } from '@docere/text-components'
 
 // function setActiveFacsimileArea(dispatch: React.Dispatch<EntryStateAction>, ids: string[]) {
 // 	dispatch({
@@ -85,9 +85,9 @@ const EntityBodyWrapper = styled.div`
 	}
 `
 
-function EntityBody(props: PopupBodyProps) {
+function EntityBody(props: EntityComponentProps) {
 	const { activeFacsimile } = React.useContext(FacsimileContext)
-	const { attributes } = props.docereComponentProps
+	const { attributes } = props.entity
 	const rect = attributes.area?.split('_').join(',')
 	// const activeFacsimile = props.docereComponentProps.activeFacsimiles.values().next().value
 

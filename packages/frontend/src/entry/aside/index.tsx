@@ -1,6 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components';
 import { ASIDE_WIDTH, AsideTab, Colors, FOOTER_HANDLE_HEIGHT, EntryTabContext } from '@docere/common'
+import { EntitiesAside } from './text-data'
 
 import MetadataAside from './metadata/index'
 
@@ -31,9 +32,7 @@ function Aside() {
 			}
 			{
 				asideTab === AsideTab.TextData &&
-				<TextDataAside
-					active={asideTab === AsideTab.TextData}
-				/>
+				<EntitiesAside />
 			}
 			{/* {
 				props.asideTab === AsideTab.Notes &&

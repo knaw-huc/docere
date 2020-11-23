@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { DocereComponentProps, Entity, EntrySettingsContext, EntitiesContext } from '@docere/common'
 
-import { Popup, PopupBodyProps } from '../popup'
+import { Popup, EntityComponentProps } from '../popup'
 import { useEntity, useChildren } from './hooks'
 import IconsByType from './icons'
 
@@ -48,14 +48,13 @@ const EntityWrapper = styled.span`
 // 	PopupBody?: React.FC<PopupBodyProps>
 // }
 
-export function getEntity(PopupBody?: React.FC<PopupBodyProps>) {
+export function getEntity(PopupBody?: React.FC<EntityComponentProps>) {
 	return function Entity(props: DocereComponentProps) {
 		const { activeEntities, addActiveEntity } = React.useContext(EntitiesContext)
 		const { settings } = React.useContext(EntrySettingsContext)
 		// const entityValue = preProps.extractValue(props)
 		if (!settings['panels.text.showEntities']) return <span>{props.children}</span>
 
-		console.log('HERE', props.attributes)
 		const entity = useEntity(props.attributes['docere:id'])
 		const [children, firstWord, restOfFirstChild] = useChildren(props.children, entity)
 

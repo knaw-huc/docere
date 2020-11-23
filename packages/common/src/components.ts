@@ -21,7 +21,6 @@ export function useUIComponent(componentType: UIComponentType, id?: string) {
 	React.useEffect(() => {
 		getUIComponent(componentType, id).then(c => {
 			if (c != null) setComponent(c)
-			// else import('../project-components/generic-result-body').then(c => setComponent(c.default))
 		})
 	}, [componentType, id])
 

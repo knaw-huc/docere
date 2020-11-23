@@ -9,6 +9,7 @@ export interface ExtractedCommon {
 }
 
 export interface ExtractedEntity extends ExtractedCommon, Omit<EntityConfig, 'extract' | 'extractId' | 'id' | 'selector'> {
+	attributes?: Record<string, string>
 	configId?: string
 	content: string
 	count?: number
@@ -22,6 +23,7 @@ export type Entity = Required<Omit<ExtractedEntity, 'anchors'>>
 
 export const defaultEntity: Entity = {
 	...defaultEntityConfig,
+	attributes: null,
 	configId: null,
 	content: null,
 	count: null,

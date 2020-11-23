@@ -1,9 +1,9 @@
 import * as React from 'react'
 import styled from 'styled-components'
+
 import { small } from '../../index.components'
 
-import type { EntryStateAction, Entity } from '@docere/common'
-import ListFacetValue from '../metadata/list-facet'
+import { Entity, useUIComponent, UIComponentType } from '@docere/common'
 
 const Li = styled.li`
 	align-content: center;
@@ -22,21 +22,24 @@ const Li = styled.li`
 
 interface Props {
 	active: boolean
-	entryDispatch: React.Dispatch<EntryStateAction>
 	entity: Entity
 }
-export default function ItemInText(props: Props) {
+export function ItemInText(props: Props) {
+	const Component = useUIComponent(UIComponentType.Entity, props.entity.configId)
+
 	const handleClick = React.useCallback(() => {
-		props.entryDispatch({ type: 'SET_ENTITY', id: props.entity.id })
+		console.log('click!')
 	}, [props.entity])
+
+	if (Component == null) return null
 
 	return (
 		<Li
 			count={props.entity.count}
 			onClick={handleClick}
 		>
-			<ListFacetValue
-				metadataItem={props.entity}
+			<Component
+				entity={props.entity}
 			/>
 		</Li>
 	)

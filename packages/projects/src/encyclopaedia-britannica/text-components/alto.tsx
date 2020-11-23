@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { getEntity, Lb, PopupBodyProps } from '@docere/text-components'
+import { getEntity, Lb, EntityComponentProps } from '@docere/text-components'
 import { Colors, FacsimileContext } from '@docere/common'
 
 import type { DocereComponents } from '@docere/common'
@@ -75,8 +75,8 @@ const EntityThumb = styled.img`
 	padding: 1rem;
 `
 
-function EntityPopupBody(props: PopupBodyProps) {
-	const { HPOS, VPOS, WIDTH, HEIGHT } = props.docereComponentProps.attributes
+function EntityPopupBody(props: EntityComponentProps) {
+	const { HPOS, VPOS, WIDTH, HEIGHT } = props.entity.attributes
 	const rect = `${HPOS},${VPOS},${WIDTH},${HEIGHT}`
 	// const activeFacsimile = props.docereComponentProps.activeFacsimiles.values().next().value
 	const { activeFacsimile } = React.useContext(FacsimileContext)

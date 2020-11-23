@@ -1,4 +1,6 @@
-export default function extractFacsimiles(layerElement: Element) {
+import { ExtractFacsimiles } from '@docere/common'
+
+export default (function extractFacsimiles({ layerElement }) {
 	return Array.from(layerElement.querySelectorAll('pb[id]'))
 		.map(pb => {
 			const imgPath = 'Senato-dispacci-ambasciatori-e-residenti-Signori-Stati-filza-2_' //0271_133-r'
@@ -20,4 +22,4 @@ export default function extractFacsimiles(layerElement: Element) {
 			}
 		})
 		.filter(facs => facs != null)
-}
+}) as ExtractFacsimiles

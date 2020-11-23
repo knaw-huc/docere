@@ -1,4 +1,6 @@
-export default function extractFacsimiles(layerElement: Element) {
+import { ExtractFacsimiles } from '@docere/common'
+
+export default (function extractFacsimiles({ layerElement }) {
 	return Array.from(layerElement.querySelectorAll('facsimile surface'))
 		.map(surface => {
 			const surfaceId = surface.getAttribute('xml:id') 
@@ -20,4 +22,4 @@ export default function extractFacsimiles(layerElement: Element) {
 			}
 		})
 		.filter(facs => facs != null)
-}
+}) as ExtractFacsimiles

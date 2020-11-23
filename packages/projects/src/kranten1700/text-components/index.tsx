@@ -2,7 +2,7 @@ import * as React from 'react'
 import styled from 'styled-components'
 import { DocereComponentContainer } from '@docere/common'
 import type { DocereConfig, DocereComponents } from '@docere/common'
-import { getEntity, PopupBodyProps } from '@docere/text-components'
+import { getEntity, EntityComponentProps } from '@docere/text-components'
 
 const Dl = styled.dl`
 	line-height: 1rem;
@@ -29,8 +29,8 @@ const Dl = styled.dl`
 	}
 `
 
-function RsBody(props: PopupBodyProps) {
-	const { attributes } = props.docereComponentProps
+function RsBody(props: EntityComponentProps) {
+	const { attributes } = props.entity
 	return (
 		<Dl>
 			<div>

@@ -1,6 +1,6 @@
-import { ExtractedEntry } from '@docere/common'
+import { ExtractFacsimiles } from '@docere/common'
 
-export default function extractFacsimiles(layerElement: Element, _layer: any, entry: ExtractedEntry) {
+export default (function extractFacsimiles({ layerElement, entry }) {
 	return Array.from(layerElement.querySelectorAll('pb[facs]'))
 		.map(pb => {
 			const id = pb.getAttribute('facs')?.slice(1)
@@ -23,4 +23,4 @@ export default function extractFacsimiles(layerElement: Element, _layer: any, en
 				id,
 				versions: [{ path }] }
 		})
-}
+}) as ExtractFacsimiles

@@ -29,7 +29,7 @@ export function AsideTabs() {
 				<Button
 					active={asideTab === AsideTab.TextData}
 					data-tab={AsideTab.TextData}
-					data-type="aside"
+					onClick={handleTabClick}
 				>
 					Entities
 				</Button>

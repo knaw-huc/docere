@@ -46,6 +46,7 @@ const projectList: ProjectList = {
 	mondrian: {
 		config: async function() { return await import('./mondrian/config') },
 		getTextComponents: async function() { return await import('./mondrian/text-components') },
+		getUIComponent: async function() { return await import('./mondrian/ui-components') },
 	},
 	'plakaatboek-guyana-1670-1816': {
 		config: async function() { return await import('./plakaatboek-guyana-1670-1816/config') },

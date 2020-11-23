@@ -65,13 +65,14 @@ const config: DocereConfig = {
 	entities: [
 		{
 			color: Colors.Pink,
-			extract: layerElement => Array.from(layerElement.querySelectorAll('w'))
+			extract: ({ layerElement, entityConfig }) => Array.from(layerElement.querySelectorAll(entityConfig.selector))
 				.map(el  => ({
 					anchors: [el],
-					id: el.getAttribute('pos'),
 					content: el.getAttribute('value'),
 				})),
+			extractId: el => el.getAttribute('pos'),
 			id: 'pos',
+			selector: 'w',
 			title: 'Part-of-speech tagging'
 		},
 		// {

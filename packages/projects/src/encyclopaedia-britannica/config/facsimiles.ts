@@ -1,4 +1,4 @@
-import type { ExtractedEntry, ExtractedFacsimile } from '@docere/common'
+import type { ExtractedFacsimile, ExtractFacsimiles } from '@docere/common'
 
 // function elementToArea(el: Element): FacsimileArea {
 // 	return {
@@ -29,7 +29,7 @@ import type { ExtractedEntry, ExtractedFacsimile } from '@docere/common'
 // 	return areas
 // }
 
-export default function extractFacsimiles(layerElement: Element, _x: any, entry: ExtractedEntry ) {
+export default (function extractFacsimiles({ layerElement, entry }) {
 	const facsimiles: ExtractedFacsimile[] = []
 
 	const [,id2] = entry.id.split('/alto/')
@@ -49,5 +49,4 @@ export default function extractFacsimiles(layerElement: Element, _x: any, entry:
 	})
 
 	return facsimiles
-}
-
+}) as ExtractFacsimiles

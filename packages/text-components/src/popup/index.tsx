@@ -41,9 +41,9 @@ const Body = styled.div`
 	padding: 1rem;
 `
 
-export interface PopupBodyProps {
+export interface EntityComponentProps {
 	entity: Entity
-	docereComponentProps: DocereComponentProps
+	// docereComponentProps: DocereComponentProps
 }
 
 interface Props {
@@ -51,7 +51,7 @@ interface Props {
 	docereComponentProps: DocereComponentProps
 	entity: Entity
 	openToAside: boolean
-	PopupBody?: React.FC<PopupBodyProps>
+	PopupBody?: React.FC<EntityComponentProps>
 	xml?: string
 }
 export function Popup(props: Props) {
@@ -89,7 +89,7 @@ export function Popup(props: Props) {
 							/>
 						</Body> :
 						<props.PopupBody
-							docereComponentProps={props.docereComponentProps}
+							// docereComponentProps={props.docereComponentProps}
 							entity={props.entity}
 						/> :
 					null

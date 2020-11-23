@@ -7,15 +7,28 @@ export default extendConfigData({
 		metadataId: 'n',
 		sortBy: 'n',
 	},
-	slug: 'florariumtemporum',
-	title: "Florarium temporum",
-	private: true,
-	metadata: [
+	entities: [
 		{
-			id: 'n',
-			extract: entry => entry.preparedElement.querySelector('text > body > div').getAttribute('xml:id')
-		}
+			color: Colors.BlueBright,
+			id: 'note',
+			extract: ({ layerElement, entityConfig }) => Array.from(layerElement.querySelectorAll(entityConfig.selector))
+				.map(el => ({
+					anchors: [el],
+					content: el.outerHTML,
+					n: el.getAttribute('xml:id').slice(1),
+					title: `Note ${el.getAttribute('xml:id').slice(1)}`,
+				})),
+			extractId: el => el.getAttribute('xml:id'),
+			selector: 'note',
+			title: "Notes",
+			type: EntityType.Note,
+		},
 	],
+	facsimiles: {
+		extractFacsimileId: el => el.getAttribute('path'),
+		extractFacsimiles,
+		selector: 'pb[path]',
+	},
 	layers: [
 		{
 			active: true,
@@ -23,26 +36,18 @@ export default extendConfigData({
 			type: LayerType.Facsimile,
 		},
 		{
-			extractFacsimiles,
 			id: 'text',
 			type: LayerType.Text,
 		},
 	],
-	entities: [
+	metadata: [
 		{
-			color: Colors.BlueBright,
-			id: 'note',
-			extract: layerElement => Array.from(layerElement.querySelectorAll('note'))
-				.map(el => ({
-					anchors: [el],
-					content: el.outerHTML,
-					id: el.getAttribute('xml:id'),
-					n: el.getAttribute('xml:id').slice(1),
-					title: `Note ${el.getAttribute('xml:id').slice(1)}`,
-				})),
-			title: "Notes",
-			type: EntityType.Note,
-		},
+			id: 'n',
+			extract: entry => entry.preparedElement.querySelector('text > body > div').getAttribute('xml:id')
+		}
 	],
 	prepare,
+	private: true,
+	slug: 'florariumtemporum',
+	title: "Florarium temporum",
 })

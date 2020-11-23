@@ -110,6 +110,11 @@ export default extendConfigData({
 			showAsFacet: false
 		}
 	],
+	facsimiles: {
+		extractFacsimileId: el => el.getAttribute('facs')?.slice(1),
+		extractFacsimiles,
+		selector: 'pb[facs]',
+	},
 	layers: [
 		{
 			id: 'facsimile',
@@ -118,13 +123,11 @@ export default extendConfigData({
 		{
 			id: 'original',
 			extractElement: extractLayerElement('div[type="original"]'),
-			extractFacsimiles,
 			type: LayerType.Text,
 		},
 		{
 			id: 'translation',
 			extractElement: extractLayerElement('div[type="translation"]'),
-			extractFacsimiles,
 			type: LayerType.Text,
 		}
 	],

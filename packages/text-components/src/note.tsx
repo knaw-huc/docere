@@ -1,7 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
-import { DocereComponentProps, Entity, EntrySettingsContext, EntitiesContext, EntryContext } from '@docere/common'
+import { DocereComponentProps, EntrySettingsContext, EntitiesContext } from '@docere/common'
 import { Popup } from './popup'
+import { useEntity } from './entity/hooks'
 
 interface NAProps { active: boolean, color: string, openToAside: boolean }
 const Wrapper = styled.div`
@@ -24,60 +25,44 @@ const Wrapper = styled.div`
 	position: ${props => props.openToAside ? 'static' : 'relative'};
 `
 
-function useNote(extractNoteId: ExtractNoteId, props: DocereComponentProps) {
-	const entry = React.useContext(EntryContext)
-	const [note, setNote] = React.useState<Entity>(null)
-
-	React.useEffect(() => {
-		const noteId = extractNoteId(props)
-		const note = entry.textData.entities.get(noteId)
-		setNote(note)
-	}, [entry])
-
-	return note
-}
-
-type ExtractNoteId = (props: DocereComponentProps) => string
-
 // TODO merge getNote with getEntity
-export default function getNote(extractNoteId: ExtractNoteId) {
-	return function Note(props: DocereComponentProps) {
-		const { activeEntities, addActiveEntity } = React.useContext(EntitiesContext)
-		const { settings } = React.useContext(EntrySettingsContext)
+// export default function getNote(extractNoteId: ExtractNoteId) {
+export const Note = React.memo(function Note(props: DocereComponentProps) {
+	const { activeEntities, addActiveEntity } = React.useContext(EntitiesContext)
+	const { settings } = React.useContext(EntrySettingsContext)
 
-		if (
-			!settings['panels.text.showNotes']
-		) return <span>{props.children}</span>
+	if (
+		!settings['panels.text.showNotes']
+	) return <span>{props.children}</span>
 
-		const note = useNote(extractNoteId, props)
+	const note = useEntity(props.attributes['docere:id'])
 
-		const active = activeEntities.has(note?.id)
-		const openToAside = active && !settings['panels.text.openPopupAsTooltip']
+	const active = activeEntities.has(note?.id)
+	const openToAside = active && !settings['panels.text.openPopupAsTooltip']
 
-		const handleClick = React.useCallback(() => {
-			addActiveEntity(note.id, props.layer.id, null)
-		}, [note, active])
+	const handleClick = React.useCallback(() => {
+		addActiveEntity(note.id, props.layer.id, null)
+	}, [note, active])
 
-		if (note == null) return null
+	if (note == null) return null
 
-		return (
-			<Wrapper
+	return (
+		<Wrapper
+			active={active}
+			className="note"
+			color={note.color}
+			id={note.id}
+			onClick={handleClick}
+			openToAside={openToAside}
+		>
+			{note.n}
+			<Popup
 				active={active}
-				className="note"
-				color={note.color}
-				id={note.id}
-				onClick={handleClick}
+				docereComponentProps={props}
+				entity={note}
 				openToAside={openToAside}
-			>
-				{note.n}
-				<Popup
-					active={active}
-					docereComponentProps={props}
-					entity={note}
-					openToAside={openToAside}
-					xml={note.content}
-				/>
-			</Wrapper>
-		)
-	}
-}
+				xml={note.content}
+			/>
+		</Wrapper>
+	)
+})

@@ -1,4 +1,6 @@
-export default function extractFacsimiles(layerElement: Element) {
+import { ExtractFacsimiles } from '@docere/common'
+
+export default (function extractFacsimiles({ layerElement }) {
 	const attr = 'facs'
 	const selector = `pb[${attr}]`
 
@@ -14,4 +16,4 @@ export default function extractFacsimiles(layerElement: Element) {
 				versions: [{ path }]
 			}
 		})
-}
+}) as ExtractFacsimiles

@@ -1,10 +1,11 @@
 import React from 'react'
-import { initialProjectContext, ProjectContext, useUrlObject } from '@docere/common'
+import { useParams } from 'react-router-dom'
+import { initialProjectContext, ProjectContext } from '@docere/common'
 import configs from '@docere/projects'
 
 function useProjectData() {
 	const [projectContext, setProjectContext] = React.useState<ProjectContext>(initialProjectContext)
-	const { projectId } = useUrlObject()
+	const { projectId } = useParams()
 
 	React.useEffect(() => {
 		if (projectId == null) return

@@ -58,12 +58,13 @@ export enum EntityType {
 
 export enum DocereComponentContainer {
 	Layer = 'layer',
-	Notes = 'notes',
+	Standalone = 'standalone',
 	Page = 'page',
 }
 
 export enum UIComponentType {
-	SearchResult = 'search-result'
+	Entity = 'entity',
+	SearchResult = 'search-result',
 }
 
 export enum AsideTab {

@@ -1,4 +1,6 @@
-export default function extractFacsimiles(layerElement: Element) {
+import { ExtractFacsimiles } from '@docere/common'
+
+export default (function extractFacsimiles({ layerElement }) {
 	const pb = layerElement.querySelector('pb')
 	const path = pb.getAttribute('path')
 	return [
@@ -10,4 +12,4 @@ export default function extractFacsimiles(layerElement: Element) {
 			}]
 		}
 	]
-}
+}) as ExtractFacsimiles
