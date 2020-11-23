@@ -14,7 +14,7 @@ export default (function extractFacsimiles({ layerElement }) {
 			const path = `/iiif/suriano/${imgPath}0${irrelevantNumber}_${pageNumber}-${rv}.jpg/info.json`
 
 			return {
-				anchors: [pb],
+				anchor: pb,
 				id: pb.id,
 				versions: [{
 					path

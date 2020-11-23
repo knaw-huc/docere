@@ -19,7 +19,7 @@ export default (function extractFacsimiles({ layerElement, entry }) {
 			const path = `/iiif/mondrian/${imgPath}.jpg/info.json`
 
 			return {
-				anchors: [pb],
+				anchor: pb,
 				id,
 				versions: [{ path }] }
 		})

@@ -32,7 +32,7 @@ export default (function extractFacsimiles({ layerElement }) {
 
 	if (facsimile) {
 		facsimiles.push({
-			anchors: [facsimile],
+			anchor: facsimile,
 			id: facsimile.textContent,
 			versions: [{
 				// areas: extractFacsimileAreas(entry.document),

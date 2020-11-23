@@ -13,7 +13,7 @@ export default extendConfigData({
 			id: 'note',
 			extract: ({ layerElement, entityConfig }) => Array.from(layerElement.querySelectorAll(entityConfig.selector))
 				.map(el => ({
-					anchors: [el],
+					anchor: el,
 					content: el.outerHTML,
 					n: el.getAttribute('xml:id').slice(1),
 					title: `Note ${el.getAttribute('xml:id').slice(1)}`,

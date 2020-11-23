@@ -4,7 +4,7 @@ import { defaultEntityConfig } from '../types/config-data/config'
 
 // Extracted entity
 export interface ExtractedCommon {
-	anchors: Element[]
+	anchor: Element
 	layerId?: ID
 }
 
@@ -19,7 +19,7 @@ export interface ExtractedEntity extends ExtractedCommon, Omit<EntityConfig, 'ex
 }
 
 // Entity
-export type Entity = Required<Omit<ExtractedEntity, 'anchors'>>
+export type Entity = Required<Omit<ExtractedEntity, 'anchor'>>
 
 export const defaultEntity: Entity = {
 	...defaultEntityConfig,

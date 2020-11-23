@@ -12,7 +12,7 @@ const config: DocereConfig = {
 			id: 'gloss',
 			extract: ({ layerElement, entityConfig }) => Array.from(layerElement.querySelectorAll(entityConfig.selector))
 				.map(el => ({
-					anchors: [el],
+					anchor: el,
 					content: el.outerHTML,
 					value: el.textContent,
 				})),

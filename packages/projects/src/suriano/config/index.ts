@@ -58,7 +58,7 @@ export default extendConfigData({
 			id: 'note',
 			extract: ({ layerElement, entityConfig }) => Array.from(layerElement.querySelectorAll(entityConfig.selector))
 				.map(el => ({
-					anchors: [el],
+					anchor: el,
 					content: xmlToString(el),
 					n: el.id.slice(2),
 					title: `Note ${el.id.slice(2)}`,

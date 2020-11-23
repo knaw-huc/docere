@@ -11,7 +11,7 @@ export default (function extractFacsimiles({ layerElement }) {
 			const id = pb.getAttribute(attr).slice(0, -4)
 			const path = `https://images.huygens.knaw.nl/iiif/${id}.tif/info.json`
 			return {
-				anchors: [pb],
+				anchor: pb,
 				id,
 				versions: [{ path }]
 			}

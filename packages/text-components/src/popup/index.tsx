@@ -1,11 +1,10 @@
 import React from 'react'
-import DocereTextView from '@docere/text'
 import styled from 'styled-components'
 import { TEXT_PANEL_TEXT_WIDTH, DEFAULT_SPACING, getTextPanelLeftSpacing, Entity, indexOfIterator, EntrySettingsContext, EntitiesContext } from '@docere/common'
 
 import Tooltip, { TooltipBody } from './tooltip'
 
-import type { DocereComponentProps, DocereConfig } from '@docere/common'
+import type { DocereConfig } from '@docere/common'
 
 export * from './body'
 
@@ -37,9 +36,6 @@ const PopupHeader = styled.header`
 	text-transform: uppercase;
 `
 
-const Body = styled.div`
-	padding: 1rem;
-`
 
 export interface EntityComponentProps {
 	entity: Entity
@@ -47,24 +43,19 @@ export interface EntityComponentProps {
 }
 
 interface Props {
-	active: boolean
-	docereComponentProps: DocereComponentProps
 	entity: Entity
-	openToAside: boolean
-	PopupBody?: React.FC<EntityComponentProps>
-	xml?: string
+	isPopup?: boolean
+	PopupBody: React.FC<EntityComponentProps>
 }
 export function Popup(props: Props) {
 	const { activeEntities } = React.useContext(EntitiesContext)
 	const { settings } = React.useContext(EntrySettingsContext)
 
-	if (!props.active) return null
-	const Wrapper = props.openToAside ?  PopupAsideWrapper : Tooltip
+	const Wrapper = props.isPopup ? PopupAsideWrapper : Tooltip
 
 	return (
 		<Wrapper
 			entity={props.entity}
-			layer={props.docereComponentProps.layer}
 			settings={settings}
 			zIndexOffset={indexOfIterator(activeEntities, props.entity.id)}
 		>
@@ -78,22 +69,12 @@ export function Popup(props: Props) {
 					<span></span>
 				</PopupHeader>
 			}
-			{
-				(props.xml != null || props.PopupBody != null) ?
-					props.xml != null ?
-						<Body>
-							<DocereTextView 
-								customProps={props.docereComponentProps}
-								components={props.docereComponentProps.components}
-								xml={props.xml}
-							/>
-						</Body> :
-						<props.PopupBody
-							// docereComponentProps={props.docereComponentProps}
-							entity={props.entity}
-						/> :
-					null
-			}
+			<props.PopupBody
+				entity={props.entity}
+			/>
 		</Wrapper>
 	)
+}
+Popup.defaultProps = {
+	isPopup: false
 }

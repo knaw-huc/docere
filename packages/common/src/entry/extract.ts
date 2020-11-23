@@ -48,7 +48,11 @@ function extractEntities(layerElement: Element, layer: TextLayerConfig, entry: E
 			const entities: ExtractedEntity[] = entityConfig
 				.extract({ config, entityConfig, entry, layer, layerElement })
 				.map(e => {
-					e.anchors.forEach(a => e.id = a.getAttribute('docere:id'))
+					e.id = e.anchor.getAttribute('docere:id')
+					e.attributes = {}
+					for (const attr of e.anchor.attributes) {
+						e.attributes[attr.name] = attr.value
+					}
 					return e
 				})
 				.filter(x => x != null && x.id != null)
@@ -74,6 +78,8 @@ function extractFacsimiles(layerElement: Element, layer: TextLayerConfig, entry:
 		.extractFacsimiles({ layerElement, layer, entry, config })	
 		.filter(x => x != null && x.id != null)
 		.map(facsimile => {
+			facsimile.layerId = layer.id
+
 			facsimile.versions = facsimile.versions.map(version => {
 				if (version.type == null) version.type = FacsimileType.IIIF
 				return version

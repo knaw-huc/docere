@@ -67,7 +67,7 @@ const config: DocereConfig = {
 			color: Colors.Pink,
 			extract: ({ layerElement, entityConfig }) => Array.from(layerElement.querySelectorAll(entityConfig.selector))
 				.map(el  => ({
-					anchors: [el],
+					anchor: el,
 					content: el.getAttribute('value'),
 				})),
 			extractId: el => el.getAttribute('pos'),

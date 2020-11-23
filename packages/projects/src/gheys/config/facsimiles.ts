@@ -58,7 +58,7 @@ export default (function extractFacsimiles({ layerElement }) {
 	const pb = layerElement.querySelector('pb')
 
 	facsimiles.push({
-		anchors: [pb],
+		anchor: pb,
 		id: pb.getAttribute('path'),
 		versions: [{
 			// areas: extractFacsimileAreas(entry.document, config),

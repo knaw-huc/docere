@@ -15,7 +15,7 @@ export function serializeEntry(entry: ExtractedEntry, config: DocereConfig): Ser
 		plainText: config.plainText(entry, config),
 		textData: {
 			entities: entry.entities.map(e => {
-				const { anchors, ...entityRest } = e
+				const { anchor, ...entityRest } = e
 				const entity: Entity = {
 					...defaultEntity,
 					...entityRest

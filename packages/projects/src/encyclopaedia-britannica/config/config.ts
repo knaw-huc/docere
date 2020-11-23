@@ -17,7 +17,7 @@ const config: DocereConfig = {
 		{
 			extract: ({ layerElement, entityConfig }) => Array.from(layerElement.querySelectorAll(entityConfig.selector))
 				.map((el: Element) => ({
-					anchors: [el],
+					anchor: el,
 					element: el,
 					content: el.getAttribute('VALUE'),
 				})),

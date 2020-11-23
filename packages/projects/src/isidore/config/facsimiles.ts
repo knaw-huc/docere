@@ -16,7 +16,7 @@ export default (function extractFacsimiles({ layerElement }) {
 			// console.log(path)
 			return {
 				// TODO find anchors
-				anchors: [],
+				anchor: null,
 				id: surfaceId,
 				versions: [{ path }]
 			}

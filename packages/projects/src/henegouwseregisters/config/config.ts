@@ -66,7 +66,7 @@ const config: DocereConfig = {
 			id: 'editor',
 			extract: ({ layerElement, entityConfig }) => Array.from(layerElement.querySelectorAll(entityConfig.selector))
 				.map((element, index) => ({
-					anchors: [element],
+					anchor: element,
 					content: xmlToString(element),
 					n: (index + 1).toString(),
 				})),

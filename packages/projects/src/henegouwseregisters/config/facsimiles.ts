@@ -59,7 +59,7 @@ export default (function extractFacsimiles({ layerElement, entry }) {
 	const z = getRectoVersoSequence(x.folia).map((rv,i) => {
 		return {
 			// TODO add anchors
-			anchors: [],
+			anchor: null,
 			id: rv,
 			versions: [
 				{

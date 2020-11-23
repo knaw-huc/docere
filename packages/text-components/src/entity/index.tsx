@@ -101,13 +101,15 @@ export function getEntity(PopupBody?: React.FC<EntityComponentProps>) {
 						/>
 					}
 					{firstWord}
-					<Popup
-						active={active && showTooltip}
-						docereComponentProps={props}
-						entity={entity}
-						openToAside={openToAside}
-						PopupBody={PopupBody}
-					/>
+					{
+						active &&
+						showTooltip &&
+						<Popup
+							entity={entity}
+							isPopup={openToAside}
+							PopupBody={PopupBody}
+						/>
+					}
 				</NoWrap>
 				{restOfFirstChild}
 				{children.slice(1)}

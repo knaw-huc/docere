@@ -56,7 +56,7 @@ export default extendConfigData({
 			type: EntityType.Artwork,
 			extract: ({ entry, entityConfig }) => Array.from(entry.preparedElement.querySelectorAll(entityConfig.selector))
 				.map(x => ({
-					anchors: [x],
+					anchor: x,
 					content: x.textContent,
 				})),
 			extractId: el => el.getAttribute('key'),
@@ -69,7 +69,7 @@ export default extendConfigData({
 			type: EntityType.PagePart,
 			extract: ({ entityConfig, entry }) => Array.from(entry.preparedElement.querySelectorAll(entityConfig.selector))
 				.map(x => ({
-					anchors: [x],
+					anchor: x,
 					content: x.textContent,
 				})),
 			extractId: el => el.getAttribute('target').split('#')[1],
@@ -83,7 +83,7 @@ export default extendConfigData({
 			extractId: el => el.getAttribute('target').split('#')[1],
 			extract: ({ entry, entityConfig }) => Array.from(entry.preparedElement.querySelectorAll(entityConfig.selector))
 				.map(x => ({
-					anchors: [x],
+					anchor: x,
 					content: x.textContent,
 				})),
 			order: 70,
@@ -99,7 +99,7 @@ export default extendConfigData({
 						const id = ptr.getAttribute('docere:id')
 						const note = entry.preparedElement.querySelector(`note[*|id="${id}"]`)
 						return {
-							anchors: [ptr],
+							anchor: ptr,
 							content: xmlToString(note),
 							n: (index + 1).toString(),
 							title: 'Note',

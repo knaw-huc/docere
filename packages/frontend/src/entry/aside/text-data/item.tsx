@@ -7,11 +7,12 @@ import { Entity, useUIComponent, UIComponentType } from '@docere/common'
 
 const Li = styled.li`
 	align-content: center;
+	background-color: white;
 	color: #CCC;
 	cursor: pointer;
 	display: grid;
-	height: 48px;
-	padding-left: 1em;
+	margin: 1rem;
+	min-height: 48px;
 
 	&:after {
 		${small}

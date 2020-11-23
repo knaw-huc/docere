@@ -1,17 +1,12 @@
 import React from 'react'
 import styled from 'styled-components'
-import { EntitiesContext, EntryContext, Colors } from '@docere/common'
+import { EntitiesContext, EntryContext, FOOTER_HANDLE_HEIGHT } from '@docere/common'
 
 import { ItemInText } from './item'
 
-export const Wrapper = styled.div`
-	background: ${Colors.Grey};
-	bottom: 0;
-	height: 100%;
-	left: 0;
-	position: absolute;
-	right: 0;
-	top: 0;
+export const Wrapper = styled.ul`
+	height: calc(100% - ${FOOTER_HANDLE_HEIGHT}px);
+	overflow: auto;
 `
 // z-index: ${(p: Pick<Props, 'active'>) => p.active ? 1 : -1};
 

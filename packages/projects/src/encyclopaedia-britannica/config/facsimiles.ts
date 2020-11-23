@@ -29,17 +29,15 @@ import type { ExtractedFacsimile, ExtractFacsimiles } from '@docere/common'
 // 	return areas
 // }
 
-export default (function extractFacsimiles({ layerElement, entry }) {
+export default (function extractFacsimiles({ entry }) {
 	const facsimiles: ExtractedFacsimile[] = []
 
 	const [,id2] = entry.id.split('/alto/')
 	const path = id2.slice(0, 4) + '/' + id2.slice(4, 8) + '/' + id2.slice(0, 9) + '.5'
 
-	layerElement
-
 	facsimiles.push({
 		// TODO find anchors
-		anchors: [],
+		anchor: null,
 		id: path,
 		versions: [{
 			// areas: extractFacsimileAreas(entry.document, config),

@@ -1,8 +1,27 @@
 import React from 'react'
 import styled from 'styled-components'
-import { DocereComponentProps, EntrySettingsContext, EntitiesContext } from '@docere/common'
-import { Popup } from './popup'
+import { DocereComponentProps, EntrySettingsContext, EntitiesContext, useComponents, DocereComponentContainer } from '@docere/common'
+import DocereTextView from '@docere/text'
+
+import { Popup, EntityComponentProps } from './popup'
 import { useEntity } from './entity/hooks'
+
+const Body = styled.div`
+	padding: 1rem;
+`
+
+export const NoteBody = React.memo(function NoteBody(props: EntityComponentProps) {
+	const components = useComponents(DocereComponentContainer.Layer, props.entity.layerId)
+	return (
+		<Body>
+			<DocereTextView 
+				// customProps={props.docereComponentProps}
+				components={components}
+				xml={props.entity.content}
+			/>
+		</Body>
+	)
+})
 
 interface NAProps { active: boolean, color: string, openToAside: boolean }
 const Wrapper = styled.div`
@@ -56,13 +75,14 @@ export const Note = React.memo(function Note(props: DocereComponentProps) {
 			openToAside={openToAside}
 		>
 			{note.n}
-			<Popup
-				active={active}
-				docereComponentProps={props}
-				entity={note}
-				openToAside={openToAside}
-				xml={note.content}
-			/>
+			{
+				active &&
+				<Popup
+					entity={note}
+					isPopup={openToAside}
+					PopupBody={NoteBody}
+				/>
+			}
 		</Wrapper>
 	)
 })

@@ -11,7 +11,7 @@ function BirthDeath(props: PageComponentProps) {
 	)
 }
 
-const PersonWrapper = styled.li.attrs((props: PageComponentProps) => ({ id: props.attributes['xml:id'] }))`
+const PersonWrapper = styled.div.attrs((props: PageComponentProps) => ({ id: props.attributes['xml:id'] }))`
 	background: ${(props: PageComponentProps) => props.activeId === props.attributes['xml:id'] ? 'green' : 'none'};
 	margin-bottom: 1rem;
 	min-height: 40px;
@@ -39,7 +39,7 @@ export function Person(props: PageComponentProps) {
 export default async function pageComponents() {
 	return {
 		teiHeader: () => null as null,
-		listPerson: styled.ul``,
+		listPerson: styled.div``,
 		person: Person,
 		'persName[full="yes"]': styled.div`
 			border-bottom: 1px solid #EEE;

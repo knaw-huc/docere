@@ -6,7 +6,7 @@ import prepare from './prepare'
 function extractSuggestions(): ExtractEntities {
 	return ({ layerElement, entityConfig }) => Array.from(layerElement.querySelectorAll(entityConfig.selector))
 		.map(element => ({
-			anchors: [element],
+			anchor: element,
 			content: element.getAttribute('suggestion'),
 		}))
 }
@@ -15,7 +15,7 @@ function extractEntities(): ExtractEntities {
 	return ({ layerElement, entityConfig }) => 
 		Array.from(layerElement.querySelectorAll(entityConfig.selector))
 			.map(element => ({
-				anchors: [element],
+				anchor: element,
 				content: element.getAttribute('content'),
 			}))
 }

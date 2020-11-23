@@ -1,9 +1,18 @@
 import React from 'react'
 import styled from 'styled-components'
-import { DEFAULT_SPACING } from '@docere/common'
+import { DEFAULT_SPACING, ID } from '@docere/common'
 import { EntityComponentProps, PopupBodyWrapper, PopupBodyLink } from '@docere/text-components'
 
-function xml2json(xml: string) {
+interface RkdImage {
+	artform: string
+	coverage: string
+	imgUrl: string
+	title: string
+	created: string
+	creator: string
+}
+
+function xml2json(xml: string): RkdImage {
 	const parser = new DOMParser()
 	const doc = parser.parseFromString(xml, 'application/xml')
 	const imgUrl = doc.querySelector('*|Image').getAttribute('rdf:about')
@@ -29,18 +38,26 @@ async function getRkdImage(id: string) {
 	return await response.text()
 }
 
+const cache = new Map<ID, RkdImage>()
 function useRkdImage(id: string) {
-	const [rkdImage, setRkdImage] = React.useState(null)
+	const [rkdImage, setRkdImage] = React.useState<RkdImage>(null)
+
 	React.useEffect(() => {
 		let unmounted = false
 
-		getRkdImage(id).then(xml => {
-			const json = xml2json(xml)
-			if (!unmounted) setRkdImage(json)
-		})
+		if (cache.has(id)) {
+			setRkdImage(cache.get(id))
+		} else {
+			getRkdImage(id).then(xml => {
+				const json = xml2json(xml)
+				cache.set(id, json)
+				if (!unmounted) setRkdImage(json)
+			})
+		}
 
 		return () => unmounted = true
 	}, [id])
+
 	return rkdImage
 }
 

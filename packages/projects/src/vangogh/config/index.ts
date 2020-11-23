@@ -16,7 +16,7 @@ export default extendConfigData({
 					if (note == null) return null
 					return {
 						content: xmlToString(note),
-						anchors: [anchor],
+						anchor,
 						n,
 						title: `Textual note ${n}`,
 					}
@@ -34,7 +34,7 @@ export default extendConfigData({
 			extract: ({ layerElement, entityConfig }) => Array.from(layerElement.querySelectorAll(entityConfig.selector))
 				.map(el => {
 					return {
-						anchors: [el],
+						anchor: el,
 						content: xmlToString(el),
 						n: el.getAttribute('n'),
 						title: `Editor note ${el.getAttribute('n')}`,
@@ -50,7 +50,7 @@ export default extendConfigData({
 			extract: ({ layerElement, entityConfig }) => Array.from(layerElement.querySelectorAll(entityConfig.selector))
 				.map(el => ({
 					content: el.textContent,
-					anchors: [el],
+					anchor: el,
 				})),
 			extractId: el => el.getAttribute('key'),
 			id: 'pers',
@@ -63,7 +63,7 @@ export default extendConfigData({
 			color: Colors.Orange,
 			extract: ({ entityConfig, layerElement }) => Array.from(layerElement.querySelectorAll(entityConfig.selector))
 				.map(el => ({
-					anchors: [el],
+					anchor: el,
 					content: el.textContent,
 				})),
 			extractId: el => el.getAttribute('target').replace(/\.xml$/, ''),
@@ -75,7 +75,7 @@ export default extendConfigData({
 			color: Colors.Brown,
 			extract: ({ entityConfig, layerElement }) => Array.from(layerElement.querySelectorAll(entityConfig.selector))
 				.map(el => ({
-					anchors: [el],
+					anchor: el,
 					content: el.textContent,
 				})),
 			extractId: el => el.getAttribute('target'),

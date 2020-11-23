@@ -1,8 +1,9 @@
 import { UIComponentType } from '@docere/common'
-import { Note, PagePartPopupBody } from '@docere/text-components'
+import { PagePartPopupBody } from '@docere/text-components'
+import { NoteBody } from '@docere/text-components/build/note'
 
 const uiComponentMapping: Record<string, React.FC<any>> = {
-	editor: Note,
+	editor: NoteBody,
 	bio: PagePartPopupBody,
 	biblio: PagePartPopupBody,
 }
