@@ -7,8 +7,8 @@ export default extendConfigData({
 	entities: [
 		{
 			color: Colors.BlueBright,
-			// extract: entry => Array.from(entry.document.querySelectorAll('div[type="textualNotes"] > note'))
-			extract: (layerElement, _layer, entry) => Array.from(layerElement.querySelectorAll('anchor'))
+			extractId: el => el.getAttribute('xml:id'),
+			extract: ({ layerElement, entry, entityConfig }) => Array.from(layerElement.querySelectorAll(entityConfig.selector))
 				.map(anchor => {
 					const id = anchor.getAttribute('xml:id')
 					const n = anchor.getAttribute('n')
@@ -17,66 +17,70 @@ export default extendConfigData({
 					return {
 						content: xmlToString(note),
 						anchors: [anchor],
-						id,
 						n,
 						title: `Textual note ${n}`,
 					}
 				})
 				.filter(x => x != null),
 			id: 'textual',
+			selector: 'anchor',
 			title: "Textual notes",
 			type: EntityType.Note,
 		},
 		{
 			color: Colors.BlueBright,
 			// TODO querySelectorAll the anchors (lb)
-			extract: (layerElement) => Array.from(layerElement.querySelectorAll('div[type="notes"] > note'))
+			extractId: el => el.getAttribute('xml:id'),
+			extract: ({ layerElement, entityConfig }) => Array.from(layerElement.querySelectorAll(entityConfig.selector))
 				.map(el => {
 					return {
 						anchors: [el],
 						content: xmlToString(el),
-						id: el.getAttribute('xml:id'),
 						n: el.getAttribute('n'),
 						title: `Editor note ${el.getAttribute('n')}`,
 					}
 				}),
 			id: 'editor',
+			selector: 'div[type="notes"] > note',
 			title: "Editor notes",
 			type: EntityType.Note,
 		},
 		{
 			color: '#fd7a7a',
-			extract: (layerElement) => Array.from(layerElement.querySelectorAll('rs[type="pers"]'))
+			extract: ({ layerElement, entityConfig }) => Array.from(layerElement.querySelectorAll(entityConfig.selector))
 				.map(el => ({
 					content: el.textContent,
 					anchors: [el],
-					id: el.getAttribute('key'),
 				})),
+			extractId: el => el.getAttribute('key'),
 			id: 'pers',
+			selector: 'rs[type="pers"]',
 			showInAside: true,
 			title: 'Persons',
 			type: EntityType.Person,
 		},
 		{
 			color: Colors.Orange,
-			extract: (layerElement) => Array.from(layerElement.querySelectorAll('ref[target][type="entry-link"]'))
+			extract: ({ entityConfig, layerElement }) => Array.from(layerElement.querySelectorAll(entityConfig.selector))
 				.map(el => ({
 					anchors: [el],
 					content: el.textContent,
-					id: el.getAttribute('target').replace(/\.xml$/, ''),
 				})),
+			extractId: el => el.getAttribute('target').replace(/\.xml$/, ''),
 			id: 'entry-link',
+			selector: 'ref[target][type="entry-link"]',
 			type: EntityType.EntryLink,
 		},
 		{
 			color: Colors.Brown,
-			extract: (layerElement) => Array.from(layerElement.querySelectorAll('ref[target][type="note-link"]'))
+			extract: ({ entityConfig, layerElement }) => Array.from(layerElement.querySelectorAll(entityConfig.selector))
 				.map(el => ({
 					anchors: [el],
 					content: el.textContent,
-					id: el.getAttribute('target'),
 				})),
+			extractId: el => el.getAttribute('target'),
 			id: 'note-link',
+			selector: 'ref[target][type="note-link"]',
 			type: EntityType.NoteLink,
 		},
 	],
