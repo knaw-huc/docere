@@ -24,17 +24,17 @@ export function AsideTabs() {
 					Metadata
 				</Button>
 			}
-			{/* {
-				!isEmpty(props.entry.entities) &&
+			{
+				entry.textData.entities.size > 0 &&
 				<Button
-					active={props.asideTab === AsideTab.TextData}
+					active={asideTab === AsideTab.TextData}
 					data-tab={AsideTab.TextData}
 					data-type="aside"
 				>
 					Entities
 				</Button>
 			}
-			{
+			{/* {
 				!isEmpty(props.entry.notes) &&
 				<Button
 					active={props.asideTab === AsideTab.Notes}

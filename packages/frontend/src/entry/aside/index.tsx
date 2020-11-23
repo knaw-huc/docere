@@ -29,18 +29,13 @@ function Aside() {
 					active={asideTab === AsideTab.Metadata}
 				/>
 			}
-			{/* {
-				props.asideTab === AsideTab.TextData &&
+			{
+				asideTab === AsideTab.TextData &&
 				<TextDataAside
-					active={props.asideTab === AsideTab.TextData}
-					activeEntity={props.activeEntity}
-					appDispatch={props.appDispatch}
-					entryDispatch={props.entryDispatch}
-					layers={props.layers}
-					entities={props.entry.entities}
+					active={asideTab === AsideTab.TextData}
 				/>
 			}
-			{
+			{/* {
 				props.asideTab === AsideTab.Notes &&
 				<NotesAside
 					active={props.asideTab === AsideTab.Notes}
