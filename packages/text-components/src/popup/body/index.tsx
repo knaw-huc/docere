@@ -1,15 +1,14 @@
 import styled from "styled-components"
-import { DEFAULT_SPACING } from '@docere/common'
 
 import type { Entity } from '@docere/common'
 
-export { default as EntryLinkPopupBody } from './entry-link'
-export { default as PagePartPopupBody } from './page-part'
-export { default as NoteLinkPopupBody } from './note-link'
+export * from './entry-link'
+export * from './page-part'
+export * from './note-link'
 
 export const PopupBodyWrapper = styled.div`
 	display: grid;
-	grid-template-rows: auto ${DEFAULT_SPACING}px;
+	grid-template-rows: auto 24px;
 
 	& > div:first-of-type {
 		padding: 1rem;
@@ -20,9 +19,9 @@ interface LinkProps {
 	entity: Entity
 }
 export const PopupBodyLink = styled.button`
-	background: ${(props: LinkProps) => props.entity.color}11;
+	background: ${(props: LinkProps) => props.entity.color}22;
 	border: none;
-	border-top: 1px solid gray;
+	border-top: 1px solid ${(props: LinkProps) => props.entity.color}66;
 	color: gray;
 	cursor: pointer;
 	font-size: inherit;
@@ -34,13 +33,13 @@ export const PopupBodyLink = styled.button`
 	text-transform: inherit;
 
 	&:hover {
-		color: black;
+		color: #666;
 	}
 
 	a {
 		color: inherit;
 		display: block;
-		line-height: ${DEFAULT_SPACING}px;
+		line-height: 24px;
 		text-decoration: none;
 	}
 `

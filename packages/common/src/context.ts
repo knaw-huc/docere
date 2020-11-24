@@ -58,3 +58,7 @@ export interface LayersContextValue {
 }
 const initialLayersContextValue: LayersContextValue = { layers: new Map(), pinLayer: null, activateLayer: null }
 export const LayersContext = React.createContext(initialLayersContextValue)
+
+// Layer
+const initialLayerContextValue: StatefulLayer = null
+export const LayerContext = React.createContext(initialLayerContextValue)

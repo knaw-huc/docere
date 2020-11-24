@@ -1,10 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
-import { DocereComponentProps, EntrySettingsContext, EntitiesContext, useComponents, DocereComponentContainer } from '@docere/common'
+import { EntrySettingsContext, EntitiesContext, useComponents, DocereComponentContainer, ComponentProps, LayerContext } from '@docere/common'
 import DocereTextView from '@docere/text'
 
-import { Popup, EntityComponentProps } from './popup'
+import { EntityWrapper, EntityComponentProps } from './popup'
 import { useEntity } from './entity/hooks'
+import Tooltip from './popup/tooltip'
 
 const Body = styled.div`
 	padding: 1rem;
@@ -15,7 +16,6 @@ export const NoteBody = React.memo(function NoteBody(props: EntityComponentProps
 	return (
 		<Body>
 			<DocereTextView 
-				// customProps={props.docereComponentProps}
 				components={components}
 				xml={props.entity.content}
 			/>
@@ -46,9 +46,10 @@ const Wrapper = styled.div`
 
 // TODO merge getNote with getEntity
 // export default function getNote(extractNoteId: ExtractNoteId) {
-export const Note = React.memo(function Note(props: DocereComponentProps) {
+export const NoteTag = React.memo(function NotePopup(props: ComponentProps) {
 	const { activeEntities, addActiveEntity } = React.useContext(EntitiesContext)
 	const { settings } = React.useContext(EntrySettingsContext)
+	const layer = React.useContext(LayerContext)
 
 	if (
 		!settings['panels.text.showNotes']
@@ -60,7 +61,7 @@ export const Note = React.memo(function Note(props: DocereComponentProps) {
 	const openToAside = active && !settings['panels.text.openPopupAsTooltip']
 
 	const handleClick = React.useCallback(() => {
-		addActiveEntity(note.id, props.layer.id, null)
+		addActiveEntity(note.id, layer.id, null)
 	}, [note, active])
 
 	if (note == null) return null
@@ -77,12 +78,25 @@ export const Note = React.memo(function Note(props: DocereComponentProps) {
 			{note.n}
 			{
 				active &&
-				<Popup
+				<Tooltip
 					entity={note}
-					isPopup={openToAside}
-					PopupBody={NoteBody}
-				/>
+					settings={settings}
+				>
+					<Note entity={note} />
+				</Tooltip>
 			}
 		</Wrapper>
+	)
+})
+
+export const Note = React.memo(function Note(props: EntityComponentProps) {
+	if (props.entity == null) return null
+
+	return (
+		<EntityWrapper
+			entity={props.entity}
+		>
+			<NoteBody entity={props.entity} />
+		</EntityWrapper>
 	)
 })

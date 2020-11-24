@@ -1,10 +1,10 @@
 import React from 'react'
-import { Entity, DocereComponentProps, EntryContext } from '@docere/common'
+import { Entity, EntryContext } from '@docere/common'
 import IconsByType from './icons'
 
-export type ExtractEntityType = (props: DocereComponentProps) => string
-export type ExtractEntityKey = (props: DocereComponentProps) => string
-export type ExtractEntityValue = (props: DocereComponentProps) => React.ReactNode
+// export type ExtractEntityType = (props: DocereComponentProps) => string
+// export type ExtractEntityKey = (props: DocereComponentProps) => string
+// export type ExtractEntityValue = (props: DocereComponentProps) => React.ReactNode
 
 export function useEntity(id: string) {
 	const entry = React.useContext(EntryContext)

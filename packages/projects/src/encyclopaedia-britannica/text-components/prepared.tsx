@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import type { DocereComponentProps, DocereComponents } from '@docere/common'
+import type { ComponentProps, DocereComponents } from '@docere/common'
 
 // function useActive(props: DocereComponentProps): [boolean, (ev: any) => void] {
 // 	const [active, setActive] = React.useState<boolean>(false)
@@ -39,7 +39,7 @@ const ArticleWrapper = styled.div`
 `
 
 // TODO fix useActive
-function Article(props: DocereComponentProps) {
+function Article(props: ComponentProps) {
 	// const [active, handleClick] = useActive(props)
 
 	return (

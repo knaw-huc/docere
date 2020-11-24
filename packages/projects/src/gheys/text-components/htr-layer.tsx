@@ -1,8 +1,8 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { Colors, FacsimileContext } from '@docere/common'
-import type { DocereConfig, DocereComponentProps } from '@docere/common'
-import { Pb, Lb, getEntity, EntityComponentProps } from '@docere/text-components'
+import { Colors } from '@docere/common'
+import type { DocereConfig, ComponentProps } from '@docere/common'
+import { Pb, Lb } from '@docere/text-components'
 
 // function setActiveFacsimileArea(dispatch: React.Dispatch<EntryStateAction>, ids: string[]) {
 // 	dispatch({
@@ -53,7 +53,7 @@ const BlockWrapper = styled.div`
 `
 
 // TODO fix useActive
-function block(props: DocereComponentProps) {
+function block(props: ComponentProps) {
 	// const [active, handleClick] = useActive(props)
 	return (
 		<BlockWrapper
@@ -71,45 +71,45 @@ function block(props: DocereComponentProps) {
 
 // const pb = getPb(props => props.attributes.path)
 
-const EntityBodyWrapper = styled.div`
-	padding: 1rem;
+// const EntityBodyWrapper = styled.div`
+// 	padding: 1rem;
 
-	.suggestion {
-		label {
-			font-size: .8rem;
-		}
+// 	.suggestion {
+// 		label {
+// 			font-size: .8rem;
+// 		}
 
-		div {
-			color: #222;
-		}
-	}
-`
+// 		div {
+// 			color: #222;
+// 		}
+// 	}
+// `
 
-function EntityBody(props: EntityComponentProps) {
-	const { activeFacsimile } = React.useContext(FacsimileContext)
-	const { attributes } = props.entity
-	const rect = attributes.area?.split('_').join(',')
-	// const activeFacsimile = props.docereComponentProps.activeFacsimiles.values().next().value
+// function EntityBody(props: EntityComponentProps) {
+// 	const { activeFacsimile } = React.useContext(FacsimileContext)
+// 	const { attributes } = props.entity
+// 	const rect = attributes.area?.split('_').join(',')
+// 	// const activeFacsimile = props.docereComponentProps.activeFacsimiles.values().next().value
 
-	return (
-		<EntityBodyWrapper>
-			{
-				rect != null &&
-				<img
-					src={activeFacsimile?.versions[0].path.replace('info.json', `${rect}/240,/0/default.jpg`)}
-					width="100%"
-				/>
-			}
-			{
-				attributes.suggestion != null && 
-				<div className="suggestion">
-					<label>suggestion</label>
-					<div>{attributes.suggestion}</div>
-				</div>
-			}
-		</EntityBodyWrapper>
-	)
-}
+// 	return (
+// 		<EntityBodyWrapper>
+// 			{
+// 				rect != null &&
+// 				<img
+// 					src={activeFacsimile?.versions[0].path.replace('info.json', `${rect}/240,/0/default.jpg`)}
+// 					width="100%"
+// 				/>
+// 			}
+// 			{
+// 				attributes.suggestion != null && 
+// 				<div className="suggestion">
+// 					<label>suggestion</label>
+// 					<div>{attributes.suggestion}</div>
+// 				</div>
+// 			}
+// 		</EntityBodyWrapper>
+// 	)
+// }
 
 // function entity(config: DocereConfig) {
 // 	return function(props: DocereComponentProps) {
@@ -160,7 +160,7 @@ const TextLineWrapper = styled(Lb)`
 `
 
 // TODO fix useActive
-function line(props: DocereComponentProps) {
+function line(props: ComponentProps) {
 	// const { settings } = React.useContext(EntrySettingsContext)
 	// const [active, handleClick] = useActive(props)
 
@@ -177,7 +177,7 @@ function line(props: DocereComponentProps) {
 	)
 }
 
-const Entity = getEntity(EntityBody)
+// const Entity = getEntity(EntityBody)
 
 export default function (_config: DocereConfig) {
 	// const string = entity(config)
@@ -185,8 +185,8 @@ export default function (_config: DocereConfig) {
 	return {
 		block,
 		pb: Pb,
-		'string[suggestion]': Entity,
-		'string[type]': Entity,
+		// 'string[suggestion]': Entity,
+		// 'string[type]': Entity,
 		line
 	}
 }

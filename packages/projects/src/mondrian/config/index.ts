@@ -62,6 +62,7 @@ export default extendConfigData({
 			extractId: el => el.getAttribute('key'),
 			order: 80,
 			selector: 'rs[type="artwork-m"][key]',
+			title: 'Artwork',
 		},
 		{
 			color: Colors.Blue,
@@ -77,7 +78,7 @@ export default extendConfigData({
 			selector: 'ref[target^="biblio.xml#"]',
 		},
 		{
-			color: Colors.Green,
+			color: Colors.BrownLight,
 			id: 'bio',
 			type: EntityType.PagePart,
 			extractId: el => el.getAttribute('target').split('#')[1],
@@ -98,11 +99,12 @@ export default extendConfigData({
 					.map((ptr, index) => {
 						const id = ptr.getAttribute('docere:id')
 						const note = entry.preparedElement.querySelector(`note[*|id="${id}"]`)
+						const n = (index + 1).toString()
 						return {
 							anchor: ptr,
 							content: xmlToString(note),
-							n: (index + 1).toString(),
-							title: 'Note',
+							n,
+							title: `Note ${n}`,
 						}
 					}),
 			type: EntityType.Note,

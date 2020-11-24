@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
-import { getEntity, Lb, EntityComponentProps } from '@docere/text-components'
-import { Colors, FacsimileContext } from '@docere/common'
+import { Lb } from '@docere/text-components'
+import { Colors } from '@docere/common'
 
 import type { DocereComponents } from '@docere/common'
 
@@ -70,30 +70,30 @@ function TextLine(props: { children: React.ReactNode }) {
 	)
 }
 
-const EntityThumb = styled.img`
-	box-sizing: border-box;
-	padding: 1rem;
-`
+// const EntityThumb = styled.img`
+// 	box-sizing: border-box;
+// 	padding: 1rem;
+// `
 
-function EntityPopupBody(props: EntityComponentProps) {
-	const { HPOS, VPOS, WIDTH, HEIGHT } = props.entity.attributes
-	const rect = `${HPOS},${VPOS},${WIDTH},${HEIGHT}`
-	// const activeFacsimile = props.docereComponentProps.activeFacsimiles.values().next().value
-	const { activeFacsimile } = React.useContext(FacsimileContext)
+// function EntityPopupBody(props: EntityComponentProps) {
+// 	const { HPOS, VPOS, WIDTH, HEIGHT } = props.entity.attributes
+// 	const rect = `${HPOS},${VPOS},${WIDTH},${HEIGHT}`
+// 	// const activeFacsimile = props.docereComponentProps.activeFacsimiles.values().next().value
+// 	const { activeFacsimile } = React.useContext(FacsimileContext)
 
-	return (
-		<EntityThumb
-			src={activeFacsimile.versions[0].path.replace('info.json', `${rect}/240,/0/default.jpg`)}
-			width="100%"
-		/>
-	)
-}
+// 	return (
+// 		<EntityThumb
+// 			src={activeFacsimile.versions[0].path.replace('info.json', `${rect}/240,/0/default.jpg`)}
+// 			width="100%"
+// 		/>
+// 	)
+// }
 
 function SP() { return <> </> }
 //
 const components: DocereComponents = {
 	Description: () => null,
-	String: getEntity(EntityPopupBody),
+	// String: getEntity(EntityPopupBody),
 	SP,
 	TextLine,
 }

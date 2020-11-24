@@ -7,8 +7,9 @@ import DocereTextView from '@docere/text'
 
 import PanelHeader from '../header'
 import Minimap from './minimap'
+import { LayerProvider } from '../../context/layer-context'
 
-import type { DocereComponentProps, DocereConfig } from '@docere/common'
+import type { DocereConfig } from '@docere/common'
 
 const Wrapper = styled.div`
 	background: white;
@@ -88,52 +89,47 @@ function TextPanel(props: Props) {
 		resetActiveArea()
 	}, [settings['panels.text.showMinimap']])
 
-	const customProps: DocereComponentProps = {
-		components,
-		insideNote: false,
-		layer: props.layer,
-	}
-
 	return (
-		<Wrapper className="text-panel">
-			{
-				settings['panels.showHeaders'] &&
-				<PanelHeader
+		<LayerProvider value={props.layer}>
+			<Wrapper className="text-panel">
+				{
+					settings['panels.showHeaders'] &&
+					<PanelHeader
+						layer={props.layer}
+					>
+						{props.layer.title}
+					</PanelHeader>
+				}
+				<TextWrapper
 					layer={props.layer}
+					onScroll={handleScroll}
+					ref={textWrapperRef}
+					showHeaders={settings['panels.showHeaders']}
 				>
-					{props.layer.title}
-				</PanelHeader>
-			}
-			<TextWrapper
-				layer={props.layer}
-				onScroll={handleScroll}
-				ref={textWrapperRef}
-				showHeaders={settings['panels.showHeaders']}
-			>
-				<Text 
-					settings={settings}
-				>
-					<DocereTextView
-						customProps={customProps}
-						components={components}
-						highlight={searchContext.state.query}
-						xml={layer.content}
-						onLoad={setDocereTextViewReady}
-						setHighlightAreas={setHighlightAreas}
+					<Text 
+						settings={settings}
+					>
+						<DocereTextView
+							components={components}
+							highlight={searchContext.state.query}
+							xml={layer.content}
+							onLoad={setDocereTextViewReady}
+							setHighlightAreas={setHighlightAreas}
+						/>
+					</Text>
+				</TextWrapper>
+				{
+					settings['panels.text.showMinimap'] &&
+					<Minimap
+						activeAreaRef={activeAreaRef}
+						hasHeader={settings['panels.showHeaders']}
+						highlightAreas={highlightAreas}
+						isReady={docereTextViewReady}
+						textWrapperRef={textWrapperRef}
 					/>
-				</Text>
-			</TextWrapper>
-			{
-				settings['panels.text.showMinimap'] &&
-				<Minimap
-					activeAreaRef={activeAreaRef}
-					hasHeader={settings['panels.showHeaders']}
-					highlightAreas={highlightAreas}
-					isReady={docereTextViewReady}
-					textWrapperRef={textWrapperRef}
-				/>
-			}
-		</Wrapper>
+				}
+			</Wrapper>
+		</LayerProvider>
 	)
 }
 

@@ -11,8 +11,9 @@ function BirthDeath(props: PageComponentProps) {
 	)
 }
 
-const PersonWrapper = styled.div.attrs((props: PageComponentProps) => ({ id: props.attributes['xml:id'] }))`
-	background: ${(props: PageComponentProps) => props.activeId === props.attributes['xml:id'] ? 'green' : 'none'};
+type PWProps = PageComponentProps & { ref?: any }
+const PersonWrapper = styled.div.attrs((props: PWProps) => ({ id: props.attributes['xml:id'] }))`
+	background: ${(props: PWProps) => props.activeId === props.attributes['xml:id'] ? 'green' : 'none'};
 	margin-bottom: 1rem;
 	min-height: 40px;
 `

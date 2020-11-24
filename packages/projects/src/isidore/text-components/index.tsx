@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { DocereComponentContainer } from '@docere/common'
-import { Pb, Paragraph, getEntity } from '@docere/text-components'
+import { Pb, Paragraph } from '@docere/text-components'
 
 import type { DocereConfig } from '@docere/common'
 
@@ -13,7 +13,7 @@ export default function getComponents(_config: DocereConfig) {
 				padding: 0;
 			`,
 			pb: Pb,
-			'gloss[corresp]': getEntity()
+			// 'gloss[corresp]': getEntity()
 		}
 	}
 }

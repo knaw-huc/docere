@@ -5,7 +5,7 @@ import DocereTextView from '@docere/text'
 import { PopupBodyLink, PopupBodyWrapper } from './index'
 
 import type { UrlObject, Entity } from '@docere/common'
-import type { EntityComponentProps } from '..'
+import { EntityComponentProps, EntityWrapper } from '..'
 
 
 interface PageLinkProps {
@@ -35,23 +35,32 @@ function PageLink(props: PageLinkProps) {
 	)
 }
 
-export default React.memo(function PagePartPopupBody(props: EntityComponentProps) {
+/**
+ * Represents an entity in a text layer which is part of a {@link Page}.
+ * 
+ * A {@link Page} can be split in parts with the right configuration. This 
+ * component shows a part of the page in a text layer. This can be used to
+ * visualise (relatively simple and small sized) structured data.
+ */
+export const PagePartEntity = React.memo(function(props: EntityComponentProps) {
 	const page = usePage(props.entity.configId)
 	const components = useComponents(DocereComponentContainer.Page, page?.id)
 
 	if (page == null) return null
 
 	return (
-		<PopupBodyWrapper>
-			<DocereTextView
-				components={components}
-				node={page.parts.get(props.entity.id)}
-			/>
-			<PageLink
-				entity={props.entity}
-			>
-				Go to {page.title}
-			</PageLink>
-		</PopupBodyWrapper>
+		<EntityWrapper entity={props.entity}>
+			<PopupBodyWrapper>
+				<DocereTextView
+					components={components}
+					node={page.parts.get(props.entity.id)}
+				/>
+				<PageLink
+					entity={props.entity}
+				>
+					Go to {page.title}
+				</PageLink>
+			</PopupBodyWrapper>
+		</EntityWrapper>
 	)
 })

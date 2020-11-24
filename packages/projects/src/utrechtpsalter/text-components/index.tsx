@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import { DocereComponentContainer } from '@docere/common'
-import type { DocereConfig, DocereComponentProps } from '@docere/common'
+import type { DocereConfig } from '@docere/common'
 
 const Coords = styled.span`
 	cursor: pointer;
@@ -11,7 +11,7 @@ export default function getComponents(_config: DocereConfig) {
 		return {
 			block: styled.span`color: #444; margin-bottom: 1rem;`,
 			text: styled.span`white-space: pre-wrap;`,
-			coords: (_props: DocereComponentProps) => {
+			coords: () => {
 				// const { x, y, w, h } = props.attributes
 				return (
 					<Coords

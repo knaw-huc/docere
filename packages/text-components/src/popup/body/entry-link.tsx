@@ -1,8 +1,9 @@
 import React from 'react'
 import { useUIComponent, UIComponentType, Hit, Entity, UrlObject, useNavigate } from '@docere/common'
 import { PopupBodyWrapper, PopupBodyLink } from './index'
-import { EntityComponentProps } from '..'
+import { EntityComponentProps, EntityWrapper } from '..'
 
+// TODO make generic
 function useSearchResult(id: string) {
 	const [result, setResult] = React.useState<Hit>(null)	
 	React.useEffect(() => {
@@ -40,20 +41,25 @@ function EntryLink(props: EntryLinkProps) {
 	)
 }
 
-export default function EntryLinkPopupBody(props: EntityComponentProps) {
+/**
+ * Represents a link to an entry in a text layer.
+ */
+export const EntryLinkEntity = React.memo(function(props: EntityComponentProps) {
 	const result = useSearchResult(props.entity.id)
 	const ResultBodyComponent = useUIComponent(UIComponentType.SearchResult)
 
 	if (ResultBodyComponent == null || result == null) return null
 
 	return (
-		<PopupBodyWrapper>
-			<ResultBodyComponent {...props} result={result} />
-			<EntryLink
-				entity={props.entity}
-			>
-				Go to entry
-			</EntryLink>
-		</PopupBodyWrapper>
+		<EntityWrapper entity={props.entity}>
+			<PopupBodyWrapper>
+				<ResultBodyComponent {...props} result={result} />
+				<EntryLink
+					entity={props.entity}
+				>
+					Go to entry
+				</EntryLink>
+			</PopupBodyWrapper>
+		</EntityWrapper>
 	)
-}
+})

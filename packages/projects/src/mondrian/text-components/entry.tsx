@@ -1,11 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Note, Pb, Lb, Hi, Paragraph, getEntity, PagePartPopupBody, Space } from '@docere/text-components'
+import { Pb, Lb, Hi, Paragraph, Space, EntityTag, NoteTag } from '@docere/text-components'
 import { Colors, EntrySettingsContext } from '@docere/common'
 
-import type { DocereComponentProps, DocereConfig } from '@docere/common'
+import type { ComponentProps, DocereConfig } from '@docere/common'
 
-function MondrianLb(props: DocereComponentProps) {
+function MondrianLb(props: ComponentProps) {
 	const { settings } = React.useContext(EntrySettingsContext)
 	return (
 		<>
@@ -62,10 +62,10 @@ export default async function entryComponents(_config: DocereConfig) {
 
 		p: Paragraph,
 
-		'[*|type="editor"]': Note,
-		'[*|type="bio"]': getEntity(PagePartPopupBody),
-		'[*|type="biblio"]': getEntity(PagePartPopupBody),
-		// '[*|type="rkd-artwork-link"]': getEntity(RkdArtworkPopupBody),
+		'[*|type="editor"]': NoteTag,
+		'[*|type="bio"]': EntityTag,
+		'[*|type="biblio"]': EntityTag,
+		'[*|type="rkd-artwork-link"]': EntityTag,
 
 		space: Space,
 	}

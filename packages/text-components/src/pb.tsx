@@ -1,8 +1,6 @@
 import React from 'react'
-import { Colors, DEFAULT_SPACING, Facsimile, EntrySettingsContext, EntryContext, FacsimileContext } from '@docere/common'
+import { Colors, DEFAULT_SPACING, Facsimile, EntrySettingsContext, EntryContext, FacsimileContext, ComponentProps, LayerContext, StatefulLayer } from '@docere/common'
 import styled from 'styled-components'
-
-import type { DocereComponentProps } from '@docere/common'
 
 // TODO changed display from grid to inline, which breaks multiple 
 // facsimiles in one PB. For a fix: add a container div with a grid,
@@ -57,13 +55,14 @@ function useFacsimiles(ids: string) {
 	return facsimiles
 }
 
-export function Pb(props: DocereComponentProps) {
+export function Pb(props: ComponentProps) {
 	const { settings } = React.useContext(EntrySettingsContext)
+	const layer = React.useContext(LayerContext)
 	const facsimiles = useFacsimiles(props.attributes['docere:id'])
 
 	if (
 		!settings['panels.text.showPageBeginnings'] ||
-		props.layer.facsimiles == null ||
+		layer.facsimiles == null ||
 		!facsimiles.length
 	) return null
 
@@ -76,7 +75,7 @@ export function Pb(props: DocereComponentProps) {
 							<FacsimileThumb
 								facsimile={facsimile}
 								key={facsimile.id}
-								layer={props.layer}
+								layer={layer}
 							/>	
 						)
 					}
@@ -88,7 +87,7 @@ export function Pb(props: DocereComponentProps) {
 
 interface FacsimileThumbProps {
 	facsimile: Facsimile
-	layer: DocereComponentProps['layer']
+	layer: StatefulLayer
 }
 function FacsimileThumb(props: FacsimileThumbProps) {
 	const { activeFacsimile, setActiveFacsimile } = React.useContext(FacsimileContext)

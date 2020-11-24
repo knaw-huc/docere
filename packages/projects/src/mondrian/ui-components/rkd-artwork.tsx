@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { DEFAULT_SPACING, ID } from '@docere/common'
-import { EntityComponentProps, PopupBodyWrapper, PopupBodyLink } from '@docere/text-components'
+import { EntityComponentProps, PopupBodyWrapper, PopupBodyLink, EntityWrapper } from '@docere/text-components'
 
 interface RkdImage {
 	artform: string
@@ -91,25 +91,27 @@ function RkdArtworkPopupBody(props: EntityComponentProps) {
 	if (rkdImage == null) return null
 
 	return (
-		<PopupBodyWrapper>
-			<Wrapper>
-				<h2>{rkdImage.title} <small>{rkdImage.created}</small></h2>
-				<img src={rkdImage.imgUrl} />
-				<div>
-					<div>{rkdImage.creator}</div>
-					<div>{rkdImage.coverage}</div>
-				</div>
-			</Wrapper>
-			<PopupBodyLink entity={props.entity}>
-				<a
-					href={`https://rkd.nl/en/explore/images/${props.entity.id}`}
-					onClick={ev => ev.stopPropagation()}
-					target="_blank"
-				>
-					source: RKD.nl
-				</a>
-			</PopupBodyLink>
-		</PopupBodyWrapper>
+		<EntityWrapper entity={props.entity}>
+			<PopupBodyWrapper>
+				<Wrapper>
+					<h2>{rkdImage.title} <small>{rkdImage.created}</small></h2>
+					<img src={rkdImage.imgUrl} />
+					<div>
+						<div>{rkdImage.creator}</div>
+						<div>{rkdImage.coverage}</div>
+					</div>
+				</Wrapper>
+				<PopupBodyLink entity={props.entity}>
+					<a
+						href={`https://rkd.nl/en/explore/images/${props.entity.id}`}
+						onClick={ev => ev.stopPropagation()}
+						target="_blank"
+					>
+						source: RKD.nl
+					</a>
+				</PopupBodyLink>
+			</PopupBodyWrapper>
+		</EntityWrapper>
 	)
 }
 export default React.memo(RkdArtworkPopupBody)

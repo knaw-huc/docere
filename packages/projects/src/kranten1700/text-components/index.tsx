@@ -1,80 +1,7 @@
-import * as React from 'react'
 import styled from 'styled-components'
 import { DocereComponentContainer } from '@docere/common'
 import type { DocereConfig, DocereComponents } from '@docere/common'
-import { getEntity, EntityComponentProps } from '@docere/text-components'
-
-const Dl = styled.dl`
-	line-height: 1rem;
-	margin: 0;
-	padding: 1rem;
-
-	& > div {
-		margin-bottom: 1rem;
-	}
-
-	dt {
-		color: #888;
-		font-size: .66rem;
-		text-transform: uppercase;
-	}
-
-	dt, dd {
-		margin: 0;
-		padding: 0;
-	}
-
-	dd {
-		font-size: 1rem;
-	}
-`
-
-function RsBody(props: EntityComponentProps) {
-	const { attributes } = props.entity
-	return (
-		<Dl>
-			<div>
-				<dt>Origineel</dt>
-				<dd>{attributes.value}</dd>
-			</div>
-			<div>
-				<dt>Contemporain</dt>
-				<dd>{attributes.contemporary}</dd>
-			</div>
-			<div>
-				<dt>pos</dt>
-				<dd>{attributes.pos}</dd>
-			</div>
-			<div>
-				<dt>pos sub</dt>
-				<dd>{attributes.possub}</dd>
-			</div>
-			{
-				attributes.type &&
-				<div>
-					<dt>NER type</dt>
-					<dd>{attributes.type}</dd>
-				</div>
-			}
-		</Dl>
-	)
-}
-
-// function w(config: DocereConfig) {
-// 	return function(props: DocereComponentProps) {
-// 		return (
-// 			<Entity
-// 				customProps={props}
-// 				entitiesConfig={config.entities}
-// 				entityId={props.attributes.id}
-// 				PopupBody={RsBody}
-// 				configId={props.attributes.type}
-// 			>
-// 				{props.attributes.value}
-// 			</Entity>
-// 		)
-// 	}
-// }
+import { EntityTag } from '@docere/text-components'
 
 // TODO move <w CONTENT="x"/> to <w>x</w>
 export default function(_config: DocereConfig) {
@@ -93,7 +20,7 @@ export default function(_config: DocereConfig) {
 			`,
 			s: styled.div``,
 			// w: w(config),
-			w: getEntity(RsBody)
+			w: EntityTag
 		}
 		return components
 	}

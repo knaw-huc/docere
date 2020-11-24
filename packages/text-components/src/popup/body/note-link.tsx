@@ -5,7 +5,7 @@ import DocereTextView from '@docere/text'
 import { PopupBodyLink, PopupBodyWrapper } from './index'
 
 import type { UrlObject } from '@docere/common'
-import { EntityComponentProps } from '..'
+import { EntityComponentProps, EntityWrapper } from '..'
 
 interface NoteLinkProps {
 	entity: Entity
@@ -36,25 +36,27 @@ function NoteLink(props: NoteLinkProps) {
 	)
 }
 
-export default function NoteLinkPopupBody(props: EntityComponentProps) {
+export const NoteLinkEntity = React.memo(function(props: EntityComponentProps) {
 	const [fileName] = props.entity.id.split('#')
 	const entry = useEntry(fileName.replace(/\.xml$/, ''))
 	const components = useComponents(DocereComponentContainer.Layer)
 
 	return (
-		<PopupBodyWrapper>
-			<DocereTextView
-				customProps={props}
-				components={components}
-				xml={props.entity.content}
-			/>
-			<NoteLink
-				entity={props.entity}
-				entryId={entry.id}
-			>
-				Go to note in entry {entry.id}
-			</NoteLink>
-		</PopupBodyWrapper>
+		<EntityWrapper entity={props.entity}>
+			<PopupBodyWrapper>
+				<DocereTextView
+					customProps={props}
+					components={components}
+					xml={props.entity.content}
+				/>
+				<NoteLink
+					entity={props.entity}
+					entryId={entry.id}
+				>
+					Go to note in entry {entry.id}
+				</NoteLink>
+			</PopupBodyWrapper>
+		</EntityWrapper>
 	)
-}
+})
 
