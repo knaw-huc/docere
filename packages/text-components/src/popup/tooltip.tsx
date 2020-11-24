@@ -1,6 +1,6 @@
 import * as React from "react"
 import styled from "styled-components"
-import { DEFAULT_POPUP_BG_COLOR, getTextPanelWidth, Entity, EntitiesContext } from '@docere/common'
+import { DEFAULT_POPUP_BG_COLOR, getTextPanelWidth, Entity, EntitiesContext, indexOfIterator } from '@docere/common'
 
 import type { DocereConfig } from '@docere/common'
 
@@ -19,7 +19,7 @@ const Wrapper = styled.div`
 
 export const TooltipBody = styled.div`
 	background: white;
-	border-color: ${(props: { entity: Entity }) => props.entity.color};
+	border-color: ${(props: { entity: Entity, active?: boolean }) => props.entity.color};
 	border-style: solid;
 	border-width: 2px;
 	box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
@@ -71,7 +71,7 @@ function Tooltip(props: Props) {
 		<Wrapper
 			offset={offset}
 			ref={wrapperRef}
-			zIndexOffset={props.zIndexOffset}
+			zIndexOffset={indexOfIterator(activeEntities, props.entity.id)}
 		>
 			<TooltipBody
 				entity={props.entity}

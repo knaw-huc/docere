@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 import { small } from '../../index.components'
 
-import { Entity, useUIComponent, UIComponentType } from '@docere/common'
+import { Entity, useUIComponent, UIComponentType, EntitiesContext } from '@docere/common'
 
 const Li = styled.li`
 	align-content: center;
@@ -26,10 +26,11 @@ interface Props {
 	entity: Entity
 }
 export function ItemInText(props: Props) {
+	const { addActiveEntity } = React.useContext(EntitiesContext)
 	const Component = useUIComponent(UIComponentType.Entity, props.entity.configId)
 
 	const handleClick = React.useCallback(() => {
-		console.log('click!')
+		addActiveEntity(props.entity.id, null, null)
 	}, [props.entity])
 
 	if (Component == null) return null

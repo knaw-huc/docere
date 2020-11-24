@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Entity } from '@docere/common'
+import { Entity, EntitiesContext, LayerContext } from '@docere/common'
 
 import { TooltipBody } from './tooltip'
 
@@ -10,7 +10,9 @@ export * from './body'
 
 // interface PAW { settings: DocereConfig['entrySettings'] }
 const Wrapper = styled(TooltipBody)`
+	filter: ${(props: any) => props.active ? 'grayscale(0%) opacity(1)' : 'grayscale(100%) opacity(.75)'};
 	text-align: left;
+	transition: filter 300ms;
 `
 // const popupasidewrapper = styled(tooltipbody)`
 // 	backgroundcolor: white;
@@ -53,13 +55,25 @@ interface Props {
 	// PopupBody: React.FC<EntityComponentProps>
 }
 export const EntityWrapper = React.memo(function EntityWrapper(props: Props) {
-	// const { activeEntities } = React.useContext(EntitiesContext)
-	// const { settings } = React.useContext(EntrySettingsContext)
+	const { activeEntities } = React.useContext(EntitiesContext)
+	const layer = React.useContext(LayerContext)
+	const ref = React.useRef<HTMLDivElement>()
+	const active = activeEntities.has(props.entity.id)
 
+	React.useEffect(() => {
+		if (active) {
+			const activeEntity = activeEntities.get(props.entity.id)
+			if (layer?.id !== activeEntity.triggerLayerId){
+				ref.current.scrollIntoView()
+			}
+		}
+	}, [activeEntities.has(props.entity.id)])
 
 	return (
 		<Wrapper
+			active={active}
 			entity={props.entity}
+			ref={ref}
 			// settings={settings}
 			// zIndexOffset={indexOfIterator(activeEntities, props.entity.id)}
 		>
