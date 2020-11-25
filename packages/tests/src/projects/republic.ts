@@ -17,7 +17,19 @@ export function republicTests() {
 	})
 
 	it('Should have a column with a docere:id', () => {
-		expect(entry.content.slice(947, 1103)).toBe('<column coords="2703_2573_843_545" facs="NL-HaNA_1.01.02/3760/NL-HaNA_1.01.02_3760_0030.jpg" docere:id="NL-HaNA_1.01.02/3760/NL-HaNA_1.01.02_3760_0030.jpg">')
+		const expected = '<column coords="2703_2573_843_545" facs="NL-HaNA_1.01.02/3760/NL-HaNA_1.01.02_3760_0030.jpg" docere:id="NL-HaNA_1.01.02/3760/NL-HaNA_1.01.02_3760_0030.jpg" docere:type="facsimile">'
+		expect(entry.content.slice(995, 995 + expected.length)).toBe(expected)
+	})
+
+	it('Should have metadata', () => {
+		const invnum = entry.metadata.find(m => m.id === 'inventory_num')
+		expect(invnum.value).toBe('3760')
+
+		const date = entry.metadata.find(m => m.id === 'date')
+		expect(date.value).toBe('1705-01-10')
+
+		const mw = entry.metadata.find(m => m.id === 'meeting_weekday')
+		expect(mw.value).toBe('Sabbathi')
 	})
 
 	// it(`Should have facs IDs: ${documentId}`, () => {
