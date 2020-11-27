@@ -54,7 +54,7 @@ interface Props {
 }
 
 function TextPanel(props: Props) {
-	const entry = React.useContext(EntryContext)
+	const { entry } = React.useContext(EntryContext)
 	const { settings } = React.useContext(EntrySettingsContext)
 	const searchContext = React.useContext(SearchContext)
 

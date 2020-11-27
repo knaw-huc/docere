@@ -2,7 +2,7 @@ import React from 'react'
 import { EntryContext, ID, FacsimileContext, ActiveFacsimile } from '@docere/common'
 
 export function FacsimileProvider(props: { children: React.ReactNode }) {
-	const entry = React.useContext(EntryContext)
+	const { entry } = React.useContext(EntryContext)
 	const [facsimile, setFacsimile] = React.useState<ActiveFacsimile>(null)
 
 	React.useEffect(() => {

@@ -39,7 +39,7 @@ const Img = styled.img`
 `
 
 function useFacsimiles(ids: string) {
-	const entry = React.useContext(EntryContext)
+	const { entry } = React.useContext(EntryContext)
 	const [facsimiles, setFacsimiles] = React.useState<Facsimile[]>([])
 
 	React.useEffect(() => {

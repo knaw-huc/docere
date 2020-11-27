@@ -7,7 +7,7 @@ import IconsByType from './icons'
 // export type ExtractEntityValue = (props: DocereComponentProps) => React.ReactNode
 
 export function useEntity(id: string) {
-	const entry = React.useContext(EntryContext)
+	const { entry } = React.useContext(EntryContext)
 	const [entity, setEntity] = React.useState<Entity>(null)
 
 	React.useEffect(() => {

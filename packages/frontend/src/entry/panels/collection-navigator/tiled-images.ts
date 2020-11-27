@@ -1,15 +1,24 @@
 import OpenSeadragon from 'openseadragon';
 
-import { Hit, Entry } from '@docere/common';
+import { Entry, ActiveFacsimile, Colors } from '@docere/common';
+import { CollectionDocument } from './controller';
 
 interface TiledImageOptions {
 	bounds: OpenSeadragon.Rect
 	index: number
 	tileSource: string
-	userData: any
+	userData: {
+		entryId: string
+		facsimileId: string
+	}
 }
 
+const ACTIVE_FACSIMILE_OVERLAY_ID = 'active_facsimile_overlay'
+const ACTIVE_ENTRY_OVERLAY_ID = 'active_entry_overlay'
+
 export default class TiledImages {
+	private activeFacsimile: ActiveFacsimile
+
 	// The bounds of the currently loaded thumbs
 	private loadedBounds = new OpenSeadragon.Rect(0, 0, 0, 0)
 
@@ -29,7 +38,7 @@ export default class TiledImages {
 
 	private entry: Entry
 
-	constructor(private viewer: OpenSeadragon.Viewer, public hits: Hit[], entry: Entry) {
+	constructor(private viewer: OpenSeadragon.Viewer, public hits: CollectionDocument[], entry: Entry, facsimile: ActiveFacsimile) {
 		// Add event handlers
 		this.viewer.world.addHandler('add-item', this.addItemHandler)
 		this.viewer.addHandler('add-item-failed', this.tileLoadFailedHandler)
@@ -37,7 +46,7 @@ export default class TiledImages {
 
 		this.removeTiledImages()
 		this.setOptions(this.hits)
-		this.setEntry(entry)
+		this.setEntry(entry, facsimile)
 		this.init()
 	}
 
@@ -48,29 +57,55 @@ export default class TiledImages {
 	// Set the active options from this.entry.facsimiles. Used to calculate this.startIndex and this.highlightActive
 	setActiveOptions() {
 		this.activeTileOptions = this.tileOptions.filter(
-			option => this.entry.id === option.userData.id
+			option => this.entry.id === option.userData.entryId
 		)
+	}
+
+	setActiveFacsimile(facsimile: ActiveFacsimile) {
+		if (facsimile == null) return
+		this.activeFacsimile = facsimile
+
+		const { path } = facsimile.versions[0]
+		const activeTileOption = this.activeTileOptions.find(to => to.tileSource === path)
+		if (activeTileOption == null || activeTileOption.bounds == null) return
+
+		this.viewer.removeOverlay(ACTIVE_FACSIMILE_OVERLAY_ID)
+
+		const element = document.createElement("div")
+		element.id = ACTIVE_FACSIMILE_OVERLAY_ID
+		element.style.border = `3px solid ${Colors.Orange}`
+		element.style.boxSizing = 'border-box'
+
+		this.viewer.addOverlay({
+			checkResize: false,
+			element,
+			location: activeTileOption.bounds,
+		})
+
+		this.viewer.viewport.fitBounds(activeTileOption.bounds)
 	}
 
 	// Set a new entry. When this.highlightActive returns false, not all tiles of that entry are loaded.
 	// The controller will than initiate a new TiledImages with that entry as centre for loading tiles.
 	// TiledImages can only load consecutive images (next on left or next on the right), so when there is
 	// a gap between the currently loaded tiles and the requested tiles, we start all over again. 
-	setEntry(entry: Entry) {
+	setEntry(entry: Entry, facsimile: ActiveFacsimile) {
 		this.entry = entry
 		this.setActiveOptions()
+		this.setActiveFacsimile(facsimile)
 		return this.highlightActiveTiles()	
 	}
 
-	getEntryFromMousePosition(mousePosition: OpenSeadragon.Point) {
+	getEntryFromMousePosition(mousePosition: OpenSeadragon.Point): TiledImageOptions['userData'] {
 		// Convert mouse pixel position to viewport coordinates
 		const point = this.viewer.viewport.pointFromPixel(mousePosition)
 
 		// Find the option with the bound that contain the clicked point
 		const clickedTiledImageOption = this.tileOptions.find(option => option.bounds?.containsPoint(point))
+		if (clickedTiledImageOption == null) return null
 
 		// Return the entry ID
-		return clickedTiledImageOption?.userData.id
+		return clickedTiledImageOption.userData
 	}
 
 	center() {
@@ -112,19 +147,24 @@ export default class TiledImages {
 
 	// Add the highlight overlay
 	private addHighlightOverlay() {
-		this.viewer.clearOverlays()
+		this.viewer.removeOverlay(ACTIVE_ENTRY_OVERLAY_ID)
 
 		const bounds = this.center()
 
 		const element = document.createElement("div")
-		element.style.border = '3px solid orange'
+		element.id = ACTIVE_ENTRY_OVERLAY_ID
 		element.style.boxSizing = 'border-box'
+		element.style.backgroundColor = `${Colors.BlueBright}44`
 
 		this.viewer.addOverlay({
 			checkResize: false,
 			element,
 			location: bounds,
 		})
+
+		if (this.viewer.getOverlayById(ACTIVE_FACSIMILE_OVERLAY_ID) == null && this.activeFacsimile != null) {
+ 			this.setActiveFacsimile(this.activeFacsimile)
+		}
 	}
 
 	// Highlights the active tiled images. If need be, wait for the tiles to be loaded
@@ -159,14 +199,17 @@ export default class TiledImages {
 	// The search result (hits) is 'reduced' to tiled image options.
 	// The options are build prior to loading thumbs, because the order of the
 	// thumbs needs to be known in advance.
-	private setOptions(hits: Hit[]) {
+	private setOptions(hits: CollectionDocument[]) {
 		this.tileOptions = hits.reduce((prev, curr, index) => {
-			curr._source.facsimiles.forEach((f: string) => {
+			curr.facsimiles.forEach(f => {
 				prev.push({
 					bounds: null,
 					index,
-					tileSource: f,
-					userData: curr._source,
+					tileSource: f.path,
+					userData: {
+						entryId: curr.id,
+						facsimileId: f.id,
+					},
 				})
 			})
 			return prev

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { SearchTab, Colors } from '@docere/common'
+import { SearchTab, Colors, Hit } from '@docere/common'
 import type { DocereResultBodyProps } from '@docere/common'
 
 interface WProps {
@@ -66,12 +66,12 @@ const FacsimileThumb = styled.li`
 `
 
 const THUMB_WIDTH = 64
-function FacsimileThumbs(props: { facsimiles: string[], small: boolean }) {
+function FacsimileThumbs(props: { facsimiles: Hit['facsimiles'], small: boolean }) {
 	if (props.facsimiles == null || !props.facsimiles.length) return null
 
 	return props.facsimiles.length === 1 ?
 		<img
-			src={props.facsimiles[0].replace('info.json', `full/${THUMB_WIDTH},/0/default.jpg`)}
+			src={props.facsimiles[0].path.replace('info.json', `full/${THUMB_WIDTH},/0/default.jpg`)}
 			width={`${THUMB_WIDTH}px`}
 		/> :
 		<FacsimileThumbList>
@@ -79,7 +79,7 @@ function FacsimileThumbs(props: { facsimiles: string[], small: boolean }) {
 				props.facsimiles.map((facs, index) => 
 					<FacsimileThumb key={index}>
 						<img
-							src={facs.replace('info.json', `full/${(THUMB_WIDTH - 8)/2},/0/default.jpg`)} 
+							src={facs.path.replace('info.json', `full/${(THUMB_WIDTH - 8)/2},/0/default.jpg`)} 
 							width={`${(THUMB_WIDTH - 8)/2}px`}
 						/>
 					</FacsimileThumb>

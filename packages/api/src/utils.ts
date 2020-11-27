@@ -4,8 +4,8 @@ import { Response as ExpressResponse } from 'express'
 import chalk from 'chalk'
 import { EsDataType, PageConfig } from '@docere/common'
 
-import type { DocereApiError, ElasticSearchDocument } from './types'
-import type { DocereConfig, MetadataItem, SerializedEntry } from '@docere/common'
+import type { DocereApiError } from './types'
+import type { DocereConfig, ElasticSearchDocument, MetadataItem, SerializedEntry } from '@docere/common'
 // import { createLookup } from '../../common/src/types/entry'
 
 // const projects = require('esm')(module)(path.resolve(process.cwd(), './packages/projects')).default
@@ -187,9 +187,9 @@ export function getElasticSearchDocument(extractedEntry: SerializedEntry | Docer
 			return agg
 		}, {} as Record<string, string[]>)
 
-	const facsimiles: string[] = Object.values(extractedEntry.textData.facsimiles)
-		.reduce((agg, [_id, facsimile]) => {
-			return agg.concat(facsimile.versions.map(v => v.path))
+	const facsimiles: ElasticSearchDocument['facsimiles'] = Object.values(extractedEntry.textData.facsimiles)
+		.reduce((agg, [id, facsimile]) => {
+			return agg.concat(facsimile.versions.map(v => ({ id, path: v.path })))
 		}, [])
 
 	const metadata = extractedEntry.metadata?.reduce((prev, curr) => {

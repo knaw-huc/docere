@@ -4,7 +4,7 @@ import { Button, isEmpty } from '..'
 
 // TODO move entry to EntryContext
 export function AsideTabs() {
-	const entry = React.useContext(EntryContext)
+	const { entry } = React.useContext(EntryContext)
 	const { asideTab, setAsideTab } = React.useContext(EntryTabContext)
 
 	const handleTabClick = React.useCallback(ev => {

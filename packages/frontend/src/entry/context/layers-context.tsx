@@ -43,7 +43,7 @@ function updateLayers(
 }
 
 export function LayersProvider(props: { children: React.ReactNode }) {
-	const entry = React.useContext(EntryContext)
+	const { entry } = React.useContext(EntryContext)
 	const { settings } = React.useContext(EntrySettingsContext)
 	const { activeEntities } = React.useContext(EntitiesContext)
 

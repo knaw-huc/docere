@@ -15,7 +15,7 @@ export default extendConfigData({
 			extract: entry =>
 				entry.document.querySelector('meta[key="meeting_date"]')?.getAttribute('value'),
 			id: 'date',
-			interval: 'y'
+			interval: 'd'
 		},
 		{
 			extract: entry =>

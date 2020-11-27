@@ -61,7 +61,7 @@ interface Props {
 	layer: FacsimileLayer
 }
 function CollectionNavigator(props: Props) {
-	const entry = React.useContext(EntryContext)
+	const { entry } = React.useContext(EntryContext)
 	const { activeFacsimile, setActiveFacsimile } = React.useContext(FacsimileContext)
 
 	const handleClick = React.useCallback(id => {

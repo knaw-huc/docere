@@ -2,7 +2,7 @@ import React from 'react'
 import { EntryContext, ID, ActiveEntity, EntitiesContext } from '@docere/common'
 
 export function EntitiesProvider(props: { children: React.ReactNode }) {
-	const entry = React.useContext(EntryContext)
+	const { entry } = React.useContext(EntryContext)
 	const [activeEntities, setActiveEntities] = React.useState<Map<ID, ActiveEntity>>(new Map())
 
 	React.useEffect(() => {

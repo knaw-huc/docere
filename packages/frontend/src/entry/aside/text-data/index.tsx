@@ -12,7 +12,7 @@ export const Wrapper = styled.ul`
 
 
 export function EntitiesAside() {
-	const entry = React.useContext(EntryContext)
+	const { entry } = React.useContext(EntryContext)
 	const { activeEntities /*, addActiveEntity */ } = React.useContext(EntitiesContext)
 
 	return (

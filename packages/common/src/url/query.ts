@@ -5,9 +5,8 @@ import { ID } from '../entry/layer'
 
 export interface UrlQuery {
 	entityId?: Set<ID>
-	// noteId?: string			/* ni */
 	facsimileId?: Set<ID>	/* fi = pb */
-	lineId?: Set<ID>			/* li = lb */
+	lineId?: Set<ID>		/* li = lb */
 	blockId?: Set<ID>		/* bi = p, ab, div */
 }
 

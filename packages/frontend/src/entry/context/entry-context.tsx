@@ -1,33 +1,54 @@
 import React from 'react'
-import { Entry, EntryContext, fetchJson, SerializedEntry, deserializeEntry } from '@docere/common'
-import { useParams } from 'react-router-dom'
+import { Entry, EntryContext, fetchJson, SerializedEntry, deserializeEntry, SetEntryProps, getEntryPath, UrlQuery } from '@docere/common'
+import { useParams, useHistory } from 'react-router-dom'
 
 const entryCache = new Map<string, Entry>()
 
+async function fetchEntry(projectId: string, entryId: string) {
+	if (entryCache.has(entryId)) return entryCache.get(entryId)
+
+	const serializedEntry: SerializedEntry = await fetchJson(`/api/projects/${projectId}/documents/${encodeURIComponent(entryId)}`)
+	if (serializedEntry == null) return
+
+	const entry = deserializeEntry(serializedEntry)
+	entryCache.set(entry.id, entry)
+
+	return entry
+}
+
 export function EntryProvider(props: { children: React.ReactNode }) {
-	const [entry, setEntry] = React.useState<Entry>(null)
+	const history = useHistory()
+	const [entry, _setEntry] = React.useState<Entry>(null)
+	const [initialFacsimileId, setInitialFacsimileId] = React.useState<string>(null)
+	const [initialEntityIds, setInitialEntityIds] = React.useState<string[]>(null)
 	const { projectId, entryId } = useParams()
+	setInitialEntityIds
+	setInitialFacsimileId
+	console.log('getting there')
 
 	React.useEffect(() => {
-		if (projectId == null || entryId == null) return
+		if (projectId == null) return
 
-		if (entryCache.has(entryId)) {
-			setEntry(entryCache.get(entryId))
+		if (entryId == null && entry != null) {
+			_setEntry(null)
 		} else {
-			fetchJson(`/api/projects/${projectId}/documents/${encodeURIComponent(entryId)}`)
-				.then((serializedEntry: SerializedEntry) => {
-					if (serializedEntry == null) return
-					const entry = deserializeEntry(serializedEntry)
-					entryCache.set(serializedEntry.id, entry)
-					setEntry(entry)
-				})
+			fetchEntry(projectId, entryId).then(_setEntry)
 		}
 	}, [projectId, entryId])
+
+	const setEntry = React.useCallback((props: SetEntryProps) => {
+		const query: UrlQuery = {}
+		if (props.facsimileId != null) query.facsimileId = new Set([props.facsimileId])
+		if (Array.isArray(props.entityIds)) query.entityId = new Set(props.entityIds)
+
+		const url = getEntryPath({ projectId, entryId: props.entryId, query })
+		history.push(url)
+	}, [projectId])
 
 	if (entry == null) return null
 
 	return (
-		<EntryContext.Provider value={entry}>
+		<EntryContext.Provider value={{ entry, initialFacsimileId, initialEntityIds, setEntry }}>
 			{props.children}
 		</EntryContext.Provider>
 	) 

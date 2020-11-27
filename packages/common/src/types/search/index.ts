@@ -39,8 +39,19 @@ export interface ElasticSearchRequestOptions {
 	sortOrder: SortOrder
 }
 
+/**
+ * JSON object which represents a ElasticSearch document
+ */
+export interface ElasticSearchDocument {
+	facsimiles: { id: string, path: string }[]
+	id: string
+	text: string
+	text_suggest: { input: string[] }
+	[key: string]: any
+}
+
 export interface Hit {
-	// facsimiles?: { id: string, path: string[] }[]
+	facsimiles?: ElasticSearchDocument['facsimiles']
 	id: string
 	snippets: string[]
 	[key: string]: any
