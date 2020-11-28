@@ -58,8 +58,8 @@ export enum EntityType {
 
 export enum DocereComponentContainer {
 	Layer = 'layer',
-	Standalone = 'standalone',
 	Page = 'page',
+	Standalone = 'standalone'
 }
 
 export enum UIComponentType {

@@ -6,11 +6,13 @@ import CollectionNavigatorController from './controller'
 
 function useOpenSeadragonController() {
 	const { config, searchUrl } = React.useContext(ProjectContext)
-	const { setEntry } = React.useContext(EntryContext)
+	const { entry, setEntry } = React.useContext(EntryContext)
+	const { setActiveFacsimile } = React.useContext(FacsimileContext)
 	const [controller, setController] = React.useState<any>(null)
 
 	const handleClick = (entryId: string, facsimileId: string) => {
-		setEntry({ entryId, facsimileId })
+		if (entry.id === entryId) setActiveFacsimile(facsimileId, null, null)
+		else setEntry({ entryId, facsimileId })
 	}
 
 	React.useEffect(() => {

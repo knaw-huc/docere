@@ -1,7 +1,8 @@
 import React from 'react'
-import { SearchTab, Viewport, useUrlObject } from '@docere/common'
+import { SearchTab, Viewport } from '@docere/common'
 
 import type { ProjectUIState, ProjectUIAction } from '@docere/common'
+import { useParams } from 'react-router-dom'
 
 const initialProjectUIState: ProjectUIState = {
 	footerTab: null,
@@ -74,7 +75,7 @@ export const ProjectUIContext = React.createContext(initialProjectUIContext)
 // let historyNavigator: HistoryNavigator
 export function ProjectUIProvider(props: { children: React.ReactNode }) {
 	const [state, dispatch] = React.useReducer(projectUIReducer, initialProjectUIState)
-	const { entryId } = useUrlObject()
+	const { entryId } = useParams()
 
 	// TODO should this be the other way around? Change the URL based
 	// on setting the appstate viewport?

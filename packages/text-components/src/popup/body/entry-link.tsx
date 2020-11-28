@@ -1,5 +1,5 @@
 import React from 'react'
-import { useUIComponent, UIComponentType, Hit, Entity, UrlObject, useNavigate } from '@docere/common'
+import { useUIComponent, UIComponentType, Hit, Entity, EntryContext } from '@docere/common'
 import { PopupBodyWrapper, PopupBodyLink } from './index'
 import { EntityComponentProps, EntityWrapper } from '..'
 
@@ -20,15 +20,11 @@ interface EntryLinkProps {
 	children: React.ReactNode
 }
 function EntryLink(props: EntryLinkProps) {
-	const navigate = useNavigate()
+	const { setEntry } = React.useContext(EntryContext)
 
 	const goToEntry = React.useCallback((ev: React.MouseEvent) => {
 		ev.stopPropagation()
-
-		const payload: UrlObject = { entryId: props.entity.id }
-
-		// TODO use entryDispatch (see ./page-part.tsx)
-		navigate(payload)
+		setEntry({ entryId: props.entity.id })
 	}, [props.entity])
 
 	return (

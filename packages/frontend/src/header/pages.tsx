@@ -85,7 +85,7 @@ function PageMenuItem(props: PageMenuItemProps) {
 	return (
 		<li>
 			<PageLink
-				to={getPagePath({ projectId: props.projectId, pageId: props.pageConfig.id })}
+				to={getPagePath(props.projectId, props.pageConfig.id)}
 			>
 				{props.pageConfig.title}
 			</PageLink>

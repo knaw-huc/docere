@@ -1,10 +1,9 @@
 import React from 'react'
-import { useComponents, DocereComponentContainer, Entity, useNavigate, useEntry } from '@docere/common'
+import { useComponents, DocereComponentContainer, Entity, useEntry, ProjectContext, EntryContext } from '@docere/common'
 import DocereTextView from '@docere/text'
 
 import { PopupBodyLink, PopupBodyWrapper } from './index'
 
-import type { UrlObject } from '@docere/common'
 import { EntityComponentProps, EntityWrapper } from '..'
 
 interface NoteLinkProps {
@@ -13,17 +12,12 @@ interface NoteLinkProps {
 	children: React.ReactNode
 }
 function NoteLink(props: NoteLinkProps) {
-	const navigate = useNavigate()
+	const { setEntry } = React.useContext(EntryContext)
 
 	const handleClick = React.useCallback((ev: React.MouseEvent) => {
 		ev.stopPropagation()
 
-		const payload: UrlObject = {
-			entryId: props.entryId,
-			query: { entityId: new Set(props.entity.id) }
-		}
-
-		navigate(payload)
+		setEntry({ entryId: props.entryId, entityIds: [props.entity.id] })
 	}, [props.entryId, props.entity])
 
 	return (
@@ -37,8 +31,9 @@ function NoteLink(props: NoteLinkProps) {
 }
 
 export const NoteLinkEntity = React.memo(function(props: EntityComponentProps) {
+	const { config } = React.useContext(ProjectContext)
 	const [fileName] = props.entity.id.split('#')
-	const entry = useEntry(fileName.replace(/\.xml$/, ''))
+	const entry = useEntry(config.slug, fileName.replace(/\.xml$/, ''))
 	const components = useComponents(DocereComponentContainer.Layer)
 
 	return (

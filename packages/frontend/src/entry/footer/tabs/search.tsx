@@ -1,21 +1,24 @@
 import React from 'react'
-import { useNavigate, SearchTab } from '@docere/common'
+import { SearchTab, getSearchPath } from '@docere/common'
 
 import { ProjectUIContext } from '../../../project/ui-context'
 import { Button } from '..'
+import { useHistory, useParams } from 'react-router-dom'
 
 export function SearchTabs() {
+	const history = useHistory()
+	const { projectId } = useParams()
 	const { state, dispatch } = React.useContext(ProjectUIContext)
-	const navigate = useNavigate()
+
 
 	const onClick = React.useCallback(ev => {
 		const { tab } = ev.target.dataset
 		if (tab === SearchTab.Search) {
-			navigate()
+			history.push(getSearchPath(projectId))
 		} else {
 			dispatch({ type: 'TOGGLE_TAB', tabType: 'search', tab })
 		}
-	}, [])
+	}, [projectId])
 
 	return (
 		<div

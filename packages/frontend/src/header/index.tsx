@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { ProjectContext, TOP_OFFSET, DEFAULT_SPACING, Colors, getPath } from '@docere/common'
+import { ProjectContext, TOP_OFFSET, DEFAULT_SPACING, Colors, getSearchPath } from '@docere/common'
 import PagesMenu from './pages'
 import { Link } from 'react-router-dom'
 
@@ -76,7 +76,7 @@ export function ProjectHeader() {
 				<Link to="/">
 					Docere
 				</Link>
-				<Link to={getPath({ projectId: config.slug })}>
+				<Link to={getSearchPath(config.slug)}>
 					{config.title}
 				</Link>
 			</H1>

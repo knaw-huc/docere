@@ -2,22 +2,21 @@ import React from 'react'
 
 import { Entry } from './index'
 import { fetchJson } from '../utils'
-import { useUrlObject } from '../url/query'
 import { SerializedEntry } from '..'
 import { deserializeEntry } from './deserialize'
 
 const entryCache = new Map<string, Entry>()
 
 // TODO this is used in text-components/../../note-link.tsx, but refactor?
-export function useEntry(id: string) {
+export function useEntry(projectId: string, entryId: string) {
 	const [entry, setEntry] = React.useState<Entry>(null)
-	const { projectId, entryId } = useUrlObject()
+	// const { projectId, entryId } = useParams()
 
 	React.useEffect(() => {
-		if (id == null) return
+		if (projectId == null || entryId == null) return
 
-		if (entryCache.has(id)) {
-			const entry = entryCache.get(id)
+		if (entryCache.has(entryId)) {
+			const entry = entryCache.get(entryId)
 			setEntry(entry)
 		} else {
 			fetchJson(`/api/projects/${projectId}/documents/${encodeURIComponent(entryId)}`)
@@ -28,7 +27,7 @@ export function useEntry(id: string) {
 					setEntry(entry)
 				})
 		}
-	}, [id])
+	}, [projectId, entryId])
 
 	return entry
 }

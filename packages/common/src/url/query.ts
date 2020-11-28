@@ -1,6 +1,5 @@
 import React from 'react'
-import { useLocation, useParams } from "react-router-dom"
-import { UrlObject } from './navigate'
+import { useLocation } from "react-router-dom"
 import { ID } from '../entry/layer'
 
 export interface UrlQuery {
@@ -12,27 +11,17 @@ export interface UrlQuery {
 
 const urlQueryMap: Record<string, keyof UrlQuery> = {
 	ei: 'entityId',
-	// ni: 'noteId',
 	fi: 'facsimileId',
 	li: 'lineId',
 	bi: 'blockId',
 } as const
 
-// function defaultPayload(): UrlObject {
-// 	return {
-// 		projectId: null,
-// 		pageId: null,
-// 		entryId: null,
-// 		query: null,
-// 	}
-// }
-
-
-// Turn the URL into an URL object
-export function useUrlObject() {
+/**
+ * Turn the query part of the URL into an URL query object
+ */ 
+export function useUrlQuery() {
 	const location = useLocation()
-	const { projectId, entryId, pageId } = useParams()
-	const [urlObject, setUrlObject] = React.useState<UrlObject>({ projectId, entryId, pageId, query: {} })
+	const [urlQuery, setUrlQuery] = React.useState<UrlQuery>(null)
 
 	React.useEffect(() => {
 		const nextQuery: UrlQuery = {}
@@ -43,15 +32,8 @@ export function useUrlObject() {
 			nextQuery[urlQueryMap[key]] = value.length ? new Set(value) : null
 		})
 
-		const nextPayload: UrlObject = {
-			projectId,
-			entryId,
-			pageId,
-			query: nextQuery
-		}
+		setUrlQuery(nextQuery)
+	}, [location.search])
 
-		setUrlObject(nextPayload)
-	}, [location.pathname, location.search])
-
-	return urlObject 
+	return urlQuery 
 }

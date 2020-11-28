@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Link } from 'react-router-dom'
-import { getPath, useUrlObject, getEntryApiPath } from '@docere/common'
+import { Link, useParams } from 'react-router-dom'
+import { getEntryApiPath, getEntryPath } from '@docere/common'
 
 import type { AnalyzeStateAction, AddSelected } from './state'
 
@@ -27,7 +27,7 @@ function Item(props: ItemProps) {
 					<>
 						{props.value}
 						<span onClick={ev => ev.stopPropagation()}>
-							<ALink to={getPath({ projectId: props.projectId, entryId: props.value })} target="_blank">w</ALink>
+							<ALink to={getEntryPath(props.projectId, props.value)} target="_blank">w</ALink>
 							<ALink to={getEntryApiPath(props.projectId, props.value, 'original')} target="_blank">xo</ALink>
 							<ALink to={getEntryApiPath(props.projectId, props.value, 'prepared')} target="_blank">xp</ALink>
 						</span>
@@ -47,7 +47,7 @@ interface Props {
 	values: string[]
 }
 export function SearchList(props: Props) {
-	const { projectId } = useUrlObject()
+	const { projectId } = useParams()
 
 	return (
 		<>

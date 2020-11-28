@@ -19,14 +19,10 @@ export const ProjectContext = React.createContext<ProjectContext>(initialProject
 export type SetEntryProps = { entryId: string, facsimileId?: string, entityIds?: string[] }
 interface EntryContextValue {
 	entry: Entry
-	initialFacsimileId: string
-	initialEntityIds: string[]
 	setEntry: (props: SetEntryProps) => void
 }
 const initialEntryContextValue: EntryContextValue = {
 	entry: null,
-	initialFacsimileId: null,
-	initialEntityIds: null,
 	setEntry: null,
 }
 export const EntryContext = React.createContext(initialEntryContextValue)

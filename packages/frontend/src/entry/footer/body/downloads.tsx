@@ -1,8 +1,9 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { getEntryApiPath, Colors, useUrlObject } from '@docere/common'
+import { getEntryApiPath, Colors } from '@docere/common'
 
 import { BottomTabWrapper } from './layers'
+import { useParams } from 'react-router-dom'
 
 const Ul = styled.ul`
 	columns: 2;
@@ -46,7 +47,7 @@ interface Props {
 }
 function Layers(props: Props) {
 	// const { config } = React.useContext(ProjectContext)
-	const { projectId, entryId } = useUrlObject()
+	const { projectId, entryId } = useParams()
 	// const baseUrl = `/api/projects/${config.slug}/documents/${encodeURIComponent(props.entry.id)}`
 	return (
 		<BottomTabWrapper active={props.active}>

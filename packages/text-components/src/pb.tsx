@@ -39,6 +39,7 @@ const Img = styled.img`
 `
 
 function useFacsimiles(ids: string) {
+	// console.log(ids)
 	const { entry } = React.useContext(EntryContext)
 	const [facsimiles, setFacsimiles] = React.useState<Facsimile[]>([])
 
@@ -101,11 +102,12 @@ function FacsimileThumb(props: FacsimileThumbProps) {
 
 	const version = props.facsimile.versions[0]
 	const src = version.thumbnailPath != null ? version.thumbnailPath : version.path
-	const active = activeFacsimile.id === props.facsimile.id
+	const active = activeFacsimile?.id === props.facsimile.id
 
 	React.useEffect(() => {
+		if (!active) return
+
 		if (
-			active &&
 			activeFacsimile.triggerLayerId !== props.layer.id &&
 			activeFacsimile.triggerLayerId != null // this happens when the page loads. only scroll when triggerlayer is actively set
 		) {

@@ -30,7 +30,7 @@ export default extendConfigData({
 	],
 	entities: [],
 	facsimiles: {
-		extractFacsimileId: el => el.getAttribute('facs'),
+		extractFacsimileId: el => el.getAttribute('facs').split('/').slice(-1)[0].replace(/\.jpg$/, ''),
 		extractFacsimiles,
 		selector: 'column[facs]'
 	},

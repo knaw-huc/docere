@@ -1,10 +1,10 @@
 import React from 'react'
-import { useNavigate, useComponents, DocereComponentContainer, usePage } from '@docere/common'
+import { useComponents, DocereComponentContainer, usePage } from '@docere/common'
 import DocereTextView from '@docere/text'
 
 import { PopupBodyLink, PopupBodyWrapper } from './index'
 
-import type { UrlObject, Entity } from '@docere/common'
+import type { Entity } from '@docere/common'
 import { EntityComponentProps, EntityWrapper } from '..'
 
 
@@ -13,16 +13,16 @@ interface PageLinkProps {
 	children: React.ReactNode
 }
 function PageLink(props: PageLinkProps) {
-	const navigate = useNavigate()
+	// const history = useHistory()
 
 	const goToPage = React.useCallback((ev: React.MouseEvent) => {
 		ev.stopPropagation()
 
-		const urlObject: UrlObject = { pageId: props.entity.configId }
-		if (props.entity.id != null) urlObject.query = { entityId: new Set(props.entity.id) }
+		// const urlObject = { pageId: props.entity.configId }
+		// if (props.entity.id != null) urlObject.query = { entityId: new Set(props.entity.id) }
 
 		// TODO Use dispatch? props.docereComponentProps.entryDispatch
-		navigate(urlObject)
+		// navigate(urlObject)
 	}, [props.entity])
 
 	return (

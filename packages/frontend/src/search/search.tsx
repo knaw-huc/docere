@@ -1,8 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import HucFacetedSearch  from '@docere/search'
-import { ProjectContext, useUIComponent, UIComponentType, Viewport, Language, getPath, useUrlObject } from '@docere/common'
+import { ProjectContext, useUIComponent, UIComponentType, Viewport, Language, getEntryPath } from '@docere/common'
 
 import useAutoSuggest from './use-auto-suggest'
 
@@ -25,10 +25,10 @@ function Search() {
 	const { state } = React.useContext(ProjectUIContext)
 	const autoSuggest = useAutoSuggest(searchUrl)
 	const ResultBodyComponent = useUIComponent(UIComponentType.SearchResult)
-	const { projectId, entryId } = useUrlObject()
+	const { projectId, entryId } = useParams()
 
 	const onClickResult = React.useCallback((result: Hit) => {
-		history.push(getPath({ projectId, entryId: result.id }))
+		history.push(getEntryPath(projectId, result.id))
 	}, [projectId])
 
 	return (

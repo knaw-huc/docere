@@ -19,12 +19,7 @@ async function fetchEntry(projectId: string, entryId: string) {
 export function EntryProvider(props: { children: React.ReactNode }) {
 	const history = useHistory()
 	const [entry, _setEntry] = React.useState<Entry>(null)
-	const [initialFacsimileId, setInitialFacsimileId] = React.useState<string>(null)
-	const [initialEntityIds, setInitialEntityIds] = React.useState<string[]>(null)
 	const { projectId, entryId } = useParams()
-	setInitialEntityIds
-	setInitialFacsimileId
-	console.log('getting there')
 
 	React.useEffect(() => {
 		if (projectId == null) return
@@ -41,14 +36,14 @@ export function EntryProvider(props: { children: React.ReactNode }) {
 		if (props.facsimileId != null) query.facsimileId = new Set([props.facsimileId])
 		if (Array.isArray(props.entityIds)) query.entityId = new Set(props.entityIds)
 
-		const url = getEntryPath({ projectId, entryId: props.entryId, query })
+		const url = getEntryPath(projectId, props.entryId, query)
 		history.push(url)
 	}, [projectId])
 
 	if (entry == null) return null
 
 	return (
-		<EntryContext.Provider value={{ entry, initialFacsimileId, initialEntityIds, setEntry }}>
+		<EntryContext.Provider value={{ entry, setEntry }}>
 			{props.children}
 		</EntryContext.Provider>
 	) 
