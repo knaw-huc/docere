@@ -17,7 +17,7 @@ function NoteLink(props: NoteLinkProps) {
 	const handleClick = React.useCallback((ev: React.MouseEvent) => {
 		ev.stopPropagation()
 
-		setEntry({ entryId: props.entryId, entityIds: [props.entity.id] })
+		setEntry({ entryId: props.entryId, entityIds: new Set([props.entity.id]) })
 	}, [props.entryId, props.entity])
 
 	return (

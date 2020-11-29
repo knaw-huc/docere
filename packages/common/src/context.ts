@@ -15,14 +15,17 @@ export const initialProjectContext: ProjectContext = null
 export const ProjectContext = React.createContext<ProjectContext>(initialProjectContext)
 
 // Entry
-
-export type SetEntryProps = { entryId: string, facsimileId?: string, entityIds?: string[] }
+export type SetEntryProps = { entryId: string, facsimileId?: string, entityIds?: Set<string> }
 interface EntryContextValue {
 	entry: Entry
+	initialFacsimileId: string
+	initialEntityIds: Set<string>
 	setEntry: (props: SetEntryProps) => void
 }
 const initialEntryContextValue: EntryContextValue = {
 	entry: null,
+	initialFacsimileId: null,
+	initialEntityIds: null,
 	setEntry: null,
 }
 export const EntryContext = React.createContext(initialEntryContextValue)

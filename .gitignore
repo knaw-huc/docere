@@ -3,6 +3,7 @@ lerna-debug.log
 build
 build.puppenv.data
 dist
+docs
 tsconfig.tsbuildinfo
 DEPLOY.md
 INTERNAL*

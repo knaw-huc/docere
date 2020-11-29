@@ -14,16 +14,6 @@ services:
       - ./secrets:/var/www/secrets
       - ../frontend:/var/www/html
 
-  # iiif:
-  #   image: lorisimageserver/loris
-  #   networks:
-  #     - elastic
-  #   ports:
-  #     - 5004:5004
-  #   restart: always
-  #   volumes:
-  #     - /data/facsimiles:/opt/loris/tests/img
-
   api:
     build:
       context: ../../

@@ -1,18 +1,15 @@
 import React from 'react'
-import { EntryContext, ID, FacsimileContext, ActiveFacsimile, useUrlQuery } from '@docere/common'
+import { EntryContext, ID, FacsimileContext, ActiveFacsimile } from '@docere/common'
 
 export function FacsimileProvider(props: { children: React.ReactNode }) {
-	const { entry } = React.useContext(EntryContext)
+	const { entry, initialFacsimileId } = React.useContext(EntryContext)
 	const [facsimile, setFacsimile] = React.useState<ActiveFacsimile>(null)
-	const query = useUrlQuery()
 
 	React.useEffect(() => {
 		if (entry == null) return
 
-		const fromQuery = query?.facsimileId != null
-
-		const activeFacsimileId = fromQuery ?
-			query.facsimileId.values().next().value :
+		const activeFacsimileId = initialFacsimileId != null ?
+			initialFacsimileId :
 			entry.textData.facsimiles.values().next().value.id
 
 		if (!entry.textData.facsimiles.has(activeFacsimileId)) return
@@ -22,7 +19,7 @@ export function FacsimileProvider(props: { children: React.ReactNode }) {
 			layerId: null,
 			triggerLayerId: null,
 		})
-	}, [entry, query?.facsimileId])
+	}, [entry, initialFacsimileId])
 
 	const setActiveFacsimile = React.useCallback((facsimileId: ID, triggerLayerId: ID, layerId: ID) => {
 		setFacsimile({
@@ -30,7 +27,7 @@ export function FacsimileProvider(props: { children: React.ReactNode }) {
 			layerId,
 			triggerLayerId,
 		})
-	}, [entry, query])
+	}, [entry])
 
 	return (
 		<FacsimileContext.Provider value={{ activeFacsimile: facsimile, setActiveFacsimile }}>

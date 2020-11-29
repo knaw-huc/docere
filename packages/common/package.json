@@ -10,11 +10,13 @@
   "types": "build/index.d.ts",
   "scripts": {
     "build": "rm -rf build && tsc",
+    "docs": "typedoc --out docs src --jsx react --ignoreCompilerErrors",
     "watch": "tsc -w"
   },
   "author": "Gijsjan Brouwer",
   "license": "GPL-3.0-or-later",
   "devDependencies": {
+    "typedoc": "^0.19.2",
     "typescript": "^3.9.5"
   }
 }
