@@ -39,11 +39,12 @@ export interface ElasticSearchRequestOptions {
 	sortOrder: SortOrder
 }
 
+export interface ElasticSearchFacsimile { id: string, path: string }
 /**
  * JSON object which represents a ElasticSearch document
  */
 export interface ElasticSearchDocument {
-	facsimiles: { id: string, path: string }[]
+	facsimiles: ElasticSearchFacsimile[]
 	id: string
 	text: string
 	text_suggest: { input: string[] }

@@ -7,10 +7,7 @@ interface TiledImageOptions {
 	bounds: OpenSeadragon.Rect
 	index: number
 	tileSource: string
-	userData: {
-		entryId: string
-		facsimileId: string
-	}
+	userData: CollectionDocument
 }
 
 const ACTIVE_FACSIMILE_OVERLAY_ID = 'active_facsimile_overlay'
@@ -57,7 +54,7 @@ export default class TiledImages {
 	// Set the active options from this.entry.facsimiles. Used to calculate this.startIndex and this.highlightActive
 	setActiveOptions() {
 		this.activeTileOptions = this.tileOptions.filter(
-			option => this.entry.id === option.userData.entryId
+			option => option.userData.entryId.has(this.entry.id)
 		)
 	}
 
@@ -200,20 +197,26 @@ export default class TiledImages {
 	// The options are build prior to loading thumbs, because the order of the
 	// thumbs needs to be known in advance.
 	private setOptions(hits: CollectionDocument[]) {
-		this.tileOptions = hits.reduce((prev, curr, index) => {
-			curr.facsimiles.forEach(f => {
-				prev.push({
-					bounds: null,
-					index,
-					tileSource: f.path,
-					userData: {
-						entryId: curr.id,
-						facsimileId: f.id,
-					},
-				})
-			})
-			return prev
-		}, [] as TiledImageOptions[])
+		this.tileOptions = hits.map((collectionDocument, index) => ({
+			bounds: null,
+			index,
+			tileSource: collectionDocument.facsimilePath,
+			userData: collectionDocument,
+		})) //, [] as TiledImageOptions[])
+		// this.tileOptions = hits.reduce((prev, curr, index) => {
+		// 	curr.facsimiles.forEach(f => {
+		// 		prev.push({
+		// 			bounds: null,
+		// 			index,
+		// 			tileSource: f.path,
+		// 			userData: {
+		// 				entryId: curr.id,
+		// 				facsimileId: f.id,
+		// 			},
+		// 		})
+		// 	})
+		// 	return prev
+		// }, [] as TiledImageOptions[])
 	}
 
 	// If an animation is finished (pan, zoom, etc) check if thumbs have to be loaded.

@@ -1,11 +1,11 @@
-import { ProjectContext, fetchPost, ActiveFacsimile, ID, Hit } from '@docere/common'
+import { ProjectContext, fetchPost, ActiveFacsimile, ID, ElasticSearchFacsimile } from '@docere/common'
 import { isHierarchyFacetConfig, isListFacetConfig, isRangeFacetConfig } from '@docere/search'
 import OpenSeadragon from 'openseadragon';
 import TiledImages from './tiled-images'
 
 import type { DocereConfig, Entry } from '@docere/common'
 
-export type CollectionDocument = { id: ID, facsimiles: Hit['facsimiles'] }
+export type CollectionDocument = { entryId: Set<ID>, facsimileId: string, facsimilePath: string }
 
 export default class CollectionNavigatorController {
 	private entry: Entry
@@ -53,8 +53,11 @@ export default class CollectionNavigatorController {
 		// TODO what does quick do/tell?
 		if (!event.quick) return
 
-		const { entryId, facsimileId } = this.tiledImages.getEntryFromMousePosition(event.position)
-		this.handleClick(entryId, facsimileId)
+		const mousePosData = this.tiledImages.getEntryFromMousePosition(event.position)
+		if (mousePosData == null) return
+
+		const { entryId, facsimileId } = mousePosData 
+		this.handleClick(entryId.values().next().value, facsimileId)
 	}
 
 	private fullScreenHandler = (event: OpenSeadragon.ViewerEvent) => {
@@ -133,6 +136,23 @@ export default class CollectionNavigatorController {
 	 */
 	private async fetchCollectionDocuments(): Promise<CollectionDocument[]> {
 		const data = await fetchPost(this.searchUrl, this.payload)
-		return data.hits.hits.map((h: any) => h._source)
+		const facsMap = data.hits.hits.reduce((prev: Map<ID, CollectionDocument>, hit: any) => {
+			hit._source.facsimiles.forEach((f: ElasticSearchFacsimile) => {
+				if (prev.has(f.id)) {
+					const cd = prev.get(f.id)
+					cd.entryId.add(hit._source.id)
+					prev.set(f.id, cd)
+				} else {
+					prev.set(f.id, {
+						entryId: new Set([hit._source.id]),
+						facsimileId: f.id,
+						facsimilePath: f.path,
+					})
+				}
+			})
+			return prev
+		}, new Map() as Map<ID, CollectionDocument>)
+
+		return Array.from(facsMap.values())
 	}
 }
