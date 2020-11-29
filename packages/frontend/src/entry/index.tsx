@@ -25,7 +25,7 @@ const Main = styled.div`
 function Wrapper(props: { children: React.ReactNode }) {
 	const { state } = React.useContext(ProjectUIContext)
 	const { asideTab } = React.useContext(EntryTabContext)
-
+	console.log('render')
 	return (
 		<Main
 			asideTab={asideTab}
@@ -38,7 +38,7 @@ function Wrapper(props: { children: React.ReactNode }) {
 	)
 }
 
-function Entry() {
+export default React.memo(function Entry() {
 	return (
 		<Providers>
 			<Wrapper>
@@ -48,6 +48,4 @@ function Entry() {
 			</Wrapper>
 		</Providers>
 	)
-}
-
-export default React.memo(Entry)
+})

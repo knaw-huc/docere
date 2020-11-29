@@ -72,10 +72,10 @@ const initialProjectUIContext: ProjectUIContextValue = {
 }
 export const ProjectUIContext = React.createContext(initialProjectUIContext)
 
-// let historyNavigator: HistoryNavigator
-export function ProjectUIProvider(props: { children: React.ReactNode }) {
+function useIt() {
 	const [state, dispatch] = React.useReducer(projectUIReducer, initialProjectUIState)
 	const { entryId } = useParams()
+	let [b, setB] = React.useState<any>(null)
 
 	// TODO should this be the other way around? Change the URL based
 	// on setting the appstate viewport?
@@ -87,8 +87,20 @@ export function ProjectUIProvider(props: { children: React.ReactNode }) {
 		}
 	}, [entryId])
 
+	React.useEffect(() => {
+		setB({ state, dispatch })
+	}, [state])
+
+	return b
+}
+
+// let historyNavigator: HistoryNavigator
+export function ProjectUIProvider(props: { children: React.ReactNode }) {
+	const a = useIt()
+	if (a == null) return null
+
 	return (
-		<ProjectUIContext.Provider value={{ state, dispatch }}>
+		<ProjectUIContext.Provider value={a}>
 			{props.children}
 		</ProjectUIContext.Provider>
 	) 
