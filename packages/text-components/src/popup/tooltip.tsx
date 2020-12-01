@@ -47,7 +47,7 @@ interface Props {
 	zIndexOffset?: number
 }
 function Tooltip(props: Props) {		
-	const { activeEntities } = React.useContext(EntitiesContext)
+	const activeEntities = React.useContext(EntitiesContext)
 	const wrapperRef: React.RefObject<HTMLDivElement> = React.useRef()
 	const [offset, setOffset] = React.useState(null)
 

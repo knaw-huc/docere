@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { DEFAULT_SPACING, isFacsimileLayer, LayersContext, StatefulFacsimileLayer, StatefulLayer } from '@docere/common'
+import { DEFAULT_SPACING, isFacsimileLayer, LayersContext, StatefulFacsimileLayer, StatefulLayer, DispatchContext } from '@docere/common'
 
 const LiWrapper = styled.li`
 	color: ${(p: PIWProps) => p.active ? '#EEE' : '#444'};
@@ -55,10 +55,13 @@ interface PIProps {
 	layer: StatefulLayer
 }
 function Li(props: PIProps) {
-	const { activateLayer } = React.useContext(LayersContext)
+	const dispatch = React.useContext(DispatchContext)
 
 	const togglePanel = React.useCallback(ev => {
-		activateLayer(ev.currentTarget.dataset.id)
+		dispatch({
+			type: 'TOGGLE_LAYER',
+			id: ev.currentTarget.dataset.id,
+		})
 	}, [])
 
 	return (
@@ -125,7 +128,7 @@ interface Props {
 	active?: boolean
 }
 function Layers(props: Props) {
-	const { layers } = React.useContext(LayersContext)
+	const layers = React.useContext(LayersContext)
 	return (
 		<BottomTabWrapper active={props.active}>
 			<Ul>

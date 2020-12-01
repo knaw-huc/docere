@@ -1,13 +1,11 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { isSearchPage, TOP_OFFSET, SEARCH_RESULT_ASIDE_WIDTH, Viewport, SearchTab, FOOTER_HEIGHT, FOOTER_HANDLE_HEIGHT, ProjectUIState } from '@docere/common'
+import { isSearchPage, TOP_OFFSET, SEARCH_RESULT_ASIDE_WIDTH, Viewport, SearchTab, FOOTER_HEIGHT, FOOTER_HANDLE_HEIGHT, UIContext } from '@docere/common'
+import type { UIContextValue } from '@docere/common'
 
 import FacetedSearch from './search'
 import Delayed from './delayed'
 
-import { ProjectUIContext } from '../project/ui-context'
-
-type WProps = Pick<ProjectUIState, 'footerTab' | 'searchTab' | 'viewport'>
 const Wrapper = styled.div`
 	bottom: ${(props => 
 		props.viewport === Viewport.EntrySelector ?
@@ -26,7 +24,7 @@ const Wrapper = styled.div`
 
 	});
 	transition: all 300ms;
-	width: ${(props: WProps) => (props.searchTab === SearchTab.Results || props.viewport !== Viewport.EntrySelector) ?
+	width: ${(props: UIContextValue) => (props.searchTab === SearchTab.Results || props.viewport !== Viewport.EntrySelector) ?
 		`${SEARCH_RESULT_ASIDE_WIDTH}px` :
 		'100vw'
 	};
@@ -38,15 +36,15 @@ const Wrapper = styled.div`
 `
 
 export default function Search() {
-	const { state } = React.useContext(ProjectUIContext)
+	const uiState = React.useContext(UIContext)
 
 	return (
 		<Delayed condition={!isSearchPage()} milliseconds={2000}>
 			<Wrapper
 				id="search-container"
-				footerTab={state.footerTab}
-				searchTab={state.searchTab}
-				viewport={state.viewport}
+				footerTab={uiState.footerTab}
+				searchTab={uiState.searchTab}
+				viewport={uiState.viewport}
 			>
 				<FacetedSearch />
 			</Wrapper>

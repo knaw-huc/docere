@@ -1,8 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
-import { FooterTab } from '@docere/common'
+import { FooterTab, UIContext } from '@docere/common'
 
-import { ProjectUIContext } from '../../../project/ui-context'
 import Layers from './layers'
 import Settings from './settings'
 import Downloads from './downloads'
@@ -14,18 +13,18 @@ const Wrapper = styled.div`
 `
 
 export function Body() {
-	const { state } = React.useContext(ProjectUIContext)
+	const uiState = React.useContext(UIContext)
 
 	return (
 		<Wrapper>
 			<Layers
-				active={state.footerTab === FooterTab.Layers}
+				active={uiState.footerTab === FooterTab.Layers}
 			/>
 			<Settings
-				active={state.footerTab === FooterTab.Settings}
+				active={uiState.footerTab === FooterTab.Settings}
 			/>
 			<Downloads
-				active={state.footerTab === FooterTab.API}
+				active={uiState.footerTab === FooterTab.API}
 			/>
 		</Wrapper>
 	)

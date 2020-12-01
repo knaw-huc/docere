@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import { EsDataType, ProjectContext } from '@docere/common'
 
 import type { FacetsConfig, MetadataConfig } from '@docere/common'

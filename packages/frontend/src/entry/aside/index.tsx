@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from 'styled-components';
-import { ASIDE_WIDTH, AsideTab, Colors, FOOTER_HANDLE_HEIGHT, EntryTabContext } from '@docere/common'
+import { ASIDE_WIDTH, AsideTab, Colors, FOOTER_HANDLE_HEIGHT, AsideTabContext } from '@docere/common'
 import { EntitiesAside } from './text-data'
 
 import MetadataAside from './metadata/index'
@@ -19,7 +19,7 @@ const Wrapper = styled.aside`
 `
 
 function Aside() {
-	const { asideTab } = React.useContext(EntryTabContext)
+	const asideTab = React.useContext(AsideTabContext)
 
 	return (
 		<Wrapper>

@@ -107,3 +107,5 @@ interface StatefulBaseLayer {
 export type StatefulTextLayer =  TextLayer & StatefulBaseLayer
 export type StatefulFacsimileLayer =  FacsimileLayer & StatefulBaseLayer
 export type StatefulLayer =  StatefulTextLayer | StatefulFacsimileLayer
+
+export type Layers = Map<ID, StatefulLayer>

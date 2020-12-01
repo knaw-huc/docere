@@ -1,22 +1,10 @@
 import React from 'react'
-import { Entity, EntryContext } from '@docere/common'
+import { Entity } from '@docere/common'
 import IconsByType from './icons'
 
 // export type ExtractEntityType = (props: DocereComponentProps) => string
 // export type ExtractEntityKey = (props: DocereComponentProps) => string
 // export type ExtractEntityValue = (props: DocereComponentProps) => React.ReactNode
-
-export function useEntity(id: string) {
-	const { entry } = React.useContext(EntryContext)
-	const [entity, setEntity] = React.useState<Entity>(null)
-
-	React.useEffect(() => {
-		const _entity = entry.textData.entities.get(id)
-		setEntity(_entity)
-	}, [entry, id])
-
-	return entity
-}
 
 // To prevent a wrap between the icon and the first word the first word is extracted.
 // The icon and the first word are placed inside a span with white-space: nowrap.

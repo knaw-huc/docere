@@ -1,7 +1,7 @@
 import React from 'react'
 import { fetchPageXml } from '../utils'
 
-import { ProjectContext } from '../context'
+import { ProjectContext } from '../project/context'
 
 import type { Page } from './index'
 import type { DocereConfig } from '../types/config-data/config'

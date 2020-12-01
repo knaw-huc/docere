@@ -1,8 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
-import { EntrySettingsContext, EntitiesContext, useUIComponent, UIComponentType, ComponentProps, LayerContext } from '@docere/common'
+import { EntrySettingsContext, EntitiesContext, useUIComponent, UIComponentType, ComponentProps, LayerContext, DocereComponentContainer, DispatchContext, useEntity } from '@docere/common'
 
-import { useEntity, useChildren } from './hooks'
+import { useChildren } from './hooks'
 import IconsByType from './icons'
 import Tooltip from '../popup/tooltip'
 
@@ -52,8 +52,9 @@ const Wrapper = styled.span`
 
 // export function getEntity(PopupBody?: React.FC<EntityComponentProps>) {
 export const EntityTag = React.memo(function EntityComp(props: ComponentProps) {
-	const { activeEntities, addActiveEntity } = React.useContext(EntitiesContext)
-	const { settings } = React.useContext(EntrySettingsContext)
+	const dispatch = React.useContext(DispatchContext)
+	const activeEntities = React.useContext(EntitiesContext)
+	const settings = React.useContext(EntrySettingsContext)
 	const layer = React.useContext(LayerContext)
 
 	// const entityValue = preProps.extractValue(props)
@@ -80,7 +81,12 @@ export const EntityTag = React.memo(function EntityComp(props: ComponentProps) {
 
 	const handleClick = React.useCallback(ev => {
 		ev.stopPropagation()
-		addActiveEntity(entity.id, layer.id, null)
+		dispatch({
+			type: 'ADD_ENTITY',
+			entityId: entity.id,
+			triggerContainer: DocereComponentContainer.Layer,
+			triggerContainerId: layer.id
+		})
 		setShowTooltip(true)
 	}, [entity?.id])
 

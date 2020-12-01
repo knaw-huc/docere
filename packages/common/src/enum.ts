@@ -59,7 +59,10 @@ export enum EntityType {
 export enum DocereComponentContainer {
 	Layer = 'layer',
 	Page = 'page',
-	Standalone = 'standalone'
+	Footer = 'footer',
+	Aside = 'aside',
+	Search = 'search',
+	CollectionNavigator = 'collection_navigator',
 }
 
 export enum UIComponentType {

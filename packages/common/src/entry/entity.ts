@@ -1,6 +1,8 @@
+import React from 'react'
 import { ID } from '.'
-import { EntityConfig, FacsimileArea } from '..'
+import { EntityConfig, FacsimileArea, EntryContext } from '..'
 import { defaultEntityConfig } from '../types/config-data/config'
+import { DocereComponentContainer } from '../enum'
 
 // Extracted entity
 export interface ExtractedCommon {
@@ -34,7 +36,21 @@ export const defaultEntity: Entity = {
 }
 
 // Active entity
-export interface ActiveEntity extends Entity {
-	layerId: ID
-	triggerLayerId: ID
+export type ActiveEntity = Entity & TriggerContainer
+
+export interface TriggerContainer {
+	triggerContainer?: DocereComponentContainer
+	triggerContainerId?: ID
+}
+
+export function useEntity(id: string) {
+	const entry = React.useContext(EntryContext)
+	const [entity, setEntity] = React.useState<Entity>(null)
+
+	React.useEffect(() => {
+		const _entity = entry.textData.entities.get(id)
+		setEntity(_entity)
+	}, [entry, id])
+
+	return entity
 }

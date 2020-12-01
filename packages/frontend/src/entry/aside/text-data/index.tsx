@@ -8,12 +8,10 @@ export const Wrapper = styled.ul`
 	height: calc(100% - ${FOOTER_HANDLE_HEIGHT}px);
 	overflow: auto;
 `
-// z-index: ${(p: Pick<Props, 'active'>) => p.active ? 1 : -1};
-
 
 export function EntitiesAside() {
-	const { entry } = React.useContext(EntryContext)
-	const { activeEntities /*, addActiveEntity */ } = React.useContext(EntitiesContext)
+	const entry = React.useContext(EntryContext)
+	const activeEntities = React.useContext(EntitiesContext)
 
 	return (
 		<Wrapper>

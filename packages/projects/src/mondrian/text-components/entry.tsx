@@ -6,7 +6,7 @@ import { Colors, EntrySettingsContext } from '@docere/common'
 import type { ComponentProps, DocereConfig } from '@docere/common'
 
 function MondrianLb(props: ComponentProps) {
-	const { settings } = React.useContext(EntrySettingsContext)
+	const settings = React.useContext(EntrySettingsContext)
 	return (
 		<>
 			<Lb />
@@ -23,7 +23,7 @@ const AddWrapper = styled.span`
 	color: ${(props: { hasLb: boolean }) => props.hasLb ? Colors.Green : 'initial'};
 `
 function Add(props: { children: React.ReactNode }) {
-	const { settings } = React.useContext(EntrySettingsContext)
+	const settings = React.useContext(EntrySettingsContext)
 	return (
 		<AddWrapper hasLb={settings["panels.text.showLineBeginnings"]}>
 			{props.children}
@@ -36,7 +36,7 @@ const DelWrapper = styled.span`
 	display: ${(props: { hasLb: boolean }) => props.hasLb ? 'inline' : 'none'};
 `
 function Del(props: { children: React.ReactNode} ) {
-	const { settings } = React.useContext(EntrySettingsContext)
+	const settings = React.useContext(EntrySettingsContext)
 
 	return (
 		<DelWrapper hasLb={settings["panels.text.showLineBeginnings"]}>

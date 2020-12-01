@@ -1,5 +1,5 @@
 import React from 'react'
-import { useComponents, DocereComponentContainer, Entity, useEntry, ProjectContext, EntryContext } from '@docere/common'
+import { useComponents, DocereComponentContainer, Entity, useEntry, ProjectContext } from '@docere/common'
 import DocereTextView from '@docere/text'
 
 import { PopupBodyLink, PopupBodyWrapper } from './index'
@@ -12,12 +12,13 @@ interface NoteLinkProps {
 	children: React.ReactNode
 }
 function NoteLink(props: NoteLinkProps) {
-	const { setEntry } = React.useContext(EntryContext)
+	// const { setEntry } = React.useContext(EntryContext)
 
 	const handleClick = React.useCallback((ev: React.MouseEvent) => {
 		ev.stopPropagation()
 
-		setEntry({ entryId: props.entryId, entityIds: new Set([props.entity.id]) })
+		// TODO fix with dispatch
+		// setEntry({ entryId: props.entryId, entityIds: new Set([props.entity.id]) })
 	}, [props.entryId, props.entity])
 
 	return (

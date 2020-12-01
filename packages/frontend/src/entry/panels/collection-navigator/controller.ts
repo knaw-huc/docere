@@ -1,11 +1,11 @@
-import { ProjectContext, fetchPost, ActiveFacsimile, ID, ElasticSearchFacsimile } from '@docere/common'
+import { ProjectContextValue, fetchPost, ActiveFacsimile, ID, ElasticSearchFacsimile, ProjectAction, DocereComponentContainer } from '@docere/common'
 import { isHierarchyFacetConfig, isListFacetConfig, isRangeFacetConfig } from '@docere/search'
 import OpenSeadragon from 'openseadragon';
 import TiledImages from './tiled-images'
 
 import type { DocereConfig, Entry } from '@docere/common'
 
-export type CollectionDocument = { entryId: Set<ID>, facsimileId: string, facsimilePath: string }
+export type CollectionDocument = { entryIds: Set<ID>, facsimileId: string, facsimilePath: string }
 
 export default class CollectionNavigatorController {
 	private entry: Entry
@@ -15,8 +15,8 @@ export default class CollectionNavigatorController {
 	constructor(
 		private viewer: OpenSeadragon.Viewer,
 		private config: DocereConfig['collection'],
-		private searchUrl: ProjectContext['searchUrl'],
-		private handleClick: (entryId: string, facsimilePath: string) => void
+		private searchUrl: ProjectContextValue['searchUrl'],
+		private dispatch: React.Dispatch<ProjectAction>
 	) {
 		this.viewer.addHandler('canvas-click', this.canvasClickHandler)
 		this.viewer.addHandler('full-screen', this.fullScreenHandler)
@@ -56,8 +56,17 @@ export default class CollectionNavigatorController {
 		const mousePosData = this.tiledImages.getEntryFromMousePosition(event.position)
 		if (mousePosData == null) return
 
-		const { entryId, facsimileId } = mousePosData 
-		this.handleClick(entryId.values().next().value, facsimileId)
+		const { entryIds, facsimileId } = mousePosData 
+		const entryId = entryIds.values().next().value
+		
+		this.dispatch({
+			type: 'SET_ENTRY_ID',
+			setEntry: {
+				entryId,
+				facsimileId,
+				triggerContainer: DocereComponentContainer.CollectionNavigator,
+			}
+		})
 	}
 
 	private fullScreenHandler = (event: OpenSeadragon.ViewerEvent) => {
@@ -140,11 +149,11 @@ export default class CollectionNavigatorController {
 			hit._source.facsimiles.forEach((f: ElasticSearchFacsimile) => {
 				if (prev.has(f.id)) {
 					const cd = prev.get(f.id)
-					cd.entryId.add(hit._source.id)
+					cd.entryIds.add(hit._source.id)
 					prev.set(f.id, cd)
 				} else {
 					prev.set(f.id, {
-						entryId: new Set([hit._source.id]),
+						entryIds: new Set([hit._source.id]),
 						facsimileId: f.id,
 						facsimilePath: f.path,
 					})

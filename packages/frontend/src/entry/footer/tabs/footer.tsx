@@ -1,11 +1,11 @@
 import React from 'react'
-import { FooterTab } from '@docere/common'
+import { FooterTab, UIContext, DispatchContext } from '@docere/common'
 
-import { ProjectUIContext } from '../../../project/ui-context'
 import { Button } from '..'
 
 export function FooterTabs() {
-	const { state, dispatch } = React.useContext(ProjectUIContext)
+	const dispatch = React.useContext(DispatchContext)
+	const uiState = React.useContext(UIContext)
 
 	const onClick = React.useCallback(ev => {
 		const { tab } = ev.target.dataset
@@ -18,19 +18,19 @@ export function FooterTabs() {
 			onClick={onClick}
 		>
 			<Button
-				active={state.footerTab === FooterTab.Layers}
+				active={uiState.footerTab === FooterTab.Layers}
 				data-tab={FooterTab.Layers}
 			>
 				Layers
 			</Button>
 			<Button
-				active={state.footerTab === FooterTab.Settings}
+				active={uiState.footerTab === FooterTab.Settings}
 				data-tab={FooterTab.Settings}
 			>
 				Settings
 			</Button>
 			<Button
-				active={state.footerTab === FooterTab.API}
+				active={uiState.footerTab === FooterTab.API}
 				data-tab={FooterTab.API}
 			>
 				API

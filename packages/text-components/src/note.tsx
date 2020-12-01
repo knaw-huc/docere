@@ -1,10 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
-import { EntrySettingsContext, EntitiesContext, useComponents, DocereComponentContainer, ComponentProps, LayerContext } from '@docere/common'
+import { EntrySettingsContext, EntitiesContext, useComponents, DocereComponentContainer, ComponentProps, LayerContext, DispatchContext, useEntity } from '@docere/common'
 import DocereTextView from '@docere/text'
 
 import { EntityWrapper, EntityComponentProps } from './popup'
-import { useEntity } from './entity/hooks'
 import Tooltip from './popup/tooltip'
 
 const Body = styled.div`
@@ -47,8 +46,9 @@ const Wrapper = styled.div`
 // TODO merge getNote with getEntity
 // export default function getNote(extractNoteId: ExtractNoteId) {
 export const NoteTag = React.memo(function NotePopup(props: ComponentProps) {
-	const { activeEntities, addActiveEntity } = React.useContext(EntitiesContext)
-	const { settings } = React.useContext(EntrySettingsContext)
+	const dispatch = React.useContext(DispatchContext)
+	const activeEntities = React.useContext(EntitiesContext)
+	const settings = React.useContext(EntrySettingsContext)
 	const layer = React.useContext(LayerContext)
 
 	if (
@@ -61,7 +61,12 @@ export const NoteTag = React.memo(function NotePopup(props: ComponentProps) {
 	const openToAside = active && !settings['panels.text.openPopupAsTooltip']
 
 	const handleClick = React.useCallback(() => {
-		addActiveEntity(note.id, layer.id, null)
+		dispatch({
+			entityId: note.id,
+			type: 'ADD_ENTITY',
+			triggerContainer: DocereComponentContainer.Layer,
+			triggerContainerId: layer.id
+		})
 	}, [note, active])
 
 	if (note == null) return null

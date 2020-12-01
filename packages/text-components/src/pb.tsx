@@ -1,5 +1,5 @@
 import React from 'react'
-import { Colors, DEFAULT_SPACING, Facsimile, EntrySettingsContext, EntryContext, FacsimileContext, ComponentProps, LayerContext, StatefulLayer } from '@docere/common'
+import { Colors, DEFAULT_SPACING, Facsimile, EntrySettingsContext, EntryContext, FacsimileContext, ComponentProps, LayerContext, StatefulLayer, DispatchContext, DocereComponentContainer } from '@docere/common'
 import styled from 'styled-components'
 
 // TODO changed display from grid to inline, which breaks multiple 
@@ -39,8 +39,7 @@ const Img = styled.img`
 `
 
 function useFacsimiles(ids: string) {
-	// console.log(ids)
-	const { entry } = React.useContext(EntryContext)
+	const entry = React.useContext(EntryContext)
 	const [facsimiles, setFacsimiles] = React.useState<Facsimile[]>([])
 
 	React.useEffect(() => {
@@ -57,7 +56,7 @@ function useFacsimiles(ids: string) {
 }
 
 export function Pb(props: ComponentProps) {
-	const { settings } = React.useContext(EntrySettingsContext)
+	const settings = React.useContext(EntrySettingsContext)
 	const layer = React.useContext(LayerContext)
 	const facsimiles = useFacsimiles(props.attributes['docere:id'])
 
@@ -91,13 +90,19 @@ interface FacsimileThumbProps {
 	layer: StatefulLayer
 }
 function FacsimileThumb(props: FacsimileThumbProps) {
-	const { activeFacsimile, setActiveFacsimile } = React.useContext(FacsimileContext)
+	const dispatch = React.useContext(DispatchContext)
+	const activeFacsimile = React.useContext(FacsimileContext)
 
 	const imgRef = React.useRef<HTMLImageElement>()
 
 	const onClick = React.useCallback((ev) => {
 		const { facsimileId } = ev.target.dataset
-		setActiveFacsimile(facsimileId, props.layer.id, null)
+		dispatch({
+			type: 'SET_FACSIMILE',
+			facsimileId,
+			triggerContainer: DocereComponentContainer.Layer,
+			triggerContainerId: props.layer.id,
+		})
 	}, [props.layer])
 
 	const version = props.facsimile.versions[0]
@@ -108,14 +113,17 @@ function FacsimileThumb(props: FacsimileThumbProps) {
 		if (!active) return
 
 		if (
-			activeFacsimile.triggerLayerId !== props.layer.id &&
-			activeFacsimile.triggerLayerId != null // this happens when the page loads. only scroll when triggerlayer is actively set
+			activeFacsimile.triggerContainer != null && // this happens when the page loads. only scroll when triggerlayer is actively set
+			(
+				activeFacsimile.triggerContainer !== DocereComponentContainer.Layer ||
+				activeFacsimile.triggerContainerId !== props.layer.id
+			)
 		) {
 			setTimeout(() => {
 				imgRef.current.scrollIntoView({ behavior: 'smooth' })
 			}, 0)
 		}
-	}, [active])
+	}, [active, activeFacsimile])
 
 	return (
 		<Img

@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { DEFAULT_SPACING, PANEL_HEADER_HEIGHT, Colors, StatefulLayer, LayersContext } from '@docere/common'
+import { DEFAULT_SPACING, PANEL_HEADER_HEIGHT, Colors, StatefulLayer, DispatchContext } from '@docere/common'
 
 import type { Layer } from '@docere/common'
 
@@ -58,14 +58,20 @@ interface Props {
 	layer: StatefulLayer
 }
 export default function PanelHeader(props: Props) {
-	const { pinLayer, activateLayer } = React.useContext(LayersContext)
+	const dispatch = React.useContext(DispatchContext)
 
 	const handleActivatePanel = React.useCallback(() => {
-		activateLayer(props.layer.id)
+		dispatch({
+			type: 'TOGGLE_LAYER',
+			id: props.layer.id
+		})
 	}, [props.layer])
 
 	const handlePinPanel = React.useCallback(() => {
-		pinLayer(props.layer.id)
+		dispatch({
+			type: 'PIN_LAYER',
+			id: props.layer.id
+		})
 	}, [props.layer])
 
 	return (

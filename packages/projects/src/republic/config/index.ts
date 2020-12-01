@@ -1,4 +1,4 @@
-import { extendConfigData } from '@docere/common'
+import { extendConfigData, ExtractEntities, ExtractEntitiesProps } from '@docere/common'
 import { LayerType, EsDataType } from '@docere/common'
 import extractFacsimiles from './facsimiles'
 
@@ -28,7 +28,16 @@ export default extendConfigData({
 			id: 'meeting_weekday',
 		}	
 	],
-	entities: [],
+	entities: [
+		{
+			id: 'line',
+			extract: extractLbs,
+			extractId: el => el.getAttribute('coords'),
+			selector: 'line',
+			showInAside: false,
+			showAsFacet: false,
+		}
+	],
 	facsimiles: {
 		extractFacsimileId: el => el.getAttribute('facs').split('/').slice(-1)[0].replace(/\.jpg$/, ''),
 		extractFacsimiles,
@@ -45,3 +54,37 @@ export default extendConfigData({
 		},
 	]
 })
+
+function createFacsimileArea(el: Element, facsimileId: string) {
+	const [x, y, w, h] = el.getAttribute('coords').split('_')
+	return {
+		h,
+		facsimileId,
+		unit: 'px',
+		w,
+		x,
+		y,
+	}
+}
+
+function extractLbs({ layerElement }: ExtractEntitiesProps) {
+	let facsimileId: string
+	let i = 0
+
+	return Array.from(layerElement.querySelectorAll('column'))
+		.reduce((prev, column) => {
+			if (column.hasAttribute('docere:id')) facsimileId = column.getAttribute('docere:id')
+
+			const lbs = Array.from(column.querySelectorAll('line'))
+				.map((el) => {
+					i = i + 1
+					return {
+						anchor: el,
+						content: el.textContent,
+						n: i.toString(),
+						facsimileAreas: [createFacsimileArea(el, facsimileId)]
+					}
+				})
+			return prev.concat(lbs)
+		}, [])
+}

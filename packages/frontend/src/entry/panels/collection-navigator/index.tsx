@@ -1,17 +1,19 @@
 import React from 'react'
 import styled from 'styled-components'
-import { ProjectContext, Colors, EntryContext, FacsimileContext } from '@docere/common'
+import { ProjectContext, Colors, EntryContext, FacsimileContext, DispatchContext } from '@docere/common'
 
 import CollectionNavigatorController from './controller'
 
 function useOpenSeadragonController() {
+	const dispatch = React.useContext(DispatchContext)
 	const { config, searchUrl } = React.useContext(ProjectContext)
-	const { setEntry } = React.useContext(EntryContext)
+	// const { setEntry } = React.useContext(EntryContext)
+	// const { setActiveFacsimile } = React.useContext(FacsimileContext)
 	const [controller, setController] = React.useState<any>(null)
 
-	const handleClick = React.useCallback((entryId: string, facsimileId: string) => {
-		setEntry({ entryId, facsimileId })
-	}, [])
+	// const handleClick = React.useCallback((entryId: string, facsimileId: string) => {
+	// 	setEntry({ entryId, facsimileId })
+	// }, [])
 
 	React.useEffect(() => {
 		import('openseadragon')
@@ -29,7 +31,7 @@ function useOpenSeadragonController() {
 					showZoomControl: false,
 				})
 
-				const collectionNavigatorController = new CollectionNavigatorController(viewer, config.collection, searchUrl, handleClick)
+				const collectionNavigatorController = new CollectionNavigatorController(viewer, config.collection, searchUrl, dispatch)
 
 				if (controller != null) controller.destroy()
 				setController(collectionNavigatorController)
@@ -40,8 +42,8 @@ function useOpenSeadragonController() {
 }
 
 function useEntry(controller: CollectionNavigatorController) {
-	const { entry } = React.useContext(EntryContext)
-	const { activeFacsimile } = React.useContext(FacsimileContext)
+	const entry = React.useContext(EntryContext)
+	const activeFacsimile = React.useContext(FacsimileContext)
 
 	React.useEffect(() => {
 		if (controller == null) return

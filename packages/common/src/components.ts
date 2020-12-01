@@ -1,7 +1,7 @@
 import React from 'react'
 import type { DocereComponents } from './types'
 import { DocereComponentContainer, UIComponentType } from './enum'
-import { ProjectContext } from './context'
+import { ProjectContext } from './project/context'
 
 export function useComponents(container: DocereComponentContainer, id?: string) {
 	const [components, setComponents] = React.useState<DocereComponents>(null)

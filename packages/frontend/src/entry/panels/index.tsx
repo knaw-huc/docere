@@ -1,12 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
-import { DEFAULT_SPACING, Colors, FooterTab, FOOTER_HANDLE_HEIGHT, ProjectContext, StatefulLayer, LayersContext } from '@docere/common'
+import { DEFAULT_SPACING, Colors, FooterTab, FOOTER_HANDLE_HEIGHT, ProjectContext, StatefulLayer, LayersContext, UIContext } from '@docere/common'
 
 import LayersFooterTab from '../footer/body/layers'
 import Panel from './panel'
 import CollectionNavigator from './collection-navigator'
-
-import { ProjectUIContext } from '../../project/ui-context'
 
 interface WProps {
 	hasCollection: boolean
@@ -94,8 +92,8 @@ const SelectLayer = styled.div`
 `
 
 function Panels() {
-	const { layers: layersMap } = React.useContext(LayersContext)
-	const { state } = React.useContext(ProjectUIContext)
+	const layersMap = React.useContext(LayersContext)
+	const uiState = React.useContext(UIContext)
 	const context = React.useContext(ProjectContext)
 
 	// TODO move to useEffect and useState or does it not matter because of React.memo?
@@ -152,7 +150,7 @@ function Panels() {
 				<SelectLayer>
 					<span>Select a panel</span>
 					{
-						state.footerTab !== FooterTab.Layers &&
+						uiState.footerTab !== FooterTab.Layers &&
 						<LayersFooterTab/>
 					}
 				</SelectLayer>

@@ -1,6 +1,5 @@
 import styled from 'styled-components'
 import type { ComponentProps } from '@docere/common'
-import { Lb } from './lb'
 import { Pb } from './pb'
 import { EntityTag } from './entity'
 
@@ -37,10 +36,10 @@ const Paragraph = styled.div`
 
 export * from './popup'
 export * from './note'
+export * from './lb'
 
 export {
 	Hi,
-	Lb,
 	Paragraph,
 	Pb,
 	Space,

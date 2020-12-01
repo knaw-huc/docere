@@ -2,7 +2,7 @@ import * as React from 'react'
 import styled from 'styled-components'
 import { BottomTabWrapper } from './layers'
 import Option from './options'
-import { DocereConfig, EntrySettingsContext } from '@docere/common'
+import { DocereConfig, EntrySettingsContext, DispatchContext } from '@docere/common'
 
 interface Option { prop: keyof DocereConfig['entrySettings'], title: string }
 const textOptions: Option[] = [
@@ -52,11 +52,15 @@ interface Props {
 	active: boolean
 }
 function Layers(props: Props) {
-	const { settings, toggleSetting} = React.useContext(EntrySettingsContext)
+	const dispatch = React.useContext(DispatchContext)
+	const settings = React.useContext(EntrySettingsContext)
 
 	const toggleSettingsProperty = React.useCallback(ev => {
 		const property = ev.currentTarget.dataset.prop
-		toggleSetting(property)
+		dispatch({
+			type: 'TOGGLE_ENTRY_SETTING',
+			property,
+		})
 	}, [])
 
 	return (

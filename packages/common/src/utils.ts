@@ -1,6 +1,6 @@
 import { DEFAULT_SPACING, TEXT_PANEL_ASIDE_WIDTH, TEXT_PANEL_MINIMAP_WIDTH, TEXT_PANEL_TEXT_WIDTH } from './constants'
 import { LayerType } from './enum'
-import { EntitiesContextValue } from './context'
+import { ActiveEntities } from './project/context'
 
 import type { ExtractedEntity, EntrySettings, ExtractedFacsimile, LayerConfig, TextLayerConfig, Layer, TextLayer, SerializedLayer, SerializedTextLayer, FacsimileLayerConfig, SerializedFacsimileLayer, FacsimileLayer, ID } from '.'
 
@@ -17,7 +17,7 @@ export function getTextPanelLeftSpacing(settings: EntrySettings) {
 
 export function getTextPanelRightSpacing(
 	settings: EntrySettings, 
-	activeEntities: EntitiesContextValue['activeEntities']
+	activeEntities: ActiveEntities
 ) {
 	let width = DEFAULT_SPACING
 
@@ -38,7 +38,7 @@ export function getTextPanelRightSpacing(
 // TODO move getTPWidth to hook useTPWIdth?
 export function getTextPanelWidth(
 	settings: EntrySettings,
-	activeEntities: EntitiesContextValue['activeEntities']
+	activeEntities: ActiveEntities
 ) {
 	const left = getTextPanelLeftSpacing(settings)
 	const right = getTextPanelRightSpacing(settings, activeEntities)

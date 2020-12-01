@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Facsimile, FacsimileLayer, Entry, FacsimileContext, EntryContext } from '@docere/common'
+import { Facsimile, FacsimileLayer, Entry, FacsimileContext, EntryContext, DispatchContext, DocereComponentContainer } from '@docere/common'
 
 import CollectionNavigatorController from './controller'
 
@@ -61,17 +61,17 @@ interface Props {
 	layer: FacsimileLayer
 }
 function CollectionNavigator(props: Props) {
-	const { entry } = React.useContext(EntryContext)
-	const { activeFacsimile, setActiveFacsimile } = React.useContext(FacsimileContext)
+	const dispatch = React.useContext(DispatchContext)
+	const entry = React.useContext(EntryContext)
+	const activeFacsimile = React.useContext(FacsimileContext)
 
-	const handleClick = React.useCallback(id => {
-		setActiveFacsimile(id, props.layer.id, null)
-		// props.entryDispatch({
-		// 	id,
-		// 	layerId: null,
-		// 	triggerLayerId: props.layer.id,
-		// 	type: "SET_FACSIMILE",
-		// })	
+	const handleClick = React.useCallback(facsimileId => {
+		dispatch({
+			facsimileId,
+			triggerContainer: DocereComponentContainer.Layer,
+			triggerContainerId: props.layer.id,
+			type: "SET_FACSIMILE",
+		})	
 	}, [])
 
 	const controller = useOpenSeadragonController(

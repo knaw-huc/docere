@@ -1,6 +1,6 @@
-import * as React from 'react'
+import React from 'react'
 import styled from 'styled-components'
-import { PANEL_HEADER_HEIGHT, FacsimileLayer, EntrySettingsContext, FacsimileContext, EntitiesContext, ProjectContext } from '@docere/common'
+import { PANEL_HEADER_HEIGHT, FacsimileLayer, EntrySettingsContext, FacsimileContext, ProjectContext, DispatchContext, DocereComponentContainer } from '@docere/common'
 
 import useAreaRenderer, { AreaRenderer } from './use-area-renderer'
 import PanelHeader from '../header'
@@ -117,7 +117,7 @@ function useActiveFacsimile(
 	areaRenderer: AreaRenderer,
 	osd: any
 ) {
-	const { activeFacsimile } = React.useContext(FacsimileContext)
+	const activeFacsimile = React.useContext(FacsimileContext)
 
 	React.useEffect(() => {
 		if (areaRenderer == null || activeFacsimile == null || osd == null) return
@@ -153,18 +153,22 @@ type Props = {
 }
 
 function FacsimilePanel(props: Props) {
+	const dispatch = React.useContext(DispatchContext)
 	const { config } = React.useContext(ProjectContext)
-	const { settings } = React.useContext(EntrySettingsContext)
-	const { addActiveEntity } = React.useContext(EntitiesContext)
+	const settings = React.useContext(EntrySettingsContext)
 	const [osd, OpenSeadragon] = useOpenSeadragon()
 
 	const handleAreaClick = React.useCallback((ev: any) => {
 		const { area } = ev.userData
-		addActiveEntity(area.target.id, props.layer.id, null)
+		dispatch({
+			type: 'ADD_ENTITY',
+			entityId: area.target.id,
+			triggerContainer: DocereComponentContainer.Layer,
+			triggerContainerId: props.layer.id
+		})
 	}, [props.layer.id])
 	const areaRenderer = useAreaRenderer(osd, OpenSeadragon, handleAreaClick)
 
-	// TODO do not just use the first facsimile, check the layer, etc.
 	useActiveFacsimile(areaRenderer, osd)
 	useActiveFacsimileAreas(areaRenderer)
 

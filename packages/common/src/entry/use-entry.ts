@@ -7,26 +7,24 @@ import { deserializeEntry } from './deserialize'
 
 const entryCache = new Map<string, Entry>()
 
-// TODO this is used in text-components/../../note-link.tsx, but refactor?
+export async function fetchEntry(projectId: string, entryId: string) {
+	if (entryCache.has(entryId)) return entryCache.get(entryId)
+
+	const serializedEntry: SerializedEntry = await fetchJson(`/api/projects/${projectId}/documents/${encodeURIComponent(entryId)}`)
+	if (serializedEntry == null) return
+
+	const entry = deserializeEntry(serializedEntry)
+	entryCache.set(entry.id, entry)
+
+	return entry
+}
+
 export function useEntry(projectId: string, entryId: string) {
 	const [entry, setEntry] = React.useState<Entry>(null)
-	// const { projectId, entryId } = useParams()
 
 	React.useEffect(() => {
 		if (projectId == null || entryId == null) return
-
-		if (entryCache.has(entryId)) {
-			const entry = entryCache.get(entryId)
-			setEntry(entry)
-		} else {
-			fetchJson(`/api/projects/${projectId}/documents/${encodeURIComponent(entryId)}`)
-				.then((serializedEntry: SerializedEntry) => {
-					if (serializedEntry == null) return
-					const entry = deserializeEntry(serializedEntry)
-					entryCache.set(serializedEntry.id, entry)
-					setEntry(entry)
-				})
-		}
+		fetchEntry(projectId, entryId).then(setEntry)
 	}, [projectId, entryId])
 
 	return entry

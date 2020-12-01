@@ -1,5 +1,5 @@
 import React from 'react'
-import { useUIComponent, UIComponentType, Hit, Entity, EntryContext } from '@docere/common'
+import { useUIComponent, UIComponentType, Hit, Entity, DispatchContext } from '@docere/common'
 import { PopupBodyWrapper, PopupBodyLink } from './index'
 import { EntityComponentProps, EntityWrapper } from '..'
 
@@ -20,11 +20,17 @@ interface EntryLinkProps {
 	children: React.ReactNode
 }
 function EntryLink(props: EntryLinkProps) {
-	const { setEntry } = React.useContext(EntryContext)
+	// const { setEntry } = React.useContext(EntryContext)
+	const dispatch = React.useContext(DispatchContext)
 
 	const goToEntry = React.useCallback((ev: React.MouseEvent) => {
 		ev.stopPropagation()
-		setEntry({ entryId: props.entity.id })
+		dispatch({
+			type: 'SET_ENTRY_ID',
+			setEntry: {
+				entryId: props.entity.id
+			}
+		})
 	}, [props.entity])
 
 	return (

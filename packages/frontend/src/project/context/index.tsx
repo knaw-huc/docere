@@ -1,44 +1,32 @@
 import React from 'react'
-import { useParams } from 'react-router-dom'
-import { initialProjectContext, ProjectContext } from '@docere/common'
-import configs from '@docere/projects'
+import { DispatchContext, EntitiesContext, FacsimileContext, EntrySettingsContext, AsideTabContext, EntryContext, LayersContext } from '@docere/common'
 
-function useProjectData() {
-	const [projectContext, setProjectContext] = React.useState<ProjectContext>(initialProjectContext)
-	const { projectId } = useParams()
+import { UIProvider } from './providers/ui'
+import { ProjectProvider } from './providers/project'
+import { useProjectState } from './state'
 
-	React.useEffect(() => {
-		if (projectId == null) return
-		
-		if (configs[projectId].getUIComponent == null) configs[projectId].getUIComponent = async () => ({ default: () => async () => null })
-		// TODO redirect to 404 if projectSlug does not exist
-		Promise.all([
-			configs[projectId].config(),
-			configs[projectId].getTextComponents(),
-			configs[projectId].getUIComponent(),
-		]).then(result => {
-			const config = result[0].default
-			const context: ProjectContext = {
-				config,
-				getComponents: result[1].default(config),
-				getUIComponent: result[2].default(config),
-				searchUrl: `/search/${config.slug}/_search`,
-			}
-
-			setProjectContext(context)
-		})
-	}, [projectId])
-
-	return projectContext
-}
-
-export function ProjectProvider(props: { children: React.ReactNode }) {
-	const projectContext = useProjectData()
-	if (projectContext == null) return null
+export function Providers(props: { children: React.ReactNode }) {
+	const [state, dispatch] = useProjectState()
 
 	return (
-		<ProjectContext.Provider value={projectContext}>
-			{props.children}
-		</ProjectContext.Provider>
+		<DispatchContext.Provider value={dispatch}>
+			<ProjectProvider state={state}>
+				<UIProvider state={state}>
+					<EntryContext.Provider value={state.entry}>
+						<EntrySettingsContext.Provider value={state.entrySettings}>
+							<LayersContext.Provider value={state.layers}>
+								<FacsimileContext.Provider value={state.activeFacsimile}>
+									<EntitiesContext.Provider value={state.activeEntities}>
+										<AsideTabContext.Provider value={state.asideTab}>
+											{props.children}
+										</AsideTabContext.Provider>
+									</EntitiesContext.Provider>
+								</FacsimileContext.Provider>
+							</LayersContext.Provider>
+						</EntrySettingsContext.Provider>
+					</EntryContext.Provider>
+				</UIProvider>
+			</ProjectProvider>
+		</DispatchContext.Provider>
 	)
 }

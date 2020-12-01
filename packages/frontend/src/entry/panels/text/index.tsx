@@ -7,7 +7,7 @@ import DocereTextView from '@docere/text'
 
 import PanelHeader from '../header'
 import Minimap from './minimap'
-import { LayerProvider } from '../../context/layer-context'
+import { LayerProvider } from './layer-provider'
 
 import type { DocereConfig } from '@docere/common'
 
@@ -54,8 +54,8 @@ interface Props {
 }
 
 function TextPanel(props: Props) {
-	const { entry } = React.useContext(EntryContext)
-	const { settings } = React.useContext(EntrySettingsContext)
+	const entry = React.useContext(EntryContext)
+	const settings = React.useContext(EntrySettingsContext)
 	const searchContext = React.useContext(SearchContext)
 
 	const textWrapperRef = React.useRef<HTMLDivElement>()

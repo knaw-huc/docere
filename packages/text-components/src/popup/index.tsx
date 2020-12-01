@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Entity, EntitiesContext, LayerContext } from '@docere/common'
+import { Entity, EntitiesContext, LayerContext, DocereComponentContainer } from '@docere/common'
 
 import { TooltipBody } from './tooltip'
 
@@ -55,7 +55,7 @@ interface Props {
 	// PopupBody: React.FC<EntityComponentProps>
 }
 export const EntityWrapper = React.memo(function EntityWrapper(props: Props) {
-	const { activeEntities } = React.useContext(EntitiesContext)
+	const activeEntities = React.useContext(EntitiesContext)
 	const layer = React.useContext(LayerContext)
 	const ref = React.useRef<HTMLDivElement>()
 	const active = activeEntities.has(props.entity.id)
@@ -63,7 +63,10 @@ export const EntityWrapper = React.memo(function EntityWrapper(props: Props) {
 	React.useEffect(() => {
 		if (active) {
 			const activeEntity = activeEntities.get(props.entity.id)
-			if (layer?.id !== activeEntity.triggerLayerId){
+			if (
+				activeEntity.triggerContainer !== DocereComponentContainer.Layer ||
+				activeEntity.triggerContainerId !== layer?.id
+			){
 				ref.current.scrollIntoView()
 			}
 		}

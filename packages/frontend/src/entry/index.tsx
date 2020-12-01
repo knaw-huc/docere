@@ -3,15 +3,13 @@ import styled from 'styled-components'
 import Panels from './panels'
 import Aside from './aside'
 import { Footer } from './footer'
-import { ProjectUIContext } from '../project/ui-context'
-import { Providers } from './context'
 
-import { TOP_OFFSET, ASIDE_WIDTH, SEARCH_RESULT_ASIDE_WIDTH, FOOTER_HEIGHT, SearchTab, AsideTab, EntryTabContext } from '@docere/common'
-import type { ProjectUIState } from '@docere/common'
+import { TOP_OFFSET, ASIDE_WIDTH, SEARCH_RESULT_ASIDE_WIDTH, FOOTER_HEIGHT, SearchTab, AsideTab, AsideTabContext, UIContext, EntryContext } from '@docere/common'
+import type { UIContextValue } from '@docere/common'
 
 interface MainProps {
-	searchTab: ProjectUIState['searchTab']
-	footerTab: ProjectUIState['footerTab']
+	searchTab: UIContextValue['searchTab']
+	footerTab: UIContextValue['footerTab']
 	asideTab: AsideTab
 }
 const Main = styled.div`
@@ -23,15 +21,15 @@ const Main = styled.div`
 	transition: all 300ms;
 `
 function Wrapper(props: { children: React.ReactNode }) {
-	const { state } = React.useContext(ProjectUIContext)
-	const { asideTab } = React.useContext(EntryTabContext)
-	console.log('render')
+	const uiState = React.useContext(UIContext)
+	const asideTab = React.useContext(AsideTabContext)
+
 	return (
 		<Main
 			asideTab={asideTab}
 			id="entry-container"
-			footerTab={state.footerTab}
-			searchTab={state.searchTab}
+			footerTab={uiState.footerTab}
+			searchTab={uiState.searchTab}
 		>
 			{ props.children }
 		</Main>
@@ -39,13 +37,14 @@ function Wrapper(props: { children: React.ReactNode }) {
 }
 
 export default React.memo(function Entry() {
+	const entry = React.useContext(EntryContext)
+	if (entry == null) return null /** Prevent render if entry does not exist */
+
 	return (
-		<Providers>
-			<Wrapper>
-				<Panels/>
-				<Aside/>
-				<Footer/>
-			</Wrapper>
-		</Providers>
+		<Wrapper>
+			<Panels/>
+			<Aside/>
+			<Footer/>
+		</Wrapper>
 	)
 })

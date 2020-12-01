@@ -1,4 +1,5 @@
-import { ID, ExtractedCommon } from '.';
+import { ExtractedCommon } from '.';
+import { TriggerContainer } from './entity';
 
 export interface FacsimileArea {
 	h: number
@@ -26,7 +27,4 @@ export interface Facsimile {
 
 export type ExtractedFacsimile = Facsimile & ExtractedCommon
 
-export interface ActiveFacsimile extends Facsimile {
-	layerId: ID
-	triggerLayerId: ID
-}
+export type ActiveFacsimile = Facsimile & TriggerContainer

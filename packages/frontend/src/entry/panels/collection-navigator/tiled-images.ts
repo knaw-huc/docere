@@ -54,7 +54,7 @@ export default class TiledImages {
 	// Set the active options from this.entry.facsimiles. Used to calculate this.startIndex and this.highlightActive
 	setActiveOptions() {
 		this.activeTileOptions = this.tileOptions.filter(
-			option => option.userData.entryId.has(this.entry.id)
+			option => option.userData.entryIds.has(this.entry.id)
 		)
 	}
 
