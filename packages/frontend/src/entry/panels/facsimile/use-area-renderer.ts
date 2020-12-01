@@ -23,7 +23,7 @@ export class AreaRenderer {
 		private handleAreaClick: (ev: any) => void
 	) {}
 
-	private deactivate() {
+	clear() {
 		this.overlays
 			.filter(o => o.active)
 			.map(o => { o.active = false; return o; })
@@ -36,7 +36,7 @@ export class AreaRenderer {
 
 	activate(areas: FacsimileArea[]) {
 		// Deactivate currently active areas
-		this.deactivate()
+		this.clear()
 
 		// If areas does not exist or is empty, there is nothing to activate
 		if (!Array.isArray(areas) || !areas.length) return
@@ -45,15 +45,16 @@ export class AreaRenderer {
 		// const ids = areas.map(a => a.id)
 		this.overlays
 			// .filter(o => ids.indexOf(o.area.id) > -1)
-			.map(o => { o.active = true; return o; })
+			// .map(o => { o.active = true; return o; })
 			.forEach(o => {
+				console.log(o.element)
 				o.element.classList.add('active')
 				// if (!o.area.showOnHover) {
-					this.osd.addOverlay({
-						checkResize: false,
-						element: o.element,
-						location: o.location,
-					})
+				this.osd.addOverlay({
+					checkResize: false,
+					element: o.element,
+					location: o.location,
+				})
 				// }
 			})
 
@@ -72,15 +73,16 @@ export class AreaRenderer {
 		if (areas == null) return
 
 		this.overlays = areas.map(area => ({
-			active: false,
+			active: true,
 			area,
 			...this.createOverlay(area),
 		}))
 
-
 		this.overlays
 			// .filter(overlay => overlay.area.showOnHover)
 			.forEach(overlay => {
+				console.log(overlay)
+				overlay.element.classList.add('active')
 				this.osd.addOverlay({
 					checkResize: false,
 					element: overlay.element,
@@ -117,8 +119,12 @@ export class AreaRenderer {
 			h = h / this.imgHeight
 		} 
 
+		console.log(x, y, w, h)
+
 		const element = document.createElement("div")
 		element.classList.add('facsimile-area')
+		element.classList.add('show')
+		element.style.borderColor = 'orange'
 
 		// element.dataset.id = area.id
 		// element.style.borderColor = area.target?.color != null ? area.target.color : Colors.Red
@@ -134,7 +140,6 @@ export class AreaRenderer {
 		// 	element.appendChild(note)
 		// }
 
-		element.classList.add('show')
 		const track = new this.OpenSeadragon.MouseTracker({
 			element,
 			clickHandler: this.handleAreaClick,
@@ -147,7 +152,7 @@ export class AreaRenderer {
 
 		return {
 			element,
-			location: new this.OpenSeadragon.Rect(x, y, w, h),
+			location: new this.OpenSeadragon.Rect(y, x, w, h),
 		}
 	}
 

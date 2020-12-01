@@ -1,11 +1,13 @@
 import React from 'react'
 import styled from 'styled-components'
-import { PANEL_HEADER_HEIGHT, FacsimileLayer, EntrySettingsContext, FacsimileContext, ProjectContext, DispatchContext, DocereComponentContainer } from '@docere/common'
+import { PANEL_HEADER_HEIGHT, FacsimileLayer, EntrySettingsContext, FacsimileContext, ProjectContext, DispatchContext, DocereComponentContainer, EntitiesContext, FacsimileArea } from '@docere/common'
 
 import useAreaRenderer, { AreaRenderer } from './use-area-renderer'
 import PanelHeader from '../header'
 import CollectionNavigator2 from '../collection-navigator2'
 import { formatTileSource } from './utils'
+
+import { addSvgOverlayFunctionality } from './svg-overlay'
 
 // TODO change facsimile when user scroll past a <pb />
 
@@ -68,6 +70,8 @@ function useOpenSeadragon(): [any, any] {
 	React.useEffect(() => {
 		import('openseadragon' as any)
 			.then(OpenSeadragon => {
+				addSvgOverlayFunctionality(OpenSeadragon)
+
 				const osdInstance = OpenSeadragon.default({
 					// crossOriginPolicy: 'Anonymous',
 					constrainDuringPan: true,
@@ -98,19 +102,23 @@ function useOpenSeadragon(): [any, any] {
 }
 
 function useActiveFacsimileAreas(areaRenderer: AreaRenderer) {
-	areaRenderer
-	// TODO fix
+	const activeFacsimile = React.useContext(FacsimileContext)
+	const activeEntities = React.useContext(EntitiesContext)
 
-	// React.useEffect(() => {
-	// 	if (areaRenderer == null) return
-	// 	const areas = Array.from(activeEntities.values())
-	// 		.reduce((agg, entity) => {
-	// 			return Array.isArray(entity.facsimileAreas) ?
-	// 				agg.concat(entity.facsimileAreas) :
-	// 				agg
-	// 		}, [] as FacsimileArea[])
-	// 	areaRenderer.activate(areas)
-	// }, [activeEntities, areaRenderer])
+	React.useEffect(() => {
+		if (areaRenderer == null) return
+		if (!activeEntities.size) {
+			areaRenderer.clear()
+			return
+		}
+		const areas = Array.from(activeEntities.values())
+			.filter(entity => Array.isArray(entity.facsimileAreas) && entity.facsimileAreas.length)
+			.reduce((agg, entity) =>
+				agg.concat(entity.facsimileAreas.filter(fa => fa.facsimileId === activeFacsimile.id))
+			, [] as FacsimileArea[])
+
+		areaRenderer.render(areas)
+	}, [activeFacsimile, activeEntities, areaRenderer])
 }
 
 function useActiveFacsimile(
@@ -136,7 +144,6 @@ function useActiveFacsimile(
 		osd.addHandler('open', openHandler)
 
 		osd.open(formatTileSource(activeFacsimile))
-		
 	}, [areaRenderer, activeFacsimile])
 }
 

@@ -12,5 +12,10 @@ export function formatTileSource(facsimile: Facsimile) {
 				buildPyramid: false
 			}
 		} :
-		version.path
+		{
+			tileSource: version.path,
+			width: 2,
+			x: .5,
+			y: .5,
+		}
 }
