@@ -13,12 +13,13 @@ export function addSvgOverlayFunctionality(OpenSeadragon: any) {
             return this._svgOverlayInfo;
         }
 
-        this._svgOverlayInfo = new Overlay(this);
+        // @ts-ignore
+        this._svgOverlayInfo = new Overlay(this)
         return this._svgOverlayInfo;
     };
 
     // ----------
-    var Overlay = function(viewer) {
+    var Overlay = function(viewer: any) {
         var self = this;
 
         this._viewer = viewer;
@@ -44,7 +45,7 @@ export function addSvgOverlayFunctionality(OpenSeadragon: any) {
             self.resize();
         });
 
-        this._viewer.addHandler('rotate', function(evt) {
+        this._viewer.addHandler('rotate', function() {
             self.resize();
         });
 
@@ -64,7 +65,6 @@ export function addSvgOverlayFunctionality(OpenSeadragon: any) {
 
         // ----------
         resize: function() {
-			console.log('resizing')
             if (this._containerWidth !== this._viewer.container.clientWidth) {
                 this._containerWidth = this._viewer.container.clientWidth;
                 this._svg.setAttribute('width', this._containerWidth);
@@ -85,7 +85,7 @@ export function addSvgOverlayFunctionality(OpenSeadragon: any) {
         },
 
         // ----------
-        onClick: function(node, handler) {
+        onClick: function(node: Element, handler: () => void) {
             // TODO: Fast click for mobile browsers
 
             new $.MouseTracker({

@@ -1,174 +1,137 @@
 import * as React from 'react'
-// import { Colors } from '@docere/common'
-import type { FacsimileArea } from '@docere/common'
-
-interface Overlay {
-	active: boolean
-	area: FacsimileArea
-	element: HTMLDivElement
-	location: any
-}
+import type { Entry, ActiveFacsimile, ID, ActiveEntities } from '@docere/common'
 
 export class AreaRenderer {
-	private trackers: OpenSeadragon.MouseTracker[] = []
-	private aspectRatio: number
-	private imgWidth: number
-	private imgHeight: number
-	private overlays: Overlay[] = []
-	// private lastClick: string
+	private overlay: any
+	private rectTpl: SVGElement
+	private cache: Map<ID, DocumentFragment> = new Map()
 
 	constructor(
 		private osd: any,
 		private OpenSeadragon: any,
+		//@ts-ignore
 		private handleAreaClick: (ev: any) => void
-	) {}
+	) {
+		this.overlay = this.osd.svgOverlay()
 
+		this.rectTpl = document.createElementNS('http://www.w3.org/2000/svg','rect')
+		this.rectTpl.setAttribute('fill', 'none')
+		this.rectTpl.style.opacity = '0'
+	}
+
+	/**
+	 * Remove all <rect>s from the overlay element. Uses `removeChild`
+	 * to ensure event listeners are removed too.
+	 */
 	clear() {
-		this.overlays
-			.filter(o => o.active)
-			.map(o => { o.active = false; return o; })
-			.forEach(o => {
-				// if (o.area.showOnHover) o.element.classList.remove('active')
-				// else this.osd.removeOverlay(o.element)
-				this.osd.removeOverlay(o.element)
-			})
-	}
-
-	activate(areas: FacsimileArea[]) {
-		// Deactivate currently active areas
-		this.clear()
-
-		// If areas does not exist or is empty, there is nothing to activate
-		if (!Array.isArray(areas) || !areas.length) return
-
-		// Activate areas
-		// const ids = areas.map(a => a.id)
-		this.overlays
-			// .filter(o => ids.indexOf(o.area.id) > -1)
-			// .map(o => { o.active = true; return o; })
-			.forEach(o => {
-				console.log(o.element)
-				o.element.classList.add('active')
-				// if (!o.area.showOnHover) {
-				this.osd.addOverlay({
-					checkResize: false,
-					element: o.element,
-					location: o.location,
-				})
-				// }
-			})
-
-		// Detect if the currect active areas are triggered from the facsimile,
-		// if so, no panning is needed. If the active area is triggered from the
-		// text or a note, the viewer pans to the active area
-		// if (!areas.some(area => area.id === this.lastClick)) this.panTo(areas[0])
-
-		// this.lastClick = null
-	}
-
-	render(areas: FacsimileArea[]) {
-		this.osd.clearOverlays()
-		this.trackers = this.trackers.map(t => t.destroy()).filter(() => false) as []
-		this.updateBounds()
-		if (areas == null) return
-
-		this.overlays = areas.map(area => ({
-			active: true,
-			area,
-			...this.createOverlay(area),
-		}))
-
-		this.overlays
-			// .filter(overlay => overlay.area.showOnHover)
-			.forEach(overlay => {
-				console.log(overlay)
-				overlay.element.classList.add('active')
-				this.osd.addOverlay({
-					checkResize: false,
-					element: overlay.element,
-					location: overlay.location,
-				})
-			})
-	}
-
-	private updateBounds() {
-		const { width: imgWidthRatio, height: imgHeightRatio } = this.osd.world.getHomeBounds()
-		this.aspectRatio = imgHeightRatio / imgWidthRatio
-		this.imgWidth = this.osd.world._contentSize.x
-		this.imgHeight = this.osd.world._contentSize.y
-	}
-
-	// private handleAreaClick = (ev: any) => {
-	// 	const { area } = ev.userData
-	// 	// this.lastClick = area.id
-	// 	// area.target != null ?
-	// 	this.entryDispatch({
-	// 		type: 'SET_ENTITY',
-	// 		id: area.target.id,
-	// 		triggerLayerId: 
-	// 	}) //:
-	// 	// this.entryDispatch({ type: 'SET_ACTIVE_FACSIMILE_AREAS', ids: [area.id] })
-	// }
-
-	private createOverlay(area: FacsimileArea) {
-		let { x, y, w, h, unit } = area
-		if (unit === 'px') {
-			x = x / this.imgWidth
-			y = y / this.imgHeight
-			w = w / this.imgWidth
-			h = h / this.imgHeight
-		} 
-
-		console.log(x, y, w, h)
-
-		const element = document.createElement("div")
-		element.classList.add('facsimile-area')
-		element.classList.add('show')
-		element.style.borderColor = 'orange'
-
-		// element.dataset.id = area.id
-		// element.style.borderColor = area.target?.color != null ? area.target.color : Colors.Red
-
-		// if (area.hasOwnProperty('note')) {
-		// 	const note = document.createElement('div')
-		// 	note.classList.add('facsimile-area-note')
-		// 	note.style.borderColor = area.target?.color != null ? area.target.color : Colors.Red
-		// 	note.style.backgroundColor = area.target?.color != null ? `${area.target.color}77` : `${Colors.Red}77`
-		// 	note.textContent = area.note.hasOwnProperty('suggestion') ?
-		// 		`${area.note.ocr} (${area.note.suggestion})` :
-		// 		area.note.ocr
-		// 	element.appendChild(note)
-		// }
-
-		const track = new this.OpenSeadragon.MouseTracker({
-			element,
-			clickHandler: this.handleAreaClick,
-			userData: { area }
-		})
-		this.trackers.push(track)
-
-		y = y * this.aspectRatio
-		h = h * this.aspectRatio
-
-		return {
-			element,
-			location: new this.OpenSeadragon.Rect(y, x, w, h),
+		while (this.overlay.node().firstChild) {
+			this.overlay.node().removeChild(this.overlay.node().firstChild);
 		}
 	}
 
-	// private panTo(area: FacsimileArea) {
-	// 	let { x, y, w, h, unit } = area
+	/**
+	 * Active <rect>s based on the active entities 
+	 * 
+	 * @param activeEntities 
+	 */
+	activate(activeEntities: ActiveEntities) {
+		// Deactivate all active <rect>s
+		for (const rect of this.overlay.node().querySelectorAll('.active')) {
+			rect.classList.remove('active')
+			rect.style.opacity = '0'
+		}
 
-	// 	if (unit === 'px') {
-	// 		x = x / this.imgWidth
-	// 		y = y / this.imgHeight
-	// 		w = w / this.imgWidth
-	// 		h = h / this.imgHeight
-	// 	}
+		// Keep track of the combined bounds. Is used to zoom and pan
+		// to the activated <rect>s
+		let combinedBounds: any
 
-	// 	const point = new this.OpenSeadragon.Point(x + w/2, y + h/2)
-	// 	this.osd.viewport.panTo(point)
-	// }
+		// Activate all active <rect>s
+		for (const id of activeEntities.keys()) {
+			const rect = this.overlay.node().querySelector(`#e${id}`)
+			if (rect == null) return
+			rect.classList.add('active')
+			rect.style.opacity = '1'
+
+			// Update combined bounds
+			const currentBounds = this.getRectBounds(rect.attributes)
+			if (combinedBounds != null) combinedBounds = combinedBounds.union(currentBounds)
+			else combinedBounds = currentBounds
+		}
+		
+		if (combinedBounds) {
+			const extraSpace = combinedBounds.width / 10;
+			this.osd.viewport.fitBounds(new this.OpenSeadragon.Rect(
+				combinedBounds.x - extraSpace,
+				combinedBounds.y - extraSpace,
+				combinedBounds.width + extraSpace * 2,
+				combinedBounds.height + extraSpace * 2
+			))
+		}
+	}
+
+	/**
+	 * Extract the bounds from a <rect>
+	 * 
+	 * @param attributes
+	 */
+	private getRectBounds(attributes: NamedNodeMap) {
+		const x = parseFloat(attributes.getNamedItem('x').value)
+		const y = parseFloat(attributes.getNamedItem('y').value)
+		const w = parseFloat(attributes.getNamedItem('width').value)
+		const h = parseFloat(attributes.getNamedItem('height').value)
+		return new this.OpenSeadragon.Rect(x, y, w, h)
+	}
+
+	/**
+	 * Render all facsimile areas (<rect>s) when the entry changes.
+	 * To activate an area, it only has to be made visible. With SVG
+	 * this is faster than creating and destroying elements. Tried it 
+	 * first with HTML elements, but they all need an overlay and
+	 * OpenSeadragon updates every overlay on zoom which is bad for
+	 * performance. With an SVG overlay only the parent <g> is updated.
+	 * 
+	 * @param entry 
+	 * @param facsimile 
+	 */
+	render(entry: Entry, facsimile: ActiveFacsimile) {
+		this.clear()
+
+		// Get the width of the <rect> stroke in pixels and set in
+		// viewport size. Setting the stroke value as "3px" does not
+		// work because of the scale() CSS on the parent <g>.
+		const { x: relativeWidth } = this.osd.viewport.imageToViewportCoordinates(3, 0)
+		const strokeWidth = (relativeWidth - .5) * 5 
+		this.rectTpl.setAttribute('stroke-width', strokeWidth.toString())
+
+		// Create the <rect>s, but skip if the <rect>s are already in the cache
+		if (!this.cache.has(facsimile.id)) {
+			const fragment = document.createDocumentFragment()
+			for (const entity of entry.textData.entities.values()) {
+				if (entity.facsimileAreas == null) continue
+
+				// Set color to be half transparent, only the last entity
+				// (could be multiple areas) is set to fully opague
+				this.rectTpl.setAttribute('stroke', `${entity.color}88`)
+
+				entity.facsimileAreas.forEach(area => {
+					const vpRect = this.osd.viewport.imageToViewportRectangle(area.x, area.y, area.w, area.h)
+					const rect = this.rectTpl.cloneNode() as Element
+					rect.setAttribute('x', (vpRect.x - strokeWidth/2).toString())
+					rect.setAttribute('y', (vpRect.y - strokeWidth/2).toString())
+					rect.setAttribute('width', vpRect.width + strokeWidth)
+					rect.setAttribute('height', vpRect.height + strokeWidth)
+					rect.id = `e${entity.id}`
+					fragment.appendChild(rect)
+				})
+			}
+
+			// Add the created fragment to the cache
+			this.cache.set(facsimile.id, fragment)
+		}
+
+		// Add the <rect>s to the overlay element
+		this.overlay.node().appendChild(this.cache.get(facsimile.id).cloneNode(true) as DocumentFragment)
+	}
 }
 
 export default function useAreaRenderer(osd: any, OpenSeadragon: any, handleAreaClick: (ev: any) => void) {
@@ -179,6 +142,3 @@ export default function useAreaRenderer(osd: any, OpenSeadragon: any, handleArea
 	}, [osd])
 	return areaRenderer
 }
-
-// function renderFacsimileAreas(osd: any, facsimileAreas: FacsimileArea[], OpenSeadragon: any, dispatch: React.Dispatch<EntryStateAction>) {
-// }

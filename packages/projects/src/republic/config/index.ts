@@ -1,4 +1,4 @@
-import { extendConfigData, ExtractEntities, ExtractEntitiesProps } from '@docere/common'
+import { extendConfigData, ExtractEntitiesProps, FacsimileArea, Colors } from '@docere/common'
 import { LayerType, EsDataType } from '@docere/common'
 import extractFacsimiles from './facsimiles'
 
@@ -30,6 +30,7 @@ export default extendConfigData({
 	],
 	entities: [
 		{
+			color: Colors.Green,
 			id: 'line',
 			extract: extractLbs,
 			extractId: el => el.getAttribute('coords'),
@@ -55,8 +56,11 @@ export default extendConfigData({
 	]
 })
 
-function createFacsimileArea(el: Element, facsimileId: string) {
-	const [x, y, w, h] = el.getAttribute('coords').split('_')
+function createFacsimileArea(el: Element, facsimileId: string): FacsimileArea {
+	const [y, x, w, h] = el.getAttribute('coords')
+		.split('_')
+		.map(x => parseInt(x, 10))
+
 	return {
 		h,
 		facsimileId,

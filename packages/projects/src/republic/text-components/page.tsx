@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { LbCommon, Pb } from '@docere/text-components'
 
-import { DocereConfig, ComponentProps, DispatchContext, useEntity, DocereComponentContainer, LayerContext, EntitiesContext, Colors } from '@docere/common'
+import { DocereConfig, ComponentProps, DispatchContext, useEntity, DocereComponentContainer, LayerContext, EntitiesContext } from '@docere/common'
 
 const ColumnWrapper = styled.div`
 	margin-bottom: 1rem;
@@ -21,9 +21,9 @@ const LbWrapper = styled.div`
 	& > div:first-of-type {
 		${LbCommon}
 		cursor: pointer;
-		${(props: { active: boolean }) =>
+		${(props: { active: boolean, color: string }) =>
 			props.active ?
-				`background-color: ${Colors.Orange};
+				`background-color: ${props.color};
 				color: white;` :
 				''
 		}
@@ -50,7 +50,10 @@ function RepublicLb(props: ComponentProps) {
 	if (entity == null) return null
 
 	return (
-		<LbWrapper active={activeEntities.has(entity.id)}>
+		<LbWrapper
+			active={activeEntities.has(entity.id)}
+			color={entity.color}
+		>
 			<div
 				onClick={handleClick}
 			>

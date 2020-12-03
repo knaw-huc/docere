@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { PANEL_HEADER_HEIGHT, FacsimileLayer, EntrySettingsContext, FacsimileContext, ProjectContext, DispatchContext, DocereComponentContainer, EntitiesContext, FacsimileArea } from '@docere/common'
+import { PANEL_HEADER_HEIGHT, FacsimileLayer, EntrySettingsContext, FacsimileContext, ProjectContext, DispatchContext, DocereComponentContainer, EntitiesContext, EntryContext } from '@docere/common'
 
 import useAreaRenderer, { AreaRenderer } from './use-area-renderer'
 import PanelHeader from '../header'
@@ -8,6 +8,7 @@ import CollectionNavigator2 from '../collection-navigator2'
 import { formatTileSource } from './utils'
 
 import { addSvgOverlayFunctionality } from './svg-overlay'
+import { LayerProvider } from '../text/layer-provider'
 
 // TODO change facsimile when user scroll past a <pb />
 
@@ -94,6 +95,7 @@ function useOpenSeadragon(): [any, any] {
 					showZoomControl: false,
 					visibilityRatio: 1.0,
 				})
+
 				setOpenSeadragon([osdInstance, OpenSeadragon])
 			})
 	}, [])
@@ -101,54 +103,52 @@ function useOpenSeadragon(): [any, any] {
 	return OpenSeadragon
 }
 
+/**
+ * Show the active entities on the active facsimile. All the areas
+ * are already rendered, but activation makes them visible.
+ * 
+ * @param areaRenderer 
+ */
 function useActiveFacsimileAreas(areaRenderer: AreaRenderer) {
 	const activeFacsimile = React.useContext(FacsimileContext)
 	const activeEntities = React.useContext(EntitiesContext)
 
 	React.useEffect(() => {
 		if (areaRenderer == null) return
-		if (!activeEntities.size) {
-			areaRenderer.clear()
-			return
-		}
-		const areas = Array.from(activeEntities.values())
-			.filter(entity => Array.isArray(entity.facsimileAreas) && entity.facsimileAreas.length)
-			.reduce((agg, entity) =>
-				agg.concat(entity.facsimileAreas.filter(fa => fa.facsimileId === activeFacsimile.id))
-			, [] as FacsimileArea[])
-
-		areaRenderer.render(areas)
+		areaRenderer.activate(activeEntities)
 	}, [activeFacsimile, activeEntities, areaRenderer])
 }
 
+/**
+ * Add the current active facsimile to OpenSeadragon. After opening,
+ * render the facsimile areas on the SVG overlay. 
+ * 
+ * @param areaRenderer 
+ * @param osd 
+ */
 function useActiveFacsimile(
 	areaRenderer: AreaRenderer,
 	osd: any
 ) {
 	const activeFacsimile = React.useContext(FacsimileContext)
+	const entry = React.useContext(EntryContext)
 
 	React.useEffect(() => {
 		if (areaRenderer == null || activeFacsimile == null || osd == null) return
-		// const facsimile = this.props.facsimiles.find(f => f.id === this.props.activeFacsimilePath)
-		// TODO acativeFacsimilePath should be activeFacsimileID
-		// TODO find the paths in this.props.facsimiles with activeFacsimileID
-
-		
 
 		function openHandler() {
-			// renderFacsimileAreas(osd, , OpenSeadragon, entryDispatch)
-			// areaRenderer.render(activeFacsimile.versions[0].areas)
+			areaRenderer.render(entry, activeFacsimile)
 			osd.removeHandler('open', openHandler)
 		}
 
 		osd.addHandler('open', openHandler)
 
 		osd.open(formatTileSource(activeFacsimile))
-	}, [areaRenderer, activeFacsimile])
+	}, [areaRenderer, entry, activeFacsimile])
 }
 
 const Container = styled.div`
-	height: ${(props: { hasHeader: boolean, hasNavigator: boolean }) => {
+	height: ${(props: { hasHeader: boolean }) => {
 		let subtract = 0 		
 		if (props.hasHeader) subtract += PANEL_HEADER_HEIGHT
 		return `calc(100% - ${subtract}px)`
@@ -180,28 +180,29 @@ function FacsimilePanel(props: Props) {
 	useActiveFacsimileAreas(areaRenderer)
 
 	return (
-		<Wrapper className="facsimile-panel">
-			{
-				settings['panels.showHeaders'] &&
-				<PanelHeader
-					layer={props.layer}
-				>
-					{props.layer.title}
-				</PanelHeader>
-			}
-			<Container
-				hasHeader={settings['panels.showHeaders']}
-				hasNavigator={props.layer.facsimiles.size > 1}
-				id="openseadragon"
-			/>
-			{
-				props.layer.facsimiles.size > 1 &&
-				config.collection == null &&
-				<CollectionNavigator2
-					layer={props.layer}
+		<LayerProvider value={props.layer}>
+			<Wrapper className="facsimile-panel">
+				{
+					settings['panels.showHeaders'] &&
+					<PanelHeader
+						layer={props.layer}
+					>
+						{props.layer.title}
+					</PanelHeader>
+				}
+				<Container
+					hasHeader={settings['panels.showHeaders']}
+					id="openseadragon"
 				/>
-			}
-		</Wrapper>
+				{
+					props.layer.facsimiles.size > 1 &&
+					config.collection == null &&
+					<CollectionNavigator2
+						layer={props.layer}
+					/>
+				}
+			</Wrapper>
+		</LayerProvider>
 	)
 }
 
