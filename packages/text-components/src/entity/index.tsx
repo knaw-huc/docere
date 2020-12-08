@@ -4,7 +4,7 @@ import { EntrySettingsContext, EntitiesContext, useUIComponent, UIComponentType,
 
 import { useChildren } from './hooks'
 import IconsByType from './icons'
-import Tooltip from '../popup/tooltip'
+import Tooltip from '../tooltip'
 
 import type { Entity } from '@docere/common'
 

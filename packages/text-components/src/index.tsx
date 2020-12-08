@@ -1,7 +1,5 @@
 import styled from 'styled-components'
 import type { ComponentProps } from '@docere/common'
-import { Pb } from './pb'
-import { EntityTag } from './entity'
 
 
 const Space = styled.div`
@@ -34,14 +32,13 @@ const Paragraph = styled.div`
 	margin-bottom: 2.25rem;
 `
 
-export * from './popup'
 export * from './note'
 export * from './lb'
+export * from './entity'
+export * from './pb'
 
 export {
 	Hi,
 	Paragraph,
-	Pb,
 	Space,
-	EntityTag,
 }

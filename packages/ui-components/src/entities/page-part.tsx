@@ -2,10 +2,10 @@ import React from 'react'
 import { useComponents, DocereComponentContainer, usePage } from '@docere/common'
 import DocereTextView from '@docere/text'
 
-import { PopupBodyLink, PopupBodyWrapper } from './index'
+import { LinkFooter, EntityWithLinkWrapper } from './link-wrapper'
 
 import type { Entity } from '@docere/common'
-import { EntityComponentProps, EntityWrapper } from '..'
+import { EntityComponentProps, EntityWrapper } from './wrapper'
 
 
 interface PageLinkProps {
@@ -26,12 +26,12 @@ function PageLink(props: PageLinkProps) {
 	}, [props.entity])
 
 	return (
-		<PopupBodyLink
+		<LinkFooter
 			entity={props.entity}
 			onClick={goToPage}
 		>
 			{props.children}
-		</PopupBodyLink>
+		</LinkFooter>
 	)
 }
 
@@ -50,7 +50,7 @@ export const PagePartEntity = React.memo(function(props: EntityComponentProps) {
 
 	return (
 		<EntityWrapper entity={props.entity}>
-			<PopupBodyWrapper>
+			<EntityWithLinkWrapper>
 				<DocereTextView
 					components={components}
 					node={page.parts.get(props.entity.id)}
@@ -60,7 +60,7 @@ export const PagePartEntity = React.memo(function(props: EntityComponentProps) {
 				>
 					Go to {page.title}
 				</PageLink>
-			</PopupBodyWrapper>
+			</EntityWithLinkWrapper>
 		</EntityWrapper>
 	)
 })

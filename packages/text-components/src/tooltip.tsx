@@ -17,7 +17,7 @@ const Wrapper = styled.div`
 	z-index: ${p => p.zIndexOffset != null ? 999 + p.zIndexOffset : 999};
 `
 
-export const TooltipBody = styled.div`
+const TooltipBody = styled.div`
 	background: white;
 	border-color: ${(props: { entity: Entity, active?: boolean }) => props.entity.color};
 	border-style: solid;

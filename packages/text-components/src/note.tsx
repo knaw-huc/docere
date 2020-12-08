@@ -1,26 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
-import { EntrySettingsContext, EntitiesContext, useComponents, DocereComponentContainer, ComponentProps, LayerContext, DispatchContext, useEntity } from '@docere/common'
-import DocereTextView from '@docere/text'
+import { EntrySettingsContext, EntitiesContext, DocereComponentContainer, ComponentProps, LayerContext, DispatchContext, useEntity } from '@docere/common'
+import { XmlEntity } from '@docere/ui-components'
 
-import { EntityWrapper, EntityComponentProps } from './popup'
-import Tooltip from './popup/tooltip'
-
-const Body = styled.div`
-	padding: 1rem;
-`
-
-export const NoteBody = React.memo(function NoteBody(props: EntityComponentProps) {
-	const components = useComponents(DocereComponentContainer.Layer, props.entity.layerId)
-	return (
-		<Body>
-			<DocereTextView 
-				components={components}
-				xml={props.entity.content}
-			/>
-		</Body>
-	)
-})
+import Tooltip from './tooltip'
 
 interface NAProps { active: boolean, color: string, openToAside: boolean }
 const Wrapper = styled.div`
@@ -87,21 +70,9 @@ export const NoteTag = React.memo(function NotePopup(props: ComponentProps) {
 					entity={note}
 					settings={settings}
 				>
-					<Note entity={note} />
+					<XmlEntity entity={note} />
 				</Tooltip>
 			}
 		</Wrapper>
-	)
-})
-
-export const Note = React.memo(function Note(props: EntityComponentProps) {
-	if (props.entity == null) return null
-
-	return (
-		<EntityWrapper
-			entity={props.entity}
-		>
-			<NoteBody entity={props.entity} />
-		</EntityWrapper>
 	)
 })

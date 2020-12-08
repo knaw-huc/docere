@@ -2,9 +2,9 @@ import React from 'react'
 import { useComponents, DocereComponentContainer, Entity, useEntry, ProjectContext } from '@docere/common'
 import DocereTextView from '@docere/text'
 
-import { PopupBodyLink, PopupBodyWrapper } from './index'
+import { LinkFooter, EntityWithLinkWrapper } from './link-wrapper'
 
-import { EntityComponentProps, EntityWrapper } from '..'
+import { EntityComponentProps, EntityWrapper } from './wrapper'
 
 interface NoteLinkProps {
 	entity: Entity
@@ -22,12 +22,12 @@ function NoteLink(props: NoteLinkProps) {
 	}, [props.entryId, props.entity])
 
 	return (
-		<PopupBodyLink
+		<LinkFooter
 			entity={props.entity}
 			onClick={handleClick}
 		>
 			{props.children}
-		</PopupBodyLink>
+		</LinkFooter>
 	)
 }
 
@@ -39,7 +39,7 @@ export const NoteLinkEntity = React.memo(function(props: EntityComponentProps) {
 
 	return (
 		<EntityWrapper entity={props.entity}>
-			<PopupBodyWrapper>
+			<EntityWithLinkWrapper>
 				<DocereTextView
 					customProps={props}
 					components={components}
@@ -51,7 +51,7 @@ export const NoteLinkEntity = React.memo(function(props: EntityComponentProps) {
 				>
 					Go to note in entry {entry.id}
 				</NoteLink>
-			</PopupBodyWrapper>
+			</EntityWithLinkWrapper>
 		</EntityWrapper>
 	)
 })

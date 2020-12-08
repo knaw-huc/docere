@@ -1,11 +1,11 @@
 import { UIComponentType } from '@docere/common'
-import { EntityWithPlainTextBody } from '@docere/text-components'
+import { TextEntity } from '@docere/ui-components'
 
 const components = new Map()
 const entities = new Map()
 
 components.set(UIComponentType.Entity, entities)
 
-entities.set('line', EntityWithPlainTextBody)
+entities.set('line', TextEntity)
 
 export default components

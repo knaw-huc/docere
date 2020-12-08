@@ -2,9 +2,20 @@ import React from 'react'
 import styled from 'styled-components'
 import { Entity, EntitiesContext, LayerContext, DocereComponentContainer } from '@docere/common'
 
-import { TooltipBody } from './tooltip'
-
-export * from './body'
+const TooltipBody = styled.div`
+	background: white;
+	border-color: ${(props: { entity: Entity, active?: boolean }) => props.entity.color};
+	border-style: solid;
+	border-width: 2px;
+	box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+	box-sizing: border-box;
+	color: #666;
+	font-family: sans-serif;
+	font-size: .85rem; ${/* Set font-size on TooltipBody, because it is also used when note is in the aside */''}
+	font-weight: 300;
+	height: 100%;
+	line-height: 1.5rem;
+`
 
 const Wrapper = styled(TooltipBody)`
 	filter: ${(props: any) => props.active ? 'grayscale(0%) opacity(1)' : 'grayscale(100%) opacity(.75)'};
@@ -76,15 +87,3 @@ export const EntityWrapper = React.memo(function EntityWrapper(props: Props) {
 	)
 })
 
-const PlainTextBody = styled.div`
-	padding: .25rem .5rem;
-`
-export function EntityWithPlainTextBody(props: EntityComponentProps) {
-	return (
-		<EntityWrapper entity={props.entity}>
-			<PlainTextBody>
-				{props.entity.content}
-			</PlainTextBody>
-		</EntityWrapper>
-	)
-}

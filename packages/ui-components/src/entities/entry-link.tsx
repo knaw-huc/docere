@@ -1,7 +1,7 @@
 import React from 'react'
 import { useUIComponent, UIComponentType, Hit, Entity, DispatchContext } from '@docere/common'
-import { PopupBodyWrapper, PopupBodyLink } from './index'
-import { EntityComponentProps, EntityWrapper } from '..'
+import { EntityWithLinkWrapper, LinkFooter } from './link-wrapper'
+import { EntityComponentProps, EntityWrapper } from './wrapper'
 
 // TODO make generic
 function useSearchResult(id: string) {
@@ -20,7 +20,6 @@ interface EntryLinkProps {
 	children: React.ReactNode
 }
 function EntryLink(props: EntryLinkProps) {
-	// const { setEntry } = React.useContext(EntryContext)
 	const dispatch = React.useContext(DispatchContext)
 
 	const goToEntry = React.useCallback((ev: React.MouseEvent) => {
@@ -34,12 +33,12 @@ function EntryLink(props: EntryLinkProps) {
 	}, [props.entity])
 
 	return (
-		<PopupBodyLink
+		<LinkFooter
 			entity={props.entity}
 			onClick={goToEntry}
 		>
 			{props.children}
-		</PopupBodyLink>
+		</LinkFooter>
 	)
 }
 
@@ -54,14 +53,14 @@ export const EntryLinkEntity = React.memo(function(props: EntityComponentProps) 
 
 	return (
 		<EntityWrapper entity={props.entity}>
-			<PopupBodyWrapper>
+			<EntityWithLinkWrapper>
 				<ResultBodyComponent {...props} result={result} />
 				<EntryLink
 					entity={props.entity}
 				>
 					Go to entry
 				</EntryLink>
-			</PopupBodyWrapper>
+			</EntityWithLinkWrapper>
 		</EntityWrapper>
 	)
 })

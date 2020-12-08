@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { DEFAULT_SPACING, ID } from '@docere/common'
-import { EntityComponentProps, PopupBodyWrapper, PopupBodyLink, EntityWrapper } from '@docere/text-components'
+import { EntityComponentProps, EntityWithLinkWrapper, LinkFooter, EntityWrapper } from '@docere/ui-components'
 
 interface RkdImage {
 	artform: string
@@ -92,7 +92,7 @@ function RkdArtworkPopupBody(props: EntityComponentProps) {
 
 	return (
 		<EntityWrapper entity={props.entity}>
-			<PopupBodyWrapper>
+			<EntityWithLinkWrapper>
 				<Wrapper>
 					<h2>{rkdImage.title} <small>{rkdImage.created}</small></h2>
 					<img src={rkdImage.imgUrl} />
@@ -101,7 +101,7 @@ function RkdArtworkPopupBody(props: EntityComponentProps) {
 						<div>{rkdImage.coverage}</div>
 					</div>
 				</Wrapper>
-				<PopupBodyLink entity={props.entity}>
+				<LinkFooter entity={props.entity}>
 					<a
 						href={`https://rkd.nl/en/explore/images/${props.entity.id}`}
 						onClick={ev => ev.stopPropagation()}
@@ -109,8 +109,8 @@ function RkdArtworkPopupBody(props: EntityComponentProps) {
 					>
 						source: RKD.nl
 					</a>
-				</PopupBodyLink>
-			</PopupBodyWrapper>
+				</LinkFooter>
+			</EntityWithLinkWrapper>
 		</EntityWrapper>
 	)
 }

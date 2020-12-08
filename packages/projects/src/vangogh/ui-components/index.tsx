@@ -1,6 +1,6 @@
 import { UIComponentType } from '@docere/common'
-import { EntryLinkEntity, EntityWrapper } from '@docere/text-components'
 import SearchResult from './search-result'
+import { TextEntity, EntryLinkEntity } from '@docere/ui-components'
 
 const searchResults = new Map()
 searchResults.set('_default', SearchResult)
@@ -8,7 +8,7 @@ searchResults.set('_default', SearchResult)
 const entities = new Map()
 entities.set('entry-link', EntryLinkEntity)
 entities.set('note-link', EntryLinkEntity)
-entities.set('pers', EntityWrapper)
+entities.set('pers', TextEntity)
 
 const components = new Map()
 components.set(UIComponentType.SearchResult, searchResults)

@@ -88,7 +88,7 @@ function FacsimileThumbs(props: { facsimiles: Hit['facsimiles'], small: boolean 
 		</FacsimileThumbList>
 }
 
-function ResultBody(props: DocereResultBodyProps) {
+export const ResultBody = React.memo(function ResultBody(props: DocereResultBodyProps) {
 	const small = props.searchTab === SearchTab.Results
 
 	return (
@@ -112,7 +112,4 @@ function ResultBody(props: DocereResultBodyProps) {
 			}
 		</Wrapper>
 	)
-}
-
-export default ResultBody
-// export default React.memo(ResultBody)
+})
