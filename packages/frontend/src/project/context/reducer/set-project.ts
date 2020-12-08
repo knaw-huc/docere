@@ -5,7 +5,7 @@ export function setProject(state: ProjectState, action: SetProject): ProjectStat
 		...state,
 		config: action.config,
 		getComponents: action.getComponents,
-		getUIComponent: action.getUIComponent,
 		searchUrl: action.searchUrl,
+		uiComponents: action.uiComponents,
 	}
 }

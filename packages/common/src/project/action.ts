@@ -44,7 +44,7 @@ export type SetFacsimile = {
 }
 
 export type SetProject =
-	Pick<ProjectState, 'config' | 'getComponents' | 'getUIComponent' | 'searchUrl'> &
+	Pick<ProjectState, 'config' | 'getComponents' | 'searchUrl' | 'uiComponents'> &
 	{
 		type: 'SET_PROJECT'
 	}

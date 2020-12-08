@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components';
 import { ASIDE_WIDTH, AsideTab, Colors, FOOTER_HANDLE_HEIGHT, AsideTabContext } from '@docere/common'
-import { EntitiesAside } from './text-data'
+import { EntityListAside } from './text-data'
 
 import MetadataAside from './metadata/index'
 
@@ -32,7 +32,7 @@ function Aside() {
 			}
 			{
 				asideTab === AsideTab.TextData &&
-				<EntitiesAside />
+				<EntityListAside />
 			}
 			{/* {
 				props.asideTab === AsideTab.Notes &&

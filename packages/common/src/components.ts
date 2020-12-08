@@ -2,6 +2,7 @@ import React from 'react'
 import type { DocereComponents } from './types'
 import { DocereComponentContainer, UIComponentType } from './enum'
 import { ProjectContext } from './project/context'
+// import { ID } from './entry/layer'
 
 export function useComponents(container: DocereComponentContainer, id?: string) {
 	const [components, setComponents] = React.useState<DocereComponents>(null)
@@ -14,15 +15,33 @@ export function useComponents(container: DocereComponentContainer, id?: string) 
 	return components
 }
 
+// const uiComponentCache: Map<UIComponentType, Map<ID, any>> = new Map()
 export function useUIComponent(componentType: UIComponentType, id?: string) {
-	const [component, setComponent] = React.useState<React.FC<any>>(null)
-	const { getUIComponent } = React.useContext(ProjectContext)
+	// const [component, setComponent] = React.useState<React.FC<any>>(null)
+	// console.log(componentType, id)
+	const { uiComponents } = React.useContext(ProjectContext)
+	// if (uiComponents == null) return null
+	// console.log(uiComponents)
+	return uiComponents?.get(componentType)?.get(id)
 
-	React.useEffect(() => {
-		getUIComponent(componentType, id).then(c => {
-			if (c != null) setComponent(c)
-		})
-	}, [componentType, id])
 
-	return component
+	// React.useEffect(() => {
+	// 	if (!uiComponentCache.has(componentType)) uiComponentCache.set(componentType, new Map())
+	// 	const typeCache = uiComponentCache.get(componentType)
+
+	// 	console.log(typeCache)
+	// 	if (typeCache.has(id)) setComponent(typeCache.get(id))
+	// 	else {
+	// 		getUIComponent(componentType, id).then(c => {
+	// 			console.log('fetched')
+	// 			if (c != null) {
+	// 				typeCache.set(id, c)
+	// 				setComponent(c)
+	// 			}
+	// 		})
+
+	// 	}
+	// }, [componentType, id])
+
+	// return component
 }

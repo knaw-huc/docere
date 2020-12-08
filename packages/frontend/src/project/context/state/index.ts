@@ -59,20 +59,20 @@ export function useProjectState(): [ProjectState, React.Dispatch<ProjectAction>]
 	React.useEffect(() => {
 		if (projectId == null) return
 		
-		if (configs[projectId].getUIComponent == null) configs[projectId].getUIComponent = async () => ({ default: () => async () => null })
+		if (configs[projectId].getUIComponents == null) configs[projectId].getUIComponents = async () => ({ default: new Map() })
 
 		Promise.all([
 			configs[projectId].config(),
 			configs[projectId].getTextComponents(),
-			configs[projectId].getUIComponent(),
+			configs[projectId].getUIComponents(),
 		]).then(result => {
 			const config = result[0].default
 			dispatch({
 				type: 'SET_PROJECT',
 				config,
 				getComponents: result[1].default(config),
-				getUIComponent: result[2].default(config),
 				searchUrl: `/search/${config.slug}/_search`,
+				uiComponents: result[2].default,
 			})
 		})
 	}, [projectId])

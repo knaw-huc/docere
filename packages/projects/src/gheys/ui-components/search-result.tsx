@@ -42,7 +42,7 @@ function formatList(items: string[], label: string) {
 	return `${items.length} ${label}${s}`
 }
 
-function GekaapteBrievenResultBody(props: DocereResultBodyProps) {
+function GheysResultBody(props: DocereResultBodyProps) {
 	const small = [`${props.result.blocks} blocks`, `${props.result.chars} characters`]
 	const normal = [
 		formatList(props.result.person, 'person'),
@@ -70,4 +70,4 @@ function GekaapteBrievenResultBody(props: DocereResultBodyProps) {
 }
 
 
-export default React.memo(GekaapteBrievenResultBody)
+export const SearchResult = React.memo(GheysResultBody)

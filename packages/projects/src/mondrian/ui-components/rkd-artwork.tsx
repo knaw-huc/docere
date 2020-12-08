@@ -114,4 +114,4 @@ function RkdArtworkPopupBody(props: EntityComponentProps) {
 		</EntityWrapper>
 	)
 }
-export default React.memo(RkdArtworkPopupBody)
+export const RkdArtwork = React.memo(RkdArtworkPopupBody)

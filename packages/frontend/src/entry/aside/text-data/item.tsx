@@ -22,7 +22,6 @@ const Li = styled.li`
 `
 
 interface Props {
-	active: boolean
 	entity: Entity
 }
 export function ItemInText(props: Props) {
@@ -38,6 +37,7 @@ export function ItemInText(props: Props) {
 	return (
 		<Li
 			count={props.entity.count}
+			data-id={`entity_${props.entity.id}`}
 			onClick={handleClick}
 		>
 			<Component

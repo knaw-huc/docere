@@ -25,7 +25,7 @@ const projectList: ProjectList = {
 	gheys: {
 		config: async function() { return await import('./gheys/config') },
 		getTextComponents: async function() { return await import('./gheys/text-components') },
-		getUIComponent: async function() { return await import('./gheys/ui-components') },
+		getUIComponents: async function() { return await import('./gheys/ui-components') },
 	},
 	gekaaptebrieven: {
 		config: async function() { return await import('./gekaaptebrieven/config') },
@@ -46,7 +46,7 @@ const projectList: ProjectList = {
 	mondrian: {
 		config: async function() { return await import('./mondrian/config') },
 		getTextComponents: async function() { return await import('./mondrian/text-components') },
-		getUIComponent: async function() { return await import('./mondrian/ui-components') },
+		getUIComponents: async function() { return await import('./mondrian/ui-components') },
 	},
 	'plakaatboek-guyana-1670-1816': {
 		config: async function() { return await import('./plakaatboek-guyana-1670-1816/config') },
@@ -54,7 +54,8 @@ const projectList: ProjectList = {
 	},
 	republic: {
 		config: async function() { return await import('./republic/config') },
-		getTextComponents: async function() { return await import('./republic/text-components') }
+		getTextComponents: async function() { return await import('./republic/text-components') },
+		getUIComponents: async function() { return await import('./republic/ui-components') },
 	},
 	suriano: {
 		config: async function() { return await import('./suriano/config') },
@@ -67,7 +68,7 @@ const projectList: ProjectList = {
 	vangogh: {
 		config: async function() { return await import('./vangogh/config') },
 		getTextComponents: async function() { return await import('./vangogh/text-components') },
-		getUIComponent: async function() { return await import('./vangogh/ui-components') },
+		getUIComponents: async function() { return await import('./vangogh/ui-components') },
 	},
 }
 

@@ -1,13 +1,17 @@
 import { UIComponentType } from '@docere/common'
 import { EntryLinkEntity, EntityWrapper } from '@docere/text-components'
+import SearchResult from './search-result'
 
-export default function getUIComponents() {
-	return async function(componentType: UIComponentType, id: string): Promise<React.FC<any>> {
-		if (componentType === UIComponentType.SearchResult) return (await import('./search-result')).default
-		if (componentType === UIComponentType.Entity) {
-			if (id === 'entry-link') return EntryLinkEntity
-			if (id === 'note-link') return EntryLinkEntity
-			if (id === 'pers') return EntityWrapper
-		}
-	}
-}
+const searchResults = new Map()
+searchResults.set('_default', SearchResult)
+
+const entities = new Map()
+entities.set('entry-link', EntryLinkEntity)
+entities.set('note-link', EntryLinkEntity)
+entities.set('pers', EntityWrapper)
+
+const components = new Map()
+components.set(UIComponentType.SearchResult, searchResults)
+components.set(UIComponentType.Entity, entities)
+
+export default components

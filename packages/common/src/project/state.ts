@@ -1,6 +1,7 @@
-import { FooterTab, SearchTab, Viewport, DocereConfig, GetComponents, GetUIComponent, AsideTab } from '..';
+import { FooterTab, SearchTab, Viewport, DocereConfig, GetComponents, AsideTab } from '..';
 import { initialProjectContext, initialUIContext, initialEntryContextValue, initialEntitiesContextValue, ActiveEntities, initialFacsimileContextValue, initialEntrySettingsContextValue, initialAsideTabContextValue, initialLayersContextValue } from './context';
 import { Entry, ActiveFacsimile, Layers, TriggerContainer } from '../entry'
+import { UIComponentsMap } from '../types';
 
 export interface ProjectState {
 	activeFacsimile: ActiveFacsimile
@@ -11,7 +12,7 @@ export interface ProjectState {
 	config: DocereConfig
 	footerTab: FooterTab
 	getComponents: GetComponents
-	getUIComponent: GetUIComponent
+	uiComponents: UIComponentsMap
 	layers: Layers
 	searchTab: SearchTab
 	searchUrl: string

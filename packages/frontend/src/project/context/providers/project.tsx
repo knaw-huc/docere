@@ -8,13 +8,13 @@ export function ProjectProvider(props: { children: React.ReactNode, state: Proje
 	React.useEffect(() => {
 		setValue({
 			config: props.state.config,
-			getUIComponent: props.state.getUIComponent,
 			getComponents: props.state.getComponents,
-			searchUrl: props.state.searchUrl
+			searchUrl: props.state.searchUrl,
+			uiComponents: props.state.uiComponents,
 		})
 	}, [
 		props.state.config,
-		props.state.getUIComponent,
+		props.state.uiComponents,
 		props.state.getComponents,
 		props.state.searchUrl
 	])

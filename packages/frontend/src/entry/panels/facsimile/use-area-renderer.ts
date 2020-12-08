@@ -1,19 +1,20 @@
 import * as React from 'react'
-import type { Entry, ActiveFacsimile, ID, ActiveEntities } from '@docere/common'
+import { Entry, ActiveFacsimile, ID, ActiveEntities, ProjectAction } from '@docere/common'
 
 export class AreaRenderer {
+	// private activeFacsimile: ActiveFacsimile
 	private overlay: any
 	private rectTpl: SVGElement
 	private cache: Map<ID, DocumentFragment> = new Map()
+	private strokeWidth: number
 
 	constructor(
 		private osd: any,
 		private OpenSeadragon: any,
-		//@ts-ignore
-		private handleAreaClick: (ev: any) => void
+		// @ts-ignore
+		private dispatch: React.Dispatch<ProjectAction>
 	) {
 		this.overlay = this.osd.svgOverlay()
-
 		this.rectTpl = document.createElementNS('http://www.w3.org/2000/svg','rect')
 		this.rectTpl.setAttribute('fill', 'none')
 		this.rectTpl.style.opacity = '0'
@@ -41,22 +42,47 @@ export class AreaRenderer {
 			rect.style.opacity = '0'
 		}
 
+		this.osd.clearOverlays()
+
 		// Keep track of the combined bounds. Is used to zoom and pan
 		// to the activated <rect>s
 		let combinedBounds: any
 
 		// Activate all active <rect>s
-		for (const id of activeEntities.keys()) {
+		// let id: any
+		let index = -1
+		activeEntities.forEach((entity, id) => {
+			index += 1
 			const rect = this.overlay.node().querySelector(`#e${id}`)
 			if (rect == null) return
 			rect.classList.add('active')
 			rect.style.opacity = '1'
 
+			// Set color to be half transparent, only the last entity
+			// (could be multiple areas) is set to fully opague
+			rect.setAttribute('stroke', `${entity.color}66`)
+
 			// Update combined bounds
 			const currentBounds = this.getRectBounds(rect.attributes)
 			if (combinedBounds != null) combinedBounds = combinedBounds.union(currentBounds)
 			else combinedBounds = currentBounds
-		}
+
+			if (activeEntities.size === index + 1) {
+				// Set last <rect> to fully opague
+				rect.setAttribute('stroke', entity.color)
+
+				const element = document.querySelector(`[data-id="entity_${entity.id}"]`).cloneNode(true)
+				if (element != null) {
+					this.osd.addOverlay({
+						checkResize: false,
+						element,
+						x: currentBounds.x + currentBounds.width / 2, //- (this.strokeWidth / 2),
+						y: currentBounds.y + currentBounds.height - (this.strokeWidth / 2),
+						placement: "TOP"
+					})
+				}
+			}
+		})
 		
 		if (combinedBounds) {
 			const extraSpace = combinedBounds.width / 10;
@@ -67,6 +93,8 @@ export class AreaRenderer {
 				combinedBounds.height + extraSpace * 2
 			))
 		}
+
+
 	}
 
 	/**
@@ -94,14 +122,15 @@ export class AreaRenderer {
 	 * @param facsimile 
 	 */
 	render(entry: Entry, facsimile: ActiveFacsimile) {
+		// this.activeFacsimile = facsimile
+
 		this.clear()
 
 		// Get the width of the <rect> stroke in pixels and set in
 		// viewport size. Setting the stroke value as "3px" does not
 		// work because of the scale() CSS on the parent <g>.
-		const { x: relativeWidth } = this.osd.viewport.imageToViewportCoordinates(3, 0)
-		const strokeWidth = (relativeWidth - .5) * 5 
-		this.rectTpl.setAttribute('stroke-width', strokeWidth.toString())
+		this.setStrokeWidth()
+		this.rectTpl.setAttribute('stroke-width', this.strokeWidth.toString())
 
 		// Create the <rect>s, but skip if the <rect>s are already in the cache
 		if (!this.cache.has(facsimile.id)) {
@@ -109,17 +138,14 @@ export class AreaRenderer {
 			for (const entity of entry.textData.entities.values()) {
 				if (entity.facsimileAreas == null) continue
 
-				// Set color to be half transparent, only the last entity
-				// (could be multiple areas) is set to fully opague
-				this.rectTpl.setAttribute('stroke', `${entity.color}88`)
-
 				entity.facsimileAreas.forEach(area => {
+					if (area.facsimileId !== facsimile.id) return
 					const vpRect = this.osd.viewport.imageToViewportRectangle(area.x, area.y, area.w, area.h)
 					const rect = this.rectTpl.cloneNode() as Element
-					rect.setAttribute('x', (vpRect.x - strokeWidth/2).toString())
-					rect.setAttribute('y', (vpRect.y - strokeWidth/2).toString())
-					rect.setAttribute('width', vpRect.width + strokeWidth)
-					rect.setAttribute('height', vpRect.height + strokeWidth)
+					rect.setAttribute('x', (vpRect.x - this.strokeWidth/2).toString())
+					rect.setAttribute('y', (vpRect.y - this.strokeWidth/2).toString())
+					rect.setAttribute('width', vpRect.width + this.strokeWidth)
+					rect.setAttribute('height', vpRect.height + this.strokeWidth)
 					rect.id = `e${entity.id}`
 					fragment.appendChild(rect)
 				})
@@ -132,13 +158,19 @@ export class AreaRenderer {
 		// Add the <rect>s to the overlay element
 		this.overlay.node().appendChild(this.cache.get(facsimile.id).cloneNode(true) as DocumentFragment)
 	}
+
+	private setStrokeWidth() {
+		const { x: relativeWidth } = this.osd.viewport.imageToViewportCoordinates(3, 0)
+		this.strokeWidth = (relativeWidth - .5) * 5 
+	}
 }
 
-export default function useAreaRenderer(osd: any, OpenSeadragon: any, handleAreaClick: (ev: any) => void) {
+
+export default function useAreaRenderer(osd: any, OpenSeadragon: any, dispatch: React.Dispatch<ProjectAction>) {
 	const [areaRenderer, setAreaRenderer] = React.useState<AreaRenderer>(null)
 	React.useEffect(() => {
 		if (osd == null) return
-		setAreaRenderer(new AreaRenderer(osd, OpenSeadragon, handleAreaClick))
+		setAreaRenderer(new AreaRenderer(osd, OpenSeadragon, dispatch))
 	}, [osd])
 	return areaRenderer
 }

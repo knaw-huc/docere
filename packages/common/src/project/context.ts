@@ -9,13 +9,13 @@ import type { ProjectAction } from './action'
 export const DispatchContext = React.createContext<React.Dispatch<ProjectAction>>(null)
 
 // Project
-export type ProjectContextValue = Pick<ProjectState, 'config' | 'getComponents' | 'getUIComponent' | 'searchUrl'>
+export type ProjectContextValue = Pick<ProjectState, 'config' | 'getComponents' | 'searchUrl' | 'uiComponents'>
 
 export const initialProjectContext: ProjectContextValue = {
 	config: null,
 	getComponents: null,
-	getUIComponent: null,
 	searchUrl: null,
+	uiComponents: null,
 }
 
 export const ProjectContext = React.createContext<ProjectContextValue>(initialProjectContext)

@@ -4,26 +4,13 @@ import { Entity, EntitiesContext, LayerContext, DocereComponentContainer } from 
 
 import { TooltipBody } from './tooltip'
 
-// import type { DocereConfig } from '@docere/common'
-
 export * from './body'
 
-// interface PAW { settings: DocereConfig['entrySettings'] }
 const Wrapper = styled(TooltipBody)`
 	filter: ${(props: any) => props.active ? 'grayscale(0%) opacity(1)' : 'grayscale(100%) opacity(.75)'};
 	text-align: left;
 	transition: filter 300ms;
 `
-// const popupasidewrapper = styled(tooltipbody)`
-// 	backgroundcolor: white;
-// 	height: auto;
-// 	left: ${(props: paw) => gettextpanelleftspacing(props.settings) + text_panel_text_width + default_spacing}px;
-// 	margin-bottom: 5rem;
-// 	margin-top: -1.1rem;
-// 	position: absolute;
-// 	text-align: left;
-// 	width: 240px;
-// `
 
 interface NHProps {
 	color: string
@@ -42,17 +29,13 @@ const Header = styled.header`
 	text-transform: uppercase;
 `
 
-
 export interface EntityComponentProps {
 	entity: Entity
-	// docereComponentProps: DocereComponentProps
 }
 
 interface Props {
 	children: React.ReactNode
 	entity: Entity
-	// isPopup?: boolean
-	// PopupBody: React.FC<EntityComponentProps>
 }
 export const EntityWrapper = React.memo(function EntityWrapper(props: Props) {
 	const activeEntities = React.useContext(EntitiesContext)
@@ -77,8 +60,6 @@ export const EntityWrapper = React.memo(function EntityWrapper(props: Props) {
 			active={active}
 			entity={props.entity}
 			ref={ref}
-			// settings={settings}
-			// zIndexOffset={indexOfIterator(activeEntities, props.entity.id)}
 		>
 			{
 				props.entity.title != null &&
@@ -91,12 +72,19 @@ export const EntityWrapper = React.memo(function EntityWrapper(props: Props) {
 				</Header>
 			}
 			{ props.children }
-			{/* <props.PopupBody
-				entity={props.entity}
-			/> */}
 		</Wrapper>
 	)
 })
-// Popup.defaultProps = {
-// 	isPopup: false
-// }
+
+const PlainTextBody = styled.div`
+	padding: .25rem .5rem;
+`
+export function EntityWithPlainTextBody(props: EntityComponentProps) {
+	return (
+		<EntityWrapper entity={props.entity}>
+			<PlainTextBody>
+				{props.entity.content}
+			</PlainTextBody>
+		</EntityWrapper>
+	)
+}
