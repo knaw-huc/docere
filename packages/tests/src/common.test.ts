@@ -1,18 +1,18 @@
-import { indexOfIterator, getQueryString, getPath, getRectoVersoSequence } from "@docere/common"
+import { indexOfIterator, getQueryString, getProjectPath, getRectoVersoSequence, getPagePath, getEntryPath } from "@docere/common"
 
 describe('Common', () => {
 	describe('URL', () => {
 		describe('Get paths', () => {
 			it('Should handle getPath', () => {
-				expect(() => getPath(null)).toThrow('[getPath] Project ID cannot be null')
-				expect(() => getPath({ projectId: null })).toThrow('[getPath] Project ID cannot be null')
-				expect(getPath({ projectId: 'p' })).toBe('/projects/p')
-				expect(getPath({ projectId: 'p', entryId: 'e' })).toBe('/projects/p/entries/e')
-				expect(getPath({ projectId: 'p', pageId: 'a' })).toBe('/projects/p/pages/a')
-				expect(getPath({ projectId: 'p', entryId: 'e', query: null })).toBe('/projects/p/entries/e')
-				expect(getPath({ projectId: 'p', entryId: 'e', query: {} })).toBe('/projects/p/entries/e')
-				expect(getPath({ projectId: 'p', entryId: 'e', query: { facsimileId: new Set(['f']) } })).toBe('/projects/p/entries/e?fi=f')
-				expect(getPath({ projectId: 'p', entryId: 'e', query: { facsimileId: new Set(['f']), lineId: new Set(['l']) } })).toBe('/projects/p/entries/e?fi=f&li=l')
+				// expect(() => getPath(null)).toThrow('[getPath] Project ID cannot be null')
+				// expect(() => getPath({ projectId: null })).toThrow('[getPath] Project ID cannot be null')
+				expect(getProjectPath('p')).toBe('/projects/p')
+				expect(getEntryPath('p', 'e' )).toBe('/projects/p/entries/e')
+				expect(getPagePath('p', 'a' )).toBe('/projects/p/pages/a')
+				expect(getEntryPath('p', 'e', null)).toBe('/projects/p/entries/e')
+				expect(getEntryPath('p', 'e',{})).toBe('/projects/p/entries/e')
+				expect(getEntryPath('p', 'e',{ facsimileId: new Set(['f']) })).toBe('/projects/p/entries/e?fi=f')
+				expect(getEntryPath('p', 'e',{ facsimileId: new Set(['f']), lineId: new Set(['l']) })).toBe('/projects/p/entries/e?fi=f&li=l')
 			})
 
 			it('Should handle getQueryString', () => {

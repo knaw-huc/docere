@@ -98,6 +98,8 @@ export function extractEntryData(entry: ExtractedEntry, config: DocereConfig) {
 				entry.preparedElement :
 				layer.extractElement(entry, config)
 
+			if (el == null) throw new Error('[extractEntryData] Layer not found!')
+
 			const facsimiles = extractFacsimiles(el, layer, entry, config)
 			const entities = extractEntities(el, layer, entry, config)
 

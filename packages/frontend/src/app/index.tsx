@@ -16,6 +16,7 @@ function App() {
 				</Route>
 				<Route path={[
 					"/projects/:projectId/entries/:entryId*",
+					"/projects/:projectId/pages/:pageId*",
 					"/projects/:projectId",
 				]}>
 					<Project />

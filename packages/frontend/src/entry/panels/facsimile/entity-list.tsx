@@ -15,12 +15,14 @@ export function EntityList() {
 	return (
 		<Wrapper>
 			{
-				Array.from(activeEntities.values()).map(entity =>
-					<EntityItem
-						entity={entity}
-						key={entity.id}
-					/>
-				)
+				Array.from(activeEntities.values())
+					.filter(entity => Array.isArray(entity.facsimileAreas))
+					.map(entity =>
+						<EntityItem
+							entity={entity}
+							key={entity.id}
+						/>
+					)
 			}
 		</Wrapper>
 	)

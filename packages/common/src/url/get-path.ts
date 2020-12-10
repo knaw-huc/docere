@@ -21,7 +21,7 @@ const PROJECTS = '/projects/'
 const ENTRIES = '/entries/'
 const PAGES = '/pages/'
 
-function getProjectPath(projectId: string) { 
+export function getProjectPath(projectId: string) { 
 	return `${PROJECTS}${projectId}`
 }
 

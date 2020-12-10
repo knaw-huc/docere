@@ -47,6 +47,7 @@ export default function PageView() {
 	const page = usePage(pageId)
 	const components = useComponents(DocereComponentContainer.Page, pageId)
 
+	console.log(projectId, pageId, page)
 	if (page == null) return null
 
 	const customProps: PageComponentProps = {

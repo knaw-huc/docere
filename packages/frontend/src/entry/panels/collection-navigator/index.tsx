@@ -7,13 +7,7 @@ import CollectionNavigatorController from './controller'
 function useOpenSeadragonController() {
 	const dispatch = React.useContext(DispatchContext)
 	const { config, searchUrl } = React.useContext(ProjectContext)
-	// const { setEntry } = React.useContext(EntryContext)
-	// const { setActiveFacsimile } = React.useContext(FacsimileContext)
 	const [controller, setController] = React.useState<any>(null)
-
-	// const handleClick = React.useCallback((entryId: string, facsimileId: string) => {
-	// 	setEntry({ entryId, facsimileId })
-	// }, [])
 
 	React.useEffect(() => {
 		import('openseadragon')

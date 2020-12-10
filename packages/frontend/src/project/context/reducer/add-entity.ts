@@ -17,6 +17,7 @@ export function addEntity(state: ProjectState, action: AddEntity): ProjectState 
 		})
 
 		if (
+			Array.isArray(activeEntity.facsimileAreas) &&
 			!activeEntity.facsimileAreas.some(fa => fa.facsimileId === state.activeFacsimile.id) &&
 			activeEntity.facsimileAreas.find(fa => fa.facsimileId != null) != null
 		) {
@@ -24,9 +25,7 @@ export function addEntity(state: ProjectState, action: AddEntity): ProjectState 
 			activeFacsimile = createActiveFacsimile(state.entry, facsimileArea.facsimileId, action.triggerContainer, action.triggerContainerId)
 		}
 	}
-
 	
-
 	const nextState = {
 		...state,
 		activeEntities: new Map(activeEntities),

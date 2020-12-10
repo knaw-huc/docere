@@ -35,6 +35,8 @@ export default class CollectionNavigatorController {
 		this.entry = entry
 
 		const nextPayload = this.getPayload()
+		if (nextPayload == null) return
+
 		if (nextPayload !== this.payload) {
 			this.payload = nextPayload
 			const entries = await this.fetchCollectionDocuments()
@@ -130,7 +132,6 @@ export default class CollectionNavigatorController {
 		}
 
 		if (this.config.sortBy != null) payload.sort = this.config.sortBy
-
 		return JSON.stringify(payload)
 	}
 
