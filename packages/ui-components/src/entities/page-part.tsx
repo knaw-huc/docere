@@ -1,5 +1,5 @@
 import React from 'react'
-import { useComponents, DocereComponentContainer, usePage } from '@docere/common'
+import { useComponents, DocereComponentContainer, usePage, DispatchContext } from '@docere/common'
 import DocereTextView from '@docere/text'
 
 import { LinkFooter, EntityWithLinkWrapper } from './link-wrapper'

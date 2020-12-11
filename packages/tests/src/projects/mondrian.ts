@@ -3,9 +3,15 @@ import { fetchEntry } from '../utils'
 import { isSerializedTextLayer, isSerializedFacsimileLayer } from '@docere/common'
 
 const projectId = 'mondrian'
+
 const briefId = '18931007_PM_ALLE_5004'
+const brief1Path = `${projectId}/editie-conversie/brieven/04_Transcriptie_DEF/${briefId}.xml`
+
 const brief2Id = '19100707y_IONG_0019'
+const brief2Path = `${projectId}/editie-conversie/brieven/04_Transcriptie_DEF/${brief2Id}.xml`
+
 const geschriftId = '1917_NieuweBeeldingInSchilderkunst_STIJL'
+const geschriftPath = `${projectId}/editie-conversie/geschriften/${geschriftId}.xml`
 
 export function mondrianTests() {
 	let brief: SerializedEntry
@@ -13,9 +19,9 @@ export function mondrianTests() {
 	let geschrift: SerializedEntry
 
 	beforeAll(async () => {
-		brief = await fetchEntry(projectId, briefId)
-		brief2 = await fetchEntry(projectId, brief2Id)
-		geschrift = await fetchEntry(projectId, geschriftId)
+		brief = await fetchEntry(projectId, briefId, brief1Path)
+		brief2 = await fetchEntry(projectId, brief2Id, brief2Path)
+		geschrift = await fetchEntry(projectId, geschriftId, geschriftPath)
 	})
 
 	it('Should have 3 layers', () => {
@@ -32,14 +38,14 @@ export function mondrianTests() {
 		const blayers = brief.layers.filter(isSerializedTextLayer)
 		expect(blayers).toHaveLength(2)
 		expect(blayers[0].id).toBe('original')
-		expect(blayers[0].content).toHaveLength(2136)
+		expect(blayers[0].content).toHaveLength(2176)
 		expect(blayers[1].id).toBe('translation')
 		expect(blayers[1].content).toBeNull()
 
 		const glayers = geschrift.layers.filter(isSerializedTextLayer)
 		expect(glayers).toHaveLength(2)
 		expect(glayers[0].id).toBe('original')
-		expect(glayers[0].content).toHaveLength(233646)
+		expect(glayers[0].content).toHaveLength(234625)
 		expect(glayers[1].id).toBe('translation')
 		expect(glayers[1].content).toBeNull()
 	})

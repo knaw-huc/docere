@@ -94,11 +94,10 @@ export function extractEntryData(entry: ExtractedEntry, config: DocereConfig) {
 
 	entry.layers = config.layers.reduce((prev, layer) => {
 		if (isTextLayerConfig(layer)) {
-			let el = layer.extractElement == null ?
-				entry.preparedElement :
-				layer.extractElement(entry, config)
-
-			if (el == null) throw new Error('[extractEntryData] Layer not found!')
+			let el = entry.preparedElement
+			if (layer.extractElement != null) {
+				el = layer.extractElement(entry, config)
+			}
 
 			const facsimiles = extractFacsimiles(el, layer, entry, config)
 			const entities = extractEntities(el, layer, entry, config)

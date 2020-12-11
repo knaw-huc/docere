@@ -3,14 +3,16 @@ import { isSerializedTextLayer, isSerializedFacsimileLayer } from '../../../comm
 
 import type { SerializedEntry } from '../../../common/src'
 import { fetchEntry } from '../utils'
+import { getElasticSearchDocument } from '../../../api/src/utils'
 
 const entryId = 'Filza_2_1_Flavia_71r_103v_letter1'
+const filePath = `suriano/letters/${entryId}.xml`
 
 export const surianoTests = () => {
 	let entry: SerializedEntry
 
 	beforeAll(async () => {
-		entry = await fetchEntry('suriano', entryId)
+		entry = await fetchEntry('suriano', entryId, filePath)
 	})
 
 	it('Should exist', () => {
@@ -30,11 +32,16 @@ export const surianoTests = () => {
 	})
 
 	it('Should have 2 layers', () => {
-		expect(entry.layers).toHaveLength(2)
+		expect(entry.layers).toHaveLength(3)
 	})
 
 	it('Should have 2 entities', () => {
 		expect(entry.textData.entities).toHaveLength(32)
+	})
+
+	it('Should a ES document', () => {
+		console.log(getElasticSearchDocument(entry))
+		expect(true).toBeTruthy()
 	})
 
 	// describe('Part 4', () => {

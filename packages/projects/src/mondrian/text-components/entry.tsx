@@ -62,10 +62,10 @@ export default async function entryComponents(_config: DocereConfig) {
 
 		p: Paragraph,
 
-		'[*|type="editor"]': NoteTag,
-		'[*|type="bio"]': EntityTag,
-		'[*|type="biblio"]': EntityTag,
-		'[*|type="rkd-artwork-link"]': EntityTag,
+		'ptr[type="note"][target]': NoteTag,
+		'ref[target^="bio.xml#"]': EntityTag,
+		'ref[target^="biblio.xml#"]': EntityTag,
+		'rs[type="artwork-m"][key]': EntityTag,
 
 		space: Space,
 	}

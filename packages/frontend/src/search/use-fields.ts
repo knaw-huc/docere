@@ -7,9 +7,6 @@ function filterNonFacets(field: MetadataConfig) {
 	// Do not show facets if config says so
 	if (!field.showAsFacet) return false
 
-	// // Do not show seperate levels of hierarchy facet
-	// if (/level\d+/.test(field.id)) return false
-
 	// Do not show facets which datatype cannot be visualised
 	if (field.datatype === EsDataType.Null || field.datatype === EsDataType.Text) return false
 

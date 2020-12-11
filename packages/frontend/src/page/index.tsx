@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Link, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import DocereTextView from '@docere/text'
-import { TOP_OFFSET, DEFAULT_SPACING, DocereComponentContainer, useComponents, usePage, getSearchPath, PageComponentProps, useUrlQuery } from '@docere/common'
+import { TOP_OFFSET, DEFAULT_SPACING, DocereComponentContainer, useComponents, usePage, getSearchPath } from '@docere/common'
 
 const Wrapper = styled.div`
 	background: white;
@@ -42,24 +42,23 @@ const Close = styled(Link)`
 // TODO useQuery is used to pass activeId to Page, but that should not be necessary
 
 export default function PageView() {
-	const query = useUrlQuery()
+	// const query = useUrlQuery()
 	const { projectId, pageId } = useParams()
 	const page = usePage(pageId)
 	const components = useComponents(DocereComponentContainer.Page, pageId)
 
-	console.log(projectId, pageId, page)
 	if (page == null) return null
 
-	const customProps: PageComponentProps = {
-		// ToDo can a page have more entity IDs? like a document?
-		activeId: query.entityId?.size > 0 ? query.entityId.values().next().value : null,
-		...query,
-	}
+	// const customProps: PageComponentProps = {
+	// 	// ToDo can a page have more entity IDs? like a document?
+	// 	activeId: query.entityId?.size > 0 ? query.entityId.values().next().value : null,
+	// 	...query,
+	// }
 
 	return (
 		<Wrapper id="page-container">
 			<DocereTextView
-				customProps={customProps}
+				// customProps={customProps}
 				components={components}
 				node={page.doc}
 			/>

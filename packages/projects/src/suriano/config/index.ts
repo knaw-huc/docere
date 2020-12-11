@@ -93,6 +93,8 @@ export default extendConfigData({
 			selector: 'ptr[target]',
 			title: "Notes",
 			type: EntityType.Note,
+			showInAside: false,
+			showAsFacet: false,
 		},
 		{
 			color: Colors.Pink,

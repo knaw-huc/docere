@@ -177,8 +177,6 @@ export async function getProjectPageConfig(projectId: string, pageId: string): P
 export function getElasticSearchDocument(extractedEntry: SerializedEntry | DocereApiError): ElasticSearchDocument | DocereApiError {
 	if (isError(extractedEntry)) return extractedEntry
 
-	// const lookup = createLookup(extractedEntry.layers)
-
 	const entities = Object.values(extractedEntry.textData.entities)
 		.reduce((agg, [_id, entity]) => {
 			agg[entity.configId] = (agg.hasOwnProperty(entity.configId)) ?
@@ -205,18 +203,19 @@ export function getElasticSearchDocument(extractedEntry: SerializedEntry | Docer
 			return prev
 		}, {} as Record<string, MetadataItem['value']>)
 
-	// const notes: string[] = Object.values(lookup.notes)
-	// 	.map(note => note.content)
+	const text = extractedEntry.plainText
+		.replace(/\s+/g, ' ')
+		.split(' ')
+		.map(t => t.trim())
+		.join(' ')
+		.trim()
 
 	return {
 		id: extractedEntry.id,
 		facsimiles,
-		// notes,
-		text: extractedEntry.plainText,
+		text,
 		text_suggest: {
-			input: extractedEntry.plainText
-				.split(' ')
-				.filter(t => t.trim().length > 0),
+			input: Array.from(new Set(text.replace(/\.|\,|\;/g, '').split(' '))),
 		},
 		...entities,
 		...metadata,

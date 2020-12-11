@@ -1,7 +1,7 @@
 import { ExtractEntryPartElements, ExtractTextLayerElement } from '@docere/common'
 
 export function extractLayerElement(selector: string): ExtractTextLayerElement {
-	return entry => entry.document.querySelector(selector)
+	return entry => entry.preparedElement.querySelector(selector)
 }
 
 function getChapterId(el: Element, attribute: string, index: number) {

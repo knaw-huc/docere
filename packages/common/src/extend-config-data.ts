@@ -1,9 +1,8 @@
-import { EsDataType } from './enum'
-
-import type { FacetConfigBase } from './types/search/facets'
-import { DocereConfig, MetadataConfig, EntityConfig, defaultEntityConfig } from './types/config-data/config'
+import { DocereConfig, MetadataConfig, EntityConfig, defaultEntityConfig, defaultMetadata } from './types/config-data/config'
 import { isTextLayerConfig } from './utils'
 import { PageConfig } from './page'
+
+import type { FacetConfigBase } from './types/search/facets'
 
 export const defaultEntrySettings: DocereConfig['entrySettings'] = {
 	'panels.showHeaders': true,
@@ -26,22 +25,6 @@ const defaultConfig: DocereConfig = {
 	private: false,
 	searchResultCount: 20,
 	slug: null,
-}
-
-export const defaultMetadata: Required<MetadataConfig> = {
-	datatype: EsDataType.Keyword,
-	extract: () => null,
-	id: null,
-	// TODO fixate the order number, which means: if there is no order than increment the order number: 999, 1000, 1001, 1002 (import for example the sort setting in the FS)
-	order: 9999,
-	showAsFacet: true,
-	showInAside: true,
-
-	// Add defaults, because they are Required<>
-	size: null,
-	sort: null,
-	description: null,
-	title: null,
 }
 
 // const defaultDocereFunctions: DocereConfigFunctions = {

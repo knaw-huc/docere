@@ -1,7 +1,7 @@
-import { EntityType, Colors } from '../../enum'
+import { EntityType, Colors, EsDataType } from '../../enum'
 import type { FacetConfig } from '../search/facets'
 import { PageConfig } from '../../page'
-import { FacsimileLayerConfig, TextLayerConfig, ExtractedEntry, ID, ExtractedEntity, defaultMetadata, ExtractedFacsimile } from '../..'
+import { FacsimileLayerConfig, TextLayerConfig, ExtractedEntry, ID, ExtractedEntity, ExtractedFacsimile } from '../..'
 
 interface ExtractFacsimilesProps {
 	config: DocereConfig
@@ -116,6 +116,22 @@ export type EntityConfig = TmpConfig & {
 	revealOnHover?: boolean
 	selector: string
 	type?: EntityType | string
+}
+
+export const defaultMetadata: Required<MetadataConfig> = {
+	datatype: EsDataType.Keyword,
+	extract: () => null,
+	id: null,
+	// TODO fixate the order number, which means: if there is no order than increment the order number: 999, 1000, 1001, 1002 (import for example the sort setting in the FS)
+	order: 9999,
+	showAsFacet: true,
+	showInAside: true,
+
+	// Add defaults, because they are Required<>
+	size: null,
+	sort: null,
+	description: null,
+	title: null,
 }
 
 export const defaultEntityConfig: Required<Omit<EntityConfig, 'extract' | 'extractId'>> = {

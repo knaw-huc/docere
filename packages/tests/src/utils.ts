@@ -4,10 +4,18 @@ import { isError } from '../../api/src/utils'
 import { Mapping } from '../../api/src/types'
 import { SerializedEntry } from '@docere/common'
 
-export async function fetchEntry(projectId: string, documentId: string): Promise<SerializedEntry> {
-	const fetchResult = await fetch(`http://localhost/api/projects/${projectId}/xml/${encodeURIComponent(documentId)}`)
-	if (fetchResult.status === 404) throw Error(`XML file server return 404`)
-	const xml = await fetchResult.text()
+import dotenv from 'dotenv'
+dotenv.config({ path: '../../.env.dev'})
+
+async function fetchXml(filePath: string) {
+	const url = `${process.env.DOCERE_XML_URL}${filePath}`
+	const result = await fetch(url)
+	return await result.text()	
+}
+
+export async function fetchEntry(projectId: string, documentId: string, filePath?: string): Promise<SerializedEntry> {
+	if (filePath == null) filePath = `${projectId}/${documentId}.xml`
+	const xml = await fetchXml(filePath)
 
 	const result = await page.evaluate(
 		prepareAndExtract,
