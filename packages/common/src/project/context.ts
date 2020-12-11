@@ -1,7 +1,7 @@
 import React from 'react'
 import { defaultEntrySettings } from '../extend-config-data'
 import { AsideTab, Viewport } from '../enum'
-import { DocereConfig, Entry, ActiveFacsimile, ID, ActiveEntity, StatefulLayer, Layers } from '..'
+import { DocereConfig, Entry, ActiveFacsimile, ID, ActiveEntity, StatefulLayer, Layers, Page } from '..'
 import type { ProjectState } from './state'
 import type { ProjectAction } from './action'
 
@@ -19,6 +19,9 @@ export const initialProjectContext: ProjectContextValue = {
 }
 
 export const ProjectContext = React.createContext<ProjectContextValue>(initialProjectContext)
+
+// Page
+export const PageContext = React.createContext<Page>(null)
 
 // UI
 export type UIContextValue = Pick<ProjectState, 'footerTab' | 'searchTab' | 'viewport'>

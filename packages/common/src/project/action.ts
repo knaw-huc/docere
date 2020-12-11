@@ -74,6 +74,22 @@ export interface PinLayer {
 	id: ID
 }
 
+export type SetPage =
+	Pick<ProjectState, 'page'> &
+	{
+		type: 'SET_PAGE'
+	}
+
+export type SetPageId =
+	Pick<ProjectState, 'setPage'> &
+	{
+		type: 'SET_PAGE_ID'
+	}
+
+export interface UnsetPage {
+	type: 'UNSET_PAGE'
+}
+
 export type ProjectAction = 
 	AddEntity |
 	PinLayer |
@@ -81,8 +97,11 @@ export type ProjectAction =
 	SetEntry |
 	SetEntryId |
 	SetFacsimile |
+	SetPage |
+	SetPageId |
 	SetProject |
 	SetViewport |
 	ToggleEntrySetting |
 	ToggleLayer |
-	ToggleTab
+	ToggleTab |
+	UnsetPage

@@ -1,9 +1,9 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { DEFAULT_SPACING, MAINHEADER_HEIGHT, Colors, ProjectContext, getPagePath, ID } from '@docere/common'
+import { DEFAULT_SPACING, MAINHEADER_HEIGHT, Colors, ProjectContext, DispatchContext } from '@docere/common'
 
 import type { PageConfig } from '@docere/common'
-import { Link } from 'react-router-dom'
+// import { Link } from 'react-router-dom'
 
 const Wrapper = styled.ul`
 	align-self: center;
@@ -62,7 +62,7 @@ const Wrapper = styled.ul`
 	}
 `
 
-const PageLink = styled(Link)`
+const PageLink = styled.span`
 	background: none;
 	border: none;
 	color: inherit;
@@ -80,13 +80,17 @@ const PageLink = styled(Link)`
 	}
 `
 
-type PageMenuItemProps = { pageConfig: PageConfig, projectId: ID }
+type PageMenuItemProps = {
+	pageConfig: PageConfig,
+	setPage: (ev: React.MouseEvent<HTMLLIElement>) => void
+}
 function PageMenuItem(props: PageMenuItemProps) {
 	return (
-		<li>
-			<PageLink
-				to={getPagePath(props.projectId, props.pageConfig.id)}
-			>
+		<li
+			data-page-id={props.pageConfig.id}
+			onClick={props.setPage}
+		>
+			<PageLink>
 				{props.pageConfig.title}
 			</PageLink>
 		</li>
@@ -95,6 +99,16 @@ function PageMenuItem(props: PageMenuItemProps) {
 
 export default React.memo(function PagesMenu() {
 	const { config } = React.useContext(ProjectContext)
+	const dispatch = React.useContext(DispatchContext)
+
+	const setPage = React.useCallback((ev: React.MouseEvent<HTMLLIElement>) => {
+		dispatch({
+			type: 'SET_PAGE_ID',
+			setPage: {
+				pageId: ev.currentTarget.dataset.pageId,
+			}
+		})
+	}, [])
 
 	return (
 		<Wrapper>
@@ -109,7 +123,7 @@ export default React.memo(function PagesMenu() {
 										<PageMenuItem
 											key={child.id}
 											pageConfig={child}
-											projectId={config.slug}
+											setPage={setPage}
 										/>
 									)
 								}
@@ -118,7 +132,7 @@ export default React.memo(function PagesMenu() {
 						<PageMenuItem
 							key={page.id}
 							pageConfig={page}
-							projectId={config.slug}
+							setPage={setPage}
 						/>
 				)
 			}

@@ -13,16 +13,18 @@ interface PageLinkProps {
 	children: React.ReactNode
 }
 function PageLink(props: PageLinkProps) {
-	// const history = useHistory()
+	const dispatch = React.useContext(DispatchContext)
 
 	const goToPage = React.useCallback((ev: React.MouseEvent) => {
 		ev.stopPropagation()
 
-		// const urlObject = { pageId: props.entity.configId }
-		// if (props.entity.id != null) urlObject.query = { entityId: new Set(props.entity.id) }
-
-		// TODO Use dispatch? props.docereComponentProps.entryDispatch
-		// navigate(urlObject)
+		dispatch({
+			type: 'SET_PAGE_ID',
+			setPage: {
+				pageId: props.entity.configId,
+				entityIds: new Set([props.entity.id])
+			}
+		})
 	}, [props.entity])
 
 	return (

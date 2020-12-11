@@ -1,8 +1,7 @@
-import * as React from 'react'
-import { Link, useParams } from 'react-router-dom'
+import React from 'react'
 import styled from 'styled-components'
 import DocereTextView from '@docere/text'
-import { TOP_OFFSET, DEFAULT_SPACING, DocereComponentContainer, useComponents, usePage, getSearchPath } from '@docere/common'
+import { TOP_OFFSET, DEFAULT_SPACING, DocereComponentContainer, useComponents, PageContext, DispatchContext } from '@docere/common'
 
 const Wrapper = styled.div`
 	background: white;
@@ -26,7 +25,7 @@ const Wrapper = styled.div`
 	}
 `
 
-const Close = styled(Link)`
+const Close = styled.div`
 	align-content: center;
 	color: #666;
 	cursor: pointer;
@@ -42,27 +41,21 @@ const Close = styled(Link)`
 // TODO useQuery is used to pass activeId to Page, but that should not be necessary
 
 export default function PageView() {
-	// const query = useUrlQuery()
-	const { projectId, pageId } = useParams()
-	const page = usePage(pageId)
-	const components = useComponents(DocereComponentContainer.Page, pageId)
+	const dispatch = React.useContext(DispatchContext)
+	const page = React.useContext(PageContext)
+	const components = useComponents(DocereComponentContainer.Page, page?.id)
+
+	const closePage = React.useCallback(() => dispatch({ type: 'UNSET_PAGE' }), [])
 
 	if (page == null) return null
-
-	// const customProps: PageComponentProps = {
-	// 	// ToDo can a page have more entity IDs? like a document?
-	// 	activeId: query.entityId?.size > 0 ? query.entityId.values().next().value : null,
-	// 	...query,
-	// }
 
 	return (
 		<Wrapper id="page-container">
 			<DocereTextView
-				// customProps={customProps}
 				components={components}
 				node={page.doc}
 			/>
-			<Close to={getSearchPath(projectId)}>✕</Close>
+			<Close onClick={closePage}>✕</Close>
 		</Wrapper>
 	)
 }

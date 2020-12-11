@@ -1,6 +1,6 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { Viewport, ProjectState, initialProjectState, ProjectAction, fetchEntry } from '@docere/common'
+import { Viewport, ProjectState, initialProjectState, ProjectAction, fetchEntry, fetchPage } from '@docere/common'
 import configs from '@docere/projects'
 
 import { projectUIReducer } from '../reducer'
@@ -31,6 +31,19 @@ export function useProjectState(): [ProjectState, React.Dispatch<ProjectAction>]
 				})
 			})
 	}, [state.config?.slug, state.setEntry])
+
+	React.useEffect(() => {
+		if (state.config == null || state.setPage?.pageId == null) return
+
+		fetchPage(state.setPage.pageId, state.config)
+			.then(page => {
+				if (page == null) return
+				dispatch({
+					type: 'SET_PAGE',
+					page
+				})
+			})
+	}, [state.config?.slug, state.setPage])
 
 	React.useEffect(() => {
 		if (

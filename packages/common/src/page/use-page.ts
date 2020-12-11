@@ -9,7 +9,7 @@ import type { ID } from '../entry/layer'
 
 const pageCache = new Map<string, Page>()
 
-async function getPage(id: ID, config: DocereConfig): Promise<Page> {
+export async function fetchPage(id: ID, config: DocereConfig): Promise<Page> {
 	if (pageCache.has(id)) return pageCache.get(id)
 
 	const doc = await fetchPageXml(config.slug, id)
@@ -35,7 +35,13 @@ export function usePage(pageId: ID) {
 
 	React.useEffect(() => {
 		if (pageId == null) return
-		getPage(pageId, projectContext.config).then(setPage)
+
+		if (pageCache.has(pageId)) {
+			setPage(pageCache.get(pageId))
+		}
+		else {
+			fetchPage(pageId, projectContext.config).then(setPage)
+		}
 	}, [pageId, projectContext.config.slug])
 
 	return page	

@@ -2,6 +2,7 @@ import { FooterTab, SearchTab, Viewport, DocereConfig, GetComponents, AsideTab }
 import { initialProjectContext, initialUIContext, initialEntryContextValue, initialEntitiesContextValue, ActiveEntities, initialFacsimileContextValue, initialEntrySettingsContextValue, initialAsideTabContextValue, initialLayersContextValue } from './context';
 import { Entry, ActiveFacsimile, Layers, TriggerContainer } from '../entry'
 import { UIComponentsMap } from '../types';
+import { Page } from '../page';
 
 export interface ProjectState {
 	activeFacsimile: ActiveFacsimile
@@ -14,6 +15,7 @@ export interface ProjectState {
 	getComponents: GetComponents
 	uiComponents: UIComponentsMap
 	layers: Layers
+	page: Page
 	searchTab: SearchTab
 	searchUrl: string
 	setEntry: {
@@ -21,6 +23,10 @@ export interface ProjectState {
 		facsimileId?: string
 		entityIds?: Set<string>
 	} & TriggerContainer
+	setPage: {
+		entityIds?: Set<string>
+		pageId: string
+	}
 	viewport: Viewport
 }
 
@@ -33,5 +39,7 @@ export const initialProjectState: ProjectState = {
 	entry: initialEntryContextValue,
 	entrySettings: initialEntrySettingsContextValue,
 	layers: initialLayersContextValue,
+	page: null,
 	setEntry: null,
+	setPage: null,
 }
