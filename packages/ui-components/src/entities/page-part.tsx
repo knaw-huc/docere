@@ -1,5 +1,5 @@
 import React from 'react'
-import { useComponents, DocereComponentContainer, usePage, DispatchContext } from '@docere/common'
+import { useComponents, ContainerType, usePage, DispatchContext } from '@docere/common'
 import DocereTextView from '@docere/text'
 
 import { LinkFooter, EntityWithLinkWrapper } from './link-wrapper'
@@ -46,7 +46,7 @@ function PageLink(props: PageLinkProps) {
  */
 export const PagePartEntity = React.memo(function(props: EntityComponentProps) {
 	const page = usePage(props.entity.configId)
-	const components = useComponents(DocereComponentContainer.Page, page?.id)
+	const components = useComponents(ContainerType.Page, page?.id)
 
 	if (page == null) return null
 

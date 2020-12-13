@@ -1,11 +1,11 @@
 import styled from 'styled-components'
-import { DocereComponentContainer } from '@docere/common'
+import { ContainerType } from '@docere/common'
 import type { DocereConfig, DocereComponents } from '@docere/common'
 import { EntityTag } from '@docere/text-components'
 
 // TODO move <w CONTENT="x"/> to <w>x</w>
 export default function(_config: DocereConfig) {
-	return async function(_container: DocereComponentContainer, _id: string): Promise<DocereComponents> {
+	return async function(_container: ContainerType, _id: string): Promise<DocereComponents> {
 		const components: DocereComponents = {
 			head: styled.h3`
 				font-size: 1.2em;

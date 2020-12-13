@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Facsimile, FacsimileLayer, Entry, FacsimileContext, EntryContext, DispatchContext, DocereComponentContainer } from '@docere/common'
+import { Facsimile, FacsimileLayer, Entry, FacsimileContext, EntryContext, DispatchContext, ContainerType } from '@docere/common'
 
 import CollectionNavigatorController from './controller'
 
@@ -68,7 +68,7 @@ function CollectionNavigator(props: Props) {
 	const handleClick = React.useCallback(facsimileId => {
 		dispatch({
 			facsimileId,
-			triggerContainer: DocereComponentContainer.Layer,
+			triggerContainer: ContainerType.Layer,
 			triggerContainerId: props.layer.id,
 			type: "SET_FACSIMILE",
 		})	

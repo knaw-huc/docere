@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { EntrySettingsContext, EntitiesContext, DocereComponentContainer, ComponentProps, LayerContext, DispatchContext, useEntity } from '@docere/common'
+import { EntrySettingsContext, EntitiesContext, ComponentProps, ContainerContext, DispatchContext, useEntity } from '@docere/common'
 import { XmlEntity } from '@docere/ui-components'
 
 import Tooltip from './tooltip'
@@ -32,7 +32,7 @@ export const NoteTag = React.memo(function NotePopup(props: ComponentProps) {
 	const dispatch = React.useContext(DispatchContext)
 	const activeEntities = React.useContext(EntitiesContext)
 	const settings = React.useContext(EntrySettingsContext)
-	const layer = React.useContext(LayerContext)
+	const container = React.useContext(ContainerContext)
 
 	if (
 		!settings['panels.text.showNotes']
@@ -47,8 +47,8 @@ export const NoteTag = React.memo(function NotePopup(props: ComponentProps) {
 		dispatch({
 			entityId: note.id,
 			type: 'ADD_ENTITY',
-			triggerContainer: DocereComponentContainer.Layer,
-			triggerContainerId: layer.id
+			triggerContainer: container.type,
+			triggerContainerId: container.id,
 		})
 	}, [note, active])
 

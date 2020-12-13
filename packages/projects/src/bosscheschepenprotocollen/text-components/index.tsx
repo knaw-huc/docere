@@ -1,10 +1,10 @@
-import { DocereComponentContainer } from '@docere/common'
+import { ContainerType } from '@docere/common'
 import type { DocereConfig, DocereComponents } from '@docere/common'
 import { Pb } from '@docere/text-components'
 import styled from 'styled-components'
 
 export default function getComponents(_config: DocereConfig) {
-	return async function(_container: DocereComponentContainer, _id: string): Promise<DocereComponents> {
+	return async function(_container: ContainerType, _id: string): Promise<DocereComponents> {
 		const components2: DocereComponents = {
 			pb: Pb,
 			date: styled.div`font-weight: bold; font-size: 1.2rem;`,

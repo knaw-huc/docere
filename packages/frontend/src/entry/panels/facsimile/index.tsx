@@ -1,10 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
-import { PANEL_HEADER_HEIGHT, FacsimileLayer, EntrySettingsContext, ProjectContext, DispatchContext } from '@docere/common'
+import { PANEL_HEADER_HEIGHT, FacsimileLayer, EntrySettingsContext, ProjectContext, DispatchContext, ContainerType } from '@docere/common'
 
 import PanelHeader from '../header'
 import CollectionNavigator2 from '../collection-navigator2'
-import { LayerProvider } from '../text/layer-provider'
+import { ContainerProvider } from '../text/layer-provider'
 
 import useAreaRenderer from './use-area-renderer'
 import { EntityList } from './entity-list'
@@ -43,7 +43,7 @@ function FacsimilePanel(props: Props) {
 	useActiveFacsimile(areaRenderer, osd)
 
 	return (
-		<LayerProvider value={props.layer}>
+		<ContainerProvider type={ContainerType.Layer} id={props.layer.id}>
 			<Wrapper className="facsimile-panel">
 				{
 					settings['panels.showHeaders'] &&
@@ -66,7 +66,7 @@ function FacsimilePanel(props: Props) {
 				}
 				<EntityList />
 			</Wrapper>
-		</LayerProvider>
+		</ContainerProvider>
 	)
 }
 

@@ -1,4 +1,4 @@
-import { Viewport, DocereComponentContainer, AsideTab } from '../enum';
+import { Viewport, ContainerType, AsideTab } from '../enum';
 import { ProjectState } from './state';
 import { ID } from '../entry/layer';
 import { DocereConfig } from '../types/config-data/config';
@@ -19,7 +19,7 @@ export type ToggleTab = ToggleFooterTab | ToggleSearchTab
 
 export type AddEntity = {
 	entityId: ID,
-	triggerContainer?: DocereComponentContainer
+	triggerContainer?: ContainerType
 	triggerContainerId?: ID
 	type: 'ADD_ENTITY',
 }
@@ -38,7 +38,7 @@ export type SetEntryId =
 
 export type SetFacsimile = {
 	facsimileId: ID,
-	triggerContainer?: DocereComponentContainer
+	triggerContainer?: ContainerType
 	triggerContainerId?: ID
 	type: 'SET_FACSIMILE',
 }

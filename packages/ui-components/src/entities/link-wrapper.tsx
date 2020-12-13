@@ -20,10 +20,6 @@ import type { EntityComponentProps } from './wrapper'
 export const EntityWithLinkWrapper = styled.div`
 	display: grid;
 	grid-template-rows: auto 24px;
-
-	& > div:first-of-type {
-		padding: 1rem;
-	}
 `
 
 export const LinkFooter = styled.button`

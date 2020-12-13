@@ -1,10 +1,10 @@
 import React from 'react'
 import type { DocereComponents } from './types'
-import { DocereComponentContainer, UIComponentType } from './enum'
+import { ContainerType, UIComponentType } from './enum'
 import { ProjectContext } from './project/context'
 // import { ID } from './entry/layer'
 
-export function useComponents(container: DocereComponentContainer, id?: string) {
+export function useComponents(container: ContainerType, id?: string) {
 	const [components, setComponents] = React.useState<DocereComponents>(null)
 	const { getComponents } = React.useContext(ProjectContext)
 

@@ -1,7 +1,7 @@
 import React from 'react'
 import { defaultEntrySettings } from '../extend-config-data'
-import { AsideTab, Viewport } from '../enum'
-import { DocereConfig, Entry, ActiveFacsimile, ID, ActiveEntity, StatefulLayer, Layers, Page } from '..'
+import { AsideTab, Viewport, ContainerType } from '../enum'
+import { DocereConfig, Entry, ActiveFacsimile, ID, ActiveEntity, Layers, Page } from '..'
 import type { ProjectState } from './state'
 import type { ProjectAction } from './action'
 
@@ -61,5 +61,12 @@ export const initialLayersContextValue: Layers = new Map() //, pinLayer: null, a
 export const LayersContext = React.createContext(initialLayersContextValue)
 
 // Layer
-const initialLayerContextValue: StatefulLayer = null
-export const LayerContext = React.createContext(initialLayerContextValue)
+export interface ContainerContextValue {
+	type: ContainerType
+	id: ID
+}
+const initialContainerContextValue: ContainerContextValue = {
+	type: null,
+	id: null
+}
+export const ContainerContext = React.createContext(initialContainerContextValue)

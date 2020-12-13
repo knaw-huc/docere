@@ -1,7 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 import DocereTextView from '@docere/text'
-import { TOP_OFFSET, DEFAULT_SPACING, DocereComponentContainer, useComponents, PageContext, DispatchContext } from '@docere/common'
+import { TOP_OFFSET, DEFAULT_SPACING, ContainerType, useComponents, PageContext, DispatchContext } from '@docere/common'
+import { ContainerProvider } from '../entry/panels/text/layer-provider'
 
 const Wrapper = styled.div`
 	background: white;
@@ -10,7 +11,7 @@ const Wrapper = styled.div`
 	display: grid;
 	font-family: serif;
 	font-size: 1.1rem;
-	grid-template-columns: auto ${DEFAULT_SPACING * 20}px auto ${DEFAULT_SPACING * 2}px;
+	grid-template-columns: auto ${DEFAULT_SPACING * 20}px auto;
 	left: 0;
 	line-height: 2rem;
 	overflow-y: auto;
@@ -26,16 +27,12 @@ const Wrapper = styled.div`
 `
 
 const Close = styled.div`
-	align-content: center;
 	color: #666;
 	cursor: pointer;
-	display: grid;
 	font-size: 1.2em;
-	grid-column: 4;
-	height: 1em;
-	justify-content: center;
-	position: sticky;
-	top: ${DEFAULT_SPACING}px;
+	position: fixed;
+	right: ${DEFAULT_SPACING}px;
+	top: ${DEFAULT_SPACING * 1.5}px;
 `
 
 // TODO useQuery is used to pass activeId to Page, but that should not be necessary
@@ -43,7 +40,7 @@ const Close = styled.div`
 export default function PageView() {
 	const dispatch = React.useContext(DispatchContext)
 	const page = React.useContext(PageContext)
-	const components = useComponents(DocereComponentContainer.Page, page?.id)
+	const components = useComponents(ContainerType.Page, page?.id)
 
 	const closePage = React.useCallback(() => dispatch({ type: 'UNSET_PAGE' }), [])
 
@@ -51,10 +48,12 @@ export default function PageView() {
 
 	return (
 		<Wrapper id="page-container">
-			<DocereTextView
-				components={components}
-				node={page.doc}
-			/>
+			<ContainerProvider id={page.id} type={ContainerType.Page}>
+				<DocereTextView
+					components={components}
+					node={page.doc}
+				/>
+			</ContainerProvider>
 			<Close onClick={closePage}>✕</Close>
 		</Wrapper>
 	)

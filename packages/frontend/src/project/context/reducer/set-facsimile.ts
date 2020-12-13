@@ -1,9 +1,9 @@
-import { ProjectState, SetFacsimile, Entry, ActiveFacsimile, ID, DocereComponentContainer } from '@docere/common'
+import { ProjectState, SetFacsimile, Entry, ActiveFacsimile, ID, ContainerType } from '@docere/common'
 
 export function createActiveFacsimile(
 	entry: Entry,
 	facsimileId: ID,
-	triggerContainer?: DocereComponentContainer,
+	triggerContainer?: ContainerType,
 	triggerContainerId?: ID,
 ): ActiveFacsimile {
 	return {

@@ -1,4 +1,4 @@
-import { ProjectContextValue, fetchPost, ActiveFacsimile, ID, ElasticSearchFacsimile, ProjectAction, DocereComponentContainer } from '@docere/common'
+import { ProjectContextValue, fetchPost, ActiveFacsimile, ID, ElasticSearchFacsimile, ProjectAction, ContainerType } from '@docere/common'
 import { isHierarchyFacetConfig, isListFacetConfig, isRangeFacetConfig } from '@docere/search'
 import OpenSeadragon from 'openseadragon';
 import TiledImages from './tiled-images'
@@ -66,7 +66,7 @@ export default class CollectionNavigatorController {
 			setEntry: {
 				entryId,
 				facsimileId,
-				triggerContainer: DocereComponentContainer.CollectionNavigator,
+				triggerContainer: ContainerType.CollectionNavigator,
 			}
 		})
 	}

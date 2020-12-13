@@ -1,5 +1,5 @@
 import React from 'react'
-import { useComponents, DocereComponentContainer, Entity, useEntry, ProjectContext } from '@docere/common'
+import { useComponents, ContainerType, Entity, useEntry, ProjectContext } from '@docere/common'
 import DocereTextView from '@docere/text'
 
 import { LinkFooter, EntityWithLinkWrapper } from './link-wrapper'
@@ -35,7 +35,7 @@ export const NoteLinkEntity = React.memo(function(props: EntityComponentProps) {
 	const { config } = React.useContext(ProjectContext)
 	const [fileName] = props.entity.id.split('#')
 	const entry = useEntry(config.slug, fileName.replace(/\.xml$/, ''))
-	const components = useComponents(DocereComponentContainer.Layer)
+	const components = useComponents(ContainerType.Layer)
 
 	return (
 		<EntityWrapper entity={props.entity}>

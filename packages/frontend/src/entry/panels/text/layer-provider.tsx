@@ -1,16 +1,21 @@
 import React from 'react'
-import { LayerContext } from '@docere/common'
-
-import type { StatefulLayer } from '@docere/common'
+import { ContainerContext, ContainerType, ID, ContainerContextValue } from '@docere/common'
 
 interface Props {
 	children: React.ReactNode
-	value: StatefulLayer
+	type: ContainerType
+	id: ID
 }
-export function LayerProvider(props: Props) {
+export function ContainerProvider(props: Props) {
+	const [value, setValue] = React.useState<ContainerContextValue>()
+
+	React.useEffect(() => {
+		setValue({ type: props.type, id: props.id })
+	}, [props.type, props.id])
+
 	return (
-		<LayerContext.Provider value={props.value}>
+		<ContainerContext.Provider value={value}>
 			{props.children}
-		</LayerContext.Provider>
+		</ContainerContext.Provider>
 	) 
 }

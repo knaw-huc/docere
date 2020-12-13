@@ -1,13 +1,13 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import debounce from 'lodash.debounce'
-import { isTextLayer, useComponents, DEFAULT_SPACING, TEXT_PANEL_TEXT_WIDTH, DocereComponentContainer, getTextPanelLeftSpacing, PANEL_HEADER_HEIGHT, StatefulTextLayer, EntrySettingsContext, EntryContext } from '@docere/common'
+import { isTextLayer, useComponents, DEFAULT_SPACING, TEXT_PANEL_TEXT_WIDTH, ContainerType, getTextPanelLeftSpacing, PANEL_HEADER_HEIGHT, StatefulTextLayer, EntrySettingsContext, EntryContext } from '@docere/common'
 import { SearchContext } from '@docere/search'
 import DocereTextView from '@docere/text'
 
 import PanelHeader from '../header'
 import Minimap from './minimap'
-import { LayerProvider } from './layer-provider'
+import { ContainerProvider } from './layer-provider'
 
 import type { DocereConfig } from '@docere/common'
 
@@ -65,7 +65,7 @@ function TextPanel(props: Props) {
 	const [highlightAreas, setHighlightAreas] = React.useState<number[]>([])
 
 	const layer = entry.layers.filter(isTextLayer).find(tl => tl.id === props.layer.id)
-	const components = useComponents(DocereComponentContainer.Layer, layer.id)
+	const components = useComponents(ContainerType.Layer, layer.id)
 
 	const handleScroll = React.useCallback(() => {
 		if (!settings['panels.text.showMinimap']) return
@@ -90,7 +90,7 @@ function TextPanel(props: Props) {
 	}, [settings['panels.text.showMinimap']])
 
 	return (
-		<LayerProvider value={props.layer}>
+		<ContainerProvider type={ContainerType.Layer} id={props.layer.id}>
 			<Wrapper className="text-panel">
 				{
 					settings['panels.showHeaders'] &&
@@ -129,7 +129,7 @@ function TextPanel(props: Props) {
 					/>
 				}
 			</Wrapper>
-		</LayerProvider>
+		</ContainerProvider>
 	)
 }
 

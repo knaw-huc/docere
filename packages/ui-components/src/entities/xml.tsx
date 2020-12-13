@@ -1,12 +1,12 @@
 import React from 'react'
-import { useComponents, DocereComponentContainer } from '@docere/common'
+import { useComponents, ContainerType } from '@docere/common'
 import DocereTextView from '@docere/text'
 
 import { EntityComponentProps, EntityWrapper } from './wrapper'
 import { TextBody } from './text'
 
 export const XmlEntityBody = React.memo(function NoteBody(props: EntityComponentProps) {
-	const components = useComponents(DocereComponentContainer.Layer, props.entity.layerId)
+	const components = useComponents(ContainerType.Layer, props.entity.layerId)
 	return (
 		<TextBody>
 			<DocereTextView 

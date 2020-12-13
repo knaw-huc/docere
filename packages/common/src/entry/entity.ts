@@ -2,7 +2,7 @@ import React from 'react'
 import { ID } from '.'
 import { EntityConfig, FacsimileArea, EntryContext } from '..'
 import { defaultEntityConfig } from '../types/config-data/config'
-import { DocereComponentContainer } from '../enum'
+import { ContainerType } from '../enum'
 
 // Extracted entity
 export interface ExtractedCommon {
@@ -39,7 +39,7 @@ export const defaultEntity: Entity = {
 export type ActiveEntity = Entity & TriggerContainer
 
 export interface TriggerContainer {
-	triggerContainer?: DocereComponentContainer
+	triggerContainer?: ContainerType
 	triggerContainerId?: ID
 }
 

@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { DocereComponentContainer } from '@docere/common'
+import { ContainerType } from '@docere/common'
 import { Pb, NoteTag } from '@docere/text-components'
 
 import type { DocereConfig, DocereComponents, ComponentProps } from '@docere/common'
@@ -21,7 +21,7 @@ function Transcriptie(props: ComponentProps) {
 // }
 
 export default function getComponents(_config: DocereConfig) {
-	return async function(_container: DocereComponentContainer, _id: string): Promise<DocereComponents> {
+	return async function(_container: ContainerType, _id: string): Promise<DocereComponents> {
 		return {
 			em: styled.em``,
 			note: NoteTag,

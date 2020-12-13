@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { LbCommon, Pb } from '@docere/text-components'
 
-import { DocereConfig, ComponentProps, DispatchContext, useEntity, DocereComponentContainer, LayerContext, EntitiesContext } from '@docere/common'
+import { DocereConfig, ComponentProps, DispatchContext, useEntity, EntitiesContext, ContainerContext } from '@docere/common'
 
 const ColumnWrapper = styled.div`
 	margin-bottom: 1rem;
@@ -32,7 +32,7 @@ const LbWrapper = styled.div`
 
 function RepublicLb(props: ComponentProps) {
 	const dispatch = React.useContext(DispatchContext)
-	const layer = React.useContext(LayerContext)
+	const container = React.useContext(ContainerContext)
 	const activeEntities = React.useContext(EntitiesContext)
 
 	const entity = useEntity(props.attributes['docere:id'])
@@ -42,8 +42,8 @@ function RepublicLb(props: ComponentProps) {
 		dispatch({
 			type: 'ADD_ENTITY',
 			entityId: entity.id,
-			triggerContainer: DocereComponentContainer.Layer,
-			triggerContainerId: layer.id
+			triggerContainer: container.type,
+			triggerContainerId: container.id,
 		})
 	}, [entity?.id])
 

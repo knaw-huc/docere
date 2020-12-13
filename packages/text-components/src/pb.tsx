@@ -1,5 +1,5 @@
 import React from 'react'
-import { Colors, DEFAULT_SPACING, Facsimile, EntrySettingsContext, EntryContext, FacsimileContext, ComponentProps, LayerContext, StatefulLayer, DispatchContext, DocereComponentContainer } from '@docere/common'
+import { Colors, DEFAULT_SPACING, Facsimile, EntrySettingsContext, EntryContext, FacsimileContext, ComponentProps, DispatchContext, ContainerType, ContainerContext, ContainerContextValue } from '@docere/common'
 import styled from 'styled-components'
 
 // TODO changed display from grid to inline, which breaks multiple 
@@ -57,12 +57,11 @@ function useFacsimiles(ids: string) {
 
 export function Pb(props: ComponentProps) {
 	const settings = React.useContext(EntrySettingsContext)
-	const layer = React.useContext(LayerContext)
+	const container = React.useContext(ContainerContext)
 	const facsimiles = useFacsimiles(props.attributes['docere:id'])
 
 	if (
 		!settings['panels.text.showPageBeginnings'] ||
-		layer.facsimiles == null ||
 		!facsimiles.length
 	) return null
 
@@ -75,7 +74,7 @@ export function Pb(props: ComponentProps) {
 							<FacsimileThumb
 								facsimile={facsimile}
 								key={facsimile.id}
-								layer={layer}
+								container={container}
 							/>	
 						)
 					}
@@ -87,7 +86,7 @@ export function Pb(props: ComponentProps) {
 
 interface FacsimileThumbProps {
 	facsimile: Facsimile
-	layer: StatefulLayer
+	container: ContainerContextValue
 }
 function FacsimileThumb(props: FacsimileThumbProps) {
 	const dispatch = React.useContext(DispatchContext)
@@ -100,10 +99,10 @@ function FacsimileThumb(props: FacsimileThumbProps) {
 		dispatch({
 			type: 'SET_FACSIMILE',
 			facsimileId,
-			triggerContainer: DocereComponentContainer.Layer,
-			triggerContainerId: props.layer.id,
+			triggerContainer: ContainerType.Layer,
+			triggerContainerId: props.container.id,
 		})
-	}, [props.layer])
+	}, [props.container])
 
 	const version = props.facsimile.versions[0]
 	const src = version.thumbnailPath != null ? version.thumbnailPath : version.path
@@ -115,8 +114,8 @@ function FacsimileThumb(props: FacsimileThumbProps) {
 		if (
 			activeFacsimile.triggerContainer != null && // this happens when the page loads. only scroll when triggerlayer is actively set
 			(
-				activeFacsimile.triggerContainer !== DocereComponentContainer.Layer ||
-				activeFacsimile.triggerContainerId !== props.layer.id
+				activeFacsimile.triggerContainer !== ContainerType.Layer ||
+				activeFacsimile.triggerContainerId !== props.container.id
 			)
 		) {
 			setTimeout(() => {

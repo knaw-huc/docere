@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { EntrySettingsContext, EntitiesContext, useUIComponent, UIComponentType, ComponentProps, LayerContext, DocereComponentContainer, DispatchContext, useEntity } from '@docere/common'
+import { EntrySettingsContext, EntitiesContext, useUIComponent, UIComponentType, ComponentProps, ContainerContext, DispatchContext, useEntity } from '@docere/common'
 
 import { useChildren } from './hooks'
 import IconsByType from './icons'
@@ -55,7 +55,7 @@ export const EntityTag = React.memo(function EntityComp(props: ComponentProps) {
 	const dispatch = React.useContext(DispatchContext)
 	const activeEntities = React.useContext(EntitiesContext)
 	const settings = React.useContext(EntrySettingsContext)
-	const layer = React.useContext(LayerContext)
+	const container = React.useContext(ContainerContext)
 
 	// const entityValue = preProps.extractValue(props)
 	if (!settings['panels.text.showEntities']) return <span>{props.children}</span>
@@ -84,8 +84,8 @@ export const EntityTag = React.memo(function EntityComp(props: ComponentProps) {
 		dispatch({
 			type: 'ADD_ENTITY',
 			entityId: entity.id,
-			triggerContainer: DocereComponentContainer.Layer,
-			triggerContainerId: layer.id
+			triggerContainer: container.type,
+			triggerContainerId: container.id,
 		})
 		setShowTooltip(true)
 	}, [entity?.id])

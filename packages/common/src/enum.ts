@@ -56,7 +56,7 @@ export enum EntityType {
 	Person = 'person',
 }
 
-export enum DocereComponentContainer {
+export enum ContainerType {
 	Layer = 'layer',
 	Page = 'page',
 	Footer = 'footer',

@@ -1,9 +1,9 @@
 import styled from 'styled-components'
 import { NoteTag, Pb, EntityTag, Lb } from '@docere/text-components'
-import { DocereComponentContainer, DocereConfig } from '@docere/common'
+import { ContainerType, DocereConfig } from '@docere/common'
 
 export default function getComponents(_config: DocereConfig) {
-	return async function(_container: DocereComponentContainer, _id: string) {
+	return async function(_container: ContainerType, _id: string) {
 		return {
 			ab: styled.div`margin-bottom: 1rem;`,
 			anchor: NoteTag,
