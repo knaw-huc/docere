@@ -108,22 +108,6 @@ function FacsimileThumb(props: FacsimileThumbProps) {
 	const src = version.thumbnailPath != null ? version.thumbnailPath : version.path
 	const active = activeFacsimile?.id === props.facsimile.id
 
-	React.useEffect(() => {
-		if (!active) return
-
-		if (
-			activeFacsimile.triggerContainer != null && // this happens when the page loads. only scroll when triggerlayer is actively set
-			(
-				activeFacsimile.triggerContainer !== ContainerType.Layer ||
-				activeFacsimile.triggerContainerId !== props.container.id
-			)
-		) {
-			setTimeout(() => {
-				imgRef.current.scrollIntoView({ behavior: 'smooth' })
-			}, 0)
-		}
-	}, [active, activeFacsimile])
-
 	return (
 		<Img
 			active={active}

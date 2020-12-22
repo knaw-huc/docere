@@ -10,6 +10,7 @@ import Minimap from './minimap'
 import { ContainerProvider } from './layer-provider'
 
 import type { DocereConfig } from '@docere/common'
+import { useScrollIntoView } from '../../use-scroll-into-view'
 
 const Wrapper = styled.div`
 	background: white;
@@ -36,7 +37,7 @@ const TextWrapper = styled.div`
 interface TextProps {
 	settings: DocereConfig['entrySettings']
 }
-export const Text = styled.div`
+const Text2 = styled.div`
 	color: #222;
 	counter-reset: linenumber notenumber;
 	font-family: Merriweather, serif;
@@ -48,6 +49,18 @@ export const Text = styled.div`
 	padding: ${DEFAULT_SPACING}px 0 200px ${(props: TextProps) => getTextPanelLeftSpacing(props.settings)}px;
 	position: relative;
 `
+
+function Text(props: any) {
+	useScrollIntoView(props.theRef, ContainerType.Layer, props.layerId)
+
+	return (
+		<Text2
+			settings={props.settings}
+		>
+				{props.children}
+		</Text2>
+	)
+}
 
 interface Props {
 	layer: StatefulTextLayer
@@ -101,13 +114,16 @@ function TextPanel(props: Props) {
 					</PanelHeader>
 				}
 				<TextWrapper
+					data-scroll-container="true"
 					layer={props.layer}
 					onScroll={handleScroll}
 					ref={textWrapperRef}
 					showHeaders={settings['panels.showHeaders']}
 				>
 					<Text 
+						layerId={props.layer.id}
 						settings={settings}
+						theRef={textWrapperRef}
 					>
 						<DocereTextView
 							components={components}

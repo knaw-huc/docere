@@ -15,13 +15,14 @@ const NoWrap = styled.span`
 	white-space: nowrap;
 `
 
+interface WProps { entity: Entity, active: boolean }
 const Wrapper = styled.span`
-	background-color: ${(props: { entity: Entity, active: boolean }) => {
+	background-color: ${(props: WProps) => {
 		return props.active ? props.entity.color : 'rgba(0, 0, 0, 0)'
 	}};
-	${props => 
+	${(props: WProps) => 
 		props.active ?
-			`border-bottom: 3px solid ${props.color};` :
+			`border-bottom: 3px solid ${props.entity.color};` :
 			props.entity.revealOnHover ?
 				`&:hover {
 					border-bottom: 3px solid ${props.entity.color};
@@ -31,7 +32,6 @@ const Wrapper = styled.span`
 	color: ${props => props.active ? 'white' : 'inherit'};
 	cursor: pointer;
 	padding: 0 2px;
-	transition: all 300ms;
 
 	svg.icon {
 		height: .85em;
@@ -99,6 +99,7 @@ export const EntityTag = React.memo(function EntityComp(props: ComponentProps) {
 	return (
 		<Wrapper
 			active={active}
+			data-entity-id={entity.id}
 			entity={entity}
 			onClick={handleClick}
 		>

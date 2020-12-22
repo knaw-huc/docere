@@ -53,6 +53,7 @@ function RepublicLb(props: ComponentProps) {
 		<LbWrapper
 			active={activeEntities.has(entity.id)}
 			color={entity.color}
+			data-entity-id={entity.id}
 		>
 			<div
 				onClick={handleClick}

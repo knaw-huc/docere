@@ -24,7 +24,7 @@ const Li = styled.li`
 interface Props {
 	entity: Entity
 }
-export function ItemInText(props: Props) {
+export const ItemInText = React.memo(function ItemInText(props: Props) {
 	const dispatch = React.useContext(DispatchContext)
 	const Component = useUIComponent(UIComponentType.Entity, props.entity.configId)
 	const container = React.useContext(ContainerContext)
@@ -43,7 +43,7 @@ export function ItemInText(props: Props) {
 	return (
 		<Li
 			count={props.entity.count}
-			data-id={`entity_${props.entity.id}`}
+			data-entity-id={props.entity.id}
 			onClick={handleClick}
 		>
 			<Component
@@ -51,4 +51,4 @@ export function ItemInText(props: Props) {
 			/>
 		</Li>
 	)
-}
+})
