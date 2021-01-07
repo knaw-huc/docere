@@ -64,7 +64,7 @@ const projectList: ProjectList = {
 	},
 	utrechtpsalter: {
 		config: async function() { return await import('./utrechtpsalter/config') },
-		getTextComponents: async function() { return await import('./utrechtpsalter/text-components') }
+		getTextComponents: async function() { return await import('./utrechtpsalter/text-components') },
 	},
 	vangogh: {
 		config: async function() { return await import('./vangogh/config') },

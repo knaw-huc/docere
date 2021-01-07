@@ -1,4 +1,4 @@
-import { EntityType, Colors, EsDataType } from '../../enum'
+import { EntityType, Colors, EsDataType, DTAP } from '../../enum'
 import type { FacetConfig } from '../search/facets'
 import { PageConfig } from '../../page'
 import { FacsimileLayerConfig, TextLayerConfig, ExtractedEntry, ID, ExtractedEntity, ExtractedFacsimile } from '../..'
@@ -22,6 +22,8 @@ export type ExtractFacsimiles = (props: ExtractFacsimilesProps) => ExtractedFacs
 export interface DocereConfig {
 	collection?: { metadataId: string, sortBy: string } /* true if whole project is one collection, MetadataConfig.id if project consists of multiple collections */
 	data?: Record<string, any>
+
+	dtap?: DTAP
 
 	/** Options for the project documents */
 	documents?: {

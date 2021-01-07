@@ -4,7 +4,7 @@
 - $ cd <docere-root>/packages/projects/src
 - $ mdkir -p <new-project-id>/xml <new-project-id>/facsimiles
 - $ cp -r <xml-source> <new-project-id>/xml/
-- $ cp -r <facsimles-source> <new-project-id>/facsimiles/
+- $ cp -r <facsimiles-source> <new-project-id>/facsimiles/
 - $ cp <other-project-id>/index.ts <new-project-id>
 - $ cp <other-project-id>/config.ts <new-project-id>
 - $ cp -r <other-project-id>/components <new-project-id>

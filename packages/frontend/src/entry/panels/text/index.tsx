@@ -34,6 +34,7 @@ const TextWrapper = styled.div`
 	}
 `
 
+// TODO improve name Text2
 interface TextProps {
 	settings: DocereConfig['entrySettings']
 }

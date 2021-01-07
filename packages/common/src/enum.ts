@@ -13,6 +13,13 @@ export enum Colors {
 	Red = '#DB4437'
 }
 
+export enum DTAP {
+	Development,
+	Testing,
+	Acceptance,
+	Production
+}
+
 export enum Language {
 	EN = 'en',
 	NL = 'nl',
