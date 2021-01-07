@@ -4,7 +4,7 @@ import { EntryContext, FOOTER_HANDLE_HEIGHT, ContainerType } from '@docere/commo
 
 import { ItemInText } from './item'
 import { ContainerProvider } from '../../panels/text/layer-provider'
-import { useScrollIntoView } from '../../use-scroll-into-view'
+import { useScrollEntityIntoView } from '../../use-scroll-into-view'
 
 export const List = styled.ul`
 	height: calc(100% - ${FOOTER_HANDLE_HEIGHT}px);
@@ -14,7 +14,7 @@ export const List = styled.ul`
 export function EntityListAside() {
 	const entry = React.useContext(EntryContext)
 	const ref = React.useRef<HTMLUListElement>()
-	useScrollIntoView(ref, ContainerType.Aside, 'entities')
+	useScrollEntityIntoView(ref, ContainerType.Aside, 'entities')
 
 	return (
 		<ContainerProvider type={ContainerType.Aside} id="entities">

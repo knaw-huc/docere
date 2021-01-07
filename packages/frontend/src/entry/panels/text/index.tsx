@@ -10,7 +10,7 @@ import Minimap from './minimap'
 import { ContainerProvider } from './layer-provider'
 
 import type { DocereConfig } from '@docere/common'
-import { useScrollIntoView } from '../../use-scroll-into-view'
+import { useScrollEntityIntoView, useScrollFacsimileIntoView } from '../../use-scroll-into-view'
 
 const Wrapper = styled.div`
 	background: white;
@@ -51,7 +51,8 @@ const Text2 = styled.div`
 `
 
 function Text(props: any) {
-	useScrollIntoView(props.theRef, ContainerType.Layer, props.layerId)
+	useScrollEntityIntoView(props.theRef, ContainerType.Layer, props.layerId)
+	useScrollFacsimileIntoView(props.theRef, ContainerType.Layer, props.layerId)
 
 	return (
 		<Text2
