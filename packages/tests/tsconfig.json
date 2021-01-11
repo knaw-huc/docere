@@ -13,7 +13,8 @@
     "outDir": "./build",
     "removeComments": true,
     "resolveJsonModule": true,
-    "target": "es2017"
+    "target": "es2017",
+    "types": []
   },
   "exclude": [
     "node_modules"

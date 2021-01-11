@@ -1,7 +1,7 @@
 import React from 'react'
 import { UIComponentType } from '@docere/common'
-import { EntityComponentProps, EntityWrapper } from '@docere/text-components'
 import styled from 'styled-components'
+import { EntityComponentProps, EntityWrapper } from '@docere/ui-components'
 
 const Dl = styled.dl`
 	line-height: 1rem;

@@ -24,7 +24,7 @@ function Search() {
 	const uiState = React.useContext(UIContext)
 	const autoSuggest = useAutoSuggest(searchUrl)
 	const ResultBodyComponent = useUIComponent(UIComponentType.SearchResult)
-	const { projectId, entryId } = useParams()
+	const { projectId, entryId } = useParams<{ projectId: string, entryId: string }>()
 
 	const onClickResult = React.useCallback((result: Hit) => {
 		history.push(getEntryPath(projectId, result.id))

@@ -5,7 +5,9 @@ module.exports = () => {
 	// webpackConfig.mode = "production"
 	webpackConfig.output.path = __dirname + '/dist'
 	webpackConfig.output.publicPath = '/dist/'
-	webpackConfig.module.rules[0].options = { configFile: 'tsconfig.dist.json' }
+	webpackConfig.module.rules[0].options = {
+		configFile: 'tsconfig.dist.json'
+	}
 	webpackConfig.externals = {
 		react: 'React',
 		'react-dom': 'ReactDOM'

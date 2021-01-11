@@ -132,7 +132,7 @@ function analyzeStateReducer(analyzeState: AnalyzeState, action: AnalyzeStateAct
 // let historyNavigator: HistoryNavigator
 export default function useAnalyzeState(): [AnalyzeState, React.Dispatch<AnalyzeStateAction>] {
 	const [state, dispatch] = React.useReducer(analyzeStateReducer, initialState)
-	const { projectId } = useParams()
+	const { projectId } = useParams<{ projectId: string }>()
 
 	React.useEffect(() => {
 		fetchJson(`/api/projects/${projectId}/analyze/documents`)

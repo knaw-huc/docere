@@ -47,7 +47,7 @@ interface Props {
 }
 function Layers(props: Props) {
 	// const { config } = React.useContext(ProjectContext)
-	const { projectId, entryId } = useParams()
+	const { projectId, entryId } = useParams<{ projectId: string, entryId: string }>()
 	// const baseUrl = `/api/projects/${config.slug}/documents/${encodeURIComponent(props.entry.id)}`
 	return (
 		<BottomTabWrapper active={props.active}>

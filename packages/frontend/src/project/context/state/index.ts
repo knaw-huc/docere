@@ -17,7 +17,7 @@ import { projectUIReducer } from '../reducer'
  */
 export function useProjectState(): [ProjectState, React.Dispatch<ProjectAction>] {
 	const [state, dispatch] = React.useReducer(projectUIReducer, initialProjectState)
-	const { projectId, entryId } = useParams()
+	const { projectId, entryId } = useParams<{ projectId: string, entryId: string }>()
 	
 	React.useEffect(() => {
 		if (state.config == null || state.setEntry?.entryId == null) return

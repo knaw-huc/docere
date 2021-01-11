@@ -47,7 +47,7 @@ interface Props {
 	values: string[]
 }
 export function SearchList(props: Props) {
-	const { projectId } = useParams()
+	const { projectId } = useParams<{ projectId: string }>()
 
 	return (
 		<>
