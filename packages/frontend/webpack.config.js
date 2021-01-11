@@ -50,7 +50,7 @@ module.exports = {
 	},
 	entry: ['./src/index.tsx'],
 	output: {
-			filename: 'bundle.js',
+			filename: '[name].bundle.js',
 			chunkFilename: '[name].bundle.js',
 			path: __dirname + '/build-dev-server',
 			publicPath: '/build-dev-server/',
@@ -67,11 +67,6 @@ module.exports = {
 				}
 			}
 		]
-	},
-	optimization: {
-		splitChunks: {
-			chunks: 'all'
-		}
 	},
 	plugins: [
 		new webpack.DefinePlugin({

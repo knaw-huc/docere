@@ -7,7 +7,7 @@ export function useOpenSeadragon(): [any, any] {
 	React.useEffect(() => {
 		import('openseadragon' as any)
 			.then(OpenSeadragon => {
-				addSvgOverlayFunctionality(OpenSeadragon)
+				addSvgOverlayFunctionality(OpenSeadragon.default)
 
 				const osdInstance = OpenSeadragon.default({
 					// crossOriginPolicy: 'Anonymous',
