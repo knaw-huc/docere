@@ -72,20 +72,29 @@ export function useProjectState(): [ProjectState, React.Dispatch<ProjectAction>]
 	React.useEffect(() => {
 		if (projectId == null) return
 		
-		if (configs[projectId].getUIComponents == null) configs[projectId].getUIComponents = async () => ({ default: new Map() })
-
-		Promise.all([
+		Promise.allSettled([
 			configs[projectId].config(),
 			configs[projectId].getTextComponents(),
 			configs[projectId].getUIComponents(),
 		]).then(result => {
-			const config = result[0].default
+			const [configResult, textCompResult, UICompResult] = result
+
+			if (configResult.status === 'rejected') {
+				throw new Error(`Project config not found for "${projectId}"`)
+			}
+
+			const config = configResult.value.default
+
 			dispatch({
 				type: 'SET_PROJECT',
 				config,
-				getComponents: result[1].default(config),
+				getComponents: textCompResult.status === 'fulfilled' ?
+					textCompResult.value.default(config) :
+					async () => ({}),
 				searchUrl: `/search/${config.slug}/_search`,
-				uiComponents: result[2].default,
+				uiComponents: UICompResult.status === 'fulfilled' ?
+					UICompResult.value.default :
+					new Map()
 			})
 		})
 	}, [projectId])

@@ -1,6 +1,9 @@
 const path = require('path')
+const webpack = require('webpack')
+const { DTAP } = require('@docere/common')
 
-const { parsed: env, error: envError } = require('dotenv').config({ path: path.resolve(__dirname, '../../.env.dev') })
+// Read the .env file
+const { parsed: env, error: envError } = require('dotenv').config({ path: path.resolve(__dirname, `../../.env.dev`) })
 if (envError) throw envError
 
 module.exports = {
@@ -70,7 +73,13 @@ module.exports = {
 			chunks: 'all'
 		}
 	},
+	plugins: [
+		new webpack.DefinePlugin({
+			DOCERE_DTAP: JSON.stringify(DTAP.Development),
+			...env
+		})
+	],
 	resolve: {
 		extensions: [".webpack.js", ".web.js", ".ts", ".tsx", ".js"],
 	}
-};
+}

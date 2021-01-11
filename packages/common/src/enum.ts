@@ -14,6 +14,7 @@ export enum Colors {
 }
 
 export enum DTAP {
+	Inactive,
 	Development,
 	Testing,
 	Acceptance,

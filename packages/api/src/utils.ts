@@ -9,7 +9,8 @@ import type { DocereConfig, ElasticSearchDocument, MetadataItem, SerializedEntry
 // import { createLookup } from '../../common/src/types/entry'
 
 // const projects = require('esm')(module)(path.resolve(process.cwd(), './packages/projects')).default
-import projects from '@docere/projects'
+
+// import projects from '@docere/projects'
 
 export function getProjectsSourceDir() {
 	// The current working dir is api/, the projects/ dir shares the same parent as api/
@@ -146,18 +147,22 @@ export function isError(payload: any | DocereApiError): payload is DocereApiErro
 }
 
 
-export async function getProjectConfig(projectId: string) {
-	const error: DocereApiError = { code: 404, __error: `Config data not found. Does project '${projectId}' exist?` }
+// export async function getProjectConfig(projectId: string) {
+// 	const error: DocereApiError = { code: 404, __error: `Config data not found. Does project '${projectId}' exist?` }
 
-	let config: DocereConfig | DocereApiError
-	try {
-		const configImport = await projects[projectId].config
-		config = configImport == null ? error : (await configImport()).default
-	} catch (err) {
-		console.log(err)
-		config = error
-	}
+// 	let config: DocereConfig | DocereApiError
+// 	try {
+// 		const configImport = await projects[projectId].config
+// 		config = configImport == null ? error : (await configImport()).default
+// 	} catch (err) {
+// 		console.log(err)
+// 		config = error
+// 	}
 
+// 	return config
+// }
+export async function getProjectConfig(id: string): Promise<DocereConfig> {
+	const { default: config } = await import(`../../projects/src/${id}/config/index`)
 	return config
 }
 
