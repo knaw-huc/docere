@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/index.tsx",
   "scripts": {
-    "build": "rm -rf build && tsc",
+    "build": "tsc --noEmit",
     "watch": "tsc -w --pretty --preserveWatchOutput --noEmit"
   },
   "author": "Gijsjan Brouwer",
