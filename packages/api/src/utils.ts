@@ -1,5 +1,5 @@
-import * as path from 'path'
-import * as fs from 'fs'
+import path from 'path'
+import fs from 'fs'
 import { Response as ExpressResponse } from 'express'
 import chalk from 'chalk'
 import { DTAP, EsDataType, PageConfig } from '@docere/common'

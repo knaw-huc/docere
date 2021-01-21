@@ -22,7 +22,7 @@ services:
     build:
       context: ../../
       dockerfile: ./packages/api/Dockerfile
-    command: ["npx", "nodemon", "--experimental-specifier-resolution=node", "./packages/api", "-w", "./packages/api/build/api", "-w", "./packages/api/build.puppenv.data"]
+    command: ["npx", "nodemon", "./packages/api", "-w", "./packages/api/build/api", "-w", "./packages/api/build.puppenv.data"]
     container_name: docere_api
     env_file:
       - ../../.env.development

@@ -6,12 +6,12 @@
     "build",
     "!build/tsconfig.tsbuildinfo"
   ],
-  "main": "src/index.ts",
-  "type": "module",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
   "scripts": {
-    "build": "tsc --noEmit",
+    "build": "tsc",
     "docs": "typedoc --out docs src --jsx react --ignoreCompilerErrors",
-    "watch": "tsc -w --pretty --preserveWatchOutput --noEmit"
+    "watch": "tsc -w --pretty --preserveWatchOutput"
   },
   "author": "Gijsjan Brouwer",
   "license": "GPL-3.0-or-later",

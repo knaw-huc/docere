@@ -32,7 +32,7 @@ services:
     build:
       context: ../../
       dockerfile: ./packages/api/Dockerfile
-    command: ["node", "--experimental-specifier-resolution=node", "./packages/api"]
+    command: ["node", "./packages/api"]
     container_name: docere_api
     env_file:
       - ../../.env.testing

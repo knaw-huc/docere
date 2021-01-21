@@ -6,7 +6,6 @@
   "private": true,
   "scripts": {
     "build": "./build.sh",
-    "test": "node build/api/src/tests/index.js",
     "watch": "tsc -w --pretty --preserveWatchOutput",
     "watch:puppenv.data": "webpack -w"
   },
@@ -38,6 +37,5 @@
     "webpack-cli": "^4.4.0"
   },
   "author": "Gijsjan Brouwer",
-  "license": "GPL-3.0-or-later",
-  "type": "module"
+  "license": "GPL-3.0-or-later"
 }

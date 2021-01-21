@@ -1,4 +1,4 @@
-import * as path from 'path'
+import path from 'path'
 import puppeteer from 'puppeteer'
 
 import { readFileContents, getXMLPath } from '../utils'

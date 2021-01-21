@@ -11,7 +11,7 @@ import dtsApi from './api/dts'
 import otherApi from './api/other'
 import { BASE_PATH } from './constants'
 
-const copyright = `Docere Copyright (C) 2018 - 2020 Gijsjan Brouwer
+const copyright = `Docere Copyright (C) 2018 - 2021 Gijsjan Brouwer
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
