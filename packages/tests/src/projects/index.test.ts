@@ -11,7 +11,6 @@ const DOCERE_DTAP: DTAP = DTAP[process.env.DOCERE_DTAP]
 
 describe('Projects', () => {
 	beforeAll(async () => {
-		console.log(path.resolve(process.cwd(), '../api/build.puppenv.data/utils.js'))
 		await page.goto(`http://localhost:4444`)
 		await page.addScriptTag({ path: path.resolve(process.cwd(), '../api/build.puppenv.data/utils.js') })
 		await page.addScriptTag({ path: path.resolve(process.cwd(), '../api/build.puppenv.data/projects.js') })

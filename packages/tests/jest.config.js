@@ -1,6 +1,6 @@
 module.exports = {
   preset: './preset.js',
-  transform: {},
-  testEnvironment: 'node',
-  extensionsToTreatAsEsm: [".ts"]
+  // transform: {},
+  // testEnvironment: 'node',
+  // extensionsToTreatAsEsm: [".ts"]
 };

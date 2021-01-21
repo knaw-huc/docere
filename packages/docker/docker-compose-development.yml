@@ -3,6 +3,7 @@ version: "3.6"
 services:
   nginx:
     command: ["nginx", "-c", "/nginx_conf/nginx.conf", "-g", "daemon off;"]
+    container_name: docere_nginx
     image: nginx:1.17.8-alpine
     networks:
       - elastic
@@ -12,7 +13,10 @@ services:
     volumes:
       - ./nginx.conf:/nginx_conf/nginx.conf
       - ./secrets:/var/www/secrets
-      - ../frontend:/var/www/html
+      - ../frontend/index.dist.html:/var/www/html/index.html
+      - ../frontend/index.css:/var/www/html/index.css
+      - ../frontend/static:/var/www/html/static
+      - ../frontend/dist:/var/www/html/dist
 
   api:
     build:
