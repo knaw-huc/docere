@@ -6,22 +6,22 @@
     "esModuleInterop": true,
     "importHelpers": true,
     "jsx": "react",
-    "module": "commonjs",
+    "module": "esnext",
+    "moduleResolution": "node",
     "noImplicitAny": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "outDir": "./build",
     "removeComments": true,
-    "resolveJsonModule": true,
-    "target": "es2017",
+    "target": "esnext",
     "types": []
   },
   "exclude": [
+    "build",
+    "build.puppenv.data",
     "node_modules"
   ],
   "include": [
-    "src/index.ts",
-    "src/indexer.ts",
-    "src/tests"
+    "src/index.ts"
   ]
 }

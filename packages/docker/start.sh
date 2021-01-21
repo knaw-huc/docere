@@ -1,15 +1,23 @@
 #!/usr/bin/env bash
 
+export DOCKER_BUILDKIT=1
+export COMPOSE_DOCKER_CLI_BUILD=1
+
 PROJECT=docere
-# CONTAINERS=$(docker ps -aq -f "name=$PROJECT*")
 CONTAINERS=$(docker ps -aq)
+
+if [[ -z "${DOCERE_DTAP}" ]]; then
+	echo "Error: DOCERE_DTAP is undefined"
+	exit 0
+fi
 
 docker stop $CONTAINERS
 docker rm $CONTAINERS
 
+docker-compose \
+	-p $PROJECT \
+	-f "./packages/docker/docker-compose-${DOCERE_DTAP,,}.yml" \
+	up \
+	-d \
+	--build
 
-if [[ -z "${DEV_ENV}" ]]; then
-	docker-compose -p $PROJECT -f ./packages/docker/docker-compose-prod.yml up --build -d
-else
-	docker-compose -p $PROJECT -f ./packages/docker/docker-compose-dev.yml up --build -d
-fi

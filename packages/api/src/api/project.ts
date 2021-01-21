@@ -5,7 +5,6 @@ import { getProjectIndexMapping } from '../es'
 
 import handleAnalyzeApi from './analyze'
 
-
 import { addRemoteFiles } from '../db/add-documents'
 import { addPagesToDb } from '../db/add-pages'
 import { initProject } from '../db/init-project'
@@ -13,54 +12,62 @@ import { initProjectIndex } from '../es'
 import { castUrlQueryToNumber } from '../utils'
 import Puppenv from '../puppenv'
 import { getPool } from '../db'
+import { dtapMap } from '../../../projects/src/dtap'
+import { DTAP } from '@docere/common'
+import { PROJECT_BASE_PATH } from '../constants'
 
-const PROJECT_BASE_PATH = '/api/projects/:projectId/'
+// @ts-ignore
+const DOCERE_DTAP = DTAP[process.env.DOCERE_DTAP]
 
 export default function handleProjectApi(app: Express, puppenv: Puppenv) {
-	app.get(`${PROJECT_BASE_PATH}config`, async (req, res) => {
+	app.use(PROJECT_BASE_PATH, (req, res, next) => {
+		if (dtapMap[req.params.projectId] < DOCERE_DTAP) res.sendStatus(404)
+		else next()
+	})
+
+	app.get(`${PROJECT_BASE_PATH}/config`, async (req, res) => {
 		const config = await getProjectConfig(req.params.projectId)
 		sendJson(config, res)
 	})
 
-	app.get(`${PROJECT_BASE_PATH}mapping`, async (req, res) => {
+	app.get(`${PROJECT_BASE_PATH}/mapping`, async (req, res) => {
 		const mapping = await getProjectIndexMapping(req.params.projectId)
 		sendJson(mapping, res)
 	})
 
-	app.get(`${PROJECT_BASE_PATH}pages`, async (req, res) => {
+	app.get(`${PROJECT_BASE_PATH}/pages`, async (req, res) => {
 		const pool = await getPool(req.params.projectId)
 		const { rows } = await pool.query(`SELECT name FROM page;`)
 		sendJson(rows, res)
 	})
 
-	app.get(`${PROJECT_BASE_PATH}pages/:pageId`, async (req, res) => {
-		console.log('HERE')
+	app.get(`${PROJECT_BASE_PATH}/pages/:pageId`, async (req, res) => {
 		const pool = await getPool(req.params.projectId)
 		const { rows } = await pool.query(`SELECT content FROM page WHERE name=$1;`, [req.params.pageId])
 		if (!rows.length) res.sendStatus(404)
 		else res.send(rows[0].content)
 	})
 
-	app.get(`${PROJECT_BASE_PATH}pages/:pageId/config`, async (req, res) => {
+	app.get(`${PROJECT_BASE_PATH}/pages/:pageId/config`, async (req, res) => {
 		const pageConfig = await getProjectPageConfig(req.params.projectId, req.params.pageId)
 		sendJson(pageConfig, res)
 	})
 
-	app.get(`${PROJECT_BASE_PATH}xml/:documentId`, async (req, res) => {
+	app.get(`${PROJECT_BASE_PATH}/xml/:documentId`, async (req, res) => {
 		const pool = await getPool(req.params.projectId)
 		const { rows } = await pool.query(`SELECT content FROM xml WHERE name=$1;`, [req.params.documentId])
 		if (!rows.length) res.sendStatus(404)
 		else res.send(rows[0].content)
 	})
 
-	app.get(`${PROJECT_BASE_PATH}xml_prepared/:documentId`, async (req, res) => {
+	app.get(`${PROJECT_BASE_PATH}/xml_prepared/:documentId`, async (req, res) => {
 		const pool = await getPool(req.params.projectId)
 		const { rows } = await pool.query(`SELECT document.content FROM document, xml WHERE xml.name=$1 AND xml.id=document.xml_id;`, [req.params.documentId])
 		if (!rows.length) res.sendStatus(404)
 		else res.send(rows[0].content)
 	})
 
-	app.post(`${PROJECT_BASE_PATH}xml`, async (req, res) => {
+	app.post(`${PROJECT_BASE_PATH}/xml`, async (req, res) => {
 		const { projectId } = req.params
 		const config = await getProjectConfig(projectId)
 		if (isError(config)) return sendJson(config, res)
@@ -78,7 +85,7 @@ export default function handleProjectApi(app: Express, puppenv: Puppenv) {
 		await addPagesToDb(config)
 	})
 
-	app.post(`${PROJECT_BASE_PATH}init`, async (req, res) => {
+	app.post(`${PROJECT_BASE_PATH}/init`, async (req, res) => {
 		await initProject(req.params.projectId)
 		await initProjectIndex(req.params.projectId)
 

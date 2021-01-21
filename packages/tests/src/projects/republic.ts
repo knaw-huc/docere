@@ -17,7 +17,7 @@ export function republicTests() {
 	})
 
 	it('Should have a column with a docere:id', () => {
-		const expected = '<column coords="2703_2573_843_545" facs="NL-HaNA_1.01.02/3760/NL-HaNA_1.01.02_3760_0030.jpg" docere:id="NL-HaNA_1.01.02/3760/NL-HaNA_1.01.02_3760_0030.jpg" docere:type="facsimile">'
+		const expected = '<column coords="2703_2573_843_545" facs="NL-HaNA_1.01.02/3760/NL-HaNA_1.01.02_3760_0030.jpg" docere:id="NL-HaNA_1.01.02_3760_0030" docere:type="facsimile">'
 		expect(entry.content.slice(995, 995 + expected.length)).toBe(expected)
 	})
 

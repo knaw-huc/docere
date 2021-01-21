@@ -1,4 +1,4 @@
-import { extendConfigData, LayerType, Colors, EntityType, xmlToString, EsDataType, DTAP } from '@docere/common'
+import { extendConfigData, LayerType, Colors, EntityType, xmlToString, EsDataType } from '@docere/common'
 import extractFacsimiles from './facsimiles'
 
 export default extendConfigData({
@@ -6,7 +6,6 @@ export default extendConfigData({
 	// 	metadataId: 'filza',
 	// 	sortBy: 'letterno',
 	// },
-	dtap: DTAP.Testing,
 	documents: {
 		remoteDirectories: [
 			'suriano/letters',

@@ -1,5 +1,5 @@
 import React from 'react'
-import { SearchContext, useSearchReducer } from '@docere/search'
+import { SearchContext, useSearchReducer } from '../../../../search/src'
 import useFacetsConfig from '../../search/use-fields'
 
 export function SearchProvider(props: { children: React.ReactNode }) {

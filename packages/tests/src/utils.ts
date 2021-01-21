@@ -2,10 +2,10 @@ import fetch from 'node-fetch'
 import { prepareAndExtract } from '../../api/src/puppenv/prepare-and-extract'
 import { isError } from '../../api/src/utils'
 import { Mapping } from '../../api/src/types'
-import { SerializedEntry } from '@docere/common'
+import { SerializedEntry } from '../../common/src'
 
 import dotenv from 'dotenv'
-dotenv.config({ path: '../../.env.dev'})
+dotenv.config({ path: '../../.env.development'})
 
 async function fetchXml(filePath: string) {
 	const url = `${process.env.DOCERE_XML_URL}${filePath}`

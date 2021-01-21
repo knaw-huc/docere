@@ -3,7 +3,6 @@ import { isTextLayerConfig } from './utils'
 import { PageConfig } from './page'
 
 import type { FacetConfigBase } from './types/search/facets'
-import { DTAP } from './enum'
 
 export const defaultEntrySettings: DocereConfig['entrySettings'] = {
 	'panels.showHeaders': true,
@@ -100,7 +99,6 @@ export function extendConfigData(configDataRaw: DocereConfig): DocereConfig {
 	return {
 		prepare: entry => entry.document.documentElement,
 		plainText: entry => entry.preparedElement.textContent,
-		dtap: DTAP.Development,
 		...config,
 	}
 }

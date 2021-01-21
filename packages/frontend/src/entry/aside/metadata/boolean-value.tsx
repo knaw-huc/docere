@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { SearchContext } from '@docere/search'
+import { SearchContext } from '../../../../../search/src'
 
 import Value from './list-facet/value'
 

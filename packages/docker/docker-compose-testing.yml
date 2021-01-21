@@ -12,12 +12,10 @@ services:
     volumes:
       - ./nginx.conf:/nginx_conf/nginx.conf
       - ./secrets:/var/www/secrets
-      - ../frontend:/var/www/html
-      - ../projects:/var/www/html/node_modules/@docere/projects
-      - /data/gheys/xml:/var/www/html/node_modules/@docere/projects/src/gheys/xml
-      - /data/docere/xml:/var/www/html/node_modules/@docere/projects/src/docere/xml
-      - /data/henegouwseregisters/xml:/var/www/html/node_modules/@docere/projects/src/henegouwseregisters/xml
-      - /data/encyclopaedia-britannica/xml:/var/www/html/node_modules/@docere/projects/src/encyclopaedia-britannica/xml
+      - ../frontend/index.dist.html:/var/www/html/index.html
+      - ../frontend/index.css:/var/www/html/index.css
+      - ../frontend/static:/var/www/html/static
+      - ../frontend/dist:/var/www/html/dist
 
   iiif:
     image: lorisimageserver/loris
@@ -27,15 +25,16 @@ services:
       - 5004:5004
     restart: always
     volumes:
-      - /data/henegouwseregisters/facsimiles:/opt/loris/tests/img/henegouwseregisters
-      - /data/mondrian/facsimiles:/opt/loris/tests/img/mondrian
-      - /data/isidore/facsimiles:/opt/loris/tests/img/isidore
+      - /data/scans:/opt/loris/tests/img
 
   api:
     build:
       context: ../../
       dockerfile: ./packages/api/Dockerfile
-    command: ["node", "./packages/api"]
+    command: ["node", "--experimental-specifier-resolution=node", "./packages/api"]
+    container_name: docere_api
+    env_file:
+      - ../../.env.testing
     networks:
       - elastic
     ports:
@@ -43,11 +42,21 @@ services:
     restart: always
     volumes:
       - ../../:/app
-      - /data/gheys/xml:/app/packages/projects/src/gheys/xml
-      - /data/republic/xml:/app/packages/projects/src/republic/xml
-      - /data/henegouwseregisters/xml:/app/packages/projects/src/henegouwseregisters/xml
-      - /data/encyclopaedia-britannica/xml:/app/packages/projects/src/encyclopaedia-britannica/xml
     working_dir: /app
+
+  db:
+    container_name: docere_db
+    environment:
+      - POSTGRES_PASSWORD=docker
+      - POSTGRES_USER=docker
+      - POSTGRES_HOST=db
+    image: postgis/postgis:12-3.0-alpine
+    networks:
+      - elastic
+    ports:
+      - 5432:5432
+    volumes:
+      - docere_db:/var/lib/postgresql/data
 
   es01:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.6.0
@@ -133,3 +142,6 @@ networks:
   elastic:
     driver: bridge
 
+volumes:
+  docere_db:
+    driver: local

@@ -5,6 +5,8 @@ import { extractLayerElement } from '../../utils'
 import extractFacsimiles from './facsimiles'
 import prepare from './prepare'
 
+const projectId = 'utrechtpsalter'
+
 const config: DocereConfig = {
 	collection: {
 		metadataId: null,
@@ -22,7 +24,7 @@ const config: DocereConfig = {
 		extractFacsimiles,
 		selector: 'imgLocation'
 	},
-	slug: 'utrechtpsalter',
+	slug: projectId,
 	title: 'Utrecht Psalter',
 	layers: [
 		{

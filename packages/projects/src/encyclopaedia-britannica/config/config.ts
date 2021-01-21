@@ -5,13 +5,15 @@ import extractPreparedLayer from './layers'
 import extractFacsimiles from './facsimiles'
 import plainText from './text'
 
+const projectId = 'encyclopaedia-britannica'
+
 const config: DocereConfig = {
 	collection: {
 		metadataId: 'setId',
 		sortBy: null
 	},
 	data: { sets },
-	slug: 'encyclopaedia-britannica',
+	slug: projectId,
 	title: 'Encyclopaedia Britannica',
 	entities: [
 		{

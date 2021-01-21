@@ -9,6 +9,8 @@ function useProjectConfigs() {
 	React.useEffect(() => {
 		fetchJson(`/api/projects`)
 			.then(projects => {
+				console.log(projects, 'hi')
+
 				Promise.all(projects.map((p: string) => fetchJson(`/api/projects/${p}/config`)))
 					.then((configs: any) => {
 						setProjectConfigs(

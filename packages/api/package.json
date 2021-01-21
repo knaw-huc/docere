@@ -7,7 +7,7 @@
   "scripts": {
     "build": "./build.sh",
     "test": "node build/api/src/tests/index.js",
-    "watch": "tsc -w"
+    "watch": "tsc -w --pretty --preserveWatchOutput"
   },
   "dependencies": {
     "@docere/common": "^1.3.6",
@@ -35,5 +35,6 @@
     "typescript": "^4.1.3"
   },
   "author": "Gijsjan Brouwer",
-  "license": "GPL-3.0-or-later"
+  "license": "GPL-3.0-or-later",
+  "type": "module"
 }

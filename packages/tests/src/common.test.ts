@@ -1,4 +1,4 @@
-import { indexOfIterator, getQueryString, getProjectPath, getRectoVersoSequence, getPagePath, getEntryPath } from "@docere/common"
+import { indexOfIterator, getQueryString, getProjectPath, getRectoVersoSequence, getPagePath, getEntryPath } from "../../common/src"
 
 describe('Common', () => {
 	describe('URL', () => {

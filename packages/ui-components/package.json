@@ -2,11 +2,10 @@
   "name": "@docere/ui-components",
   "version": "1.3.6",
   "description": "",
-  "main": "build/index.js",
-  "types": "build/index.d.ts",
+  "main": "src/index.tsx",
   "scripts": {
     "build": "rm -rf build && tsc",
-    "watch": "tsc -w"
+    "watch": "tsc -w --pretty --preserveWatchOutput --noEmit"
   },
   "author": "Gijsjan Brouwer",
   "license": "GPL-3.0-or-later",

@@ -1,8 +1,9 @@
-import { extendConfigData, EsDataType, LayerType, DTAP } from '@docere/common'
+import { extendConfigData, EsDataType, LayerType } from '@docere/common'
 import extractFacsimiles from './facsimiles'
 
+const projectId = 'bosscheschepenprotocollen'
+
 export default extendConfigData({
-	dtap: DTAP.Testing,
 	facsimiles: {
 		extractFacsimileId: el => el.getAttribute('n'),
 		extractFacsimiles,
@@ -39,6 +40,6 @@ export default extendConfigData({
 	// 	],
 	// },
 	private: true,
-	slug: 'bosscheschepenprotocollen',
+	slug: projectId,
 	title: 'Bossche Schepenprotocollen',
 })

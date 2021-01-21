@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { useHistory, useParams } from 'react-router-dom'
-import HucFacetedSearch  from '@docere/search'
+import HucFacetedSearch  from '../../../search/src'
 import { ProjectContext, useUIComponent, UIComponentType, Viewport, Language, getEntryPath, UIContext } from '@docere/common'
 
 import useAutoSuggest from './use-auto-suggest'

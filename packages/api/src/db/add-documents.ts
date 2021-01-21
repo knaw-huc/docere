@@ -49,14 +49,15 @@ export async function addRemoteFiles(
 		return
 	}
 	const dirStructure: XmlDirectoryStructure = await result.json()
-
-	// Add XML files to database
-	// const files = options.maxPerDir ? dirStructure.files.slice(0, options.maxPerDir) : dirStr
 	let { files } = dirStructure
+
+	// If the maxPerDir option is set, slice the files
 	if (options.maxPerDir != null) {
 		const maxPerDirOffset = options.maxPerDirOffset == null ? 0 : options.maxPerDirOffset
 		files = files.slice(maxPerDirOffset, maxPerDirOffset + options.maxPerDir)
 	}
+
+	// Add every XML file to the database
 	for (const filePath of files) {
 		const entryId = getDocumentIdFromRemoteXmlFilePath(filePath, remotePath, projectConfig.documents.stripRemoteDirectoryFromDocumentId)
 		const result = await fetch(`${process.env.DOCERE_XML_URL}${filePath}`)

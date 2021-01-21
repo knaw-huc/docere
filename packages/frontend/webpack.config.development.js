@@ -1,13 +1,8 @@
 const path = require('path')
-const webpack = require('webpack')
-const { DTAP } = require('@docere/common')
+const baseConfig = require('./webpack.config.base')
 
-// Read the .env file
-const { parsed: env, error: envError } = require('dotenv').config({ path: path.resolve(__dirname, `../../.env.dev`) })
-if (envError) throw envError
-
-module.exports = {
-	devServer: {
+module.exports = () => {
+	baseConfig.devServer = {
 		contentBase: path.resolve(__dirname),
 		disableHostCheck: true,
 		headers: { "Access-Control-Allow-Origin": "*" },
@@ -36,7 +31,7 @@ module.exports = {
 			},
 			'/iiif': {
 				changeOrigin: true,
-				target: env.DOCERE_IIIF_URL,
+				target: baseConfig.plugins[0].definitions.DOCERE_IIIF_URL,
 				pathRewrite: {'^/iiif': ''}
 			},
 			// '/xml': {
@@ -47,34 +42,16 @@ module.exports = {
 		watchOptions: {
 			ignored: /node_modules/
 		}
-	},
-	entry: ['./src/index.tsx'],
-	output: {
-			filename: '[name].bundle.js',
-			chunkFilename: '[name].bundle.js',
-			path: __dirname + '/build-dev-server',
-			publicPath: '/build-dev-server/',
-	},
-	mode: 'development',
-	module: {
-		rules: [
-			{
-				exclude: /node_modules/,
-				test: /\.tsx?$/,
-				loader: "ts-loader",
-				options: {
-					transpileOnly: true
-				}
-			}
-		]
-	},
-	plugins: [
-		new webpack.DefinePlugin({
-			DOCERE_DTAP: JSON.stringify(DTAP.Development),
-			...env
-		})
-	],
-	resolve: {
-		extensions: [".webpack.js", ".web.js", ".ts", ".tsx", ".js"],
 	}
+
+	baseConfig.entry = ['./src/index.tsx']
+
+	baseConfig.output = {
+		filename: '[name].bundle.js',
+		chunkFilename: '[name].bundle.js',
+		path: __dirname + '/build-dev-server',
+		publicPath: '/build-dev-server/',
+	}
+
+	return baseConfig
 }

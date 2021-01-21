@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import { Entry, ActiveFacsimile, ID, ActiveEntities, ProjectAction } from '@docere/common'
 
 export class AreaRenderer {
@@ -169,8 +169,8 @@ export class AreaRenderer {
 export default function useAreaRenderer(osd: any, OpenSeadragon: any, dispatch: React.Dispatch<ProjectAction>) {
 	const [areaRenderer, setAreaRenderer] = React.useState<AreaRenderer>(null)
 	React.useEffect(() => {
-		if (osd == null) return
+		if (osd == null || OpenSeadragon == null) return
 		setAreaRenderer(new AreaRenderer(osd, OpenSeadragon, dispatch))
-	}, [osd])
+	}, [osd, OpenSeadragon])
 	return areaRenderer
 }

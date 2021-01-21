@@ -1,23 +1,15 @@
-// import type { DocereConfigData, GetUIComponent, GetComponents, DocereConfig } from '@docere/common'
 import { ProjectList } from '@docere/common'
+import { dtapMap } from './dtap'
 
 const projectList: ProjectList = {
-	achterdeschermen: {
-		config: async function() { return await import('./achterdeschermen/config') },
-		getTextComponents: async function() { return await import('./achterdeschermen/text-components') },
-	},
 	bosscheschepenprotocollen: {
 		config: async function() { return await import('./bosscheschepenprotocollen/config') },
 		getTextComponents: async function() { return await import('./bosscheschepenprotocollen/text-components') },
 	},
-	ecodicesnl: {
-		config: async function() { return await import('./ecodicesnl/config') },
-		getTextComponents: async function() { return { default: () => async () => ({}) } },
-	},
-	'encyclopaedia-britannica': {
-		config: async function() { return await import('./encyclopaedia-britannica/config') },
-		getTextComponents: async function() { return await import('./encyclopaedia-britannica/text-components') },
-	},
+	// ecodicesnl: {
+	// 	config: async function() { return await import('./ecodicesnl/config') },
+	// 	getTextComponents: async function() { return { default: () => async () => ({}) } },
+	// },
 	florariumtemporum: {
 		config: async function() { return await import('./florariumtemporum/config') },
 		getTextComponents: async function() { return await import('./suriano/text-components') }
@@ -62,10 +54,10 @@ const projectList: ProjectList = {
 		getTextComponents: async function() { return await import('./suriano/text-components') },
 		getUIComponents: async function() { return await import('./suriano/ui-components') },
 	},
-	utrechtpsalter: {
-		config: async function() { return await import('./utrechtpsalter/config') },
-		getTextComponents: async function() { return await import('./utrechtpsalter/text-components') },
-	},
+	// utrechtpsalter: {
+	// 	config: async function() { return await import('./utrechtpsalter/config') },
+	// 	getTextComponents: async function() { return await import('./utrechtpsalter/text-components') },
+	// },
 	vangogh: {
 		config: async function() { return await import('./vangogh/config') },
 		getTextComponents: async function() { return await import('./vangogh/text-components') },
@@ -73,5 +65,18 @@ const projectList: ProjectList = {
 	},
 }
 
-export default projectList
+declare global {
+	const DOCERE_DTAP: string
+}
+
+let currentProjects: ProjectList = {}
+
+for (const projectId of Object.keys(projectList)) {
+	if (dtapMap[projectId] == null) console.error(`Project "${projectId}" has no DTAP`)
+	if (dtapMap[projectId] >= DOCERE_DTAP) {
+		currentProjects[projectId] = projectList[projectId]
+	}
+}
+
+export default currentProjects
 

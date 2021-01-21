@@ -1,9 +1,8 @@
-import { extendConfigData, ExtractEntitiesProps, FacsimileArea, Colors, DTAP } from '@docere/common'
+import { extendConfigData, ExtractEntitiesProps, FacsimileArea, Colors } from '@docere/common'
 import { LayerType, EsDataType } from '@docere/common'
 import extractFacsimiles from './facsimiles'
 
 export default extendConfigData({
-	dtap: DTAP.Testing,
 	slug: 'republic',
 	title: 'Republic',
 	collection: {

@@ -1,13 +1,15 @@
-import * as path from 'path'
+import fs from 'fs'
+import path from 'path'
 import express from 'express'
 import chalk from 'chalk'
 
 import Puppenv from './puppenv'
-import { listProjects, getElasticSearchDocument, sendJson, isError } from './utils'
+import { listProjects, sendJson } from './utils'
 import projectApi from './api/project'
 import documentApi from './api/document'
 import dtsApi from './api/dts'
 import otherApi from './api/other'
+import { BASE_PATH } from './constants'
 
 const copyright = `Docere Copyright (C) 2018 - 2020 Gijsjan Brouwer
 
@@ -47,42 +49,25 @@ async function main() {
 	const puppenv = new Puppenv()
 	await puppenv.start()
 
-	app.get('/api', (_req, res) => res.json({
-		title: 'Docere API',
-		version: '0.0.0'
-	}))
+	app.get(BASE_PATH, (_req, res) => {
+		const pkg = fs.readFileSync(path.resolve('./packages/api/package.json'), 'utf8')
 
-	app.get('/api/swaggerconfig', (_req, res) => {
+		res.json({
+			title: 'Docere API',
+			version: JSON.parse(pkg).version
+		})
+	})
+
+	app.get(`${BASE_PATH}/swaggerconfig`, (_req, res) => {
 		res.sendFile(path.resolve('./packages/api/swagger.yml'))
 	})
 
-	app.get('/api/projects', (_req, res) => sendJson(listProjects(), res))
+	app.get(`${BASE_PATH}/projects`, (_req, res) => sendJson(listProjects(), res))
 
 	projectApi(app, puppenv)
-	documentApi(app)
+	documentApi(app, puppenv)
 	dtsApi(app)
 	otherApi(app)
-
-	/*
-	 * Usage example:
-	 * $ curl -X POST localhost:3000/projects/<projectId>/documents/<docId>/fields -H content-type:text/xml -d @/path/to/file.xml
-	 */
-	app.post('/projects/:projectId/documents/:documentId/fields', async (req, res) => {
-		if (req.headers['content-type'] !== 'application/xml' && req.headers['content-type'] !== 'text/xml') {
-			sendJson({ code: 415, __error: 'Missing the HTTP Content-type header for XML' }, res)
-		}
-		if (req.body == null || !req.body.length) {
-			sendJson({ __error: 'The payload body should be the contents of an XML file.' }, res)
-		}
-
-		const prepareAndExtractOutput = await puppenv.prepareAndExtract(req.body, req.params.projectId, req.params.documentId)
-		if (isError(prepareAndExtractOutput)) {
-			sendJson(prepareAndExtractOutput, res)
-			return
-		}
-		const [extractedEntry] = prepareAndExtractOutput
-		sendJson(getElasticSearchDocument(extractedEntry), res)
-	})
 
 	app.listen(port, () => {
 		console.log(`Docere API running on port ${port}`)

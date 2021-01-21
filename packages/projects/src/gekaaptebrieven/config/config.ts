@@ -1,4 +1,4 @@
-import { EsDataType, LayerType, ExtractedEntry, DTAP } from '@docere/common'
+import { EsDataType, LayerType, ExtractedEntry } from '@docere/common'
 import { DocereConfig } from '@docere/common'
 import extractFacsimiles from './facsimiles'
 import prepare from './prepare'
@@ -19,7 +19,6 @@ function getTextContent(selector: string) {
 
 
 const config: DocereConfig = {
-	dtap: DTAP.Testing,
 	slug: 'gekaaptebrieven',
 	title: 'Gekaapte brieven',
 	searchResultCount: 20,

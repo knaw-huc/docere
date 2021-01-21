@@ -1,5 +1,5 @@
-import * as React from 'react'
-import { SearchContext } from '@docere/search'
+import React from 'react'
+import { SearchContext } from '../../../../../../search/src'
 
 import Value from './value'
 

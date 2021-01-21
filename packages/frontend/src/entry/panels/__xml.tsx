@@ -1,8 +1,6 @@
 import * as React from 'react'
 import styled from 'styled-components'
 
-declare global { const Prism: any }
-
 const Wrapper = styled.div`
 	overflow-y: auto;
 

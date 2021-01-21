@@ -67,7 +67,6 @@ export default class Puppenv {
 		await page.addScriptTag({ path: path.resolve(process.cwd(), './packages/api/build.puppenv.data/utils.js') })
 		await page.addScriptTag({ path: path.resolve(process.cwd(), './packages/api/build.puppenv.data/projects.js') })
 
-
 		this.pages.set(projectId, page)	
 		console.log(`Return ${projectId} page`)
 		return page

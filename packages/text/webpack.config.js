@@ -10,7 +10,6 @@ module.exports = {
 		globalObject: 'this',
 		library: "DocereText",
 		libraryTarget: "umd",
-		// path: __dirname + "/dist",
 		path: path.resolve(__dirname, './build')
 	},
 	resolve: {

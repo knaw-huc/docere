@@ -14,11 +14,11 @@ export enum Colors {
 }
 
 export enum DTAP {
-	Inactive,
-	Development,
-	Testing,
-	Acceptance,
-	Production
+	Inactive = 'Inactive',
+	Development = 'Development',
+	Testing = 'Testing',
+	Acceptance = 'Acceptance',
+	Production = 'Production'
 }
 
 export enum Language {

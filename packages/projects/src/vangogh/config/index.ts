@@ -3,6 +3,8 @@ import extractFacsimiles from './facsimiles'
 import prepare from './prepare'
 import metadata from './metadata'
 
+const projectId = 'vangogh'
+
 export default extendConfigData({
 	entities: [
 		{
@@ -109,7 +111,7 @@ export default extendConfigData({
 		},
 	],
 	metadata,
-	slug: 'vangogh',
+	slug: projectId,
 	title: 'Van Gogh Letters',
 	pages: [],
 	prepare,

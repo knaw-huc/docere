@@ -2,10 +2,22 @@ import * as path from 'path'
 import * as fs from 'fs'
 import { Response as ExpressResponse } from 'express'
 import chalk from 'chalk'
-import { EsDataType, PageConfig } from '@docere/common'
+import { DTAP, EsDataType, PageConfig } from '@docere/common'
 
 import type { DocereApiError } from './types'
 import type { DocereConfig, ElasticSearchDocument, MetadataItem, SerializedEntry } from '@docere/common'
+import { dtapMap } from '../../projects/src/dtap'
+
+// @ts-ignore
+const DOCERE_DTAP = DTAP[process.env.DOCERE_DTAP]
+
+// Object.keys(dtapMap).forEach(id => {
+	// const configPath = path.resolve(process.cwd(), `./packages/projects/src/suriano/config/index`)
+	// const configPath = '../../projects/src/suriano/config'
+	// import(configPath).then(x => console.log(x))
+
+// })
+
 // import { createLookup } from '../../common/src/types/entry'
 
 // const projects = require('esm')(module)(path.resolve(process.cwd(), './packages/projects')).default
@@ -100,12 +112,8 @@ function getDirents(dirPath: string) {
 }
 
 export function listProjects() {
-	const sourceDir = getProjectsSourceDir()
-	const dirents = getDirents(sourceDir)
-
-	return dirents
-		.filter(dirent => dirent.isDirectory())
-		.map(dirent => dirent.name)
+	return Object.keys(dtapMap)
+		.filter(projectId => dtapMap[projectId] >= DOCERE_DTAP)
 }
 
 /**
@@ -147,22 +155,9 @@ export function isError(payload: any | DocereApiError): payload is DocereApiErro
 }
 
 
-// export async function getProjectConfig(projectId: string) {
-// 	const error: DocereApiError = { code: 404, __error: `Config data not found. Does project '${projectId}' exist?` }
-
-// 	let config: DocereConfig | DocereApiError
-// 	try {
-// 		const configImport = await projects[projectId].config
-// 		config = configImport == null ? error : (await configImport()).default
-// 	} catch (err) {
-// 		console.log(err)
-// 		config = error
-// 	}
-
-// 	return config
-// }
 export async function getProjectConfig(id: string): Promise<DocereConfig> {
-	const { default: config } = await import(`../../projects/src/${id}/config/index`)
+	const configPath = `../../projects/src/${id}/config`
+	const { default: config } = await import(configPath)
 	return config
 }
 

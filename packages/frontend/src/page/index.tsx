@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import DocereTextView from '@docere/text'
+import DocereTextView from '../../../text/src'
 import { TOP_OFFSET, DEFAULT_SPACING, ContainerType, useComponents, PageContext, DispatchContext } from '@docere/common'
 import { ContainerProvider } from '../entry/panels/text/layer-provider'
 

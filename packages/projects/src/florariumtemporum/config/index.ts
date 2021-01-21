@@ -2,6 +2,8 @@ import { extendConfigData, LayerType, Colors, EntityType } from '@docere/common'
 import extractFacsimiles from './facsimiles'
 import prepare from './prepare'
 
+const projectId = 'florariumtemporum'
+
 export default extendConfigData({
 	collection: {
 		metadataId: 'n',
@@ -48,6 +50,6 @@ export default extendConfigData({
 	],
 	prepare,
 	private: true,
-	slug: 'florariumtemporum',
+	slug: projectId,
 	title: "Florarium temporum",
 })

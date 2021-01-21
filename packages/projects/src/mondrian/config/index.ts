@@ -1,9 +1,8 @@
-import { extendConfigData, EsDataType, Colors, EntityType, LayerType, xmlToString, DTAP } from '@docere/common'
+import { extendConfigData, EsDataType, Colors, EntityType, LayerType, xmlToString } from '@docere/common'
 import { extractLayerElement } from '../../utils'
 import extractFacsimiles from './facsimiles'
 
 export default extendConfigData({
-	dtap: DTAP.Testing,
 	metadata: [
 		{
 			datatype: EsDataType.Date,

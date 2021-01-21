@@ -2,15 +2,15 @@ import * as React from 'react'
 import styled from 'styled-components'
 import debounce from 'lodash.debounce'
 import { isTextLayer, useComponents, DEFAULT_SPACING, TEXT_PANEL_TEXT_WIDTH, ContainerType, getTextPanelLeftSpacing, PANEL_HEADER_HEIGHT, StatefulTextLayer, EntrySettingsContext, EntryContext } from '@docere/common'
-import { SearchContext } from '@docere/search'
-import DocereTextView from '@docere/text'
+import { SearchContext } from '../../../../../search/src'
+import DocereTextView from '../../../../../text/src'
 
+import { useScrollEntityIntoView, useScrollFacsimileIntoView } from '../../use-scroll-into-view'
 import PanelHeader from '../header'
 import Minimap from './minimap'
 import { ContainerProvider } from './layer-provider'
 
 import type { DocereConfig } from '@docere/common'
-import { useScrollEntityIntoView, useScrollFacsimileIntoView } from '../../use-scroll-into-view'
 
 const Wrapper = styled.div`
 	background: white;

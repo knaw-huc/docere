@@ -9,6 +9,7 @@
 		"jsx": "react",
 		"lib": [
 			"DOM",
+			"DOM.Iterable",
 			"ES2020"
 		],
 		"module": "esnext",
@@ -19,7 +20,7 @@
 		"outDir": "./build",
 		"removeComments": true,
 		"resolveJsonModule": true,
-		"target": "es6",
+		"target": "esnext",
 		"types": []
 	},
 	"exclude": [

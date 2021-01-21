@@ -1,5 +1,5 @@
 import { ProjectContextValue, fetchPost, ActiveFacsimile, ID, ElasticSearchFacsimile, ProjectAction, ContainerType } from '@docere/common'
-import { isHierarchyFacetConfig, isListFacetConfig, isRangeFacetConfig } from '@docere/search'
+import { isHierarchyFacetConfig, isListFacetConfig, isRangeFacetConfig } from '../../../../../search/src'
 import OpenSeadragon from 'openseadragon';
 import TiledImages from './tiled-images'
 
