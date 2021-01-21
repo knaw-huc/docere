@@ -3,10 +3,10 @@
   "version": "1.3.6",
   "description": "",
   "main": "build/bundle.js",
-  "types": "build/index.d.ts",
+  "types": "build/types/index.d.ts",
   "scripts": {
-    "build": "webpack",
-    "dist": "webpack --config webpack.config.prod.js",
+    "build": "./build.sh",
+    "dist": "./dist.sh",
     "watch": "tsc -w --pretty --preserveWatchOutput --noEmit"
   },
   "author": "",
