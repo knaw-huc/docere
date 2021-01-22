@@ -5,8 +5,6 @@ services:
     command: ["nginx", "-c", "/nginx_conf/nginx.conf", "-g", "daemon off;"]
     container_name: docere_nginx
     image: nginx:1.17.8-alpine
-    networks:
-      - elastic
     ports:
       - "80:80"
     restart: always
@@ -26,8 +24,6 @@ services:
     container_name: docere_api
     env_file:
       - ../../.env.development
-    networks:
-      - elastic
     ports:
       - "3000:3000"
     restart: always
@@ -37,17 +33,13 @@ services:
 
   db:
     container_name: docere_db
-    environment:
-      - POSTGRES_PASSWORD=docker
-      - POSTGRES_USER=docker
-      - POSTGRES_HOST=db
-    image: postgis/postgis:12-3.0-alpine
-    networks:
-      - elastic
+    env_file:
+      - ../../.env.development
+    image: postgis/postgis:13-3.1-alpine
     ports:
       - 5432:5432
     volumes:
-      - docere_db:/var/lib/postgresql/data
+      - db_dev:/var/lib/postgresql/data
 
   es01:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.6.0
@@ -59,21 +51,14 @@ services:
       memlock:
         soft: -1
         hard: -1
-    networks:
-      - elastic
     restart: always
     ports:
       - 9200:9200
     volumes:
-      - docere_es_dev:/usr/share/elasticsearch/data
+      - es_dev:/usr/share/elasticsearch/data
 
 volumes:
-  docere_db:
+  db_dev:
     driver: local
-  docere_es_dev:
+  es_dev:
     driver: local
-
-networks:
-  elastic:
-    driver: bridge
-

@@ -156,7 +156,7 @@ export function isError(payload: any | DocereApiError): payload is DocereApiErro
 
 
 export async function getProjectConfig(id: string): Promise<DocereConfig> {
-	const configPath = `../../projects/src/${id}/config`
+	const configPath = path.resolve(process.cwd(), `./packages/projects/build/${id}/config`)
 	const { default: config } = await import(configPath)
 	return config
 }

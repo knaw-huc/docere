@@ -1,9 +1,12 @@
 import pg from 'pg'
 
+import dotenv from 'dotenv'
+dotenv.config({ path: `../../.env.${process.env.DOCERE_DTAP.toLowerCase()}`})
+
 const pgConnection = {
-	password: 'docker',
-	user: 'docker',
-	host: 'db',
+	password: process.env.POSTGRES_PASSWORD,
+	user: process.env.POSTGRES_USER,
+	host: process.env.POSTGRES_HOST,
 }
 
 const poolCache: Map<string, pg.Pool> = new Map()
