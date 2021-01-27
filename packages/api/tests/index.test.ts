@@ -1,4 +1,4 @@
-import { getDocumentIdFromRemoteXmlFilePath } from "../../api/src/utils"
+import { getDocumentIdFromRemoteXmlFilePath } from "../src/utils"
 
 describe('API', () => {
 	describe('extractDocumentIdFromRemoteFilePath', () => {
