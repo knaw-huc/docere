@@ -5,8 +5,8 @@
   "private": true,
   "scripts": {
     "build": "rm -rf build && tsc",
-    "serve": "webpack serve --config webpack.config.development.js",
-    "dist": "rm -rf dist && webpack --config webpack.config.testing.js",
+    "serve": "webpack serve --config webpack.config.local.js",
+    "dist": "rm -rf dist && webpack --config webpack.config.remote.js",
     "watch": "tsc -w --pretty --preserveWatchOutput --noEmit"
   },
   "author": "",
@@ -27,6 +27,7 @@
     "@types/react-router-dom": "^5.1.7",
     "@types/webpack": "^4.41.26",
     "@types/webpack-dev-server": "^3.11.1",
+    "html-webpack-plugin": "4.5.1",
     "ts-node": "^9.1.1",
     "typescript": "^4.1.3",
     "webpack": "^5.16.0",

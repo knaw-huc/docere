@@ -6,7 +6,7 @@ if (envError) throw envError
 
 module.exports = () => {
 	baseConfig.devServer = {
-		contentBase: path.resolve(__dirname),
+		contentBase: path.resolve(process.cwd(), '../../public'),
 		disableHostCheck: true,
 		headers: { "Access-Control-Allow-Origin": "*" },
 		historyApiFallback: {
@@ -50,10 +50,10 @@ module.exports = () => {
 	baseConfig.entry = ['./src/index.tsx']
 
 	baseConfig.output = {
-		filename: '[name].bundle.js',
-		chunkFilename: '[name].bundle.js',
+		filename: 'js/[fullhash].main.js',
+		chunkFilename: 'js/[id].chunk.js',
 		path: __dirname + '/build-dev-server',
-		publicPath: '/build-dev-server/',
+		publicPath: '/',
 	}
 
 	return baseConfig

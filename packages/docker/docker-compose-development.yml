@@ -11,10 +11,7 @@ services:
     volumes:
       - ./nginx.conf:/nginx_conf/nginx.conf
       - ./secrets:/var/www/secrets
-      - ../frontend/index.dist.html:/var/www/html/index.html
-      - ../frontend/index.css:/var/www/html/index.css
-      - ../frontend/static:/var/www/html/static
-      - ../frontend/dist:/var/www/html/dist
+      - ../../public:/var/www/html
 
   api:
     build:

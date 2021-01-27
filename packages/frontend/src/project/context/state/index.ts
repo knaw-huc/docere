@@ -1,7 +1,7 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import { Viewport, ProjectState, initialProjectState, ProjectAction, fetchEntry, fetchPage } from '@docere/common'
-import configs from '@docere/projects'
+import configs from '../../../../../projects/src'
 
 import { projectUIReducer } from '../reducer'
 
