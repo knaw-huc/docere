@@ -1,15 +1,8 @@
 const path = require('path')
 const webpack = require('webpack')
 
-if (
-	process.env.DOCERE_DTAP !== 'Development' &&
-	process.env.DOCERE_DTAP !== 'Testing' && 
-	process.env.DOCERE_DTAP !== 'Acceptance' && 
-	process.env.DOCERE_DTAP !== 'Production'
-) throw Error('DOCERE_DTAP environment variable is not set')
-
 // Read the .env file
-const { parsed: env, error: envError } = require('dotenv').config({ path: path.resolve(__dirname, `../../.env.${process.env.DOCERE_DTAP.toLowerCase()}`) })
+const { parsed: env, error: envError } = require('dotenv').config({ path: path.resolve(process.cwd(), `../../.env`) })
 if (envError) throw envError
 
 module.exports = {
@@ -26,12 +19,13 @@ module.exports = {
 			}
 		]
 	},
-	plugins: [
-		new webpack.DefinePlugin({
-			...env,
-			DOCERE_DTAP: JSON.stringify(process.env.DOCERE_DTAP),
-		})
-	],
+	// plugins: [new webpack.DefinePlugin()],
+	plugins: [new webpack.DefinePlugin(
+		Object.keys(env).reduce((prev, curr) => {
+			prev[curr] = JSON.stringify(env[curr])
+			return prev
+		}, {})
+	)],
 	resolve: {
 		extensions: [".webpack.js", ".web.js", ".ts", ".tsx", ".js"],
 	}

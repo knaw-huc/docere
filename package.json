@@ -6,13 +6,15 @@
   "scripts": {
     "build": "lerna run build",
     "dist": "lerna run dist",
-    "dist:development": "DOCERE_DTAP=Development lerna run dist",
-    "dist:testing": "DOCERE_DTAP=Testing lerna run dist",
+    "dist:development": "cp .env.development .env && lerna run dist",
+    "dist:testing": "cp .env.testing .env && lerna run dist",
     "install": "./install.sh",
     "publish": "lerna publish",
-    "start:testing": "DOCERE_DTAP=Testing ./packages/docker/start.sh",
     "start:development": "DOCERE_DTAP=Development ./packages/docker/start.sh",
+    "start:testing": "DOCERE_DTAP=Testing ./packages/docker/start.sh",
     "test": "cd ./packages/tests && npm t",
+    "test:development": "cp .env.development .env && cd ./packages/tests && npm t",
+    "test:testing": "cp .env.testing .env && cd ./packages/tests && npm t",
     "watch": "lerna run watch --parallel"
   },
   "devDependencies": {

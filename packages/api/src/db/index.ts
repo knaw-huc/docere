@@ -1,8 +1,5 @@
 import pg from 'pg'
 
-import dotenv from 'dotenv'
-dotenv.config({ path: `../../.env.${process.env.DOCERE_DTAP.toLowerCase()}`})
-
 const pgConnection = {
 	password: process.env.POSTGRES_PASSWORD,
 	user: process.env.POSTGRES_USER,

@@ -2,12 +2,16 @@ import { DTAP } from '../../../common/src'
 import path from 'path'
 import { dtapMap } from '../../../projects/src/dtap'
 
+import dotenv from 'dotenv'
+dotenv.config({ path: path.resolve(process.cwd(), '../../.env') })
+
 /**
  * Convert environment variable to DTAP number. This doesn't
  * validate so we ignore the TS error
  */
 // @ts-ignore
 const DOCERE_DTAP: DTAP = DTAP[process.env.DOCERE_DTAP]
+
 
 describe('Projects', () => {
 	beforeAll(async () => {
@@ -37,7 +41,8 @@ describe('Projects', () => {
 		 * or should it than fail? TODO
 		 */
 		try {
-			const x = require(`./${projectId}`)
+			const testsPath = path.resolve(process.cwd(), `../projects/src/${projectId}/tests/index.test.ts`)
+			const x = require(testsPath)
 			describe(projectId, x[`${projectId}Tests`])
 		} catch (err) {
 			console.log(`No tests found for project: "${projectId}"`)	

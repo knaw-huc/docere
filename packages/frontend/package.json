@@ -5,11 +5,8 @@
   "private": true,
   "scripts": {
     "build": "rm -rf build && tsc",
-    "serve": "DOCERE_DTAP=Development webpack serve --config webpack.config.development.js",
+    "serve": "webpack serve --config webpack.config.development.js",
     "dist": "rm -rf dist && webpack --config webpack.config.testing.js",
-    "dist:testing": "DOCERE_DTAP=Testing npm run dist",
-    "dist:acceptance": "DOCERE_DTAP=Acceptance npm run dist",
-    "dist:production": "DOCERE_DTAP=Production npm run dist",
     "watch": "tsc -w --pretty --preserveWatchOutput --noEmit"
   },
   "author": "",

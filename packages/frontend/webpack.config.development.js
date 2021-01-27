@@ -1,6 +1,9 @@
 const path = require('path')
 const baseConfig = require('./webpack.config.base')
 
+const { parsed: env, error: envError } = require('dotenv').config({ path: path.resolve(process.cwd(), `../../.env`) })
+if (envError) throw envError
+
 module.exports = () => {
 	baseConfig.devServer = {
 		contentBase: path.resolve(__dirname),
@@ -31,7 +34,7 @@ module.exports = () => {
 			},
 			'/iiif': {
 				changeOrigin: true,
-				target: baseConfig.plugins[0].definitions.DOCERE_IIIF_URL,
+				target: env.DOCERE_IIIF_URL,
 				pathRewrite: {'^/iiif': ''}
 			},
 			// '/xml': {

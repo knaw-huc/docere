@@ -4,7 +4,9 @@
   "description": "",
   "private": true,
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "test:development": "cp .env.development .env && npm t",
+    "test:testing": "cp .env.testing .env && npm t"
   },
   "dependencies": {
     "@docere/common": "^1.3.6",

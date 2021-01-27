@@ -31,7 +31,7 @@ services:
     command: ["node", "./packages/api"]
     container_name: docere_api
     env_file:
-      - ../../.env.testing
+      - ../../.env
     ports:
       - 3000
     restart: always
@@ -42,7 +42,7 @@ services:
   db:
     container_name: docere_db
     env_file:
-      - ../../.env.testing
+      - ../../.env
     image: postgis/postgis:13-3.1-alpine
     ports:
       - 5432

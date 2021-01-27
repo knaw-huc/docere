@@ -14,10 +14,11 @@ fi
 docker stop $CONTAINERS
 docker rm $CONTAINERS
 
+cp ".env.${DOCERE_DTAP,,}" .env
+
 docker-compose \
 	-p $PROJECT \
 	-f "./packages/docker/docker-compose-${DOCERE_DTAP,,}.yml" \
 	up \
 	-d \
 	--build
-

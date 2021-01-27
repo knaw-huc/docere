@@ -9,7 +9,7 @@ module.exports = () => {
 		projects: "../projects/src/index.ts"
 	}
 
-	config.mode = 'production'
+	config.mode = 'development'
 
 	config.module.rules[0].options.transpileOnly = false
 

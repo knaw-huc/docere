@@ -1,5 +1,5 @@
-import { SerializedEntry } from '../../../common/src'
-import { fetchEntry } from '../utils'
+import { SerializedEntry } from '@docere/common'
+import { fetchEntry } from '../../../../tests/src/utils'
 import { isSerializedTextLayer, isSerializedFacsimileLayer } from '@docere/common'
 
 const projectId = 'vangogh'

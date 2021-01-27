@@ -4,11 +4,8 @@ import { isError } from '../../api/src/utils'
 import { Mapping } from '../../api/src/types'
 import { SerializedEntry } from '../../common/src'
 
-import dotenv from 'dotenv'
-dotenv.config({ path: '../../.env.development'})
-
 async function fetchXml(filePath: string) {
-	const url = `${process.env.DOCERE_XML_URL}${filePath}`
+	const url = `${process.env.DOCERE_XML_URL}/${filePath}`
 	const result = await fetch(url)
 	return await result.text()	
 }
