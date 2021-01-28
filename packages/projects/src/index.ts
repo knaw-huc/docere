@@ -22,6 +22,7 @@ const projectList: ProjectList = {
 	gekaaptebrieven: {
 		config: async function() { return await import('./gekaaptebrieven/config') },
 		getTextComponents: async function() { return await import('./gekaaptebrieven/text-components') },
+		getUIComponents: async function() { return await import('./gekaaptebrieven/ui-components') }
 	},
 	henegouwseregisters: {
 		config: async function() { return await import('./henegouwseregisters/config') },

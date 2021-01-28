@@ -7,6 +7,7 @@ import { ProjectContext, useUIComponent, UIComponentType, Viewport, Language, ge
 import useAutoSuggest from './use-auto-suggest'
 
 import type { Hit } from '@docere/common'
+import { GenericResultBody } from '../../../search/node_modules/@docere/ui-components/src'
 
 const FS = styled(HucFacetedSearch)`
 	background: white;
@@ -23,7 +24,10 @@ function Search() {
 	const { config, searchUrl } = React.useContext(ProjectContext)
 	const uiState = React.useContext(UIContext)
 	const autoSuggest = useAutoSuggest(searchUrl)
-	const ResultBodyComponent = useUIComponent(UIComponentType.SearchResult)
+
+	let ResultBodyComponent = useUIComponent(UIComponentType.SearchResult)
+	if (ResultBodyComponent == null) ResultBodyComponent = GenericResultBody
+
 	const { projectId, entryId } = useParams<{ projectId: string, entryId: string }>()
 
 	const onClickResult = React.useCallback((result: Hit) => {
