@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { DocereResultBodyProps } from '@docere/common'
 
-import { ResultBody } from '@docere/ui-components'
+import { ResultBody } from './result-body'
 
 const Label = styled.div`
 	color: #888;
@@ -22,7 +22,7 @@ const Metadata = styled.div`
 
 const ignoredKeys = ['facsimiles', 'snippets', 'text']
 
-export default function GenericResultBody(props: DocereResultBodyProps) {
+export function GenericResultBody(props: DocereResultBodyProps) {
 	return (
 		<ResultBody {...props}>
 			<Metadata>

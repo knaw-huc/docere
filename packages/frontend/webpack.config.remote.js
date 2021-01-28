@@ -1,4 +1,3 @@
-const HtmlWebpackPlugin = require('html-webpack-plugin')
 const devConfig = require('./webpack.config.local')
 const path = require('path')
 
@@ -19,12 +18,6 @@ module.exports = () => {
 	}
 
 	config.output.path = path.resolve(process.cwd(), '../../public')
-	// config.output.publicPath = '/'
-
-	config.plugins.push(new HtmlWebpackPlugin({
-		title: 'Docere',
-		template: 'index.template.html',
-	}))
 
 	return config
 }

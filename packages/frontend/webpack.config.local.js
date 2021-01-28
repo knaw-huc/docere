@@ -1,4 +1,5 @@
 const path = require('path')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 const baseConfig = require('./webpack.config.base')
 
 const { parsed: env, error: envError } = require('dotenv').config({ path: path.resolve(process.cwd(), `../../.env`) })
@@ -12,6 +13,8 @@ module.exports = () => {
 		historyApiFallback: {
 			disableDotRule: true
 		},
+		host: 'localhost',
+		hot: true,
 		port: 4000,
 		proxy: {
 			'/api': {
@@ -55,6 +58,11 @@ module.exports = () => {
 		path: __dirname + '/build-dev-server',
 		publicPath: '/',
 	}
+
+	baseConfig.plugins.push(new HtmlWebpackPlugin({
+		title: 'Docere',
+		template: 'index.template.html',
+	}))
 
 	return baseConfig
 }

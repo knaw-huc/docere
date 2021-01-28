@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { formatDate, SearchContext, isDateFacetConfig } from '../../../../../../search/src'
+import { formatDate, SearchContext } from '../../../../../../search/src'
 
 import MetadataValue from '../value'
 
@@ -70,7 +70,9 @@ interface Props {
 export default function DateFacetValue(props: Props) {
 	const searchContext = React.useContext(SearchContext)
 
-	const value = Array.isArray(props.metadataItem.value) ? props.metadataItem.value : [props.metadataItem.value]
+	const value = Array.isArray(props.metadataItem.value) ?
+		props.metadataItem.value :
+		[props.metadataItem.value]
 	if (!value.length) return <>-</>
 
 	const facet = (searchContext.state.facets?.get(props.metadataItem.id) as RangeFacetData)
@@ -82,6 +84,7 @@ export default function DateFacetValue(props: Props) {
 			<Values>
 			{
 				value
+					.map(v => new Date(v).getTime())
 					.sort((a, b) => a - b)
 					.map((num, i) => {
 						const ratio = (num - facet.value.from) / (facet.value.to - facet.value.from)
@@ -104,11 +107,7 @@ export default function DateFacetValue(props: Props) {
 									}
 									flip={ratio > .5}
 								>
-									{
-										isDateFacetConfig(props.metadataItem) ?
-											formatDate(num, 'd') :
-											num
-									}
+									{formatDate(num, 'd')}
 								</MetadataValue>
 							</ValueWrapper>
 						)

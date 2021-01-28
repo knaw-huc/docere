@@ -1,7 +1,7 @@
 import React from "react"
 import { Colors, Language } from '@docere/common'
+import { GenericResultBody } from '@docere/ui-components'
 
-import GenericResultBody from './views/search-result/generic-result-body'
 import { LanguageMap } from './language/nl'
 
 import type { FacetedSearchProps } from '@docere/common'

@@ -14,7 +14,13 @@ export function useComponents(container: ContainerType, id?: string) {
 	return components
 }
 
+export function useUIComponent(componentType: UIComponentType.SearchResult): React.FC<any> 
+export function useUIComponent(componentType: UIComponentType.Entity, id: string): React.FC<any> 
 export function useUIComponent(componentType: UIComponentType, id?: string) {
 	const { uiComponents } = React.useContext(ProjectContext)
-	return uiComponents?.get(componentType)?.get(id)
+
+	return id == null ?
+		// TODO export should be a React.FC<any> not a Map
+		uiComponents?.get(componentType) : 
+		uiComponents?.get(componentType)?.get(id)
 }

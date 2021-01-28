@@ -22,7 +22,6 @@ interface Props {
 }
 function MetadataAside(props: Props) {
 	const entry = React.useContext(EntryContext)
-	console.log('aside', entry.id)
 	return (
 		<Wrapper active={props.active}>
 			{
