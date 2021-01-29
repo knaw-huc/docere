@@ -1,9 +1,9 @@
 import * as React from 'react'
-import { formatDate, SearchContext } from '../../../../../../search/src'
+import { formatDate } from '../../../../../../search/src'
 
 import MetadataValue from '../value'
 
-import { RangeFacetData, Colors, RangeMetadata, DateMetadata, /* RangeFacetData */ } from '@docere/common'
+import { RangeFacetData, Colors, RangeMetadata, DateMetadata, SearchContext, /* RangeFacetData */ } from '@docere/common'
 import styled from 'styled-components'
 
 interface TProps { count: number }

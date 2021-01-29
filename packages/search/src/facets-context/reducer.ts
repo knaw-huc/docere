@@ -1,13 +1,13 @@
 import React from 'react'
+import { initialSearchContextState } from '@docere/common'
 
 import extendFacetConfig from '../extend-facet-config'
 import { isListFacetData, isBooleanFacetData, isRangeFacetData, isDateFacetData, isHierarchyFacetData } from '../utils'
-import initFacetsData from './init-facets-data'
-import { initialSearchContextState } from './index'
-
-import type { FacetsConfig, FacetsDataReducerAction, RangeFacetValue } from '@docere/common'
-import type { FacetsState } from './index'
 import { getRangeBucketSize } from '../use-search/get-buckets'
+import initFacetsData from './init-facets-data'
+
+import type { FacetsConfig, FacetsState, FacetsDataReducerAction, RangeFacetValue } from '@docere/common'
+
 
 export default function useFacetsDataReducer(facetsConfig: FacetsConfig) {
 	const x = React.useReducer(facetsDataReducer, initialSearchContextState)

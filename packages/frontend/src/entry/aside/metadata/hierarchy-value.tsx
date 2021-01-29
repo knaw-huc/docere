@@ -1,10 +1,9 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { SearchContext } from '../../../../../search/src'
 
 import Value from './list-facet/value'
 
-import type { HierarchyMetadata, FacetsData, HierarchyFacetData } from '@docere/common'
+import { HierarchyMetadata, FacetsData, HierarchyFacetData, SearchContext } from '@docere/common'
 
 const Ul = styled.ul`
 	ul {

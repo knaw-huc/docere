@@ -1,8 +1,6 @@
 import React from 'react'
-import styled from 'styled-components';
-import { Colors } from '@docere/common'
-
-import SearchContext from '../../../facets-context'
+import styled from 'styled-components'
+import { Colors, SearchContext } from '@docere/common'
 
 import type { RangeFacetData, DateFacetData, RangeFacetValue } from '@docere/common'
 

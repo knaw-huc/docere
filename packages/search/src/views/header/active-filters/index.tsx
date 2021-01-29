@@ -1,12 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import FacetedSearchContext from '../../../context'
 import { Button } from '../page-number'
 import useFilters from './use-filters'
 import Details from './details'
+import { SearchPropsContext, SearchContext } from '@docere/common'
 
-import SearchContext from '../../../facets-context'
 
 const Wrapper = styled.div`
 	grid-column: 1 / span 2;
@@ -36,7 +35,7 @@ const Wrapper = styled.div`
 `
 
 function ActiveFilters() {
-	const { i18n, style } = React.useContext(FacetedSearchContext)
+	const { i18n, style } = React.useContext(SearchPropsContext)
 	const { state, dispatch } = React.useContext(SearchContext) 
 	const filters = useFilters(state.facets)
 

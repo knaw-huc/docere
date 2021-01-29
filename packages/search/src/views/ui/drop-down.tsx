@@ -1,7 +1,7 @@
+import { SearchPropsContext } from '@docere/common'
 import React from 'react'
 import styled from 'styled-components'
 
-import FacetedSearchContext from '../../context'
 import { Button } from '../header/page-number'
 
 const Wrapper = styled.div`
@@ -68,7 +68,7 @@ interface Props {
 	z: number
 }
 function DropDown(props: Props) {
-	const context = React.useContext(FacetedSearchContext)
+	const context = React.useContext(SearchPropsContext)
 	const [showBody, setShowBody] = React.useState(false)
 	const hideMenu = React.useCallback(() => setShowBody(false), [])
 

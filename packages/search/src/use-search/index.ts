@@ -1,12 +1,10 @@
 import React from 'react'
+import { FSResponse, ElasticSearchRequestOptions, FacetValues, SearchPropsContext } from '@docere/common'
 
 import ESRequestWithFacets from './request-with-facets-creator'
 import ESResponseWithFacetsParser from './response-with-facets-parser'
 import ESResponseParser from './response-parser'
 import fetchSearchResults from './fetch'
-import FacetedSearchContext from '../context'
-
-import type { FSResponse, ElasticSearchRequestOptions, FacetValues } from '@docere/common'
 
 const initialSearchResult: FSResponse = {
 	results: [],
@@ -16,7 +14,7 @@ const initialSearchResult: FSResponse = {
 export default function useSearch(options: ElasticSearchRequestOptions): [FSResponse, Record<string, FacetValues>] {
 	const [searchResult, setSearchResult] = React.useState(initialSearchResult)
 	const [facetValues, setFacetValues] = React.useState({})
-	const context = React.useContext(FacetedSearchContext)
+	const context = React.useContext(SearchPropsContext)
 
 	React.useEffect(() => {
 		const searchRequest = new ESRequestWithFacets(options, context)

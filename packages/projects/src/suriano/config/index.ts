@@ -57,6 +57,11 @@ export default extendConfigData({
 			id: 'biblScope',
 			extract: entry => entry.preparedElement.querySelector('biblScope').textContent
 		},
+		{
+			id: 'summary',
+			extract: entry => entry.preparedElement.querySelector('div[type="summary"]')?.textContent,
+			showAsFacet: false
+		}
 	],
 	layers: [
 		{

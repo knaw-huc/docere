@@ -1,8 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import FacetedSearchContext from '../../context'
 import { BACKGROUND_GRAY } from '../../constants'
+import { SearchPropsContext } from '@docere/common'
 
 export const Button = styled.div`
 	color: ${(props: { spotColor: string}) => props.spotColor};
@@ -26,7 +26,7 @@ interface Props {
 	setCurrentPage: () => void
 }
 function PageNumber(props: Props) {
-	const context = React.useContext(FacetedSearchContext)
+	const context = React.useContext(SearchPropsContext)
 	const active = props.pageNumber === props.currentPage
 	return (
 		<PageNumberWrapper

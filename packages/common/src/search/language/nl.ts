@@ -1,6 +1,4 @@
-import english from './en'
-
-export type LanguageMap = Record<keyof typeof english, string>
+import { LanguageMap } from "."
 
 const dutch: LanguageMap = {
 	active: 'actief',

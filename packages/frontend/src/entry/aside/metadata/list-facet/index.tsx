@@ -1,9 +1,8 @@
 import React from 'react'
-import { SearchContext } from '../../../../../../search/src'
 
 import Value from './value'
 
-import type { ListMetadata, ListFacetData } from '@docere/common'
+import { ListMetadata, ListFacetData, SearchContext } from '@docere/common'
 
 interface Props {
 	metadataItem: ListMetadata // | Entity

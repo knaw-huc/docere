@@ -1,18 +1,17 @@
+import { SearchContext, SearchPropsContext } from '@docere/common'
 import React from 'react'
 import styled from 'styled-components'
 
-import FacetedSearchContext from '../../../context'
 import { MoreLessButton } from '../../button'
 
 import type { Props } from './values'
-import SearchContext from '../../../facets-context'
 
 const MoreButton = styled(MoreLessButton)`
 	margin-right: 1rem;	
 `
 
 export default function(props: Props) {
-	const { i18n, style } = React.useContext(FacetedSearchContext)
+	const { i18n, style } = React.useContext(SearchPropsContext)
 	const searchContext = React.useContext(SearchContext)
 
 	const handleLess = React.useCallback(() => {

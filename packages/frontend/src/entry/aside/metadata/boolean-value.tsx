@@ -1,9 +1,8 @@
 import * as React from 'react'
-import { SearchContext } from '../../../../../search/src'
 
 import Value from './list-facet/value'
 
-import type { BooleanMetadata, BooleanFacetData } from '@docere/common'
+import { BooleanMetadata, BooleanFacetData, SearchContext } from '@docere/common'
 
 
 interface Props {

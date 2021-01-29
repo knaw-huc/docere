@@ -3,13 +3,14 @@ import { SerializedLayer, Layer, ID, ExtractedLayer } from './layer'
 import { ExtractedEntity, Entity } from './entity'
 import { ExtractedFacsimile, Facsimile } from './facsimile'
 
-export * from './extract'
-export * from './serialize'
 export * from './deserialize'
-export * from './use-entry'
-export * from './layer'
 export * from './entity'
+export * from './extract'
 export * from './facsimile'
+export * from './layer'
+export * from './metadata'
+export * from './serialize'
+export * from './use-entry'
 
 // TODO move
 export type ListMetadata = ListFacetConfig & { value: string | string[] }

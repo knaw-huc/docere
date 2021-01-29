@@ -1,8 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
-import { SortDirection } from '@docere/common'
+import { SearchPropsContext, SortDirection } from '@docere/common'
 
-import FacetedSearchContext from '../../../../context'
 import { Button } from '../../page-number'
 
 import type { FacetData, SortOrder, SetSortOrder } from '@docere/common'
@@ -45,7 +44,7 @@ interface Props {
 	setSortOrder: SetSortOrder
 }
 function OrderOption(props: Props) {
-	const context = React.useContext(FacetedSearchContext)
+	const context = React.useContext(SearchPropsContext)
 
 	const setDirection = React.useCallback(ev => {
 		ev.stopPropagation()

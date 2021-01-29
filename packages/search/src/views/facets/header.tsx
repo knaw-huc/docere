@@ -1,10 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import FacetedSearchContext from '../../context'
 import { FacetInfoButton, FacetMenuButton } from '../button'
 
-import { FacetData } from '@docere/common'
+import { FacetData, SearchPropsContext } from '@docere/common'
 
 const Header = styled('header')`
 	display: grid;
@@ -51,7 +50,7 @@ interface Props {
 	toggleCollapse: () => void
 }
 function FacetHeader(props: Props) {
-	const { style } = React.useContext(FacetedSearchContext)
+	const { style } = React.useContext(SearchPropsContext)
 	const [showDescription, setShowDescription] = React.useState(false)
 	const [showOptions, setShowOptions] = React.useState(false)
 	

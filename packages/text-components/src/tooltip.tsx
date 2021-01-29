@@ -1,6 +1,6 @@
-import * as React from "react"
+import React from "react"
 import styled from "styled-components"
-import { DEFAULT_POPUP_BG_COLOR, getTextPanelWidth, Entity, EntitiesContext, indexOfIterator } from '@docere/common'
+import { getTextPanelWidth, Entity, EntitiesContext, indexOfIterator, Colors } from '@docere/common'
 
 import type { DocereConfig } from '@docere/common'
 
@@ -31,7 +31,7 @@ const TooltipBody = styled.div`
 	height: 100%;
 	line-height: 1.5rem;
 `
-TooltipBody.defaultProps = { color: DEFAULT_POPUP_BG_COLOR }
+TooltipBody.defaultProps = { color: Colors.Blue }
 
 const Svg = styled.svg`
 	left: calc(50% - ${(p: P) => p.offset}px - 10px);

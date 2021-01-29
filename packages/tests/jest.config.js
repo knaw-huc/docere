@@ -2,9 +2,9 @@ module.exports = {
   preset: './packages/tests/preset.js',
   rootDir: "../../",
   roots: [
-    // "<rootDir>/packages/tests/src",
-    "<rootDir>/packages/projects/src",
-    // "<rootDir>/packages/api/tests",
+    "<rootDir>/packages/tests/src",
+    // "<rootDir>/packages/projects/src",
+    "<rootDir>/packages/api/tests",
   ],
 
 

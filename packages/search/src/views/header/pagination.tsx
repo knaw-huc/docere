@@ -1,10 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import FacetedSearchContext from '../../context'
 import PageNumber, { Button } from './page-number'
 
-import type { FSResponse } from '@docere/common'
+import { FSResponse, SearchPropsContext } from '@docere/common'
 
 function getRange(start: number, end: number) {
 	return Array.from({length: end - start + 1}, (_value, key) => key + start)
@@ -79,7 +78,7 @@ interface Props {
 }
 
 function Pagination(props: Props) {
-	const context = React.useContext(FacetedSearchContext)
+	const context = React.useContext(SearchPropsContext)
 
 	const pageCount = Math.ceil(props.searchResults.total / context.resultsPerPage)
 	if (isNaN(pageCount) || pageCount === 1) return null

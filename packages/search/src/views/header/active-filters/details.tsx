@@ -1,10 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import FacetedSearchContext from '../../../context'
 import DropDown from '../../ui/drop-down'
 
-import type { FacetsDataReducerAction, ActiveFilter } from '@docere/common'
+import { FacetsDataReducerAction, ActiveFilter, SearchPropsContext } from '@docere/common'
 
 const ActiveFiltersDropDown = styled(DropDown)`
 	.huc-fs-dropdown-button {
@@ -48,7 +47,7 @@ interface Props {
 	query: string
 }
 function ActiveFiltersDetails(props: Props) {
-	const { i18n } = React.useContext(FacetedSearchContext)
+	const { i18n } = React.useContext(SearchPropsContext)
 
 	const clearFullTextInput = React.useCallback(ev => {
 		ev.stopPropagation()

@@ -34,7 +34,7 @@ describe('Projects', () => {
 		 * on the acceptance server, but not on the production server,
 		 * are being tested. If DOCERE_DTAP is undefined, test everything
 		 */ 
-		if (DOCERE_DTAP != null && dtapMap[projectId] !== DOCERE_DTAP) continue
+		// if (DOCERE_DTAP != null && dtapMap[projectId] !== DOCERE_DTAP) continue
 
 		/**
 		 * Use a try catch, because a project could have no tests,

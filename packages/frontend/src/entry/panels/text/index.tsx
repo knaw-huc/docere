@@ -1,8 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import debounce from 'lodash.debounce'
-import { isTextLayer, useComponents, DEFAULT_SPACING, TEXT_PANEL_TEXT_WIDTH, ContainerType, getTextPanelLeftSpacing, PANEL_HEADER_HEIGHT, StatefulTextLayer, EntrySettingsContext, EntryContext } from '@docere/common'
-import { SearchContext } from '../../../../../search/src'
+import { isTextLayer, useComponents, DEFAULT_SPACING, TEXT_PANEL_TEXT_WIDTH, ContainerType, getTextPanelLeftSpacing, PANEL_HEADER_HEIGHT, StatefulTextLayer, EntrySettingsContext, EntryContext, SearchContext } from '@docere/common'
 import DocereTextView from '../../../../../text/src'
 
 import { useScrollEntityIntoView, useScrollFacsimileIntoView } from '../../use-scroll-into-view'

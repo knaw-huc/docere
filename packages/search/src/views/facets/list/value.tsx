@@ -1,8 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
+import { SearchContext } from '@docere/common'
 
 import type { KeyCount } from '@docere/common'
-import SearchContext from '../../../facets-context'
 
 interface WProps { active: boolean }
 const Wrapper = styled('li')`

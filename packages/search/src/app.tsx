@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { SortOrder, DEFAULT_SPACING } from '@docere/common'
+import { SortOrder, DEFAULT_SPACING, SearchContext, SearchPropsContext } from '@docere/common'
 
 import BooleanFacet from './views/facets/boolean'
 import HierarchyFacet from './views/facets/hierarchy'
@@ -11,8 +11,6 @@ import Header from './views/header'
 import SearchResult from './views/search-result'
 import FullTextSearch from './views/full-text-search'
 import useSearch from './use-search'
-import Context from './context'
-import SearchContext from './facets-context'
 
 import type { ListFacetValues, BooleanFacetValues, HierarchyFacetValues, RangeFacetValue } from '@docere/common'
 
@@ -102,7 +100,7 @@ const ToggleView = styled.div`
 `
 
 export default function FacetedSearch() {
-	const context = React.useContext(Context)
+	const context = React.useContext(SearchPropsContext)
 	const searchContext = React.useContext(SearchContext)
 	const [showResults, setShowResults] = React.useState(true)
 	const [currentPage, setCurrentPage] = React.useState(1)

@@ -1,10 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import FacetedSearchContext from '../../../context'
 import SortBy from './order-by'
 
-import type { FSResponse, SetSortOrder, SortOrder } from '@docere/common'
+import { FSResponse, SearchPropsContext, SetSortOrder, SortOrder } from '@docere/common'
 
 const Wrapper = styled.div`
 	grid-column: 1;
@@ -20,7 +19,7 @@ interface Props {
 	sortOrder: SortOrder
 }
 export default function ResultCount(props: Props) {
-	const { i18n, resultsPerPage } = React.useContext(FacetedSearchContext)
+	const { i18n, resultsPerPage } = React.useContext(SearchPropsContext)
 	const [fromTo, setFromTo] = React.useState<[number, number]>([null, null])
 
 	React.useEffect(() => {

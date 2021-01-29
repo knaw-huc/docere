@@ -1,9 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 import debounce from 'lodash.debounce'
-import FacetedSearchContext from '../../context'
-import SearchContext from '../../facets-context'
 import AutoSuggest from './auto-suggest'
+import { SearchContext, SearchPropsContext } from '@docere/common'
 
 export const Wrapper = styled.div`
 	align-self: end;
@@ -68,7 +67,7 @@ function hideLoader(loaderRef: any) {
 }
 
 function FullTextSearch() {
-	const context = React.useContext(FacetedSearchContext)
+	const context = React.useContext(SearchPropsContext)
 	const searchContext = React.useContext(SearchContext)
 	const loaderRef = React.useRef()
 	const [suggestActive, setSuggestActive] = React.useState(false)

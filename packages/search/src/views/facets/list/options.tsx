@@ -1,13 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
 import debounce from 'lodash.debounce'
-import { SortBy, SortDirection } from '@docere/common'
+import { SearchContext, SearchPropsContext, SortBy, SortDirection } from '@docere/common'
 
 import { Input } from '../../full-text-search'
 
 import type { ListFacetProps } from '.'
-import SearchContext from '../../../facets-context'
-import FacetedSearchContext from '../../../context'
 
 export const OptionsWrapper = styled('div')`
 	font-size: .9em;
@@ -46,7 +44,7 @@ const FilterInput = styled(Input)`
 `
 
 function Options(props: ListFacetProps) {
-	const { i18n } = React.useContext(FacetedSearchContext)
+	const { i18n } = React.useContext(SearchPropsContext)
 	const { dispatch } = React.useContext(SearchContext)
 	const [filterInputValue, setFilterInputValue] = React.useState('')
 

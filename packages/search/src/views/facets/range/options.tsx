@@ -1,11 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
 import { OptionsWrapper } from '../list/options'
-import SearchContext from '../../../facets-context'
-import { DateFacetData, RangeFacetData } from '@docere/common'
+import { DateFacetData, RangeFacetData, SearchContext, SearchPropsContext } from '@docere/common'
 import { dateRangeToFacetValue, rangeToFacetValue } from '../../../use-search/get-buckets'
 import { isDateFacetData } from '../../../utils'
-import FacetedSearchContext from '../../../context'
 
 // Convert a timestamp to a <input type="date" /> value: yyyy-mm-dd
 function timestampToDateInputValue(timestamp: number) {
@@ -33,7 +31,7 @@ const Fieldset = styled.fieldset`
 `
 export default function RangeOptions(props: { facetData: RangeFacetData | DateFacetData }) {
 	const { dispatch } = React.useContext(SearchContext)
-	const { i18n } = React.useContext(FacetedSearchContext)
+	const { i18n } = React.useContext(SearchPropsContext)
 
 	// There can be multpiple range facets. To get a unique ID, prefix it with the facet ID
 	const idPrefix = `${props.facetData.config.id}_range_`

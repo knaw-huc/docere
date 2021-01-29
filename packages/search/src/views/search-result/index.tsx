@@ -1,15 +1,14 @@
 import React from 'react'
 
-import FacetedSearchContext from '../../context'
 import { Section, ResultList, Result } from './components'
 
-import type { FSResponse } from '@docere/common'
+import { FSResponse, SearchPropsContext } from '@docere/common'
 
 interface Props {
 	searchResult: FSResponse
 }
 function HucSearchResults(props: Props) {
-	const context = React.useContext(FacetedSearchContext)
+	const context = React.useContext(SearchPropsContext)
 	return (
 		<Section id="huc-fs-search-results">
 			<ResultList>

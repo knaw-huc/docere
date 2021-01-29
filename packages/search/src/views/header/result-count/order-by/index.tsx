@@ -1,12 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import SearchContext from '../../../../facets-context'
-import FacetedSearchContext from '../../../../context'
 import DropDown from '../../../ui/drop-down'
 import OrderOption from './option'
 
-import type { SetSortOrder, SortOrder } from '@docere/common'
+import { SearchContext, SearchPropsContext, SetSortOrder, SortOrder } from '@docere/common'
 
 const SortByDropDown = styled(DropDown)`
 	& > .huc-fs-dropdown-button {
@@ -25,7 +23,7 @@ interface Props {
 }
 function SortBy(props: Props) {
 	const { state } = React.useContext(SearchContext)
-	const { i18n } = React.useContext(FacetedSearchContext)
+	const { i18n } = React.useContext(SearchPropsContext)
 
 	const label = (props.sortOrder.size > 0) ?
 		`${i18n.sort_by} (${props.sortOrder.size})` :
