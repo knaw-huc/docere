@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { ResultBody } from '@docere/ui-components'
 import type { DocereResultBodyProps } from '@docere/common'
-import StringMetadata from '@docere/common/build/entry/metadata/string'
+import { StringMetadata } from '@docere/common'
 
 function SurianoResultBody(props: DocereResultBodyProps) {
 	return (

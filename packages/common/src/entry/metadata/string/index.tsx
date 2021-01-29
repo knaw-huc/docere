@@ -8,7 +8,7 @@ interface Props {
 	metadataId: string
 	value: string | string[]
 }
-export default function StringMetadata(props: Props) {
+export function StringMetadata(props: Props) {
 	const searchContext = React.useContext(SearchContext)
 	const { facets } = searchContext.state
 
