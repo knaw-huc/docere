@@ -4,19 +4,12 @@ import extractFacsimiles from './facsimiles'
 import prepare from './prepare'
 import { extractLanguages, extractTextTypes } from './metadata'
 
-// function extractEntity(name: string): ExtractEntity {
-// 	return entry =>
-// 		Array.from(entry.document.querySelectorAll(`ner[type~=${name}]`))
-// 			.map(element => ({
-// 				id: element.textContent,
-// 				content: element.textContent
-// 			}))
-// }
-
-function getTextContent(selector: string) {
-	return (entry: ExtractedEntry) => entry.document.querySelector(selector)?.textContent	
+function getValue(selector: string) {
+	return (entry: ExtractedEntry) => {
+		const value = entry.document.querySelector(selector)?.getAttribute('value')
+		return value === 'NULL' ? null : value
+	}
 }
-
 
 const config: DocereConfig = {
 	slug: 'gekaaptebrieven',
@@ -24,35 +17,35 @@ const config: DocereConfig = {
 	searchResultCount: 20,
 	metadata: [
 		{
-			extract: getTextContent('meta[id="sender"]'),
+			extract: getValue('meta[type="sender"]'),
 			id: 'sender',
 			title: 'Zender'
 		},
 		{
-			extract: getTextContent('meta[id="recipient"]'),
+			extract: getValue('meta[type="recipient"]'),
 			id: 'recipient',
 			title: 'Ontvanger'
 		},
 		{
-			extract: getTextContent('meta[id="senderprof"]'),
+			extract: getValue('meta[type="senderprof"]'),
 			id: 'senderprof',
 			title: 'Beroep zender'
 		},
 		{
-			extract: getTextContent('meta[id="recipientprof"]'),
+			extract: getValue('meta[type="recipientprof"]'),
 			id: 'recipientprof',
 			title: 'Beroep ontvanger'
 		},
 		{
 			datatype: EsDataType.Date,
-			extract: getTextContent('meta[id="date"]'),
+			extract: getValue('meta[type="date"]'),
 			id: 'date',
 			interval: 'y',
 			order: 10,
 			title: 'Datum'
 		},
 		{
-			extract: entry => entry.document.querySelector('meta[id="date"]')?.textContent.trim().length > 1,
+			extract: entry => entry.document.querySelector('meta[type="date"]')?.textContent.trim().length > 1,
 			showInAside: false,
 			datatype: EsDataType.Boolean,
 			id: 'has_date',
@@ -60,32 +53,32 @@ const config: DocereConfig = {
 			order: 20,
 		},
 		{
-			extract: getTextContent('meta[id="recipientloc"]'),
+			extract: getValue('meta[type="recipientloc"]'),
 			id: 'recipientloc',
 			title: 'Locatie ontvanger'
 		},
 		{
-			extract: getTextContent('meta[id="senderloc"]'),
+			extract: getValue('meta[type="senderloc"]'),
 			id: 'senderloc',
 			title: 'Locatie zender'
 		},
 		{
-			extract: getTextContent('meta[id="recipientgender"]'),
+			extract: getValue('meta[type="recipientgender"]'),
 			id: 'recipientgender',
 			title: 'Geslacht ontvanger'
 		},
 		{
-			extract: getTextContent('meta[id="sendergender"]'),
+			extract: getValue('meta[type="sendergender"]'),
 			id: 'sendergender',
 			title: 'Geslacht zender'
 		},
 		{
-			extract: getTextContent('meta[id="recipientship"]'),
+			extract: getValue('meta[type="recipientship"]'),
 			id: 'recipientship',
 			title: 'Schip ontvanger'
 		},
 		{
-			extract: getTextContent('meta[id="sendership"]'),
+			extract: getValue('meta[type="sendership"]'),
 			id: 'sendership',
 			title: 'Schip zender'
 		},
@@ -116,43 +109,6 @@ const config: DocereConfig = {
 			]
 		}
 	],
-	// entities: [
-	// 	{
-	// 		color: '#fd7a7a',
-	// 		extract: extractEntity('per'),
-	// 		id: 'per',
-	// 		showInAside: true,
-	// 		type: EntityType.Person
-	// 	}, {
-	// 		color: '#5fb53f',
-	// 		extract: extractEntity('org'),
-	// 		id: 'org',
-	// 		showInAside: true,
-	// 		title: 'Organisation',
-	// 		type: EntityType.None
-	// 	}, {
-	// 		color: 'orange',
-	// 		extract: extractEntity('loc'),
-	// 		id: 'loc',
-	// 		showInAside: true,
-	// 		title: 'Location',
-	// 		type: EntityType.Location
-	// 	}, {
-	// 		color: '#8080ff',
-	// 		extract: extractEntity('misc'),
-	// 		id: 'misc',
-	// 		showInAside: true,
-	// 		title: 'Miscellaneous',
-	// 		type: EntityType.None
-	// 	}, {
-	// 		color: '#8080ff',
-	// 		extract: extractEntity('pro'),
-	// 		id: 'pro',
-	// 		showInAside: true,
-	// 		title: 'Products',
-	// 		type: EntityType.None
-	// 	}
-	// ],
 	facsimiles: {
 		extractFacsimileId: el => el.getAttribute('facs'),
 		extractFacsimiles,

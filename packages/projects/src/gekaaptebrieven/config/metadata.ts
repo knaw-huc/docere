@@ -1,7 +1,10 @@
 import type { ExtractedEntry } from '@docere/common'
 
 function extractMultiple(entry: ExtractedEntry, selector: string) {
-	return entry.document.querySelector(selector)?.textContent.split(/;|\//).map(part => part.trim())
+	return entry.document.querySelector(selector)?.textContent
+		.split(/;|\//)
+		.map(part => part.trim())
+		.filter(part => part.length > 0)
 }
 
 export function extractLanguages(entry: ExtractedEntry) {

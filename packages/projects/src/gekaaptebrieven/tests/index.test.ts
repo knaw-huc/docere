@@ -1,6 +1,5 @@
-import { SerializedEntry } from '../../../common/src'
-import { fetchEntry } from '../utils'
-import { isSerializedFacsimileLayer } from '@docere/common'
+import { fetchEntry } from '../../../../tests/src/utils'
+import { isSerializedFacsimileLayer, SerializedEntry } from '@docere/common'
 
 const projectId = 'gekaaptebrieven'
 const documentId = '1150'
@@ -14,6 +13,25 @@ export function gekaaptebrievenTests() {
 
 	it(`Should have ID: ${documentId}`, () => {
 		expect(entry.id).toBe(documentId)
+	})
+
+	it(`Should have 14 items of metadata`, () => {
+		expect(entry.metadata).toHaveLength(14)
+	})
+
+	it(`Should have metadata on 'date'`, () => {
+		const md = entry.metadata.find(md => md.id === 'date')
+		expect(md.value).toBe('1772-06-03')
+	})
+
+	it(`Should have metadata on 'sender'`, () => {
+		const md = entry.metadata.find(md => md.id === 'sender')
+		expect(md.value).toBe('J. Boudaen Courten')
+	})
+
+	it(`Should have metadata on 'sender'`, () => {
+		const md = entry.metadata.find(md => md.id === 'senderprof')
+		expect(md.value).toBeUndefined()
 	})
 
 	it(`Should have facs IDs: ${documentId}`, () => {
