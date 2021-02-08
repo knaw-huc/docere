@@ -4,12 +4,15 @@ services:
   nginx:
     command: ["nginx", "-c", "/nginx_conf/nginx.conf", "-g", "daemon off;"]
     container_name: docere_nginx
-    image: nginx:1.17.8-alpine
+    env_file:
+      - ../../.env
+    image: nginx:1.19.6-alpine
     ports:
       - "80:80"
     restart: always
     volumes:
       - ./nginx.conf:/nginx_conf/nginx.conf
+      - ./nginx.server.conf:/etc/nginx/templates/default.conf.template
       - ./secrets:/var/www/secrets
       - ../../public:/var/www/html
 
