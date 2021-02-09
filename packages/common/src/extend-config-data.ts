@@ -21,7 +21,7 @@ const defaultConfig: DocereConfig = {
 	layers: [],
 	metadata: [],
 	parts: null,
-	pages: [],
+	pages: null,
 	private: false,
 	searchResultCount: 20,
 	slug: null,
@@ -44,15 +44,21 @@ export function setTitle<T extends FacetConfigBase>(entityConfig: T): T & { titl
 	}
 }
 
-function extendPage(page: PageConfig) {
-	if (Array.isArray(page.children)) {
-		page.children = page.children.map(p => setTitle(setPath(p)))
+function extendPage(config: DocereConfig) {
+	return function extendPage(page: PageConfig) {
+		if (Array.isArray(page.children)) {
+			page.children = page.children.map(p => setTitle(setPath(p, config)))
+		}
+		return setTitle(setPath(page, config))
 	}
-	return setTitle(setPath(page))
 }
 
-function setPath(page: PageConfig) {
-	if (page.remotePath == null) page.remotePath = `${page.id}.xml`
+function setPath(page: PageConfig, config: DocereConfig) {
+	if (page.remotePath == null) {
+		page.remotePath = config.pages.getRemotePath != null ?
+			config.pages.getRemotePath(page) :
+			`${page.id}.xml`
+	}
 	return page
 }
 
@@ -87,7 +93,13 @@ export function extendConfigData(configDataRaw: DocereConfig): DocereConfig {
 
 	config.entities = config.entities.map(extendEntities)
 
-	config.pages = config.pages.map(extendPage)
+	if (config.pages != null) {
+		config.pages = {
+			...config.pages,
+			config: config.pages.config.map(extendPage(config))
+		}
+	}
+
 
 	if (config.parts != null) {
 		config.parts = {

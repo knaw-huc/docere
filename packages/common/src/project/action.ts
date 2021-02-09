@@ -77,7 +77,7 @@ export interface PinLayer {
 export type SetPage =
 	Pick<ProjectState, 'page'> &
 	{
-		type: 'SET_PAGE'
+		type: 'SET_PAGE',
 	}
 
 export type SetPageId =

@@ -80,7 +80,7 @@ function GekaapteBrievenResultBody(props: DocereResultBodyProps) {
 			/>
 			{
 
-				props.result.texttypes.filter((tt: string) => tt !== 'Onbekend').length > 0 &&
+				props.result.texttypes?.filter((tt: string) => tt !== 'Onbekend').length > 0 &&
 				<div>
 					<Label>Tekstsoort</Label>
 					{
@@ -91,7 +91,7 @@ function GekaapteBrievenResultBody(props: DocereResultBodyProps) {
 				</div>
 			}
 			{
-				props.result.languages.length > 0 &&
+				props.result.languages?.length > 0 &&
 				<div>
 					<Label>Taal</Label>
 					{ props.result.languages.join(', ') }

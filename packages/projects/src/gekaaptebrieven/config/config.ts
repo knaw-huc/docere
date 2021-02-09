@@ -1,4 +1,4 @@
-import { EsDataType, LayerType, ExtractedEntry } from '@docere/common'
+import { EsDataType, LayerType, ExtractedEntry, PageConfig } from '@docere/common'
 import { DocereConfig } from '@docere/common'
 import extractFacsimiles from './facsimiles'
 import prepare from './prepare'
@@ -93,22 +93,33 @@ const config: DocereConfig = {
 			title: 'Tekstsoort'
 		}
 	],
-	pages: [
-		{ id: 'handleiding' },
-		{ id: 'achtergrond', children: [
-			{ id: 'gekaaptebrieven', title: 'Gekaapte brieven' },
-			{ id: 'transcriptieregels' },
-			{ id: 'werkwijze' },
-		]},
-		{
-			id: 'over', title: 'Over deze editie', children: [
-				{ id: 'links' },
-				{ id: 'publicaties' },
-				{ id: 'medewerkers' },
-				{ id: 'contact' },
-			]
-		}
-	],
+	documents: {
+		remoteDirectories: [
+			'gekaaptebrieven/documents'
+		],
+	},
+	pages: {
+		config: [
+			{
+				id: 'handleiding',
+				remotePath: 'gekaaptebrieven/pages/handleiding.xml',
+			},
+			{ id: 'achtergrond', children: [
+				{ id: 'gekaaptebrieven', title: 'Gekaapte brieven' },
+				{ id: 'transcriptieregels' },
+				{ id: 'werkwijze' },
+			]},
+			{
+				id: 'over', title: 'Over deze editie', children: [
+					{ id: 'links' },
+					{ id: 'publicaties' },
+					{ id: 'medewerkers' },
+					{ id: 'contact' },
+				]
+			}
+		],
+		getRemotePath: (config: PageConfig) => `gekaaptebrieven/pages/${config.id}.xml`
+	},
 	facsimiles: {
 		extractFacsimileId: el => el.getAttribute('facs'),
 		extractFacsimiles,

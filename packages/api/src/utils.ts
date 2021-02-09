@@ -165,7 +165,7 @@ export async function getProjectPageConfig(projectId: string, pageId: string): P
 	const config = await getProjectConfig(projectId)
 	if (isError(config)) return config
 
-	return config.pages
+	return config.pages.config
 		.reduce((prev, curr) => {
 			if (Array.isArray(curr.children)) prev.push(...curr.children)
 			prev.push(curr)

@@ -28,6 +28,7 @@ export default extendConfigData({
 			selector: 'anchor',
 			title: "Textual notes",
 			type: EntityType.Note,
+			showAsFacet: false,
 		},
 		{
 			color: Colors.BlueBright,
@@ -113,6 +114,5 @@ export default extendConfigData({
 	metadata,
 	slug: projectId,
 	title: 'Van Gogh Letters',
-	pages: [],
 	prepare,
 })

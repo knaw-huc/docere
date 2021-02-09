@@ -3,6 +3,7 @@ import { LayerType } from './enum'
 import { ActiveEntities } from './project/context'
 
 import type { ExtractedEntity, EntrySettings, ExtractedFacsimile, LayerConfig, TextLayerConfig, Layer, TextLayer, SerializedLayer, SerializedTextLayer, FacsimileLayerConfig, SerializedFacsimileLayer, FacsimileLayer, ID } from '.'
+import { getProjectPagePath } from './url'
 
 export function getTextPanelLeftSpacing(settings: EntrySettings) {
 	let width = DEFAULT_SPACING
@@ -107,13 +108,15 @@ export function isSearchPage() {
 // 	return await fetchJson(endpoint)
 // }
 
-export async function fetchPageXml(projectSlug: string, pageId: string) {
-	const endpoint = `/api/projects/${projectSlug}/pages/${pageId}`
-
+export async function fetchPageXml(projectId: string, pageId: string) {
 	let doc: XMLDocument
+	
+	const pagePath = getProjectPagePath(projectId, pageId)
+
 	try {
-		doc = await fetchXml(endpoint)
+		doc = await fetchXml(pagePath)
 	} catch (err) {
+		console.error(`Page '${pageId}' (${pagePath}) not not found on project '${projectId}' `)
 		doc = null			
 	}
 
@@ -144,7 +147,7 @@ export function fetchXml(url: string): Promise<XMLDocument> {
 			if (xhr.readyState === xhr.DONE && xhr.status === 200) {
 				resolve(xhr.responseXML)
 			} else {
-				reject()
+				reject(xhr.statusText)
 			}
 		}
 

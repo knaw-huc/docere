@@ -30,11 +30,11 @@ module.exports = () => {
 				target: 'http://vangoghletters.org/vg/facsimiles',
 				pathRewrite: {'^/iiif/vangogh': ''}
 			},
-			'/iiif/encyclopaedia-britannica': {
-				changeOrigin: true,
-				target: 'https://view.nls.uk/iiif',
-				pathRewrite: {'^/iiif/encyclopaedia-britannica': ''}
-			},
+			// '/iiif/encyclopaedia-britannica': {
+			// 	changeOrigin: true,
+			// 	target: 'https://view.nls.uk/iiif',
+			// 	pathRewrite: {'^/iiif/encyclopaedia-britannica': ''}
+			// },
 			'/iiif': {
 				changeOrigin: true,
 				target: env.DOCERE_IIIF_URL,

@@ -47,10 +47,16 @@ export function getPagePath(projectId: string, pageId: string, query?: UrlQuery)
 // 	else								return getSearchPath(urlObject)
 // }
 
+export const API_BASE_PATH = '/api/projects'
+
 export function getEntryApiPath(projectId: string, entryId: string, prop: string = '') {
-	return `/api/projects/${projectId}/documents/${encodeURIComponent(entryId)}/${prop}`
+	return `${API_BASE_PATH}/${projectId}/documents/${encodeURIComponent(entryId)}/${prop}`
 }
 
 export function getProjectMappingPath(projectId: string) {
-	return `/api/projects/${projectId}/mapping`
+	return `${API_BASE_PATH}/${projectId}/mapping`
+}
+
+export function getProjectPagePath(projectId: string, pageId: string) {
+	return `${API_BASE_PATH}/${projectId}/pages/${pageId}`
 }

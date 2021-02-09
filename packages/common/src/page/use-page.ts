@@ -3,18 +3,33 @@ import { fetchPageXml } from '../utils'
 
 import { ProjectContext } from '../project/context'
 
-import type { Page } from './index'
+import type { Page, PageConfig } from './index'
 import type { DocereConfig } from '../types/config-data/config'
 import type { ID } from '../entry/layer'
 
 const pageCache = new Map<string, Page>()
 
+export function flattenPages(config: DocereConfig) {
+	const pages: PageConfig[] = []
+	const addPage = (page: PageConfig) => {
+		pages.push(page)
+		if (Array.isArray(page.children)) {
+			page.children.forEach(p => addPage(p))
+		}
+	}
+
+	config.pages?.config?.forEach(p => addPage(p))
+
+	return pages
+}
+
 export async function fetchPage(id: ID, config: DocereConfig): Promise<Page> {
 	if (pageCache.has(id)) return pageCache.get(id)
 
 	const doc = await fetchPageXml(config.slug, id)
-	const pageConfig = config.pages.find(p => p.id === id)
+	if (doc == null) return null
 
+	const pageConfig = flattenPages(config).find(p => p.id === id)
 	let parts: Map<string, Element>
 	if (pageConfig.split != null) {
 		parts = new Map()

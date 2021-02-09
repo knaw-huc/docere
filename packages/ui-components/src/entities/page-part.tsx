@@ -21,8 +21,8 @@ function PageLink(props: PageLinkProps) {
 		dispatch({
 			type: 'SET_PAGE_ID',
 			setPage: {
+				entityIds: new Set([props.entity.id]),
 				pageId: props.entity.configId,
-				entityIds: new Set([props.entity.id])
 			}
 		})
 	}, [props.entity])

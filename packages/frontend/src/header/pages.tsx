@@ -110,10 +110,12 @@ export default React.memo(function PagesMenu() {
 		})
 	}, [])
 
+	if (config.pages?.config == null) return null
+
 	return (
 		<Wrapper>
 			{
-				config.pages.map(page =>
+				config.pages.config.map(page =>
 					page.hasOwnProperty('children') ?
 						<li key={page.id}>
 							<div>{page.title}</div>

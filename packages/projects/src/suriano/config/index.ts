@@ -120,24 +120,26 @@ export default extendConfigData({
 		extractFacsimiles,
 		selector: 'pb',
 	},
-	pages: [
-		{
-			id: 'biblio',
-			remotePath: 'suriano/pages/Biblio.xml',
-			split: {
-				extractId: (el) => el.getAttribute('xml:id'),
-				selector: 'bibl',
+	pages: {
+		config: [
+			{
+				id: 'biblio',
+				remotePath: 'suriano/pages/Biblio.xml',
+				split: {
+					extractId: (el) => el.getAttribute('xml:id'),
+					selector: 'bibl',
+				},
+				title: 'Bibliography'
 			},
-			title: 'Bibliography'
-		},
-		{
-			id: 'personography',
-			remotePath: 'suriano/pages/Personography.xml',
-			split: {
-				extractId: (el) => el.getAttribute('xml:id'),
-				selector: 'person',
+			{
+				id: 'personography',
+				remotePath: 'suriano/pages/Personography.xml',
+				split: {
+					extractId: (el) => el.getAttribute('xml:id'),
+					selector: 'person',
+				},
+				title: 'Personography'
 			},
-			title: 'Personography'
-		},
-	],
+		],
+	}
 })

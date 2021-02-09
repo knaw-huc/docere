@@ -55,7 +55,7 @@ function ActiveArea(props: Props) {
 		return () => {
 			window.removeEventListener('mousemove', handleMouseMove)
 			window.removeEventListener('mouseup', handleMouseUp)
-			props.activeAreaRef.current.removeEventListener('mousedown', handleMouseDown)
+			props.activeAreaRef.current?.removeEventListener('mousedown', handleMouseDown)
 		}
 	}, [])
 

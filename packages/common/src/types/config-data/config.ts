@@ -52,7 +52,29 @@ export interface DocereConfig {
 	}
 	layers?: (TextLayerConfig | FacsimileLayerConfig)[]
 	metadata?: MetadataConfig[]
-	pages?: PageConfig[]
+
+	/**
+	 * Configure the background pages of the project, for example:
+	 * about, colofon, manual, structured data (people, places, ...)
+	 */
+	pages?: {
+		/**
+		 * Page configs. The hierarchy of the configuration
+		 * is used to display the pages in a menu reflecting given
+		 * hierarchy
+		 */
+		config: PageConfig[]
+
+		/**
+		 * Get the remote path of the pages.
+		 * 
+		 * Order of precedence to get the remote path:
+		 * 1. PageConfig['remotePath']
+		 * 2. getRemotePath
+		 * 3. ${PageConfig['id']}.xml
+		 */
+		getRemotePath?: (config: PageConfig) => string
+	}
 	plainText?: (entry: ExtractedEntry, config: DocereConfig) => string
 	prepare?: (entry: ExtractedEntry, config: DocereConfig) => Element
 	private?: boolean

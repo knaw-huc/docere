@@ -1,6 +1,6 @@
 import React from 'react'
-import { useParams } from 'react-router-dom'
-import { Viewport, ProjectState, initialProjectState, ProjectAction, fetchEntry, fetchPage } from '@docere/common'
+import { useHistory, useParams } from 'react-router-dom'
+import { Viewport, ProjectState, initialProjectState, ProjectAction, fetchEntry, fetchPage, getPagePath } from '@docere/common'
 import configs from '../../../../../projects/src'
 
 import { projectUIReducer } from '../reducer'
@@ -17,8 +17,9 @@ import { projectUIReducer } from '../reducer'
  */
 export function useProjectState(): [ProjectState, React.Dispatch<ProjectAction>] {
 	const [state, dispatch] = React.useReducer(projectUIReducer, initialProjectState)
-	const { projectId, entryId } = useParams<{ projectId: string, entryId: string }>()
-	
+	const { projectId, entryId, pageId } = useParams<{ projectId: string, entryId: string, pageId: string }>()
+	const history = useHistory()
+
 	React.useEffect(() => {
 		if (state.config == null || state.setEntry?.entryId == null) return
 
@@ -40,14 +41,29 @@ export function useProjectState(): [ProjectState, React.Dispatch<ProjectAction>]
 				if (page == null) return
 				dispatch({
 					type: 'SET_PAGE',
-					page
+					page,
 				})
+				history.push(getPagePath(state.config.slug, page.id))
 			})
 	}, [state.config?.slug, state.setPage])
 
 	React.useEffect(() => {
+		if (state.config == null || pageId == null) return
+
+		fetchPage(pageId, state.config)
+			.then(page => {
+				if (page == null) return
+				dispatch({
+					type: 'SET_PAGE',
+					page,
+				})
+			})
+	}, [state.config?.slug, pageId])
+
+	React.useEffect(() => {
 		if (
 			state.config == null ||		/** Project hasn't loaded yet */
+			entryId == null || 			/** Navigating away from entry */
 			state.entry?.id === entryId	/** Entry is already loaded */
 		) return
 
@@ -62,12 +78,15 @@ export function useProjectState(): [ProjectState, React.Dispatch<ProjectAction>]
 	}, [state.config, entryId])
 
 	React.useEffect(() => {
+		// When pageId is set, do not change the viewport
+		if (pageId != null) return
+
 		if (entryId != null && state.viewport !== Viewport.Entry) {
 			dispatch({ type: 'SET_VIEWPORT', viewport: Viewport.Entry })
 		} else if (entryId == null && state.viewport !== Viewport.EntrySelector) {
 			dispatch({ type: 'SET_VIEWPORT', viewport: Viewport.EntrySelector })
 		}
-	}, [entryId])
+	}, [entryId, pageId])
 
 	React.useEffect(() => {
 		if (projectId == null) return

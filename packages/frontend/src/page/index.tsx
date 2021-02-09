@@ -3,6 +3,8 @@ import styled from 'styled-components'
 import DocereTextView from '../../../text/src'
 import { TOP_OFFSET, DEFAULT_SPACING, ContainerType, useComponents, PageContext, DispatchContext } from '@docere/common'
 import { ContainerProvider } from '../entry/panels/text/layer-provider'
+import { useHistory } from 'react-router'
+import { docereHistory } from '../app/history'
 
 const Wrapper = styled.div`
 	background: white;
@@ -41,8 +43,12 @@ export default function PageView() {
 	const dispatch = React.useContext(DispatchContext)
 	const page = React.useContext(PageContext)
 	const components = useComponents(ContainerType.Page, page?.id)
+	const history = useHistory()
 
-	const closePage = React.useCallback(() => dispatch({ type: 'UNSET_PAGE' }), [])
+	const closePage = React.useCallback(() => {
+		dispatch({ type: 'UNSET_PAGE' })
+		history.push(docereHistory.getLastNonPage())
+	}, [])
 
 	if (page == null) return null
 

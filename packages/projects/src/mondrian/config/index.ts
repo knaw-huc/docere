@@ -139,26 +139,27 @@ export default extendConfigData({
 			'mondrian/editie-conversie/brieven/04_Transcriptie_DEF'
 		],
 	},
-	pages: [
-		{
-			id: 'biblio',
-			remotePath: 'mondrian/editie/apparaat/biblio.xml',
-			split: {
-				extractId: (el) => el.getAttribute('xml:id'),
-				selector: 'bibl',
+	pages: {
+		config: [
+			{
+				id: 'biblio',
+				split: {
+					extractId: (el) => el.getAttribute('xml:id'),
+					selector: 'bibl',
+				},
+				title: 'Bibliography'
 			},
-			title: 'Bibliography'
-		},
-		{
-			id: 'bio',
-			remotePath: 'mondrian/editie/apparaat/bio.xml',
-			split: {
-				extractId: (el) => el.getAttribute('xml:id'),
-				selector: 'person',
+			{
+				id: 'bio',
+				split: {
+					extractId: (el) => el.getAttribute('xml:id'),
+					selector: 'person',
+				},
+				title: 'Biographies'
 			},
-			title: 'Biographies'
-		},
-	],
+		],
+		getRemotePath: config => `mondrian/editie/apparaat/${config.id}.xml`
+	},
 	private: true,
 	slug: 'mondrian',
 	title: 'The Mondrian Papers',
