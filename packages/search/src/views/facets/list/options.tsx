@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import debounce from 'lodash.debounce'
 import { SearchContext, SearchPropsContext, SortBy, SortDirection } from '@docere/common'
 
-import { Input } from '../../full-text-search'
+import { inputStyle } from '../../full-text-search'
 
 import type { ListFacetProps } from '.'
 
@@ -37,7 +37,8 @@ export const OptionsTitle = styled('h4')`
 	padding: 0;
 `
 
-const FilterInput = styled(Input)`
+const FilterInput = styled('input')`
+	${inputStyle}
 	border: 1px solid #AAA;
 	height: 2em;
 	width: 100%;

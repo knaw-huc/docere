@@ -9,7 +9,7 @@ import RangeFacet from './views/facets/range'
 import { isBooleanFacetData, isListFacetData, isRangeFacetData, isDateFacetData, isHierarchyFacetData } from './utils'
 import Header from './views/header'
 import SearchResult from './views/search-result'
-import FullTextSearch from './views/full-text-search'
+import { FullTextSearch } from './views/full-text-search'
 import useSearch from './use-search'
 
 import type { ListFacetValues, BooleanFacetValues, HierarchyFacetValues, RangeFacetValue } from '@docere/common'
