@@ -150,7 +150,7 @@ function Panels() {
 				<SelectLayer>
 					<span>Select a panel</span>
 					{
-						uiState.footerTab !== FooterTab.Layers &&
+						uiState.footerTab !== FooterTab.Panels &&
 						<LayersFooterTab/>
 					}
 				</SelectLayer>

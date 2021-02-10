@@ -17,24 +17,17 @@ export function FooterTabs() {
 			className="footer-tabs"
 			onClick={onClick}
 		>
-			<Button
-				active={uiState.footerTab === FooterTab.Layers}
-				data-tab={FooterTab.Layers}
-			>
-				Layers
-			</Button>
-			<Button
-				active={uiState.footerTab === FooterTab.Settings}
-				data-tab={FooterTab.Settings}
-			>
-				Settings
-			</Button>
-			<Button
-				active={uiState.footerTab === FooterTab.API}
-				data-tab={FooterTab.API}
-			>
-				API
-			</Button>
+			{
+				Object.values(FooterTab).map(name =>
+					<Button
+						active={uiState.footerTab === name}
+						data-tab={name}
+						key={name}
+					>
+						{name}
+					</Button>
+				)
+			}
 		</div>
 	)
 }

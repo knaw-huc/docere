@@ -18,13 +18,13 @@ export function Body() {
 	return (
 		<Wrapper>
 			<Layers
-				active={uiState.footerTab === FooterTab.Layers}
+				active={uiState.footerTab === FooterTab.Panels}
 			/>
 			<Settings
 				active={uiState.footerTab === FooterTab.Settings}
 			/>
 			<Downloads
-				active={uiState.footerTab === FooterTab.API}
+				active={uiState.footerTab === FooterTab.Downloads}
 			/>
 		</Wrapper>
 	)
