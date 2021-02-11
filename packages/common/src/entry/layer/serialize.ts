@@ -4,6 +4,7 @@ import { isFacsimileLayerConfig } from '../../utils'
 import type { SerializedLayer, Type, ID, SerializedTextLayer, SerializedFacsimileLayer, ExtractedLayer } from '.'
 import type { ExtractedEntity } from '../entity' 
 import { setTitle } from '../../extend-config-data'
+import { DocereConfig } from '../../types/config-data/config'
 
 /**
  * Entities are extracted as a list (Array), but for further processing
@@ -25,32 +26,35 @@ function mapEntitiesByType(entities: ExtractedEntity[]): SerializedLayer['entiti
 	return Array.from(mappedEntities)
 }
 
-function serializeBaseLayer(layer: ExtractedLayer) {
+function serializeBaseLayer(layer: ExtractedLayer, config: DocereConfig) {
+	const layerConfig = config.layers.find(l => l.id === layer.id)
 	return {
-		active: layer.active != null ? layer.active : true,
+		active: layer.active != null ? layer.active : layerConfig.active,
 		entities: mapEntitiesByType(layer.entities),
 		facsimiles: layer.facsimiles.map(f => f.id),
 		id: layer.id,
-		pinned: layer.pinned != null ? layer.pinned : false,
+		pinned: layer.pinned != null ? layer.pinned : layerConfig.pinned,
 		title: layer.title,
 	}
 }
 
-export function serializeLayer(layer: ExtractedLayer): SerializedLayer {
-	if (isTextLayerConfig(layer)) {
-		const l: SerializedTextLayer = {
-			...layer,
-			...serializeBaseLayer(layer),
-			content: xmlToString(layer.el),
-		}
+export function serializeLayer(config: DocereConfig) {
+	return function(layer: ExtractedLayer): SerializedLayer {
+		if (isTextLayerConfig(layer)) {
+			const l: SerializedTextLayer = {
+				...layer,
+				...serializeBaseLayer(layer, config),
+				content: xmlToString(layer.el),
+			}
 
-		return setTitle(l)
-	} else if (isFacsimileLayerConfig(layer)) {
-		const l: SerializedFacsimileLayer = {
-			...layer,
-			...serializeBaseLayer(layer),
-		}
+			return setTitle(l)
+		} else if (isFacsimileLayerConfig(layer)) {
+			const l: SerializedFacsimileLayer = {
+				...layer,
+				...serializeBaseLayer(layer, config),
+			}
 
-		return setTitle(l)
+			return setTitle(l)
+		}
 	}
 }

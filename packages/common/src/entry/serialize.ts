@@ -7,7 +7,7 @@ export function serializeEntry(entry: ExtractedEntry, config: DocereConfig): Ser
 	return {
 		content: xmlToString(entry.document),
 		id: entry.id,
-		layers: entry.layers.map(serializeLayer),
+		layers: entry.layers.map(serializeLayer(config)),
 		metadata: entry.metadata,
 		parts: Array.from(entry.parts || []).map((part =>
 			serializeEntry(part[1], config))

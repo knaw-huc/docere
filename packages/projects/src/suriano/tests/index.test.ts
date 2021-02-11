@@ -37,8 +37,13 @@ export function surianoTests() {
 		expect(facsimileLayer.facsimiles).toHaveLength(8)
 	})
 
-	it('Should have 2 layers', () => {
+	it('Should have 3 layers', () => {
 		expect(entry.layers).toHaveLength(3)
+	})
+
+	it('Should have 2 inactive layers', () => {
+		console.log(JSON.stringify(entry.layers.map(l => l.active)))
+		expect(entry.layers.filter(l => !l.active)).toHaveLength(2)
 	})
 
 	it('Should have 2 entities', () => {

@@ -10,6 +10,12 @@ function unwrap(el: HTMLElement) {
 	el.parentNode.removeChild(el)
 }
 
+function removeCurrentHighlights(container: HTMLElement) {
+	for (const mark of container.querySelectorAll('mark')) {
+		unwrap(mark)
+	}
+}
+
 function wrap(node: Text, index: number, found: string) {
 	const textRange = document.createRange()
 	textRange.setStart(node, index)
@@ -19,13 +25,8 @@ function wrap(node: Text, index: number, found: string) {
 	return el
 }
 
-function removeCurrentHighlights(container: HTMLElement) {
-	for (const mark of container.querySelectorAll('mark')) {
-		unwrap(mark)
-	}
-}
-
 export function highlightQueryInDomElement(container: HTMLElement, query: string | string[]) {
+	console.log(container.outerHTML)	
 	const treeWalker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT)
 	const map = new Map()
 

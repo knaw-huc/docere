@@ -65,10 +65,12 @@ export default extendConfigData({
 	],
 	layers: [
 		{
+			active: false,
 			id: 'facsimile',
 			type: LayerType.Facsimile,
 		},
 		{
+			active: false,
 			extractElement: entry => entry.preparedElement.querySelector('div[type="original"]'),
 			id: 'text',
 			type: LayerType.Text,

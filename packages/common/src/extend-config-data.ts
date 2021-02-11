@@ -80,6 +80,9 @@ export function extendConfigData(configDataRaw: DocereConfig): DocereConfig {
 
 	config.entrySettings = { ...defaultEntrySettings, ...config.entrySettings }
 	config.layers = config.layers.map(layer => {
+		if (layer.active == null) layer.active = true
+		if (layer.pinned == null) layer.pinned = false
+
 		if (isTextLayerConfig(layer) && layer.extractElement == null) {
 			layer.extractElement = (entry) => entry.preparedElement
 		}
@@ -99,7 +102,6 @@ export function extendConfigData(configDataRaw: DocereConfig): DocereConfig {
 			config: config.pages.config.map(extendPage(config))
 		}
 	}
-
 
 	if (config.parts != null) {
 		config.parts = {
