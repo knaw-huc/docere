@@ -1,25 +1,12 @@
 import React from 'react'
-import styled from 'styled-components'
-import useGetComponentTree from './use-get-component-tree'
-import useHighlight from './use-highlight'
-import useComponentDidMount from './use-component-did-mount'
+import { useGetComponentTree } from './use-get-component-tree'
 
 import type { DocereComponents } from '@docere/common'
 import type { ComponentLeaf } from './types'
 
-export type { DocereComponents } from '@docere/common'
-
 export { highlightQueryInDomElement } from './use-highlight'
 
-const Error = styled.div`
-	background: darkred;
-	border-radius: .25em;
-	color: white;
-	display: inline-block;
-	font-size: 1.5rem;
-	font-weight: bold;
-	padding: 1em;
-`
+export type { DocereComponents } from '@docere/common'
 
 function renderComponentTree(tree: ComponentLeaf, props: DocereTextViewProps): React.ReactNode {
 	if (tree == null || typeof tree === 'string') return tree
@@ -46,22 +33,19 @@ export interface DocereTextViewProps {
 	xml?: string
 }
 function DocereTextView(props: DocereTextViewProps) {
-	const wrapperRef = React.useRef()
 	const componentTree = useGetComponentTree(props)
 
-	const tree = renderComponentTree(componentTree, props)
-	useComponentDidMount(props, tree, wrapperRef.current)
-	
-	// console.log(wrapperRef.current.outerHTML)
-	useHighlight(wrapperRef, tree, props.highlight, props.setHighlightAreas)
+	const handleRef = React.useCallback(node => {
+		if (props.onLoad != null) {
+			setTimeout(() => props.onLoad(node != null, node), 0)
+		}
+	}, [props.highlight, componentTree])
 
-	if (componentTree === undefined) {
-		return <Error>Failed to fetch {props.url}</Error>
-	}
+	if (componentTree == null) return null
 
 	return (
-		<div ref={wrapperRef}>
-			{tree}
+		<div ref={handleRef}>
+			{renderComponentTree(componentTree, props)}
 		</div>
 	)
 }

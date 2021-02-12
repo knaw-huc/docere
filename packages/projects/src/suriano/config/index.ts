@@ -63,24 +63,6 @@ export default extendConfigData({
 			showAsFacet: false
 		}
 	],
-	layers: [
-		{
-			active: false,
-			id: 'facsimile',
-			type: LayerType.Facsimile,
-		},
-		{
-			active: false,
-			extractElement: entry => entry.preparedElement.querySelector('div[type="original"]'),
-			id: 'text',
-			type: LayerType.Text,
-		},
-		{
-			extractElement: entry => entry.preparedElement.querySelector('div[type="summary"]'),
-			id: 'summary',
-			type: LayerType.Text,
-		},
-	],
 	entities: [
 		{
 			color: Colors.BlueBright,
@@ -122,6 +104,22 @@ export default extendConfigData({
 		extractFacsimiles,
 		selector: 'pb',
 	},
+	layers: [
+		{
+			id: 'facsimile',
+			type: LayerType.Facsimile,
+		},
+		{
+			extractElement: entry => entry.preparedElement.querySelector('div[type="original"]'),
+			id: 'text',
+			type: LayerType.Text,
+		},
+		{
+			extractElement: entry => entry.preparedElement.querySelector('div[type="summary"]'),
+			id: 'summary',
+			type: LayerType.Text,
+		},
+	],
 	pages: {
 		config: [
 			{
