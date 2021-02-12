@@ -18,14 +18,16 @@ function extendHierarchyFacet(config: HierarchyFacetConfig): HierarchyFacetConfi
 	}
 }
 
+const defaultSort = {
+	by: SortBy.Count,
+	direction: SortDirection.Desc
+}
+
 function extendListFacet(config: ListFacetConfig): ListFacetConfig {
-	const sort = {
-		by: SortBy.Count,
-		direction: SortDirection.Desc
-	}
+	if (config.sort == null) delete config.sort
 
 	return {
-		sort,
+		sort: defaultSort,
 		...config,
 		size: config.size || 10, /* if size is null, default to 10 */
 		datatype: EsDataType.Keyword, /* Explicitly set the datatype, for it is the default; facetConfig's without a datatype are converted to ListFacet's */
@@ -56,7 +58,7 @@ function initFacet(facetConfig: FacetConfig): FacetConfig {
 	console.error(`Facet config with datatype: '${facetConfig.datatype}' not found!`)
 }
 
-export default function extendFacetConfig(facetsConfig: FacetsConfig) {
+export function extendFacetConfig(facetsConfig: FacetsConfig) {
 	for (const facetId of Object.keys(facetsConfig)) {
 		const facetConfig = facetsConfig[facetId]
 		const extendedFacetConfig = initFacet(facetConfig)
