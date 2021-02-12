@@ -42,7 +42,7 @@ services:
       - db_dev:/var/lib/postgresql/data
 
   es01:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.6.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.1
     environment:
       - discovery.type=single-node
       - bootstrap.memory_lock=true
