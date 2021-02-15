@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import PageNumber, { Button } from './page-number'
+import { PageNumber, PaginationButton } from './page-number'
 
 import { FSResponse, SearchPropsContext } from '@docere/common'
 
@@ -20,7 +20,7 @@ const Wrapper = styled.div`
 	margin: 0 .2em;
 `
 
-const Prev = styled(Button)`
+const Prev = styled(PaginationButton)`
 	font-size: 1.6em;
 	margin-top: -4px;
 `
@@ -117,9 +117,9 @@ function Pagination(props: Props) {
 			}
 			<PageNumbers className="pagenumbers">
 				{first.length > 0 && first.map(toPageNumber)}
-				{first.length > 0 && current.length > 0 && <Button onClick={toBetweenFirstAndCurrent} spotColor={context.style.spotColor}>…</Button>}
+				{first.length > 0 && current.length > 0 && <PaginationButton onClick={toBetweenFirstAndCurrent} spotColor={context.style.spotColor}>…</PaginationButton>}
 				{current.map(toPageNumber)}
-				{last.length > 0 && <Button onClick={toBetweenCurrentAndLast} spotColor={context.style.spotColor}>…</Button>}
+				{last.length > 0 && <PaginationButton onClick={toBetweenCurrentAndLast} spotColor={context.style.spotColor}>…</PaginationButton>}
 				{last.length > 0 && last.map(toPageNumber)}
 			</PageNumbers>
 			{props.currentPage !== pageCount ?

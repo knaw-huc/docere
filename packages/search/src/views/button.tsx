@@ -1,12 +1,19 @@
 import styled from 'styled-components'
 
-const Button = styled('div')`
+export const Button = styled('button')`
 	background: none;
-	border: none;
+	border-radius: .2rem;
+	border: 1px solid ${(props: { spotColor: string }) => `${props.spotColor}44`};
 	color: ${(props: { spotColor: string }) => props.spotColor};
 	cursor: pointer;
+	font-size: 0.8rem;
 	outline: none;
-	padding: 0;
+	padding: 0.1rem 0.3rem;
+
+	&:hover {
+		background-color: ${(props: { spotColor: string }) => `${props.spotColor}11`};
+		border-color: ${(props: { spotColor: string }) => props.spotColor};
+	}
 `
 
 export const MoreLessButton = styled(Button)`
@@ -38,5 +45,3 @@ export const FacetMenuButton = styled(Button)`
 
 export const FacetInfoButton = styled(FacetMenuButton)`
 `
-
-export default Button

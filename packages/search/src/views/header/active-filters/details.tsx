@@ -1,42 +1,52 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import DropDown from '../../ui/drop-down'
+import { FacetsDataReducerAction, ActiveFilter } from '@docere/common'
 
-import { FacetsDataReducerAction, ActiveFilter, SearchPropsContext } from '@docere/common'
-
-const ActiveFiltersDropDown = styled(DropDown)`
-	.huc-fs-dropdown-button {
-		margin: 0 .5em;
-		text-align: right;
-	}
-
-	.huc-fs-dropdown-body {
+const Ul = styled.ul`
+	& > li {
 		box-sizing: border-box;
-		right: 0;
-		width: calc(100% - 32px);
+		cursor: pointer;
+		display: grid;
+		grid-template-columns: auto auto;
+		padding: .35rem 0 .1rem 0;
 
-		& > ul > li {
-			display: grid;
-			grid-template-columns: 140px auto;
+		& > .title {
+			margin-right: .25rem;
+		}
 
-			& > ul > li {
+		& > ul {
+			display: flex;
+			justify-content: flex-end;
+			flex-wrap: wrap;
+
+			& > li {
 				cursor: pointer;
-				display: inline-block;
 				background: #EEE;
-				margin-right: .5rem;
-				margin-bottom: .3rem;
-				line-height: 1rem;
-				padding: 0 .35rem;
+				border: 1px solid #EEE;
+				border-radius: .125rem;
+				padding: 0 .2rem;
+				margin: 0 0 .2rem .2rem;
 
 				&:hover {
-					color: #444;
+					border-color: #BBB;
+
+					&:after {
+						color: #444;
+					}
+				}
+
+				&:after {
+					content: '✕';
+					color: #888;
+					font-size: 0.6rem;
+					padding-left: .1rem;
 				}
 			}
+		}
 
-			&:not(:last-of-type) {
-				border-bottom: 1px solid #eee;
-			}
+		&:not(:last-of-type) {
+			border-bottom: 1px solid #eee;
 		}
 	}
 `
@@ -47,13 +57,6 @@ interface Props {
 	query: string
 }
 function ActiveFiltersDetails(props: Props) {
-	const { i18n } = React.useContext(SearchPropsContext)
-
-	const clearFullTextInput = React.useCallback(ev => {
-		ev.stopPropagation()
-		props.dispatch({ type: 'SET_QUERY', value: '' })
-	}, [])
-
 	const removeSearchFilter = React.useCallback(ev => {
 		ev.stopPropagation()
 		const { facetId, value } = ev.currentTarget.dataset
@@ -61,47 +64,29 @@ function ActiveFiltersDetails(props: Props) {
 	}, [])
 
 	return (
-		<ActiveFiltersDropDown
-			label={`${i18n.active} (${props.filters.reduce((p, c) => p + c.values.length, !props.query.length ? 0 : 1)})`}
-			z={1001}
-		>
-			<ul>
-				{
-					props.query.length > 0 &&
-					<li>
-						<div>{i18n.full_text_query}</div>
+		<Ul>
+			{
+				props.filters.map(filter =>
+					<li key={filter.id}>
+						<div className="title">{filter.title}</div>
 						<ul>
-							<li
-								onClick={clearFullTextInput}
-							>
-								{props.query}
-							</li>		
+							{
+								filter.values.map(value =>
+									<li
+										data-facet-id={filter.id}
+										data-value={value}
+										key={value}
+										onClick={removeSearchFilter}
+									>
+										{value}
+									</li>		
+								)
+							}
 						</ul>
 					</li>
-				}
-				{
-					props.filters.map(filter =>
-						<li key={filter.id}>
-							<div>{filter.title}</div>
-							<ul>
-								{
-									filter.values.map(value =>
-										<li
-											data-facet-id={filter.id}
-											data-value={value}
-											key={value}
-											onClick={removeSearchFilter}
-										>
-											{value}
-										</li>		
-									)
-								}
-							</ul>
-						</li>
-					)
-				}
-			</ul>
-		</ActiveFiltersDropDown>
+				)
+			}
+		</Ul>
 	)
 }
 

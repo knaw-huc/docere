@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import ActiveFilters from './active-filters'
 import Pagination from './pagination'
 import ResultCount from './result-count'
 
@@ -31,7 +30,6 @@ interface Props {
 function Header(props: Props) {
 	return (
 		<Wrapper id="huc-fs-header">
-			<ActiveFilters />
 			<ResultCount
 				currentPage={props.currentPage}
 				searchResult={props.searchResult}

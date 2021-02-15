@@ -1,17 +1,19 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { BACKGROUND_GRAY } from '../../constants'
+import { BACKGROUND_GRAY } from '../../../constants'
 import { SearchPropsContext } from '@docere/common'
 
-export const Button = styled.div`
-	color: ${(props: { spotColor: string}) => props.spotColor};
+export const PaginationButton = styled.button`
+	background: none;
+	border: none;
+	color: ${(props: { spotColor: string }) => props.spotColor};
 	cursor: pointer;
-	user-select: none;
+	outline: none;
 `
 
 interface PnProps { active: boolean }
-const PageNumberWrapper = styled(Button)`
+const PageNumberWrapper = styled(PaginationButton)`
 	background-color: ${(props: PnProps) => props.active ? BACKGROUND_GRAY : 'white'};
 	border-radius: .25em;
 	color: ${(props: PnProps) => props.active ? '#888' : 'inherit'};
@@ -25,7 +27,7 @@ interface Props {
 	pageNumber: number
 	setCurrentPage: () => void
 }
-function PageNumber(props: Props) {
+export function PageNumber(props: Props) {
 	const context = React.useContext(SearchPropsContext)
 	const active = props.pageNumber === props.currentPage
 	return (
@@ -41,4 +43,3 @@ function PageNumber(props: Props) {
 	)
 }
 
-export default React.memo(PageNumber)

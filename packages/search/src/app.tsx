@@ -11,6 +11,7 @@ import Header from './views/header'
 import SearchResult from './views/search-result'
 import { FullTextSearch } from './views/full-text-search'
 import useSearch from './use-search'
+import { ActiveFilters } from './views/header/active-filters'
 
 import type { ListFacetValues, BooleanFacetValues, HierarchyFacetValues, RangeFacetValue } from '@docere/common'
 
@@ -54,6 +55,7 @@ const Wrapper = styled.div`
 	}
 
 	& > #huc-fs-facets {
+		margin: 1.5rem 0 240px 0;
 		width: 300px;
 	}
 
@@ -141,6 +143,13 @@ export default function FacetedSearch() {
 			/>
 			{/* TODO move to Facets */}
 			<div id="huc-fs-facets">
+				<ActiveFilters />
+				{/* <Button
+					onClick={() => console.log('click')}
+					spotColor={context.style.spotColor}
+				>
+					{context.i18n.collapseAll}
+				</Button> */}
 				{
 					Array.from(searchContext.state.facets.values())
 						.map(facetData => {

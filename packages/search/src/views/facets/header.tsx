@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 import { FacetInfoButton, FacetMenuButton } from '../button'
 
-import { FacetData, SearchPropsContext } from '@docere/common'
+import { FacetData, FacetFilter, SearchPropsContext } from '@docere/common'
 
 const Header = styled('header')`
 	display: grid;
@@ -77,6 +77,10 @@ function FacetHeader(props: Props) {
 				spotColor={style.spotColor}
 			>
 				{props.facetData.config.title}
+				{
+					props.collapse &&
+					<ActiveIndicator filters={props.facetData.filters} />
+				}
 			</H3>
 			{
 				props.facetData.config.description != null &&
@@ -137,3 +141,25 @@ function FacetHeader(props: Props) {
 }
 
 export default React.memo(FacetHeader)
+
+const Small = styled.small`
+	font-weight: normal;
+	margin-left: .5rem;
+	font-size: .7rem;
+	color: #888;
+`
+function ActiveIndicator(props: { filters: FacetFilter }) {
+	const { i18n } = React.useContext(SearchPropsContext)
+
+	const size = Array.isArray(props.filters) ?
+		props.filters.length :
+		props.filters.size
+
+	if (size === 0) return null
+
+	return (
+		<Small>
+			{size} {i18n.active}
+		</Small>
+	)
+}

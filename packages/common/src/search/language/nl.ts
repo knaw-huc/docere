@@ -2,9 +2,10 @@ import { LanguageMap } from "."
 
 const dutch: LanguageMap = {
 	active: 'actief',
-	clear: "Leegmaken",
+	clear: "Nieuwe zoekopdracht",
+	collapseAll: "Filters inklappen",
 	list_facet_filter: "Zoeken in lijst",
-	filters: "Filters",
+	// filters: "Filters",
 	full_text_query: "Vrije zoekterm",
 	highest_first: "100 - 1",
 	lowest_first: "1 - 100",

@@ -1,8 +1,9 @@
 const english = {
 	active: "active",
 	clear: "clear",
+	collapseAll: "Collapse filters",
 	list_facet_filter: "Search list",
-	filters: "Filters",
+	// filters: "Filters",
 	full_text_query: "Full text query",
 	highest_first: "Highest first",
 	lowest_first: "Lowest first",

@@ -2,9 +2,8 @@ import React from 'react'
 import styled from 'styled-components'
 import { SearchPropsContext, SortDirection } from '@docere/common'
 
-import { Button } from '../../page-number'
-
 import type { FacetData, SortOrder, SetSortOrder } from '@docere/common'
+import { Button } from '../../../button'
 
 interface OOProps { active: boolean }
 const Wrapper = styled.div`
