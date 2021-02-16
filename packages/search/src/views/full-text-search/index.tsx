@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import debounce from 'lodash.debounce'
-import AutoSuggest from './auto-suggest'
+import { AutoSuggest } from './auto-suggest'
 import { SearchContext, SearchPropsContext } from '@docere/common'
 import { InputWrapper } from './input'
 
