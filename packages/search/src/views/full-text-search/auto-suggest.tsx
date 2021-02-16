@@ -64,6 +64,17 @@ export default class AutoSuggest extends React.PureComponent<Props, State> {
 			this.cache[this.props.value] = suggestions
 		}
 
+		/**
+		 * If there is only one suggestions which is equal to the input value,
+		 * show nothing.
+		 */
+		if (
+			suggestions.length === 1 &&
+			suggestions[0].toLowerCase() === this.props.value.toLowerCase()
+		) {
+			suggestions = []
+		}
+
 		this.setState({ suggestions })
 	}
 	private requestAutoSuggest = debounce(this.autoSuggest, 300)
