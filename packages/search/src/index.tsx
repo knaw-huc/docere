@@ -1,5 +1,5 @@
 import React from 'react'
-import { EsDataType, SearchPropsContext, SortBy, SortDirection, languageMaps, Language, Colors } from '@docere/common'
+import { EsDataType, SearchPropsContext, SortBy, SortDirection, languageMaps, Language, Colors, SearchContext } from '@docere/common'
 
 import useSearchReducer from './facets-context/reducer'
 import App from './app'
@@ -10,6 +10,7 @@ export * from './utils'
 export * from './date.utils'
 export {
 	EsDataType,
+	SearchContext,
 	SortBy,
 	SortDirection,
 	useSearchReducer,
