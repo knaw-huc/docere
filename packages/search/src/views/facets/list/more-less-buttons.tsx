@@ -2,7 +2,7 @@ import { SearchContext, SearchPropsContext } from '@docere/common'
 import React from 'react'
 import styled from 'styled-components'
 
-import { MoreLessButton } from '../../button'
+import { MoreLessButton } from '../../ui/button'
 
 import type { Props } from './values'
 

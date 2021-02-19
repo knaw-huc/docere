@@ -1,20 +1,34 @@
 import styled from 'styled-components'
 
+interface ButtonProps {
+	active?: boolean
+	spotColor: string
+}
 export const Button = styled('button')`
-	background: none;
+	background: ${(props: ButtonProps) => props.active ? props.spotColor : 'none'};
 	border-radius: .2rem;
-	border: 1px solid ${(props: { spotColor: string }) => `${props.spotColor}44`};
-	color: ${(props: { spotColor: string }) => props.spotColor};
+	border: 1px solid ${props => `${props.spotColor}44`};
+	color: ${props => props.active ? 'white' : props.spotColor};
 	cursor: pointer;
 	font-size: 0.8rem;
 	outline: none;
 	padding: 0.1rem 0.3rem;
 
 	&:hover {
-		background-color: ${(props: { spotColor: string }) => `${props.spotColor}11`};
-		border-color: ${(props: { spotColor: string }) => props.spotColor};
+		background-color: ${props => props.active ? props.spotColor : `${props.spotColor}11`};
+		border-color: ${props => props.spotColor};
 	}
 `
+
+export const RoundButton = styled(Button)`
+	border-radius: .6rem;
+	height: 1.2rem;
+	line-height: 1rem;
+	padding: 0;
+	text-align: center;
+	width: 1.2rem;
+`
+
 
 export const MoreLessButton = styled(Button)`
 	display: inline-block;

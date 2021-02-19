@@ -4,7 +4,7 @@ import { EntrySettingsContext, EntitiesContext, useUIComponent, UIComponentType,
 
 import { useChildren } from './hooks'
 import IconsByType from './icons'
-import Tooltip from '../tooltip'
+import { EntityTooltip } from './entity-tooltip'
 
 import type { Entity } from '@docere/common'
 
@@ -117,12 +117,12 @@ export const EntityTag = React.memo(function EntityComp(props: ComponentProps) {
 				{
 					active &&
 					showTooltip &&
-					<Tooltip
+					<EntityTooltip
 						entity={entity}
 						settings={settings}
 					>
 						<Component entity={entity} />
-					</Tooltip>
+					</EntityTooltip>
 				}
 			</NoWrap>
 			{restOfFirstChild}

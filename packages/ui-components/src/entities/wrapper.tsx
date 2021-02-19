@@ -10,7 +10,7 @@ const TooltipBody = styled.div`
 	box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
 	box-sizing: border-box;
 	color: #666;
-	font-family: sans-serif;
+	font-family: Roboto, sans-serif;
 	font-size: .85rem; ${/* Set font-size on TooltipBody, because it is also used when note is in the aside */''}
 	font-weight: 300;
 	height: 100%;

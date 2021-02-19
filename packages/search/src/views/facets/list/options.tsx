@@ -8,12 +8,16 @@ import { inputStyle } from '../../full-text-search'
 import type { ListFacetProps } from '.'
 
 export const OptionsWrapper = styled('div')`
-	font-size: .9em;
-	margin-bottom: 2em;
+	border: 1px solid ${(props: { color: string }) => props.color};
+	background: ${(props: { color: string }) => `${props.color}11`};
+	font-size: .75rem;
 	grid-column: 1 / -1;
+	margin-bottom: 1rem;
+	padding: .5rem;
 `
 
 export const OptionsGroup = styled.div`
+	background: white;
 	border: 1px solid #AAA;
 	padding: 1em;
 `
@@ -31,7 +35,7 @@ const Div = styled('div')`
 `
 
 export const OptionsTitle = styled('h4')`
-	color: gray;
+	color: #222;
 	font-weight: normal;
 	margin: 1em 0 .2em 0;
 	padding: 0;
@@ -45,7 +49,7 @@ const FilterInput = styled('input')`
 `
 
 function Options(props: ListFacetProps) {
-	const { i18n } = React.useContext(SearchPropsContext)
+	const { i18n, style } = React.useContext(SearchPropsContext)
 	const { dispatch } = React.useContext(SearchContext)
 	const [filterInputValue, setFilterInputValue] = React.useState('')
 
@@ -69,7 +73,7 @@ function Options(props: ListFacetProps) {
 	)
 
 	return (
-		<OptionsWrapper>
+		<OptionsWrapper color={style.spotColor}>
 			<OptionsTitle>{i18n.list_facet_order}</OptionsTitle>
 			<RadioGroup>
 				<Div>

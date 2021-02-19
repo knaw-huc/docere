@@ -1,6 +1,7 @@
-import { LanguageMap, SPOT_COLOR } from '@docere/common'
+import { SearchPropsContext, SPOT_COLOR } from '@docere/common'
 import React from 'react'
 import styled, { css } from "styled-components"
+import { HelpButton } from '../ui/help-button'
 
 export const inputStyle = css`
 	border: none;
@@ -32,7 +33,7 @@ const Wrapper = styled.div`
 		${inputStyle}
 	}
 
-	button {
+	button.close {
 		align-self: center;
 		background: none;
 		border: none;
@@ -47,14 +48,14 @@ const Wrapper = styled.div`
 	}
 `
 
-
 interface Props {
 	handleInputChange: any
-	i18n: LanguageMap
 	inputValue: string
 	setSuggestActive: any
 }
 export function InputWrapper(props: Props) {
+	const { i18n, inputHelpText } = React.useContext(SearchPropsContext)
+
 	const handleKeyDown = React.useCallback(ev => {
 		if (
 			ev.keyCode === 13 || 	// Enter
@@ -81,17 +82,22 @@ export function InputWrapper(props: Props) {
 				onChange={props.handleInputChange}
 				onClick={() => props.setSuggestActive(false)}
 				onKeyDown={handleKeyDown}
-				placeholder={props.i18n.search_documents}
+				placeholder={i18n.search_documents}
 				value={props.inputValue}
 			/>
 			{
-				props.inputValue.length > 0 &&
-				<button
-					className="close"
-					onClick={handleClose}
-				>
-					✕
-				</button>
+				props.inputValue.length > 0 ?
+					<button
+						className="close"
+						onClick={handleClose}
+					>
+						✕
+					</button> :
+					<HelpButton
+						offset={-135}
+					>
+						{inputHelpText}
+					</HelpButton>
 			}
 		</Wrapper>
 	)

@@ -28,8 +28,14 @@
 	font-style: normal;
 	font-weight: normal;
 }
+@font-face {
+	font-family: "Roboto";
+	src: url('/static/roboto/Roboto-Light.ttf');
+	font-style: normal;
+	font-weight: normal;
+}
 html, body {
-	font-family: sans-serif;
+	font-family: Roboto, sans-serif;
 	font-size: 18px;
 	margin: 0;
 	padding: 0;
@@ -41,7 +47,7 @@ ul {
 	padding: 0;
 }
 input {
-	font-family: sans-serif;
+	font-family: Roboto, sans-serif;
 }
 #container {
 	width: 100%;

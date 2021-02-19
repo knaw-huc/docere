@@ -11,10 +11,11 @@ function timestampToDateInputValue(timestamp: number) {
 	return isoDate.slice(0, isoDate.indexOf('T'))
 }
 const Fieldset = styled.fieldset`
+	background: white;
 	padding: 1rem;
 
 	legend {
-		color: #AAA;
+		color: #222;
 		padding: 0 .33rem;
 	}
 
@@ -31,7 +32,7 @@ const Fieldset = styled.fieldset`
 `
 export default function RangeOptions(props: { facetData: RangeFacetData | DateFacetData }) {
 	const { dispatch } = React.useContext(SearchContext)
-	const { i18n } = React.useContext(SearchPropsContext)
+	const { i18n, style } = React.useContext(SearchPropsContext)
 
 	// There can be multpiple range facets. To get a unique ID, prefix it with the facet ID
 	const idPrefix = `${props.facetData.config.id}_range_`
@@ -99,7 +100,7 @@ export default function RangeOptions(props: { facetData: RangeFacetData | DateFa
 	}, [from, to])
 
 	return (
-		<OptionsWrapper>
+		<OptionsWrapper color={style.spotColor}>
 			<Fieldset>
 				<legend>{i18n.set_range}</legend>
 				<div>

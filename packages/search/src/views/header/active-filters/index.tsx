@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import useFilters from './use-filters'
 import Details from './details'
 import { SearchPropsContext, SearchContext } from '@docere/common'
-import { Button } from '../../button'
+import { Button } from '../../ui/button'
 
 const Wrapper = styled.div`
 	font-size: .8rem;

@@ -11,7 +11,7 @@ const Wrapper = styled.div`
 	bottom: 0;
 	color: #222;
 	display: grid;
-	font-family: serif;
+	font-family: Roboto, serif;
 	font-size: 1.1rem;
 	grid-template-columns: auto ${DEFAULT_SPACING * 20}px auto;
 	left: 0;

@@ -44,7 +44,7 @@ function hideLoader(loaderRef: any) {
 }
 
 export function FullTextSearch() {
-	const context = React.useContext(SearchPropsContext)
+	const { autoSuggest } = React.useContext(SearchPropsContext)
 	const searchContext = React.useContext(SearchContext)
 	const loaderRef = React.useRef()
 	const [suggestActive, setSuggestActive] = React.useState(false)
@@ -59,7 +59,7 @@ export function FullTextSearch() {
 	)
 	const handleInputChange = React.useCallback(
 		(ev: React.ChangeEvent<HTMLInputElement>) => {
-			setSuggestActive(context.autoSuggest != null) // Set suggestActive state only to true if props.autoSuggest exists
+			setSuggestActive(autoSuggest != null) // Set suggestActive state only to true if props.autoSuggest exists
 			setInputValue(ev.target.value)
 			setQuery(ev.target.value)
 			showLoader(loaderRef)
@@ -75,14 +75,13 @@ export function FullTextSearch() {
 		<Wrapper id="huc-full-text-search">
 			<InputWrapper
 				handleInputChange={handleInputChange}
-				i18n={context.i18n}
 				inputValue={inputValue}
 				setSuggestActive={setSuggestActive}
 			/>
 			{
 				suggestActive &&
 				<AutoSuggest
-					autoSuggest={context.autoSuggest}
+					autoSuggest={autoSuggest}
 					onClick={query => {
 						setInputValue(query)
 						setQuery(query)

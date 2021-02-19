@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { SearchPropsContext, SortDirection } from '@docere/common'
 
 import type { FacetData, SortOrder, SetSortOrder } from '@docere/common'
-import { Button } from '../../../button'
+import { Button } from '../../../ui/button'
 
 interface OOProps { active: boolean }
 const Wrapper = styled.div`

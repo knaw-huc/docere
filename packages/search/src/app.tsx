@@ -20,7 +20,7 @@ const margin = DEFAULT_SPACING * 2
 interface WProps { showResults: boolean, small: boolean }
 const Wrapper = styled.div`
 	display: grid;
-	font-family: sans-serif;
+	font-family: Roboto, sans-serif;
 	grid-template-columns: ${(props: WProps) => 
 		props.small ?
 			`${margin}px calc(100% - 128px) ${margin}px calc(100% - 128px) ${margin}px;` :

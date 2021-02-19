@@ -9,6 +9,7 @@ export interface FacetedSearchProps {
 	autoSuggest?: (query: string) => Promise<string[]>
 	className?: string /* className prop is used by StyledComponents */
 	excludeResultFields?: string[]
+	inputHelpText?: string
 	language?: Language
 	onClickResult: (result: any, ev: React.MouseEvent<HTMLLIElement>) => void
 	resultFields?: string[]

@@ -20,6 +20,7 @@ export default extendConfigData({
 		// 	extract: entry => entry.preparedElement.querySelector('div[type="summary"] > p').textContent
 		// },
 		{
+			description: 'Dit is een test om wat te zien',
 			id: 'sender',
 			extract: entry => entry.preparedElement.querySelector('correspAction[type="sent"] name').textContent
 		},

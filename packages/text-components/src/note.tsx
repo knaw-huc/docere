@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { EntrySettingsContext, EntitiesContext, ComponentProps, ContainerContext, DispatchContext, useEntity } from '@docere/common'
 import { XmlEntity } from '@docere/ui-components'
 
-import Tooltip from './tooltip'
+import { EntityTooltip } from './entity/entity-tooltip'
 
 interface NAProps { active: boolean, color: string, openToAside: boolean }
 const Wrapper = styled.div`
@@ -66,12 +66,12 @@ export const NoteTag = React.memo(function NotePopup(props: ComponentProps) {
 			{note.n}
 			{
 				active &&
-				<Tooltip
+				<EntityTooltip
 					entity={note}
 					settings={settings}
 				>
 					<XmlEntity entity={note} />
-				</Tooltip>
+				</EntityTooltip>
 			}
 		</Wrapper>
 	)
