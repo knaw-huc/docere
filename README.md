@@ -13,3 +13,4 @@ Ideally we would like to use ESM only, but especially the support on the NodeJS 
 ## License
 
 Docere is licensed under the [**GNU General Public License v3.0**](LICENSE).
+
