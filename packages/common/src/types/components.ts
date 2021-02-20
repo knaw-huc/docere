@@ -1,6 +1,6 @@
 // import type { TextLayer } from '../entry/layer'
 
-export type ReactComponent = React.FunctionComponent<{ children?: React.ReactNode }>
+export type ReactComponent = React.FunctionComponent<ComponentProps>
 export type DocereComponents = Record<string, ReactComponent>
 
 export interface ComponentProps {

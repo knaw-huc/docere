@@ -1,13 +1,13 @@
 import React from 'react'
 import styled from 'styled-components'
 import { useHistory, useParams } from 'react-router-dom'
-import HucFacetedSearch  from '../../../search/src'
 import { ProjectContext, useUIComponent, UIComponentType, Viewport, Language, getEntryPath, UIContext } from '@docere/common'
+import { GenericResultBody } from '@docere/ui-components'
 
+import HucFacetedSearch  from '../../../search/src'
 import useAutoSuggest from './use-auto-suggest'
 
 import type { Hit } from '@docere/common'
-import { GenericResultBody } from '../../../search/node_modules/@docere/ui-components/src'
 
 const FS = styled(HucFacetedSearch)`
 	background: white;
