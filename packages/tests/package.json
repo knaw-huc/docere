@@ -1,6 +1,6 @@
 {
   "name": "@docere/tests",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "",
   "private": true,
   "scripts": {
@@ -9,7 +9,7 @@
     "test:testing": "cp .env.testing .env && npm t"
   },
   "dependencies": {
-    "@docere/common": "^1.4.0",
+    "@docere/common": "^1.4.1",
     "chalk": "^4.1.0"
   },
   "devDependencies": {

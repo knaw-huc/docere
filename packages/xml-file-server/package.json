@@ -1,6 +1,6 @@
 {
   "name": "@docere/xml-file-server",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -12,7 +12,7 @@
     "watch": "tsc -w --pretty --preserveWatchOutput"
   },
   "dependencies": {
-    "@docere/common": "^1.4.0",
+    "@docere/common": "^1.4.1",
     "express": "^4.17.1"
   },
   "devDependencies": {

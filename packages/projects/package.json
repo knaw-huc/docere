@@ -1,6 +1,6 @@
 {
   "name": "@docere/projects",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -12,10 +12,10 @@
   "author": "Gijsjan Brouwer",
   "license": "GPL-3.0-or-later",
   "dependencies": {
-    "@docere/common": "^1.4.0",
-    "@docere/text": "^1.4.0",
-    "@docere/text-components": "^1.4.0",
-    "@docere/ui-components": "^1.4.0"
+    "@docere/common": "^1.4.1",
+    "@docere/text": "^1.4.1",
+    "@docere/text-components": "^1.4.1",
+    "@docere/ui-components": "^1.4.1"
   },
   "devDependencies": {
     "typescript": "^4.1.3"
