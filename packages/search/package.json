@@ -12,8 +12,7 @@
   "author": "",
   "license": "GPL-3.0-or-later",
   "dependencies": {
-    "@docere/common": "^1.4.0",
-    "@docere/ui-components": "^1.4.0"
+    "@docere/common": "^1.4.0"
   },
   "devDependencies": {
     "@types/elasticsearch": "^5.0.37",
