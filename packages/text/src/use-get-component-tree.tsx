@@ -4,7 +4,7 @@ import { fetchXml, attrsToObject } from './utils'
 import type { ReactComponent } from '@docere/common'
 import type { DocereTextViewProps } from '.'
 import type { ComponentLeaf, ComponentTree } from './types'
-import { MARK_TAG_NAME, useHighlight } from './use-highlight'
+import { MARK_TAG_NAME, highlightNode } from './use-highlight'
 
 function NoopComp(props: any) { return props.children } 
 
@@ -98,8 +98,6 @@ export function useGetComponentTree(props: DocereTextViewProps) {
 	 * 3 `url`: an XMLDocument is fetched by XMLHttpRequest.
 	 */
 	React.useEffect(() => {
-		if (props.components == null) return
-
 		const cachedPreparedNode = preparedNodeFromCache(props)
 		if (cachedPreparedNode != null) return setNode(cachedPreparedNode)
 
@@ -128,7 +126,7 @@ export function useGetComponentTree(props: DocereTextViewProps) {
 			preparedNodeToCache(prepared, props)
 			setNode(prepared)
 		}
-	}, [props.html, props.node, props.url, props.xml, props.components])
+	}, [props.html, props.node, props.url, props.xml])
 
 	/**
 	 * Create and set the component tree.
@@ -143,10 +141,13 @@ export function useGetComponentTree(props: DocereTextViewProps) {
 	 * re-renders, creating mangled texts.
 	 */
 	React.useEffect(() => {
-		useHighlight(node, props.highlight, props.setHighlightAreas)
-		const componentTree = nodeToComponentTree(node, props)
+		if (props.components == null) return
+
+		const hiNode = highlightNode(node, props.highlight, props.setHighlightAreas)
+
+		const componentTree = nodeToComponentTree(hiNode, props)
 		setComponentTree(componentTree as ComponentTree)
-	}, [node, props.highlight])
+	}, [node, props.highlight, props.components])
 
 	return componentTree
 }

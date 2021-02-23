@@ -2,7 +2,7 @@
 
 import type { DocereTextViewProps } from '.'
 
-export const MARK_TAG_NAME = 'x-docere-mark'
+export const MARK_TAG_NAME = 'mark'
 
 function unwrap(el: HTMLElement) {
 	// move all children out of the element
@@ -63,15 +63,19 @@ export function highlightQueryInDomElement(container: Element, query: string | s
 	return tops
 }
 
-export function useHighlight(
+export function highlightNode(
 	el: Element,
 	highlight: DocereTextViewProps['highlight'],
 	setHighlightAreas: (areas: number[]) => void
 ) {
-	if (el == null || highlight == null || highlight.length === 0) return
+	if (el == null || highlight == null || highlight.length === 0) return el
+
+	el = el.cloneNode(true) as Element
 
 	removeCurrentHighlights(el)
 	const tops = highlightQueryInDomElement(el, highlight)
 
 	if (setHighlightAreas) setHighlightAreas(tops.filter((v, i, a) => v > 0 && a.indexOf(v) === i))
+
+	return el
 }
