@@ -1,6 +1,6 @@
 {
   "name": "@docere/ui-components",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "",
   "main": "src/index.tsx",
   "scripts": {
@@ -11,7 +11,7 @@
   "license": "GPL-3.0-or-later",
   "dependencies": {
     "@docere/common": "^1.4.1",
-    "@docere/text": "^1.4.1"
+    "@docere/text": "^1.4.2"
   },
   "devDependencies": {
     "typescript": "^4.1.3"
