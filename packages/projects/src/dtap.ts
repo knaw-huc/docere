@@ -11,10 +11,10 @@ import { DTAP } from "@docere/common"
 export const dtapMap: Record<string, DTAP> = {
 	// Testing => demo.docere.diginfra.net
 	bosscheschepenprotocollen: DTAP.Testing,
-	gekaaptebrieven: DTAP.Testing,
 	mondrian: DTAP.Testing,
 	republic: DTAP.Testing,
 	suriano: DTAP.Testing,
+	vangogh: DTAP.Testing,
 
 	// Development => localhost(:4000)
 	'plakaatboek-guyana-1670-1816': DTAP.Development,
@@ -23,9 +23,9 @@ export const dtapMap: Record<string, DTAP> = {
 	henegouwseregisters: DTAP.Development,
 	isidore: DTAP.Development,
 	kranten1700: DTAP.Development,
-	// utrechtpsalter: DTAP.Development,
-	vangogh: DTAP.Development,
 
 	// Inactive
-	// ecodicesnl: DTAP.Inactive,
+	// ecodicesnl
+	// utrechtpsalter
+	// gekaaptebrieven
 }
