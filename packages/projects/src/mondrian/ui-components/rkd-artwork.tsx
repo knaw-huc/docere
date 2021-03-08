@@ -55,7 +55,7 @@ function useRkdImage(id: string) {
 			})
 		}
 
-		return () => unmounted = true
+		return () => {unmounted = true}
 	}, [id])
 
 	return rkdImage
