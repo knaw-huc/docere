@@ -11,6 +11,7 @@ import Puppenv from '../puppenv'
 import { getPool, transactionQuery } from './index'
 import { indexDocument } from '../es'
 import { DocereConfig, ID } from '@docere/common'
+import { XML_SERVER_ENDPOINT } from '../constants'
 
 type AddRemoteFilesOptions = {
 	force?: boolean
@@ -42,7 +43,7 @@ export async function addRemoteFiles(
 	if (remotePath.charAt(0) === '/') remotePath = remotePath.slice(1)
 
 	// Fetch directory structure
-	const xmlEndpoint = `${process.env.DOCERE_XML_URL}/${remotePath}`
+	const xmlEndpoint = `${XML_SERVER_ENDPOINT}/${remotePath}`
 	const result = await fetch(xmlEndpoint)
 	if (result.status === 404) {
 		console.log(`[${projectId}] remote path not found: '${remotePath}'`)
@@ -60,7 +61,7 @@ export async function addRemoteFiles(
 	// Add every XML file to the database
 	for (const filePath of files) {
 		const entryId = getDocumentIdFromRemoteXmlFilePath(filePath, remotePath, projectConfig.documents.stripRemoteDirectoryFromDocumentId)
-		const result = await fetch(`${process.env.DOCERE_XML_URL}${filePath}`)
+		const result = await fetch(`${XML_SERVER_ENDPOINT}${filePath}`)
 		const content = await result.text()	
 		await addXmlToDb(content, projectId, entryId, puppenv, options.force)
 	}

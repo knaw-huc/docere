@@ -18,11 +18,11 @@ module.exports = () => {
 		port: 4000,
 		proxy: {
 			'/api': {
-				target: 'http://localhost:3000',
+				target: `http://localhost:${env.DOCERE_API_PORT}`,
 				// pathRewrite: {'^/api': ''}
 			},
 			'/search': {
-				target: 'http://localhost:9200',
+				target: `http://localhost:${env.DOCERE_SEARCH_PORT}`,
 				pathRewrite: {'^/search': ''}
 			},
 			'/iiif/vangogh': {
@@ -30,20 +30,11 @@ module.exports = () => {
 				target: 'http://vangoghletters.org/vg/facsimiles',
 				pathRewrite: {'^/iiif/vangogh': ''}
 			},
-			// '/iiif/encyclopaedia-britannica': {
-			// 	changeOrigin: true,
-			// 	target: 'https://view.nls.uk/iiif',
-			// 	pathRewrite: {'^/iiif/encyclopaedia-britannica': ''}
-			// },
 			'/iiif': {
 				changeOrigin: true,
-				target: env.DOCERE_IIIF_URL,
+				target: env.DOCERE_IIIF_BASE_URL,
 				pathRewrite: {'^/iiif': ''}
 			},
-			// '/xml': {
-			// 	changeOrigin: true,
-			// 	target: env.DOCERE_XML_URL,
-			// },
 		},
 		watchOptions: {
 			ignored: /node_modules/

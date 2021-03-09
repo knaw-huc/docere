@@ -16,14 +16,6 @@ services:
       - ./secrets:/var/www/secrets
       - ../../public:/var/www/html
 
-  iiif:
-    image: lorisimageserver/loris
-    ports:
-      - 5004
-    restart: always
-    volumes:
-      - /data/docere/facsimiles:/opt/loris/tests/img
-
   api:
     build:
       context: ../../
@@ -50,7 +42,11 @@ services:
       - db_testing:/var/lib/postgresql/data
 
   xml_file_server:
-    command: ["npx", "@docere/xml-file-server"]
+    # command: ["npx", "@docere/xml-file-server"]
+    command: ["npm", "start"]
+    container_name: docere_xml_file_server
+    env_file:
+      - ../../.env
     environment:
       - DOCERE_XML_BASE_PATH=/xml
     expose:
@@ -59,6 +55,8 @@ services:
     restart: always
     volumes:
       - /data/docere/xml:/xml
+      - ../../:/app
+    working_dir: /app/packages/xml-file-server
 
   es01:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.10.1

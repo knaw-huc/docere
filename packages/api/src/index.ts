@@ -29,7 +29,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 const app = express()
 app.disable('x-powered-by')
-const port = 3000
 
 app.use(express.json())
 app.use((req, _res, next) => {
@@ -69,8 +68,8 @@ async function main() {
 	dtsApi(app)
 	otherApi(app)
 
-	app.listen(port, () => {
-		console.log(`Docere API running on port ${port}`)
+	app.listen(process.env.DOCERE_API_PORT, () => {
+		console.log(`Docere API running on port ${process.env.DOCERE_API_PORT}`)
 	})
 }
 
