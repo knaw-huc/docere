@@ -128,6 +128,11 @@ export async function addXmlToDb(content: string, projectId: string, documentId:
 	client.release()
 }
 
+/**
+ * Add document to DB 
+ * 
+ * @param props
+ */
 async function addDocumentToDb(props: {
 	client: PoolClient,
 	content: string

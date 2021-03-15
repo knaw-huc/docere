@@ -109,7 +109,6 @@ export function extractEntryData(entry: ExtractedEntry, config: DocereConfig) {
 		return prev
 	}, [] as (ExtractedLayer)[])
 
-
 	// TODO unambiguate (yeah, it's not a word)
 	entry.facsimiles = entry.layers.reduce(
 		(prev, layer) =>
@@ -118,6 +117,16 @@ export function extractEntryData(entry: ExtractedEntry, config: DocereConfig) {
 				prev,
 		[]
 	)
+
+	entry.facsimiles = Array.from(entry.layers
+		.reduce(
+			(prev, curr) => {
+				curr.facsimiles.forEach(f => prev.set(f.id, f))
+				return prev
+			},
+			new Map()	
+		)
+		.values())
 
 	const facsimileLayer = entry.layers.find(l => l.type === LayerType.Facsimile)
 	if (facsimileLayer != null) facsimileLayer.facsimiles = entry.facsimiles

@@ -109,8 +109,9 @@ type TmpConfig = FacetConfig & {
 	showAsFacet?: boolean /* Show data as a facet? */
 }
 
+export type ExtractMetadata = (entry: ExtractedEntry, config?: DocereConfig) => string | number | string[] | number[] | boolean
 export type MetadataConfig = TmpConfig & {
-	extract: (entry: ExtractedEntry, config?: DocereConfig) => string | number | string[] | number[] | boolean
+	extract: ExtractMetadata
 }
 
 // export type ExtractTextData = (entry: ConfigEntry, config?: DocereConfig) => ExtractedTextData[]

@@ -1,31 +1,35 @@
-import { LayerType, EntityType, Colors, extendConfigData, xmlToString } from '@docere/common'
+import { LayerType, EntityType, Colors, extendConfigData, xmlToString, ExtractEntitiesProps } from '@docere/common'
 import extractFacsimiles from './facsimiles'
 import prepare from './prepare'
 import metadata from './metadata'
 
 const projectId = 'vangogh'
 
+function extractNote({ layerElement, entry, entityConfig }: ExtractEntitiesProps) {
+	return Array.from(layerElement.querySelectorAll(entityConfig.selector))
+		.map(anchor => {
+			const id = entityConfig.extractId(anchor)
+			const n = anchor.getAttribute('n')
+			const note = entry.document.querySelector(`note[target="#${id}"]`)
+			if (note == null) return null
+			return {
+				anchor,
+				content: xmlToString(note),
+				n,
+				title: `Note ${n}`,
+			}
+		})
+		.filter(x => x != null)
+}
+
 export default extendConfigData({
 	entities: [
 		{
 			color: Colors.BlueBright,
 			extractId: el => el.getAttribute('xml:id'),
-			extract: ({ layerElement, entry, entityConfig }) => Array.from(layerElement.querySelectorAll(entityConfig.selector))
-				.map(anchor => {
-					const id = anchor.getAttribute('xml:id')
-					const n = anchor.getAttribute('n')
-					const note = entry.document.querySelector(`note[target="#${id}"]`)
-					if (note == null) return null
-					return {
-						content: xmlToString(note),
-						anchor,
-						n,
-						title: `Textual note ${n}`,
-					}
-				})
-				.filter(x => x != null),
+			extract: extractNote,
 			id: 'textual',
-			selector: 'anchor',
+			selector: 'div[type="original"] anchor',
 			title: "Textual notes",
 			type: EntityType.Note,
 			showAsFacet: false,
@@ -34,17 +38,9 @@ export default extendConfigData({
 			color: Colors.BlueBright,
 			// TODO querySelectorAll the anchors (lb)
 			extractId: el => el.getAttribute('xml:id'),
-			extract: ({ layerElement, entityConfig }) => Array.from(layerElement.querySelectorAll(entityConfig.selector))
-				.map(el => {
-					return {
-						anchor: el,
-						content: xmlToString(el),
-						n: el.getAttribute('n'),
-						title: `Editor note ${el.getAttribute('n')}`,
-					}
-				}),
+			extract: extractNote,
 			id: 'editor',
-			selector: 'div[type="notes"] > note',
+			selector: 'div[type="translation"] anchor',
 			title: "Editor notes",
 			type: EntityType.Note,
 		},

@@ -1,6 +1,11 @@
 import { extendConfigData, ExtractEntitiesProps, FacsimileArea, Colors } from '@docere/common'
-import { LayerType, EsDataType } from '@docere/common'
+import { LayerType, EsDataType, ExtractMetadata } from '@docere/common'
 import extractFacsimiles from './facsimiles'
+
+function extractMetadata(key: string): ExtractMetadata {
+	return entry =>
+		entry.document.querySelector(`metadata[key="${key}"]`)?.getAttribute('value')
+}
 
 export default extendConfigData({
 	slug: 'republic',
@@ -12,20 +17,21 @@ export default extendConfigData({
 	metadata: [
 		{
 			datatype: EsDataType.Date,
-			extract: entry =>
-				entry.document.querySelector('meta[key="meeting_date"]')?.getAttribute('value'),
+			extract: extractMetadata('session_date'),
 			id: 'date',
 			interval: 'd'
 		},
 		{
-			extract: entry =>
-				entry.document.querySelector('meta[key="inventory_num"]')?.getAttribute('value'),
+			extract: extractMetadata('inventory_num'),
 			id: 'inventory_num',
 		},
 		{
-			extract: entry =>
-				entry.document.querySelector('meta[key="meeting_weekday"]')?.getAttribute('value'),
-			id: 'meeting_weekday',
+			extract: extractMetadata('session_weekday'),
+			id: 'session_weekday',
+		},	
+		{
+			extract: extractMetadata('president'),
+			id: 'president',
 		}	
 	],
 	entities: [
@@ -37,6 +43,20 @@ export default extendConfigData({
 			selector: 'line',
 			showInAside: false,
 			showAsFacet: false,
+		},
+		{
+			id: 'attendant',
+			extract: ({ entityConfig, layerElement }) => {
+				return Array.from(layerElement.querySelectorAll(entityConfig.selector))
+					.map(el => {
+						return {
+							anchor: el,
+							content: el.textContent,
+						}
+					})
+			},
+			extractId: el => el.id,
+			selector: 'attendant',
 		}
 	],
 	facsimiles: {
@@ -71,24 +91,19 @@ function createFacsimileArea(el: Element, facsimileId: string): FacsimileArea {
 	}
 }
 
+function getLineN(id: string) {
+	const splits = id.split('-')
+	return (parseInt(splits[splits.length - 1], 10) + 1).toString()
+}
+
 function extractLbs({ layerElement }: ExtractEntitiesProps) {
-	let facsimileId: string
-	let i = 0
-
-	return Array.from(layerElement.querySelectorAll('column'))
-		.reduce((prev, column) => {
-			if (column.hasAttribute('docere:id')) facsimileId = column.getAttribute('docere:id')
-
-			const lbs = Array.from(column.querySelectorAll('line'))
-				.map((el) => {
-					i = i + 1
-					return {
-						anchor: el,
-						content: el.textContent,
-						n: i.toString(),
-						facsimileAreas: [createFacsimileArea(el, facsimileId)]
-					}
-				})
-			return prev.concat(lbs)
-		}, [])
+	return Array.from(layerElement.querySelectorAll('line'))
+		.map(line => {
+			return {
+				anchor: line,
+				content: null,
+				n: getLineN(line.id),
+				facsimileAreas: [createFacsimileArea(line, line.getAttribute('scan_id'))]
+			}
+		})
 }

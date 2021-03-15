@@ -24,9 +24,9 @@ export function vangoghTests() {
 		const blayers = brief.layers.filter(isSerializedTextLayer)
 		expect(blayers).toHaveLength(2)
 		expect(blayers[0].id).toBe('original')
-		expect(blayers[0].content).toHaveLength(5034)
+		expect(blayers[0].content).toHaveLength(5297)
 		expect(blayers[1].id).toBe('translation')
-		expect(blayers[1].content).toHaveLength(3141)
+		expect(blayers[1].content).toHaveLength(3478)
 	})
 
 	describe('Brief', () => {
@@ -35,7 +35,7 @@ export function vangoghTests() {
 		})
 
 		it('Should be a letter from Willemien van Gogh', () => {
-			expect(brief.content.slice(548, 597)).toBe('Willemien van Gogh. Auvers, Friday, 13 June 1890.')
+			expect(brief.content.slice(596, 645)).toBe('Willemien van Gogh. Auvers, Friday, 13 June 1890.')
 		})
 
 		it('Should have 3 layers', () => {
@@ -49,9 +49,9 @@ export function vangoghTests() {
 		})
 
 		it('Should have 5 notes', () => {
-			const textLayer = brief.layers.find(isSerializedTextLayer)
+			const textLayer = brief.layers.find(l => l.id === 'translation')
 			const entities = new Map(textLayer.entities)
-			expect(entities.get('note')).toHaveLength(5)
+			expect(entities.get('editor')).toHaveLength(5)
 		})
 	})
 }

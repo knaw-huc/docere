@@ -9,8 +9,9 @@ function SurianoResultBody(props: DocereResultBodyProps) {
 		<ResultBody {...props}>
 			{/* <StringMetadata metadataId="date" value={props.result.date} /> */}
 			<div style={{ marginBottom: '1rem' }}>{new Date(Date.parse(props.result.date)).toDateString()}</div>
-			<StringMetadata metadataId="meeting_weekday" value={props.result.meeting_weekday} />
+			<StringMetadata metadataId="session_weekday" value={props.result.session_weekday} />
 			<StringMetadata metadataId="inventory_num" value={props.result.inventory_num} />
+			<StringMetadata metadataId="president" value={props.result.president} />
 		</ResultBody>
 	)
 }

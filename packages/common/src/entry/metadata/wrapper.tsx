@@ -10,7 +10,6 @@ const Title = styled.div`
 	color: #888;
 	display: block;
 	font-size: .75rem;
-	margin-bottom: .25rem;
 	text-transform: uppercase;
 `
 

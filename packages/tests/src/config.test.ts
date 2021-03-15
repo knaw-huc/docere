@@ -23,7 +23,7 @@ describe('Config', () => {
 		expect(config.entities).toHaveLength(0)
 		expect(config.layers).toHaveLength(0)
 		expect(config.metadata).toHaveLength(0)
-		expect(config.pages).toHaveLength(0)
+		expect(config.pages).toBeNull()
 	})
 
 	describe('Parts', () => {

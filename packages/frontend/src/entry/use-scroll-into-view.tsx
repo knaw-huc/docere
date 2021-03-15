@@ -5,6 +5,7 @@ export function useScrollFacsimileIntoView(ref: React.RefObject<HTMLElement>, co
 	const activeFacsimile = React.useContext(FacsimileContext)
 
 	React.useEffect(() => {
+		if (activeFacsimile == null) return
 		// Don't scroll the container which caused the trigger. If the user
 		// clicks an element, it's bad UX to move the clicked element
 		if (

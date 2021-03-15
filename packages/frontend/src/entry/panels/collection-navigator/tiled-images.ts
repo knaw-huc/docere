@@ -125,6 +125,8 @@ export default class TiledImages {
 	}
 
 	private init() {
+		if (!this.activeTileOptions.length) return
+
 		// start = index of the current tiled image / first active facsimile
 		this.startIndex = this.activeTileOptions[0].index
 

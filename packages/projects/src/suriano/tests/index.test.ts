@@ -41,9 +41,9 @@ export function surianoTests() {
 		expect(entry.layers).toHaveLength(3)
 	})
 
-	it('Should have 2 inactive layers', () => {
-		console.log(JSON.stringify(entry.layers.map(l => l.active)))
-		expect(entry.layers.filter(l => !l.active)).toHaveLength(2)
+	it('Should have 3 active layers', () => {
+		expect(entry.layers.filter(l => l.active)).toHaveLength(3)
+		expect(entry.layers.filter(l => !l.active)).toHaveLength(0)
 	})
 
 	it('Should have 2 entities', () => {

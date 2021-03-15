@@ -24,6 +24,7 @@ export function EntityListAside() {
 			>
 				{
 					Array.from(entry.textData.entities.values())
+						.filter(e => e.showInAside)
 						.map((entity) =>
 							<ItemInText
 								entity={entity}

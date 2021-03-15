@@ -1,21 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
-import { LbCommon, Pb } from '@docere/text-components'
+import { EntityTag, LbCommon } from '@docere/text-components'
 
 import { DocereConfig, ComponentProps, DispatchContext, useEntity, EntitiesContext, ContainerContext } from '@docere/common'
-
-const ColumnWrapper = styled.div`
-	margin-bottom: 1rem;
-`
-
-function Column(props: ComponentProps) {
-	return (
-		<ColumnWrapper>
-			<Pb {...props} />	
-			{props.children}
-		</ColumnWrapper>
-	)
-}
 
 const LbWrapper = styled.div`
 	& > div:first-of-type {
@@ -60,16 +47,66 @@ function RepublicLb(props: ComponentProps) {
 			>
 				{entity.n}
 			</div>
-			{props.children}
 		</LbWrapper>
 	)
 }
 
 export default function (_config: DocereConfig) {
 	return {
-		TextLine: styled.div``,
-		TextRegion: styled.div``,
-		column: Column,
+		attendant: EntityTag,
 		line: RepublicLb,
+		attendance_list: AttendanceList,
+		resolution: Resolution,
+		paragraph: styled.div`
+			margin-bottom: 1rem;
+		`
 	}
 }
+
+function AttendanceList(props: ComponentProps) {
+	return (
+		<SessionPart
+			{...props}
+			color="green"
+			title="Attendance list"
+		>
+			{props.children}
+		</SessionPart>	
+	)
+}
+
+function Resolution(props: ComponentProps) {
+	return (
+		<SessionPart
+			{...props}
+			color="orange"
+			title="Resolution"
+		>
+			{props.children}
+		</SessionPart>	
+	)
+}
+
+
+function SessionPart(props: ComponentProps & { color: string, title: string }) {
+	const [active, setActive] = React.useState(false)
+
+	return (
+		<ResolutionWrapper
+			color={props.color}
+		>
+			<h4 onClick={() => setActive(!active)}>{props.title}</h4>
+			{
+				active &&
+				props.children
+			}
+		</ResolutionWrapper>
+	)
+}
+
+const ResolutionWrapper = styled.div`
+	h4 {
+		color: ${props => props.color};
+		cursor: pointer;
+	}
+`
