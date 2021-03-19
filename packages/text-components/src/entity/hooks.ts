@@ -16,18 +16,16 @@ export function useChildren(entityValue: React.ReactNode, entity: Entity): [Reac
 	React.useEffect(() => {
 		if (entity == null) return
 		let children = React.Children.toArray(entityValue)
-		let firstWord: React.ReactNode = entityValue
 		let restOfFirstChild: string
 		if (IconsByType.hasOwnProperty(entity.type) && children.length) {
 			if (typeof children[0] !== 'string') {
 				setFirstWord(' ')
 				setRestOfFirstChild(children)
 			} else {
-				const [fw, ...rofc] = children[0].split(/\s/)
-				firstWord = fw
-				restOfFirstChild = rofc.length ? ' '.concat(rofc.join(' ')) : ''
+				const [firstWord, ...rest] = children[0].split(/\s/)
+				restOfFirstChild = rest.length ? ' '.concat(rest.join(' ')) : ''
 
-				setFirstWord(fw)
+				setFirstWord(firstWord)
 				setRestOfFirstChild([restOfFirstChild].concat(children.slice(1) as any))
 			}
 		}

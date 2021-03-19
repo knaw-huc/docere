@@ -2,6 +2,7 @@ import * as React from 'react'
 import styled from 'styled-components'
 import ActiveArea, { activeAreaRGB } from './active-area'
 import { TEXT_PANEL_MINIMAP_WIDTH, DEFAULT_SPACING, PANEL_HEADER_HEIGHT } from '@docere/common'
+import debounce from 'lodash.debounce'
 
 const Wrapper = styled.div`
 	bottom: 0;
@@ -74,16 +75,17 @@ function Minimap(props: Props) {
 
 		miniMapRef.current.querySelector('.blocker').addEventListener('wheel', handleWheel)
 		miniMapRef.current.querySelector('.active-area').addEventListener('wheel', handleWheel)
-	}, [])
 
-	React.useEffect(() => {
-		if (props.isReady) {
-			props.textWrapperRef.current.scrollTop = 0
+		const handleMutation = debounce(() => {
 			const current = miniMapRef.current.querySelector('.container')
 			if (current) current.innerHTML = ''
 			current.appendChild(props.textWrapperRef.current.firstChild.cloneNode(true))
-		}
-	}, [props.isReady])
+		}, 350)
+
+		const observer = new MutationObserver(handleMutation)
+		observer.observe(props.textWrapperRef.current, { attributes: true, childList: true, subtree: true });
+		return () => observer.disconnect();
+	}, [])
 
 	return (
 		<Wrapper
