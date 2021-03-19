@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { EntityTag, LbCommon } from '@docere/text-components'
+import { EntityTag, LbCommon, Pb } from '@docere/text-components'
 
 import { DocereConfig, ComponentProps, DispatchContext, useEntity, EntitiesContext, ContainerContext } from '@docere/common'
 
@@ -55,6 +55,7 @@ export default function (_config: DocereConfig) {
 	return {
 		attendant: EntityTag,
 		line: RepublicLb,
+		scan: Pb,
 		attendance_list: AttendanceList,
 		resolution: Resolution,
 		paragraph: styled.div`
@@ -89,7 +90,7 @@ function Resolution(props: ComponentProps) {
 
 
 function SessionPart(props: ComponentProps & { color: string, title: string }) {
-	const [active, setActive] = React.useState(false)
+	const [active, setActive] = React.useState(true)
 
 	return (
 		<ResolutionWrapper

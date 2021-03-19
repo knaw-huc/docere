@@ -61,9 +61,9 @@ export default extendConfigData({
 		}
 	],
 	facsimiles: {
-		extractFacsimileId: el => el.getAttribute('facs').split('/').slice(-1)[0].replace(/\.jpg$/, ''),
+		extractFacsimileId: el => el.id,
 		extractFacsimiles,
-		selector: 'column[facs]'
+		selector: 'scan[id]'
 	},
 	layers: [
 		{
