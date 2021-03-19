@@ -7,7 +7,6 @@ const Wrapper = styled.div`
 `
 
 function AttendantEntityBody(props: EntityComponentProps) {
-	console.log(props.entity)
 	return (
 		<EntityWrapper entity={props.entity}>
 			<EntityWithLinkWrapper>

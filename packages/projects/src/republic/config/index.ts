@@ -1,4 +1,4 @@
-import { extendConfigData, ExtractEntitiesProps, FacsimileArea, Colors } from '@docere/common'
+import { extendConfigData, ExtractEntitiesProps, FacsimileArea, Colors, EntityType } from '@docere/common'
 import { LayerType, EsDataType, ExtractMetadata } from '@docere/common'
 import extractFacsimiles from './facsimiles'
 
@@ -57,6 +57,7 @@ export default extendConfigData({
 			},
 			extractId: el => el.id,
 			selector: 'attendant',
+			type: EntityType.Person,
 		}
 	],
 	facsimiles: {

@@ -8,26 +8,30 @@ import IconsByType from './icons'
 
 // To prevent a wrap between the icon and the first word the first word is extracted.
 // The icon and the first word are placed inside a span with white-space: nowrap.
-export function useChildren(entityValue: React.ReactNode, entity: Entity): [React.ReactNode[], React.ReactNode, string] {
-	const [children, setChildren] = React.useState<React.ReactNode[]>(entityValue as any)
-	const [firstWord, setFirstWord] = React.useState<React.ReactNode>(null)
-	const [restOfFirstChild, setRestOfFirstChild] = React.useState<string>(null)
+export function useChildren(entityValue: React.ReactNode, entity: Entity): [React.ReactNode, React.ReactNode] {
+	// const [children, setChildren] = React.useState<React.ReactNode[]>(entityValue as any)
+	const [firstWord, setFirstWord] = React.useState<React.ReactNode>(entityValue)
+	const [restOfFirstChild, setRestOfFirstChild] = React.useState<React.ReactNode[]>(null)
 
 	React.useEffect(() => {
 		if (entity == null) return
-		const children = React.Children.toArray(entityValue)
+		let children = React.Children.toArray(entityValue)
 		let firstWord: React.ReactNode = entityValue
 		let restOfFirstChild: string
-		if (IconsByType.hasOwnProperty(entity.type) && children.length && typeof children[0] === 'string') {
-			const [fw, ...rofc] = children[0].split(/\s/)
-			firstWord = fw
-			restOfFirstChild = rofc.length ? ' '.concat(rofc.join(' ')) : ''
-		}
+		if (IconsByType.hasOwnProperty(entity.type) && children.length) {
+			if (typeof children[0] !== 'string') {
+				setFirstWord(' ')
+				setRestOfFirstChild(children)
+			} else {
+				const [fw, ...rofc] = children[0].split(/\s/)
+				firstWord = fw
+				restOfFirstChild = rofc.length ? ' '.concat(rofc.join(' ')) : ''
 
-		setChildren(children)
-		setFirstWord(firstWord)
-		setRestOfFirstChild(restOfFirstChild)
+				setFirstWord(fw)
+				setRestOfFirstChild([restOfFirstChild].concat(children.slice(1) as any))
+			}
+		}
 	}, [entityValue, entity])
 
-	return [children, firstWord, restOfFirstChild]
+	return [firstWord, restOfFirstChild]
 }

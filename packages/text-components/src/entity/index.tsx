@@ -61,7 +61,7 @@ export const EntityTag = React.memo(function EntityComp(props: ComponentProps) {
 	if (!settings['panels.text.showEntities']) return <span>{props.children}</span>
 
 	const entity = useEntity(props.attributes['docere:id'])
-	const [children, firstWord, restOfFirstChild] = useChildren(props.children, entity)
+	const [firstWord, restOfFirstChild] = useChildren(props.children, entity)
 
 	const Component = useUIComponent(UIComponentType.Entity, entity?.configId)
 
@@ -126,7 +126,7 @@ export const EntityTag = React.memo(function EntityComp(props: ComponentProps) {
 				}
 			</NoWrap>
 			{restOfFirstChild}
-			{children.slice(1)}
+			{/* {children.slice(1)} */}
 		</Wrapper>
 	)
 })

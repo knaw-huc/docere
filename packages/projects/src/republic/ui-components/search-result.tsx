@@ -3,8 +3,8 @@ import { ResultBody } from '@docere/ui-components'
 import type { DocereResultBodyProps } from '@docere/common'
 import { StringMetadata } from '@docere/common'
 
-function SurianoResultBody(props: DocereResultBodyProps) {
-	console.log(props.result)
+function RepublicResultBody(props: DocereResultBodyProps) {
+	// console.log(props.result)
 	return (
 		<ResultBody {...props}>
 			{/* <StringMetadata metadataId="date" value={props.result.date} /> */}
@@ -16,4 +16,4 @@ function SurianoResultBody(props: DocereResultBodyProps) {
 	)
 }
 
-export const SearchResult = React.memo(SurianoResultBody)
+export const SearchResult = React.memo(RepublicResultBody)
