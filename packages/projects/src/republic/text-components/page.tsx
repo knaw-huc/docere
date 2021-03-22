@@ -77,6 +77,7 @@ function AttendanceList(props: ComponentProps) {
 }
 
 function Resolution(props: ComponentProps) {
+
 	return (
 		<SessionPart
 			{...props}
@@ -90,22 +91,35 @@ function Resolution(props: ComponentProps) {
 
 
 function SessionPart(props: ComponentProps & { color: string, title: string }) {
-	const [active, setActive] = React.useState(true)
+	const dispatch = React.useContext(DispatchContext)
+	const container = React.useContext(ContainerContext)
+
+	const entity = useEntity(props.attributes['docere:id'])
+
+	const handleClick = React.useCallback(ev => {
+		ev.stopPropagation()
+
+		dispatch({
+			type: 'ADD_ENTITY',
+			entityId: entity.id,
+			triggerContainer: container.type,
+			triggerContainerId: container.id,
+		})
+	}, [entity?.id])
+
+	if (entity == null) return null
 
 	return (
-		<ResolutionWrapper
+		<SessionPartWrapper
 			color={props.color}
 		>
-			<h4 onClick={() => setActive(!active)}>{props.title}</h4>
-			{
-				active &&
-				props.children
-			}
-		</ResolutionWrapper>
+			<h4 onClick={handleClick}>{props.title}</h4>
+			{props.children}
+		</SessionPartWrapper>
 	)
 }
 
-const ResolutionWrapper = styled.div`
+const SessionPartWrapper = styled.div`
 	h4 {
 		color: ${props => props.color};
 		cursor: pointer;

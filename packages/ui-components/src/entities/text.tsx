@@ -9,9 +9,12 @@ export const TextBody = styled.div`
 export const TextEntity = React.memo(function TextEntity(props: EntityComponentProps) {
 	return (
 		<EntityWrapper entity={props.entity}>
-			<TextBody>
-				{props.entity.content}
-			</TextBody>
+			{
+				props.entity.content?.length > 0 &&
+				<TextBody>
+					{props.entity.content}
+				</TextBody>
+			}
 		</EntityWrapper>
 	)
 })

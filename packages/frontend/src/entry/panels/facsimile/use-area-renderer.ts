@@ -36,6 +36,7 @@ export class AreaRenderer {
 	 * @param activeEntities 
 	 */
 	activate(activeEntities: ActiveEntities) {
+		// console.log(activeEntities.values().next().value?.facsimileAreas)
 		// Deactivate all active <rect>s
 		for (const rect of this.overlay.node().querySelectorAll('.active')) {
 			rect.classList.remove('active')

@@ -34,6 +34,11 @@ const Item = styled.div`
 
 function EntityItem(props: { entity: ActiveEntity }) {
 	const Component = useUIComponent(UIComponentType.Entity, props.entity.configId)
+	if (Component == null) {
+		console.error('[EntityItem] Component not found!')
+		return null
+	}
+
 	return (
 		<Item
 			data-id={`entity_${props.entity.id}`}

@@ -10,6 +10,7 @@ components.set(UIComponentType.Entity, entities)
 components.set(UIComponentType.SearchResult, SearchResult)
 
 entities.set('line', TextEntity)
+entities.set('resolution', TextEntity)
 entities.set('attendant', AttendantEntity)
 
 export default components
