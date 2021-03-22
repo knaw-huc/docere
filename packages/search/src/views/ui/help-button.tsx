@@ -1,7 +1,7 @@
 import React from "react"
 import styled from "styled-components"
 import { SearchPropsContext, Tooltip } from "@docere/common"
-import { RoundButton } from "./button"
+import { SvgButton } from "./button"
 
 const Wrapper = styled.div`
 	align-self: center;
@@ -29,12 +29,26 @@ export function HelpButton(props: Props) {
 			className="help-button"
 			onClick={() => setTooltipActive(!tooltipActive)}
 		>
-			<RoundButton
+			{/* <RoundButton
 				active={tooltipActive}
 				spotColor={style.spotColor}
 			>
 				?
-			</RoundButton>
+			</RoundButton> */}
+			<SvgButton
+				active={tooltipActive}
+				spotColor={style.spotColor}
+			>
+				<text
+					x="11"
+					y="23"
+					fontFamily="sans-serif"
+					fontSize="18"
+					fontWeight="bold"
+				>
+					?
+				</text>
+			</SvgButton>
 			{
 				tooltipActive &&
 				<Tooltip

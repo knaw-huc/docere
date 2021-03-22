@@ -1,7 +1,11 @@
+import React from 'react'
 import styled from 'styled-components'
 
 interface ButtonProps {
 	active?: boolean
+	children: React.ReactNode
+	className?: string
+	onClick?: (x?: any) => void
 	spotColor: string
 }
 export const Button = styled('button')`
@@ -19,6 +23,46 @@ export const Button = styled('button')`
 		border-color: ${props => props.spotColor};
 	}
 `
+
+const SvgWrapper = styled.svg`
+	cursor: pointer;
+
+	&:hover circle {
+		fill: ${props => props.active ? props.spotColor : `${props.spotColor}11`};
+		stroke: ${props => props.spotColor};
+	}
+
+
+	circle {
+		fill: ${(props: ButtonProps) => props.active ? props.spotColor : 'none'};
+		stroke: ${(props: ButtonProps) => `${props.spotColor}44`};
+	}
+
+	rect, text {
+		fill: ${(props: ButtonProps) => props.active ? 'white' : props.spotColor};
+	}
+`
+
+export function SvgButton(props: ButtonProps) {
+	return (
+		<SvgWrapper
+			{...props}
+			className={props.className}
+			onClick={props.onClick}
+			viewBox="0 0 32 32"
+			width="20px"
+			height="20px"
+		>
+			<circle
+				cx="16"
+				cy="16"
+				r="12"
+				strokeWidth="2"
+			/>
+			{props.children}
+		</SvgWrapper>
+	)
+}
 
 export const RoundButton = styled(Button)`
 	border-radius: .6rem;

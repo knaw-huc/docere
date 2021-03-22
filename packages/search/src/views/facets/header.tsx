@@ -3,13 +3,7 @@ import styled from 'styled-components'
 
 import { FacetData, FacetFilter, SearchPropsContext } from '@docere/common'
 import { HelpButton } from '../ui/help-button'
-import { RoundButton } from '../ui/button'
-
-const MoreButton = styled(RoundButton)`
-	& > div {
-		transform: scale(1.5);
-	}
-`
+import { SvgButton } from '../ui/button'
 
 const Header = styled('header')`
 	align-items: center;
@@ -17,6 +11,7 @@ const Header = styled('header')`
 	grid-template-columns: fit-content(0) 24px 24px auto;
 
 	.more-button, .help-button {
+		height: 20px;
 		margin-left: .75rem;
 	}
 `
@@ -83,14 +78,23 @@ function FacetHeader(props: Props) {
 			{
 				!props.collapse &&
 				props.hasOptions &&
-				<MoreButton
+				<SvgButton
 					active={showOptions}
 					className="more-button"
-					onClick={toggleOptions}
+				 	onClick={toggleOptions}
 					spotColor={style.spotColor}
 				>
-					<div>+</div>
-				</MoreButton>
+					<rect x="15" y="9" width ="2" height="14" /> 
+					<rect x="9" y="15" width ="14" height="2" /> 
+				</SvgButton>
+				// <MoreButton
+				// 	active={showOptions}
+				// 	className="more-button"
+				// 	onClick={toggleOptions}
+				// 	spotColor={style.spotColor}
+				// >
+				// 	<div>+</div>
+				// </MoreButton>
 			}
 			{
 				showOptions &&
