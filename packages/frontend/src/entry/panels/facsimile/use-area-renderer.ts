@@ -50,29 +50,37 @@ export class AreaRenderer {
 		let combinedBounds: any
 
 		// Activate all active <rect>s
-		// let id: any
 		let index = -1
-		activeEntities.forEach((entity, id) => {
+		activeEntities.forEach((entity) => {
 			index += 1
-			const rect = this.overlay.node().querySelector(`#e${id}`)
-			if (rect == null) return
-			rect.classList.add('active')
-			rect.style.opacity = '1'
+			let rect: SVGRectElement
+			let currentBounds: any
 
-			// Set color to be half transparent, only the last entity
-			// (could be multiple areas) is set to fully opague
-			rect.setAttribute('stroke', `${entity.color}66`)
+			const lastEntity = activeEntities.size === index + 1
 
-			// Update combined bounds
-			const currentBounds = this.getRectBounds(rect.attributes)
-			if (combinedBounds != null) combinedBounds = combinedBounds.union(currentBounds)
-			else combinedBounds = currentBounds
+			entity.facsimileAreas?.forEach(fa => {
+				rect = this.overlay.node().querySelector(`#${fa.id}`)
+				if (rect == null) return
+				rect.classList.add('active')
+				rect.style.opacity = '1'
 
-			if (activeEntities.size === index + 1) {
-				// Set last <rect> to fully opague
-				rect.setAttribute('stroke', entity.color)
+				// Set color to be half transparent, only the last entity
+				// (could be multiple areas) is set to fully opague
+				rect.setAttribute(
+					'stroke',
+					lastEntity ? entity.color : `${entity.color}66`
+				)
 
+				// Update combined bounds
+				currentBounds = this.getRectBounds(rect.attributes)
+				if (combinedBounds != null) combinedBounds = combinedBounds.union(currentBounds)
+				else combinedBounds = currentBounds
+			})
+
+			if (lastEntity) {
+				if (currentBounds == null) return
 				const element = document.querySelector(`[data-id="entity_${entity.id}"]`).cloneNode(true)
+
 				if (element != null) {
 					this.osd.addOverlay({
 						checkResize: false,
@@ -147,7 +155,7 @@ export class AreaRenderer {
 					rect.setAttribute('y', (vpRect.y - this.strokeWidth/2).toString())
 					rect.setAttribute('width', vpRect.width + this.strokeWidth)
 					rect.setAttribute('height', vpRect.height + this.strokeWidth)
-					rect.id = `e${entity.id}`
+					rect.id = area.id
 					fragment.appendChild(rect)
 				})
 			}

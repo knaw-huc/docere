@@ -2,8 +2,9 @@ import { ExtractedCommon } from '.';
 import { TriggerContainer } from './entity';
 
 export interface FacsimileArea {
-	h: number
 	facsimileId: string
+	h: number
+	id?: string
 	unit?: 'px' | 'perc'
 	w: number
 	x: number

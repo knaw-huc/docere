@@ -1,5 +1,5 @@
 import { ExtractedEntity, DocereConfig, FacsimileType } from '..'
-import { isTextLayerConfig } from '../utils'
+import { generateId, isTextLayerConfig } from '../utils'
 import { TextLayerConfig, ExtractedEntry, MetadataItem, ID, ExtractedLayer } from '.'
 import { LayerType } from '../enum'
 
@@ -48,6 +48,13 @@ function extractEntities(layerElement: Element, layer: TextLayerConfig, entry: E
 			const entities: ExtractedEntity[] = entityConfig
 				.extract({ config, entityConfig, entry, layer, layerElement })
 				.map(e => {
+					if (Array.isArray(e.facsimileAreas)) {
+						e.facsimileAreas = e.facsimileAreas.map(fa => {
+							fa.unit = fa.unit || 'px'
+							fa.id = generateId()
+							return fa
+						})
+					}
 					e.id = e.anchor.getAttribute('docere:id')
 					e.attributes = {}
 					for (const attr of e.anchor.attributes) {

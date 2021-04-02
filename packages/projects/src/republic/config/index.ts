@@ -54,6 +54,15 @@ export default extendConfigData({
 			showAsFacet: false,
 		},
 		{
+			color: Colors.Red,
+			id: 'attendance_list',
+			extract: extractResolutions,
+			extractId: el => el.id,
+			selector: 'attendance_list',
+			showInAside: false,
+			showAsFacet: false,
+		},
+		{
 			id: 'attendant',
 			extract: ({ entityConfig, layerElement }) => {
 				return Array.from(layerElement.querySelectorAll(entityConfig.selector))
@@ -86,23 +95,28 @@ export default extendConfigData({
 	]
 })
 
+function coordsToFacsimileArea(el: Element) {
+	return function(coords: string): FacsimileArea {
+		const [x, y, w, h] = coords
+			.split('_')
+			.map(x => parseInt(x, 10))
+
+		return {
+			facsimileId: el.getAttribute('scan_id'),
+			h,
+			unit: 'px',
+			w,
+			x,
+			y,
+		}
+	}
+}
+
 function createFacsimileArea(el: Element): FacsimileArea[] {
+	if (!el.hasAttribute('coords')) return []
 	return el.getAttribute('coords')
 		.split(' ')
-		.map(coords => {
-			const [x, y, w, h] = coords
-				.split('_')
-				.map(x => parseInt(x, 10))
-
-			return {
-				h,
-				facsimileId: el.getAttribute('scan_id'),
-				unit: 'px',
-				w,
-				x,
-				y,
-			} as FacsimileArea
-		})
+		.map(coordsToFacsimileArea(el))
 }
 
 function getLineN(id: string) {
@@ -122,8 +136,9 @@ function extractLbs({ layerElement }: ExtractEntitiesProps) {
 		})
 }
 
-function extractResolutions({ layerElement }: ExtractEntitiesProps) {
-	return Array.from(layerElement.querySelectorAll('resolution'))
+function extractResolutions({ layerElement, entityConfig }: ExtractEntitiesProps) {
+	// console.log(Array.from(layerElement.querySelectorAll(entityConfig.selector)))
+	return Array.from(layerElement.querySelectorAll(entityConfig.selector))
 		.map(res => {
 			return {
 				anchor: res,
