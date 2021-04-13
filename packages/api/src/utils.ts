@@ -187,7 +187,10 @@ export function getElasticSearchDocument(extractedEntry: SerializedEntry | Docer
 
 	const facsimiles: ElasticSearchDocument['facsimiles'] = Object.values(extractedEntry.textData.facsimiles)
 		.reduce((agg, [id, facsimile]) => {
-			return agg.concat(facsimile.versions.map(v => ({ id, path: v.path })))
+			return agg.concat(facsimile.versions.map(v => ({
+				id,
+				path: v.thumbnailPath != null ? v.thumbnailPath : v.path
+			})))
 		}, [])
 
 	const metadata = extractedEntry.metadata?.reduce((prev, curr) => {

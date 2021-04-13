@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { PANEL_HEADER_HEIGHT, FacsimileLayer, EntrySettingsContext, ProjectContext, DispatchContext, ContainerType } from '@docere/common'
 
 import PanelHeader from '../header'
-import CollectionNavigator2 from '../collection-navigator2'
+import CollectionNavigator3 from '../collection-navigator3'
 import { ContainerProvider } from '../text/layer-provider'
 
 import useAreaRenderer from './use-area-renderer'
@@ -60,9 +60,7 @@ function FacsimilePanel(props: Props) {
 				{
 					props.layer.facsimiles.size > 1 &&
 					config.collection == null &&
-					<CollectionNavigator2
-						layer={props.layer}
-					/>
+					<CollectionNavigator3 />
 				}
 				<EntityList />
 			</Wrapper>

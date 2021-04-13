@@ -1,6 +1,6 @@
 import React from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { Viewport, ProjectState, initialProjectState, ProjectAction, fetchEntry, fetchPage, getPagePath } from '@docere/common'
+import { Viewport, ProjectState, initialProjectState, ProjectAction, fetchEntry, fetchPage, getPagePath, getEntryPath } from '@docere/common'
 import configs from '../../../../../projects/src'
 
 import { projectUIReducer } from '../reducer'
@@ -30,6 +30,7 @@ export function useProjectState(): [ProjectState, React.Dispatch<ProjectAction>]
 					type: 'SET_ENTRY',
 					entry
 				})
+				history.push(getEntryPath(state.config.slug, entry.id))
 			})
 	}, [state.config?.slug, state.setEntry])
 

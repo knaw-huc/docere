@@ -84,9 +84,11 @@ export default extendConfigData({
 		},
 	],
 	facsimiles: {
+		// extractFacsimileId: el => el.getAttribute('xml:id'),
+
+		extractFacsimileId: pb => pb.getAttribute('facs')?.slice(1),
 		extractFacsimiles,
-		extractFacsimileId: el => el.getAttribute('xml:id'),
-		selector: 'facsimile zone',
+		selector: 'pb[facs]',
 	},
 	layers: [
 		{

@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { useHistory, useParams } from 'react-router-dom'
-import { ProjectContext, useUIComponent, UIComponentType, Viewport, Language, getEntryPath, UIContext } from '@docere/common'
+import { ProjectContext, useUIComponent, UIComponentType, Viewport, Language, UIContext, EntryContext, DispatchContext, ContainerType, FacsimileContext } from '@docere/common'
 import { GenericResultBody } from '@docere/ui-components'
 
 import HucFacetedSearch  from '../../../search/src'
@@ -20,19 +19,25 @@ const FS = styled(HucFacetedSearch)`
 const excludeResultFields = ['text', 'text_suggest']
 
 function Search() {
-	const history = useHistory()
 	const { config, searchUrl } = React.useContext(ProjectContext)
 	const uiState = React.useContext(UIContext)
 	const autoSuggest = useAutoSuggest(searchUrl)
+	const entry = React.useContext(EntryContext)
+	const activeFacsimile = React.useContext(FacsimileContext)
+	const dispatch = React.useContext(DispatchContext)
 
 	let ResultBodyComponent = useUIComponent(UIComponentType.SearchResult)
 	if (ResultBodyComponent == null) ResultBodyComponent = GenericResultBody
 
-	const { projectId, entryId } = useParams<{ projectId: string, entryId: string }>()
-
 	const onClickResult = React.useCallback((result: Hit) => {
-		history.push(getEntryPath(projectId, result.id))
-	}, [projectId])
+		dispatch({
+			type: 'SET_ENTRY_ID',
+			setEntry: {
+				entryId: result.id,
+				triggerContainer: ContainerType.Search,
+			}
+		})
+	}, [config.slug])
 
 	return (
 		<FS
@@ -42,7 +47,8 @@ function Search() {
 			onClickResult={onClickResult}
 			ResultBodyComponent={ResultBodyComponent}
 			resultBodyProps={{
-				activeId: entryId, //createElasticSearchIdFromIds(entryId, query?.partId),
+				activeId: entry?.id, //createElasticSearchIdFromIds(entryId, query?.partId),
+				facsimile: activeFacsimile,
 				searchTab: uiState.searchTab,
 			}}
 			resultsPerPage={config.searchResultCount}

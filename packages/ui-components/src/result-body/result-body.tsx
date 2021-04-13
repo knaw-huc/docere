@@ -12,13 +12,14 @@ interface WProps {
 	small: boolean
 }
 const Wrapper = styled.div`
-	border: 2px solid white;
-	border-bottom: 2px solid #EEE;
+	border-left: 3px solid white;
+	border-right: 3px solid white;
+	border-bottom: 3px solid #EEE;
 	display: grid;
 	font-size: ${(props: WProps) => props.small ? '.8em' : '1em'};
 	grid-column-gap: ${(props: WProps) => props.small ? 32 / 2 : 32}px;
 	grid-template-columns: ${(props: WProps) => props.hasFacsimile ?
-		'64px auto' :
+		'76px auto' :
 		'auto'
 	};
 	padding: 1.5em 0;
@@ -27,14 +28,15 @@ const Wrapper = styled.div`
 	${(props: WProps) => {
 		if (props.active) {
 			return `
-				border: 2px solid ${Colors.Orange};
+				border-left-color: ${Colors.Orange};
+				border-right-color: ${Colors.Orange};
 				padding: 1.5em;
 			`
 		} else {
 			return `
 				&:hover {
 					background: #EEE4;
-					border-bottom: 2px solid #CCC;
+					border-bottom: 3px solid #CCC;
 				}
 			`
 		}
@@ -63,6 +65,8 @@ export const ResultBody = React.memo(function ResultBody(props: DocereResultBody
 			small={small}
 		>
 			<FacsimileThumbs
+				activeResult={props.result.id === props.activeId}
+				activeFacsimile={props.facsimile}
 				facsimiles={props.result.facsimiles}
 				small={small}
 			/>

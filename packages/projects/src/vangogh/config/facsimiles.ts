@@ -1,9 +1,9 @@
 import { FacsimileType, ExtractFacsimiles } from '@docere/common'
 
-export default (function extractFacsimiles({ layerElement, entry }) {
-	return Array.from(layerElement.querySelectorAll('pb[facs]'))
+export default (function extractFacsimiles({ layerElement, entry, config }) {
+	return Array.from(layerElement.querySelectorAll(config.facsimiles.selector))
 		.map(pb => {
-			const id = pb.getAttribute('facs')?.slice(1)
+			const id = config.facsimiles.extractFacsimileId(pb)
 			if (id == null) return
 			const graphic = entry.document.querySelector(`zone[*|id="${id}"] graphic[rend="facstab"]`)
 			if (graphic == null) return

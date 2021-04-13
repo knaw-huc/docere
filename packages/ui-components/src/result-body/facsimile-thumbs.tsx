@@ -1,17 +1,21 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import type { Hit } from '@docere/common'
+import { ActiveFacsimile, Colors, Hit } from '@docere/common'
 
-const FacsimileThumbList = styled.ul`
-	& > li:nth-of-type(odd) {
-		margin-right: 8px;
-	}
-`
+const FacsimileThumbList = styled.ul``
 
+interface FTProps {
+	active: boolean
+	activeResult: boolean
+}
 const FacsimileThumb = styled.li`
+	border: 3px solid ${(props: FTProps) => props.active ?
+		`${Colors.Orange}${props.activeResult ? 'ff' : '88'}` :
+		'white'
+	};
 	display: inline-block;
-	margin-bottom: 8px;
+	padding: 2px;
 
 	& > img {
 		border-radius: .15em;
@@ -20,7 +24,13 @@ const FacsimileThumb = styled.li`
 
 const THUMB_WIDTH = 64
 
-export function FacsimileThumbs(props: { facsimiles: Hit['facsimiles'], small: boolean }) {
+interface Props {
+	activeFacsimile: ActiveFacsimile
+	activeResult: boolean
+	facsimiles: Hit['facsimiles'],
+	small: boolean
+}
+export function FacsimileThumbs(props: Props) {
 	if (props.facsimiles == null || !props.facsimiles.length) return null
 
 	return props.facsimiles.length === 1 ?
@@ -31,7 +41,11 @@ export function FacsimileThumbs(props: { facsimiles: Hit['facsimiles'], small: b
 		<FacsimileThumbList>
 			{
 				props.facsimiles.map((facs, index) => 
-					<FacsimileThumb key={index}>
+					<FacsimileThumb
+						active={facs.id === props.activeFacsimile?.id}
+						activeResult={props.activeResult}
+						key={index}
+					>
 						<img
 							src={facs.path.replace('info.json', `full/${(THUMB_WIDTH - 8)/2},/0/default.jpg`)} 
 							width={`${(THUMB_WIDTH - 8)/2}px`}

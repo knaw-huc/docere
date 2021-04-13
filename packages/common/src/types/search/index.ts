@@ -1,3 +1,4 @@
+import { ActiveFacsimile } from '../../entry/facsimile'
 import { SortDirection, SearchTab, Language } from '../../enum'
 
 import type { FacetsData, FacetConfig, FacetFilter } from './facets'
@@ -90,6 +91,7 @@ export interface ResultBodyProps {
 export interface DocereResultBodyProps extends ResultBodyProps {
 	activeId: string
 	children?: React.ReactNode
+	facsimile: ActiveFacsimile
 	searchTab: SearchTab
 }
 

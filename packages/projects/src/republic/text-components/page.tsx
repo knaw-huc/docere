@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { EntityTag, LbCommon, Pb } from '@docere/text-components'
 
-import { DocereConfig, ComponentProps, DispatchContext, useEntity, EntitiesContext, ContainerContext } from '@docere/common'
+import { DocereConfig, ComponentProps, DispatchContext, useEntity, EntitiesContext, ContainerContext, Colors } from '@docere/common'
 
 const LbWrapper = styled.div`
 	& > div:first-of-type {
@@ -68,7 +68,7 @@ function AttendanceList(props: ComponentProps) {
 	return (
 		<SessionPart
 			{...props}
-			color="green"
+			color={Colors.Red}
 			title="Attendance list"
 		>
 			{props.children}
@@ -81,7 +81,7 @@ function Resolution(props: ComponentProps) {
 	return (
 		<SessionPart
 			{...props}
-			color="orange"
+			color={Colors.Red}
 			title="Resolution"
 		>
 			{props.children}

@@ -73,6 +73,8 @@ function Minimap(props: Props) {
 			return false
 		}
 
+		if (miniMapRef.current == null) return
+
 		miniMapRef.current.querySelector('.blocker').addEventListener('wheel', handleWheel)
 		miniMapRef.current.querySelector('.active-area').addEventListener('wheel', handleWheel)
 
