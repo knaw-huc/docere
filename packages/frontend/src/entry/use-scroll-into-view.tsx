@@ -1,6 +1,19 @@
 import React from "react"
 import { ContainerType, ID, EntitiesContext, FacsimileContext } from '@docere/common'
 
+function handleScroll(el: Element) {
+	if (el == null) return
+	// element.scrollIntoView does not work well in Chromium, that's why
+	// the scroll position is calculated and used with scrollTo, which
+	// does work. This workaround does require an extra data-scroll-container
+	// attribute on the element which is scrollable (overflow: auto | scroll)
+	const container = el.closest('[data-scroll-container]')
+	const { height: containerHeight } = container.getBoundingClientRect()
+	const { top: entityTop } = el.getBoundingClientRect()
+	const top = (container.scrollTop + entityTop) - (containerHeight / 2)
+	container.scrollTo({ top: top, behavior: 'smooth' })
+}
+
 export function useScrollFacsimileIntoView(ref: React.RefObject<HTMLElement>, containerType: ContainerType, containerId: ID) {
 	const activeFacsimile = React.useContext(FacsimileContext)
 
@@ -16,17 +29,15 @@ export function useScrollFacsimileIntoView(ref: React.RefObject<HTMLElement>, co
 		// Find the first element which represents the entity
 		if (ref.current == null) return
 		const el = ref.current.querySelector(`[data-facsimile-id="${activeFacsimile.id}"]`)
-		if (el == null) return
-
-		// element.scrollIntoView does not work well in Chromium, that's why
-		// the scroll position is calculated and used with scrollTo, which
-		// does work. This workaround does require an extra data-scroll-container
-		// attribute on the element which is scrollable (overflow: auto | scroll)
-		const container = el.closest('[data-scroll-container]')
-		const { height: containerHeight } = container.getBoundingClientRect()
-		const { top: entityTop } = el.getBoundingClientRect()
-		const top = (container.scrollTop + entityTop) - (containerHeight / 2)
-		container.scrollTo({ top: top, behavior: 'smooth' })
+		if (el == null) {
+			setTimeout(() => {
+				const el = ref.current.querySelector(`[data-facsimile-id="${activeFacsimile.id}"]`)
+				handleScroll(el)
+			}, 300)
+			return
+		}
+		
+		handleScroll(el)
 	}, [activeFacsimile, containerType, containerId])
 }
 
@@ -51,14 +62,6 @@ export function useScrollEntityIntoView(ref: React.RefObject<HTMLElement>, conta
 		const el = ref.current.querySelector(`[data-entity-id="${entityId}"]`)
 		if (el == null) return
 
-		// element.scrollIntoView does not work well in Chromium, that's why
-		// the scroll position is calculated and used with scrollTo, which
-		// does work. This workaround does require an extra data-scroll-container
-		// attribute on the element which is scrollable (overflow: auto | scroll)
-		const container = el.closest('[data-scroll-container]')
-		const { height: containerHeight } = container.getBoundingClientRect()
-		const { top: entityTop } = el.getBoundingClientRect()
-		const top = (container.scrollTop + entityTop) - (containerHeight / 2)
-		container.scrollTo({ top: top, behavior: 'smooth' })
+		handleScroll(el)
 	}, [activeEntities, containerType, containerId])
 }

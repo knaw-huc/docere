@@ -65,7 +65,7 @@ export default class TiledImages {
 	}
 
 	setActiveFacsimile(facsimile?: ActiveFacsimile) {
-		if (facsimile == null && this.currentOverlay !== this.activeFacsimile.id) {
+		if (facsimile == null && this.currentOverlay !== this.activeFacsimile?.id) {
 			facsimile = this.activeFacsimile
 		}
 		this.activeFacsimile = facsimile
