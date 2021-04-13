@@ -67,6 +67,7 @@ export const ResultBody = React.memo(function ResultBody(props: DocereResultBody
 			<FacsimileThumbs
 				activeResult={props.result.id === props.activeId}
 				activeFacsimile={props.facsimile}
+				entryId={props.result.id}
 				facsimiles={props.result.facsimiles}
 				small={small}
 			/>

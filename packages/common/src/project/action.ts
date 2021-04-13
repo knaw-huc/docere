@@ -37,6 +37,7 @@ export type SetEntryId =
 	}
 
 export type SetFacsimile = {
+	entryId?: ID,
 	facsimileId: ID,
 	triggerContainer?: ContainerType
 	triggerContainerId?: ID

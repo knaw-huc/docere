@@ -35,6 +35,23 @@ export function useProjectState(): [ProjectState, React.Dispatch<ProjectAction>]
 	}, [state.config?.slug, state.setEntry])
 
 	React.useEffect(() => {
+		if (
+			state.config == null ||		/** Project hasn't loaded yet */
+			entryId == null || 			/** Navigating away from entry */
+			state.entry?.id === entryId	/** Entry is already loaded */
+		) return
+
+		fetchEntry(state.config.slug, entryId)
+			.then(entry => {
+				if (entry == null) return
+				dispatch({
+					type: 'SET_ENTRY',
+					entry
+				})
+			})
+	}, [state.config, entryId])
+
+	React.useEffect(() => {
 		if (state.config == null || state.setPage?.pageId == null) return
 
 		fetchPage(state.setPage.pageId, state.config)
@@ -62,23 +79,6 @@ export function useProjectState(): [ProjectState, React.Dispatch<ProjectAction>]
 	}, [state.config?.slug, pageId])
 
 	React.useEffect(() => {
-		if (
-			state.config == null ||		/** Project hasn't loaded yet */
-			entryId == null || 			/** Navigating away from entry */
-			state.entry?.id === entryId	/** Entry is already loaded */
-		) return
-
-		fetchEntry(state.config.slug, entryId)
-			.then(entry => {
-				if (entry == null) return
-				dispatch({
-					type: 'SET_ENTRY',
-					entry
-				})
-			})
-	}, [state.config, entryId])
-
-	React.useEffect(() => {
 		// When pageId is set, do not change the viewport
 		if (pageId != null) return
 
@@ -88,6 +88,13 @@ export function useProjectState(): [ProjectState, React.Dispatch<ProjectAction>]
 			dispatch({ type: 'SET_VIEWPORT', viewport: Viewport.EntrySelector })
 		}
 	}, [entryId, pageId])
+
+	React.useEffect(() => {
+		if (state.entry != null && state.viewport !== Viewport.Entry) {
+			dispatch({ type: 'SET_VIEWPORT', viewport: Viewport.Entry })
+			history.push(getEntryPath(state.config.slug, state.entry.id))
+		}
+	}, [state.activeFacsimile])
 
 	React.useEffect(() => {
 		if (projectId == null) return

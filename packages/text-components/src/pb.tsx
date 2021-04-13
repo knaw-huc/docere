@@ -1,5 +1,6 @@
 import React from 'react'
-import { Colors, DEFAULT_SPACING, Facsimile, EntrySettingsContext, EntryContext, FacsimileContext, ComponentProps, DispatchContext, ContainerType, ContainerContext, ContainerContextValue } from '@docere/common'
+import { DEFAULT_SPACING, Facsimile, EntrySettingsContext, EntryContext, ComponentProps, ContainerContext } from '@docere/common'
+import { FacsimileThumb } from '@docere/ui-components'
 import styled from 'styled-components'
 
 // TODO changed display from grid to inline, which breaks multiple 
@@ -20,22 +21,6 @@ const ThumbWrapper = styled.div`
 			`display: grid;` :
 			''
 	}
-`
-
-const Img = styled.img`
-	border: 3px solid rgba(0, 0, 0, 0);
-	margin-top: 6px;
-	padding: 2px;
-	width: 32px;
-
-	${(props: { active: boolean}) => props.active ?
-		`border: 3px solid ${Colors.Orange};` :
-		`cursor: pointer;
-
-		&:hover {
-			border: 3px solid ${Colors.Orange}88;
-		}`
-	}}
 `
 
 function useFacsimiles(ids: string) {
@@ -81,41 +66,5 @@ export function Pb(props: ComponentProps) {
 				</ThumbWrapper>
 			</div>
 		</Wrapper>
-	)
-}
-
-interface FacsimileThumbProps {
-	facsimile: Facsimile
-	container: ContainerContextValue
-}
-function FacsimileThumb(props: FacsimileThumbProps) {
-	const dispatch = React.useContext(DispatchContext)
-	const activeFacsimile = React.useContext(FacsimileContext)
-
-	const imgRef = React.useRef<HTMLImageElement>()
-
-	const onClick = React.useCallback((ev) => {
-		const { facsimileId } = ev.target.dataset
-		dispatch({
-			type: 'SET_FACSIMILE',
-			facsimileId,
-			triggerContainer: ContainerType.Layer,
-			triggerContainerId: props.container.id,
-		})
-	}, [props.container])
-
-	const version = props.facsimile.versions[0]
-	const src = version.thumbnailPath != null ? version.thumbnailPath : version.path
-	const active = activeFacsimile?.id === props.facsimile.id
-
-	return (
-		<Img
-			active={active}
-			data-facsimile-id={props.facsimile.id}
-			key={props.facsimile.id}
-			onClick={onClick}
-			ref={imgRef}
-			src={src.slice(-10) === '/info.json' ? src.replace('/info.json', '/full/,32/0/default.jpg') : src}
-		/>
 	)
 }

@@ -1,6 +1,6 @@
 import OpenSeadragon from 'openseadragon';
 
-import { Entry, ActiveFacsimile, Colors } from '@docere/common';
+import { Entry, ActiveFacsimile, Colors, ID } from '@docere/common';
 import { CollectionDocument } from './controller';
 
 interface TiledImageOptions {
@@ -33,6 +33,9 @@ export default class TiledImages {
 
 	private entry: Entry
 
+	// Keep track of which facsimile has an overlay
+	private currentOverlay: ID
+
 	constructor(
 		private viewer: OpenSeadragon.Viewer,
 		public hits: CollectionDocument[],
@@ -62,7 +65,9 @@ export default class TiledImages {
 	}
 
 	setActiveFacsimile(facsimile?: ActiveFacsimile) {
-		if (facsimile == null) facsimile = this.activeFacsimile
+		if (facsimile == null && this.currentOverlay !== this.activeFacsimile.id) {
+			facsimile = this.activeFacsimile
+		}
 		this.activeFacsimile = facsimile
 		if (this.activeFacsimile == null) return
 
@@ -85,6 +90,8 @@ export default class TiledImages {
 		})
 
 		this.viewer.viewport.fitBounds(activeTileOption.bounds)
+
+		this.currentOverlay = this.activeFacsimile.id
 	}
 
 	// Set a new entry. When this.highlightActive returns false, not all tiles of that entry are loaded.
