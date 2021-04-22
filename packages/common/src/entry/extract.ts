@@ -2,6 +2,7 @@ import { ExtractedEntity, DocereConfig, FacsimileType } from '..'
 import { generateId, isTextLayerConfig } from '../utils'
 import { TextLayerConfig, ExtractedEntry, MetadataItem, ID, ExtractedLayer } from '.'
 import { LayerType } from '../enum'
+import { isFacsimileAreaRectangle } from './facsimile'
 
 export type GetDefaultExtractedEntry = (id: string) => ExtractedEntry
 export function getDefaultExtractedEntry(id: string): ExtractedEntry {
@@ -50,7 +51,9 @@ function extractEntities(layerElement: Element, layer: TextLayerConfig, entry: E
 				.map(e => {
 					if (Array.isArray(e.facsimileAreas)) {
 						e.facsimileAreas = e.facsimileAreas.map(fa => {
-							fa.unit = fa.unit || 'px'
+							if (isFacsimileAreaRectangle(fa)) {
+								fa.unit = fa.unit || 'px'
+							}
 							fa.id = generateId()
 							return fa
 						})
