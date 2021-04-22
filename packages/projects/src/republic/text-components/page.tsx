@@ -5,9 +5,11 @@ import { EntityTag, LbCommon, Pb } from '@docere/text-components'
 import { DocereConfig, ComponentProps, DispatchContext, useEntity, EntitiesContext, ContainerContext, Colors } from '@docere/common'
 
 const LbWrapper = styled.div`
-	& > div:first-of-type {
-		${LbCommon}
+	&:before {
+		content: counter(session);
+		counter-increment: session;
 		cursor: pointer;
+		${LbCommon}
 		${(props: { active: boolean, color: string }) =>
 			props.active ?
 				`background-color: ${props.color};
@@ -15,7 +17,18 @@ const LbWrapper = styled.div`
 				''
 		}
 	}
+
 `
+	// & > div:first-of-type {
+	// 	${LbCommon}
+	// 	cursor: pointer;
+	// 	${(props: { active: boolean, color: string }) =>
+	// 		props.active ?
+	// 			`background-color: ${props.color};
+	// 			color: white;` :
+	// 			''
+	// 	}
+	// }
 
 function RepublicLb(props: ComponentProps) {
 	const dispatch = React.useContext(DispatchContext)
@@ -41,6 +54,7 @@ function RepublicLb(props: ComponentProps) {
 			active={activeEntities.has(entity.id)}
 			color={entity.color}
 			data-entity-id={entity.id}
+			onClick={handleClick}
 		>
 			<div
 				onClick={handleClick}
@@ -77,7 +91,6 @@ function AttendanceList(props: ComponentProps) {
 }
 
 function Resolution(props: ComponentProps) {
-
 	return (
 		<SessionPart
 			{...props}
@@ -91,6 +104,7 @@ function Resolution(props: ComponentProps) {
 
 
 function SessionPart(props: ComponentProps & { color: string, title: string }) {
+	const activeEntities = React.useContext(EntitiesContext)
 	const dispatch = React.useContext(DispatchContext)
 	const container = React.useContext(ContainerContext)
 
@@ -111,6 +125,7 @@ function SessionPart(props: ComponentProps & { color: string, title: string }) {
 
 	return (
 		<SessionPartWrapper
+			active={activeEntities.has(entity.id)}
 			color={props.color}
 		>
 			<h4 onClick={handleClick}>{props.title}</h4>
@@ -120,8 +135,10 @@ function SessionPart(props: ComponentProps & { color: string, title: string }) {
 }
 
 const SessionPartWrapper = styled.div`
+	counter-reset: session;
+
 	h4 {
-		color: ${props => props.color};
+		color: ${(props: { active: boolean, color: string }) => props.active ? props.color : 'initial'};
 		cursor: pointer;
 	}
 `

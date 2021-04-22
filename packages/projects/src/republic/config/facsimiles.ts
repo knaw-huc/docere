@@ -3,7 +3,6 @@ import { ExtractedFacsimile, ExtractFacsimiles } from '@docere/common'
 export default (function extractFacsimiles({ layerElement, config }) {
 	const facsimiles: ExtractedFacsimile[] = Array.from(layerElement.querySelectorAll(config.facsimiles.selector))
 		.reduce((prev, scan) => {
-			const path = scan.getAttribute('iiif_url').replace(/\/full\/full\/0\/default\.jpg$/, '/info.json')
 			const id = config.facsimiles.extractFacsimileId(scan)
 
 			if (!prev.some(p => p.id === id)) {
@@ -11,7 +10,7 @@ export default (function extractFacsimiles({ layerElement, config }) {
 					anchors: [scan],
 					id,
 					versions: [{
-						path
+						path: scan.getAttribute('iiif_info_url')
 					}]
 				})
 			}

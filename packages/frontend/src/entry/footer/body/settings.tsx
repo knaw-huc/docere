@@ -19,8 +19,12 @@ const textOptions: Option[] = [
 		title: 'Show minimap'
 	},
 	{
-		prop: 'panels.text.showEntities',
+		prop: 'panels.entities.show',
 		title: 'Show entities'
+	},
+	{
+		prop: 'panels.entities.toggle',
+		title: 'Toggle entities'
 	},
 	{
 		prop: 'panels.text.showNotes',

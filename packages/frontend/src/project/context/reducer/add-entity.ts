@@ -10,6 +10,7 @@ export function addEntity(state: ProjectState, action: AddEntity): ProjectState 
 		activeEntities.delete(action.entityId)
 	} else {
 		const activeEntity = state.entry.textData.entities.get(action.entityId)
+		if (state.entrySettings['panels.entities.toggle']) activeEntities.clear()
 		activeEntities.set(action.entityId, {
 			...activeEntity,
 			triggerContainer: action.triggerContainer,
@@ -18,11 +19,12 @@ export function addEntity(state: ProjectState, action: AddEntity): ProjectState 
 
 		if (
 			Array.isArray(activeEntity.facsimileAreas) &&
-			!activeEntity.facsimileAreas.some(fa => fa.facsimileId === state.activeFacsimile.id) &&
-			activeEntity.facsimileAreas.find(fa => fa.facsimileId != null) != null
+			!activeEntity.facsimileAreas.some(fa => fa.facsimileId === state.activeFacsimile.id)
 		) {
 			const facsimileArea = activeEntity.facsimileAreas.find(fa => fa.facsimileId != null)
-			activeFacsimile = createActiveFacsimile(state.entry, facsimileArea.facsimileId, action.triggerContainer, action.triggerContainerId)
+			if (facsimileArea != null) {
+				activeFacsimile = createActiveFacsimile(state.entry, facsimileArea.facsimileId, action.triggerContainer, action.triggerContainerId)
+			}
 		}
 	}
 	

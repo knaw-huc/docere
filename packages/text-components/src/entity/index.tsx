@@ -58,7 +58,7 @@ export const EntityTag = React.memo(function EntityComp(props: ComponentProps) {
 	const container = React.useContext(ContainerContext)
 
 	// const entityValue = preProps.extractValue(props)
-	if (!settings['panels.text.showEntities']) return <span>{props.children}</span>
+	if (!settings['panels.entities.show']) return <span>{props.children}</span>
 
 	const entity = useEntity(props.attributes['docere:id'])
 	const [firstWord, restOfFirstChild] = useChildren(props.children, entity)

@@ -10,7 +10,8 @@ export const defaultEntrySettings: DocereConfig['entrySettings'] = {
 	'panels.text.showMinimap': true,
 	'panels.text.showLineBeginnings': true,
 	'panels.text.showPageBeginnings': true,
-	'panels.text.showEntities': true,
+	'panels.entities.show': true,
+	'panels.entities.toggle': true,
 	'panels.text.showNotes': true,
 }
 

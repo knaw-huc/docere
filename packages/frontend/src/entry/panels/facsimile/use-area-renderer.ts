@@ -1,23 +1,70 @@
 import React from 'react'
-import { Entry, ActiveFacsimile, ID, ActiveEntities, ProjectAction } from '@docere/common'
+import { Entry, ActiveFacsimile, ID, ActiveEntities, ProjectAction, isFacsimileAreaRectangle, isFacsimileAreaPolygon, ContainerType } from '@docere/common'
+import { FacsimileArea } from '@docere/common'
+import OpenSeadragon from 'openseadragon'
+
+type AreaCache = {
+	entryId: string,
+	entityId: string,
+	points: OpenSeadragon.Point[]
+}[]
 
 export class AreaRenderer {
 	// private activeFacsimile: ActiveFacsimile
 	private overlay: any
 	private rectTpl: SVGElement
-	private cache: Map<ID, DocumentFragment> = new Map()
+	private cache: Map<ID, {
+		fragment: DocumentFragment,
+		areas: AreaCache
+	}> = new Map()
 	private strokeWidth: number
 
+	private areas: AreaCache = []
+
 	constructor(
-		private osd: any,
+		private osd: OpenSeadragon.Viewer,
 		private OpenSeadragon: any,
 		// @ts-ignore
 		private dispatch: React.Dispatch<ProjectAction>
 	) {
+		// @ts-ignore
 		this.overlay = this.osd.svgOverlay()
 		this.rectTpl = document.createElementNS('http://www.w3.org/2000/svg','rect')
 		this.rectTpl.setAttribute('fill', 'none')
 		this.rectTpl.style.opacity = '0'
+
+		this.osd.addHandler('canvas-click', this.canvasClickHandler)
+	}
+
+	private canvasClickHandler = (event: OpenSeadragon.ViewerEvent) => {
+		// TODO what does quick do/tell?
+		if (!event.quick) return
+
+		const point = this.osd.viewport.pointFromPixel(event.position)
+
+		const areas = this.areas.filter(area => {
+			return this.insidePoly(area.points, point.x, point.y)
+		})
+
+		areas.forEach(area => {
+			this.dispatch({
+				type: 'ADD_ENTITY',
+				entityId: area.entityId
+			})
+		})
+	}
+
+	private insidePoly(poly: OpenSeadragon.Point[], pointx: number, pointy: number) {
+		var i, j;
+		var inside = false;
+		for (i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+			if (
+				((poly[i].y > pointy) != (poly[j].y > pointy)) &&
+				(pointx < (poly[j].x-poly[i].x) * (pointy-poly[i].y) / (poly[j].y-poly[i].y) + poly[i].x)
+			)
+			inside = !inside;
+		}
+		return inside;
 	}
 
 	/**
@@ -25,6 +72,8 @@ export class AreaRenderer {
 	 * to ensure event listeners are removed too.
 	 */
 	clear() {
+		this.areas = []
+
 		while (this.overlay.node().firstChild) {
 			this.overlay.node().removeChild(this.overlay.node().firstChild);
 		}
@@ -67,12 +116,12 @@ export class AreaRenderer {
 				// Set color to be half transparent, only the last entity
 				// (could be multiple areas) is set to fully opague
 				rect.setAttribute(
-					'stroke',
-					lastEntity ? entity.color : `${entity.color}66`
+					'fill',
+					lastEntity ? `${entity.color}66` : `${entity.color}66`
 				)
 
 				// Update combined bounds
-				currentBounds = this.getRectBounds(rect.attributes)
+				currentBounds = this.getRectBounds(fa)
 				if (combinedBounds != null) combinedBounds = combinedBounds.union(currentBounds)
 				else combinedBounds = currentBounds
 			})
@@ -111,12 +160,26 @@ export class AreaRenderer {
 	 * 
 	 * @param attributes
 	 */
-	private getRectBounds(attributes: NamedNodeMap) {
-		const x = parseFloat(attributes.getNamedItem('x').value)
-		const y = parseFloat(attributes.getNamedItem('y').value)
-		const w = parseFloat(attributes.getNamedItem('width').value)
-		const h = parseFloat(attributes.getNamedItem('height').value)
-		return new this.OpenSeadragon.Rect(x, y, w, h)
+	private getRectBounds(area: FacsimileArea) {
+		if (isFacsimileAreaRectangle(area)) {
+			return this.osd.viewport.imageToViewportRectangle(area.x, area.y, area.w, area.h)
+		} else if (isFacsimileAreaPolygon(area)) {
+			const xs = area.points.map(p => p[0])
+			const ys = area.points.map(p => p[1])
+
+			const x = Math.min(...xs)
+			const y = Math.min(...ys)
+			const maxX = Math.max(...xs)
+			const maxY = Math.max(...ys)
+			const w = maxX - x
+			const h = maxY - y
+
+			return this.osd.viewport.imageToViewportRectangle(x, y, w, h)
+		}
+		// const x = parseFloat(attributes.getNamedItem('x').value)
+		// const y = parseFloat(attributes.getNamedItem('y').value)
+		// const w = parseFloat(attributes.getNamedItem('width').value)
+		// const h = parseFloat(attributes.getNamedItem('height').value)
 	}
 
 	/**
@@ -131,8 +194,6 @@ export class AreaRenderer {
 	 * @param facsimile 
 	 */
 	render(entry: Entry, facsimile: ActiveFacsimile) {
-		// this.activeFacsimile = facsimile
-
 		this.clear()
 
 		// Get the width of the <rect> stroke in pixels and set in
@@ -144,28 +205,52 @@ export class AreaRenderer {
 		// Create the <rect>s, but skip if the <rect>s are already in the cache
 		if (!this.cache.has(facsimile.id)) {
 			const fragment = document.createDocumentFragment()
+			const areas: AreaCache = []
+
 			for (const entity of entry.textData.entities.values()) {
 				if (entity.facsimileAreas == null) continue
 
 				entity.facsimileAreas.forEach(area => {
 					if (area.facsimileId !== facsimile.id) return
-					const vpRect = this.osd.viewport.imageToViewportRectangle(area.x, area.y, area.w, area.h)
-					const rect = this.rectTpl.cloneNode() as Element
-					rect.setAttribute('x', (vpRect.x - this.strokeWidth/2).toString())
-					rect.setAttribute('y', (vpRect.y - this.strokeWidth/2).toString())
-					rect.setAttribute('width', vpRect.width + this.strokeWidth)
-					rect.setAttribute('height', vpRect.height + this.strokeWidth)
-					rect.id = area.id
-					fragment.appendChild(rect)
+
+					if (isFacsimileAreaRectangle(area)) {
+						const vpRect = this.osd.viewport.imageToViewportRectangle(area.x, area.y, area.w, area.h)
+						const rect = this.rectTpl.cloneNode() as Element
+						rect.setAttribute('x', (vpRect.x - this.strokeWidth/2).toString())
+						rect.setAttribute('y', (vpRect.y - this.strokeWidth/2).toString())
+						rect.setAttribute('width', (vpRect.width + this.strokeWidth).toString())
+						rect.setAttribute('height', (vpRect.height + this.strokeWidth).toString())
+						rect.id = area.id
+						fragment.appendChild(rect)
+					} else if (isFacsimileAreaPolygon(area)) {
+						const polygon = document.createElementNS('http://www.w3.org/2000/svg','polygon')
+						const points = area.points
+							.map(([x, y]) => {
+								return this.osd.viewport.imageToViewportCoordinates(x, y)
+							})
+						polygon.setAttribute('points', points.map(p => `${p.x},${p.y}`).join(' '))
+								
+						polygon.style.opacity = '0'
+						polygon.id = area.id
+						fragment.appendChild(polygon)
+
+						areas.push({
+							entryId: entry.id,
+							entityId: entity.id,
+							points,
+						})
+					}
 				})
 			}
 
 			// Add the created fragment to the cache
-			this.cache.set(facsimile.id, fragment)
+			this.cache.set(facsimile.id, { fragment, areas })
 		}
 
 		// Add the <rect>s to the overlay element
-		this.overlay.node().appendChild(this.cache.get(facsimile.id).cloneNode(true) as DocumentFragment)
+		const { fragment, areas } = this.cache.get(facsimile.id)
+		this.areas = areas
+		this.overlay.node().appendChild(fragment.cloneNode(true) as DocumentFragment)
 	}
 
 	private setStrokeWidth() {

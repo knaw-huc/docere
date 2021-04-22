@@ -7,6 +7,7 @@ export const TextBody = styled.div`
 	padding: .25rem .5rem;
 `
 export const TextEntity = React.memo(function TextEntity(props: EntityComponentProps) {
+	console.log(props.entity)
 	return (
 		<EntityWrapper entity={props.entity}>
 			{

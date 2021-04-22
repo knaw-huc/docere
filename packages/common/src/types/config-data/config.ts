@@ -91,12 +91,19 @@ export type ExtractEntryPartElements = (entry: ExtractedEntry, config: DocereCon
 
 export interface EntrySettings {
 	'panels.showHeaders'?: boolean
+
 	'panels.text.openPopupAsTooltip'?: boolean
 	'panels.text.showMinimap'?: boolean
 	'panels.text.showLineBeginnings'?: boolean
 	'panels.text.showPageBeginnings'?: boolean
-	'panels.text.showEntities'?: boolean,
 	'panels.text.showNotes'?: boolean,
+
+	// Automatically remove current active entities when activating a new entity.
+	// When set to false, the previous active entities stay active and highlighted.
+	'panels.entities.toggle'?: boolean,
+
+	// Show/hide entities
+	'panels.entities.show'?: boolean,
 }
 
 export interface BaseConfig {

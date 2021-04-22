@@ -4,7 +4,7 @@ import extractFacsimiles from './facsimiles'
 
 function extractMetadata(key: string): ExtractMetadata {
 	return entry =>
-		entry.document.querySelector(`metadata[key="${key}"]`)?.getAttribute('value')
+		entry.document.querySelector(`meta[key="${key}"]`)?.getAttribute('value')
 }
 
 export default extendConfigData({
@@ -61,6 +61,7 @@ export default extendConfigData({
 			selector: 'attendance_list',
 			showInAside: false,
 			showAsFacet: false,
+			title: 'Attendance list'
 		},
 		{
 			id: 'attendant',
@@ -73,13 +74,13 @@ export default extendConfigData({
 						}
 					})
 			},
-			extractId: el => el.id,
+			extractId: el => el.getAttribute('delegate_id'),
 			selector: 'attendant',
 			type: EntityType.Person,
 		}
 	],
 	facsimiles: {
-		extractFacsimileId: el => el.id,
+		extractFacsimileId: el => el.id, //getAttribute('filepath'),
 		extractFacsimiles,
 		selector: 'scan[id]'
 	},
@@ -95,34 +96,41 @@ export default extendConfigData({
 	]
 })
 
-function coordsToFacsimileArea(el: Element) {
-	return function(coords: string): FacsimileArea {
-		const [x, y, w, h] = coords
-			.split('_')
-			.map(x => parseInt(x, 10))
+// function coordsToFacsimileArea(el: Element) {
+// 	return function(coords: string): FacsimileArea {
+// 		const [x, y, w, h] = coords
+// 			.split('_')
+// 			.map(x => parseInt(x, 10))
 
-		return {
-			facsimileId: el.getAttribute('scan_id'),
-			h,
-			unit: 'px',
-			w,
-			x,
-			y,
-		}
+// 		return {
+// 			facsimileId: el.getAttribute('scan_id'),
+// 			h,
+// 			unit: 'px',
+// 			w,
+// 			x,
+// 			y,
+// 		}
+// 	}
+// }
+
+function createFacsimileArea(el: Element): FacsimileArea {
+	if (!el.hasAttribute('coords')) return null
+
+	return {
+		facsimileId: el.getAttribute('scan_id'),
+		points: el.getAttribute('coords')
+			.split(' ')
+			.map(coord =>
+				coord.split(',')
+					.map(c => parseInt(c, 10)) as [number, number]
+			)
 	}
 }
 
-function createFacsimileArea(el: Element): FacsimileArea[] {
-	if (!el.hasAttribute('coords')) return []
-	return el.getAttribute('coords')
-		.split(' ')
-		.map(coordsToFacsimileArea(el))
-}
-
-function getLineN(id: string) {
-	const splits = id.split('_')
-	return (parseInt(splits[splits.length - 1], 10) + 1).toString()
-}
+// function getLineN(id: string) {
+// 	const splits = id.split('_')
+// 	return (parseInt(splits[splits.length - 1], 10) + 1).toString()
+// }
 
 function extractLbs({ layerElement }: ExtractEntitiesProps) {
 	return Array.from(layerElement.querySelectorAll('line'))
@@ -130,8 +138,8 @@ function extractLbs({ layerElement }: ExtractEntitiesProps) {
 			return {
 				anchor: line,
 				content: null,
-				n: getLineN(line.id),
-				facsimileAreas: createFacsimileArea(line)
+				// n: getLineN(line.id),
+				facsimileAreas: [createFacsimileArea(line)]
 			}
 		})
 }
@@ -143,7 +151,16 @@ function extractResolutions({ layerElement, entityConfig }: ExtractEntitiesProps
 			return {
 				anchor: res,
 				content: null,
-				facsimileAreas: createFacsimileArea(res)
+				facsimileAreas: res.getAttribute('coords').split('__')
+					.map(coords => ({
+						facsimileId: res.getAttribute('scan_id'),
+						points: coords
+							.split(' ')
+							.map(coord =>
+								coord.split(',')
+									.map(c => parseInt(c, 10)) as [number, number]
+							)
+					}))
 			}
 		})
 }
