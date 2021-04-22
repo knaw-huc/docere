@@ -1,5 +1,5 @@
 import React from 'react'
-import { Entry, ActiveFacsimile, ID, ActiveEntities, ProjectAction, isFacsimileAreaRectangle, isFacsimileAreaPolygon, ContainerType } from '@docere/common'
+import { Entry, ActiveFacsimile, ID, ActiveEntities, ProjectAction, isFacsimileAreaRectangle, isFacsimileAreaPolygon } from '@docere/common'
 import { FacsimileArea } from '@docere/common'
 import OpenSeadragon from 'openseadragon'
 
