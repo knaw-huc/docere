@@ -1,6 +1,6 @@
 import React from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { Viewport, ProjectState, initialProjectState, ProjectAction, fetchEntry, fetchPage, getPagePath, getEntryPath } from '@docere/common'
+import { Viewport, ProjectState, initialProjectState, ProjectAction, fetchEntry, fetchPage, getPagePath, getEntryPath, DTAP } from '@docere/common'
 import configs from '../../../../../projects/src'
 
 import { projectUIReducer } from '../reducer'
@@ -90,11 +90,19 @@ export function useProjectState(): [ProjectState, React.Dispatch<ProjectAction>]
 	}, [entryId, pageId])
 
 	React.useEffect(() => {
+		if (DOCERE_DTAP === DTAP.Development) console.log('[ActiveFacsimile]', state.activeFacsimile)
+
 		if (state.entry != null && state.viewport !== Viewport.Entry) {
 			dispatch({ type: 'SET_VIEWPORT', viewport: Viewport.Entry })
 			history.push(getEntryPath(state.config.slug, state.entry.id))
 		}
 	}, [state.activeFacsimile])
+
+	if (DOCERE_DTAP === DTAP.Development) {
+		React.useEffect(() => {
+			console.log('[ActiveEntities]', Array.from(state.activeEntities.values()))
+		}, [state.activeEntities])
+	}
 
 	React.useEffect(() => {
 		if (projectId == null) return

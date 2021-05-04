@@ -1,4 +1,4 @@
-import { ProjectState, ProjectAction } from '@docere/common'
+import { ProjectState, ProjectAction, DTAP } from '@docere/common'
 
 import { addEntity } from './add-entity'
 import { setAsideTab } from './set-aside-tab'
@@ -12,7 +12,7 @@ import { toggleTab } from './toggle-tab'
 import { pinLayer, toggleLayer } from './layer'
 
 export function projectUIReducer(state: ProjectState, action: ProjectAction): ProjectState {
-	if ((window as any).DEBUG) console.log('[ProjectReducer]', action)
+	if (DOCERE_DTAP === DTAP.Development) console.log('[ProjectReducer]', action)
 
 	switch (action.type) {
 		case 'ADD_ENTITY': return addEntity(state, action)

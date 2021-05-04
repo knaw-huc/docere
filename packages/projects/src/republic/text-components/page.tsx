@@ -19,16 +19,6 @@ const LbWrapper = styled.div`
 	}
 
 `
-	// & > div:first-of-type {
-	// 	${LbCommon}
-	// 	cursor: pointer;
-	// 	${(props: { active: boolean, color: string }) =>
-	// 		props.active ?
-	// 			`background-color: ${props.color};
-	// 			color: white;` :
-	// 			''
-	// 	}
-	// }
 
 function RepublicLb(props: ComponentProps) {
 	const dispatch = React.useContext(DispatchContext)
@@ -55,13 +45,7 @@ function RepublicLb(props: ComponentProps) {
 			color={entity.color}
 			data-entity-id={entity.id}
 			onClick={handleClick}
-		>
-			<div
-				onClick={handleClick}
-			>
-				{entity.n}
-			</div>
-		</LbWrapper>
+		/>
 	)
 }
 
