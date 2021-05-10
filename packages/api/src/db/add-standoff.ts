@@ -2,14 +2,13 @@ import crypto from 'crypto'
 import * as es from '@elastic/elasticsearch'
 import { PoolClient } from 'pg'
 import fetch from 'node-fetch'
+import { JsonEntry, XmlDirectoryStructure, AnnotationTree, createJsonEntry, DocereConfig, ID } from '@docere/common'
 
-import { SerializedEntry, XmlDirectoryStructure } from '../../../common/src'
 
 import { getDocumentIdFromRemoteFilePath } from '../utils'
 
 import { getPool, transactionQuery } from './index'
 import { indexDocument } from '../es'
-import { AnnotationTree, createEntry, DocereConfig, ID } from '@docere/common'
 import { XML_SERVER_ENDPOINT } from '../constants'
 import { createDocereAnnotationTree } from '../api/document'
 
@@ -89,7 +88,7 @@ async function addStandoffToDb(
 	const standoff = projectConfig.standoff.prepareSource(source)
 	const tree = createDocereAnnotationTree(standoff, projectConfig)
 
-	const entry = createEntry({
+	const entry = createJsonEntry({
 		config: projectConfig,
 		id: documentId,
 		tree,
@@ -141,7 +140,7 @@ async function addDocumentToDb(props: {
 	client: PoolClient,
 	tree: AnnotationTree,
 	documentId: ID,
-	entry: SerializedEntry,
+	entry: JsonEntry,
 	order_number: number,
 	sourceId: string
 }) {

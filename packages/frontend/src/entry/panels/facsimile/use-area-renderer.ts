@@ -101,7 +101,6 @@ export class AreaRenderer {
 		// Activate all active <rect>s
 		let index = -1
 		activeEntities.forEach((entity) => {
-			console.log(entity)
 			index += 1
 			let rect: SVGRectElement
 			let currentBounds: any

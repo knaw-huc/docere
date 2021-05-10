@@ -1,12 +1,16 @@
+export * from './config'
 export * from './components'
 export * from './constants'
 export * from './entry'
 export * from './enum'
 export * from './extend-config-data'
 export * from './page'
+
 export * from './project/action'
 export * from './project/context'
 export * from './project/state'
+export * from './project/list'
+
 export * from './search'
 export * from './standoff-annotations'
 export * from './types'

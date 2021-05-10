@@ -3,14 +3,12 @@ import { Layer, ID, ExtractedLayer } from './layer'
 import { Entity, ExtractedEntity } from './entity'
 import { ExtractedFacsimile, Facsimile } from './facsimile'
 
-// export * from './deserialize'
-export * from './entity'
-export * from './extract'
+export * from './create-json'
 export * from './facsimile'
 export * from './layer'
 export * from './metadata'
-// export * from './serialize'
-export * from './use-entry'
+export * from './entity'
+export * from './fetch'
 
 // TODO move
 export type ListMetadata = ListFacetConfig & { value: string | string[] }
@@ -33,25 +31,16 @@ export type ExtractedEntry = Omit<Entry, 'layers' | 'textData' | 'selector'> & {
 
 export type EntryParts = Map<string, ExtractedEntry>
 
-// Serialized entry
-export interface SerializedEntry {
-	// content: string
+export interface JsonEntry {
 	id: ID
 	layers: Layer[]
-	metadata: Entry['metadata']
-	// parts: SerializedEntry[]
-	// plainText: string
+	metadata: MetadataItem[]
 	textData: {
-		// entities?: [ID, Entity][]
 		facsimiles: [ID, ExtractedFacsimile][]
 	}
 }
 
-// Entry
-export interface Entry {
-	id: ID
-	layers: Layer[]
-	metadata: MetadataItem[]
+export interface Entry extends Omit<JsonEntry, 'textData'> {
 	textData: EntryTextData
 }
 

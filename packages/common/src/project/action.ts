@@ -1,7 +1,7 @@
-import { Viewport, ContainerType, AsideTab } from '../enum';
-import { ProjectState } from './state';
-import { ID } from '../entry/layer';
-import { DocereConfig } from '../types/config-data/config';
+import { Viewport, ContainerType, AsideTab } from '../enum'
+import { ID } from '../entry/layer'
+import { DocereConfig } from '../config'
+import { ProjectState } from './state'
 
 interface ToggleFooterTab {
 	type: 'TOGGLE_TAB',

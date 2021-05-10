@@ -1,10 +1,8 @@
 import type React from 'react'
-import { ContainerType, UIComponentType } from '../../enum'
-import type { DocereComponents } from '../components'
-import { DocereConfig } from './config'
-import { ID } from '../../entry/layer'
-
-export * from './config'
+import { ContainerType, UIComponentType } from '../enum'
+import type { DocereComponents } from '../types/components'
+import { DocereConfig } from '../config'
+import { ID } from '../entry/layer'
 
 export type GetComponents = (container: ContainerType, id?: string) => Promise<DocereComponents>
 

@@ -1,7 +1,7 @@
-import type { SerializedEntry, EsDataType } from '../../common/src'
+import type { JsonEntry, EsDataType } from '../../common/src'
 
 export type ExtractedXml = { original: string, prepared: string }
-export type PrepareAndExtractOutput = [SerializedEntry, ExtractedXml]
+export type PrepareAndExtractOutput = [JsonEntry, ExtractedXml]
 
 export type MappingProperties = Record<string, {
 	type: EsDataType

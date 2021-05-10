@@ -1,4 +1,4 @@
-import { DocereConfig, MetadataConfig, defaultEntityConfig, defaultMetadata, EntityConfig2 } from './types/config-data/config'
+import { DocereConfig, MetadataConfig, defaultEntityConfig, defaultMetadata, EntityConfig2 } from './config'
 import { isTextLayerConfig } from './utils'
 import { PageConfig } from './page'
 

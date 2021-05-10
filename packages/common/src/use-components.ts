@@ -15,7 +15,6 @@ export function useComponents(container: ContainerType, id?: string) {
 	return components
 }
 
-// TODO memo or React.useEffect?
 export function useUIComponent(componentType: UIComponentType.SearchResult): React.FC<any> 
 export function useUIComponent(componentType: UIComponentType.Entity, id: string): React.FC<{ entity: Entity | ActiveEntity, children?: React.ReactNode }> 
 export function useUIComponent(componentType: UIComponentType, id?: string) {

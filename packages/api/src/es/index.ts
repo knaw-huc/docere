@@ -1,6 +1,6 @@
 import * as es from '@elastic/elasticsearch'
 
-import { EsDataType, SerializedEntry, isHierarchyFacetConfig } from '../../../common/src'
+import { EsDataType, JsonEntry, isHierarchyFacetConfig } from '../../../common/src'
 import { getType, isError, getElasticSearchDocument, getProjectConfig } from '../utils'
 
 import type { Mapping, DocereApiError } from '../types'
@@ -69,7 +69,7 @@ export async function getProjectIndexMapping(projectId: string): Promise<Mapping
 
 export async function indexDocument(
 	projectId: string,
-	extractedEntry: SerializedEntry,
+	extractedEntry: JsonEntry,
 	standoff: Standoff,
 	esClient: es.Client
 ) {

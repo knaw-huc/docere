@@ -4,10 +4,10 @@ import { Response as ExpressResponse } from 'express'
 import chalk from 'chalk'
 import { DTAP, EsDataType, PageConfig } from '@docere/common'
 
-import type { DocereApiError } from './types'
-import type { DocereConfig, ElasticSearchDocument, MetadataItem, SerializedEntry } from '@docere/common'
 import { dtapMap } from '../../projects/src/dtap'
-import { Standoff } from '@docere/common'
+
+import type { DocereApiError } from './types'
+import type { Standoff, DocereConfig, ElasticSearchDocument, MetadataItem, JsonEntry } from '@docere/common'
 
 // @ts-ignore
 const DOCERE_DTAP = DTAP[process.env.DOCERE_DTAP]
@@ -181,7 +181,7 @@ export async function getProjectPageConfig(projectId: string, pageId: string): P
 }
 
 export function getElasticSearchDocument(
-	extractedEntry: SerializedEntry | DocereApiError,
+	extractedEntry: JsonEntry | DocereApiError,
 	standoff: Standoff
 ): ElasticSearchDocument | DocereApiError {
 	if (isError(extractedEntry)) return extractedEntry

@@ -1,9 +1,8 @@
-import { EntityType, Colors, EsDataType } from '../../enum'
-import type { FacetConfig } from '../search/facets'
-import { PageConfig } from '../../page'
-import { FacsimileLayerConfig, TextLayerConfig, ExtractedEntry, ID, ExtractedEntity, ExtractedFacsimile, Standoff } from '../..'
-import { AnnotationTree, FilterFunction, PartialExportOptions, StandoffAnnotation } from '../../standoff-annotations'
-import { CreateEntryProps, LayerConfig } from '../../entry'
+import { EntityType, Colors, EsDataType } from '../enum'
+import type { FacetConfig } from '../types/search/facets'
+import { PageConfig } from '../page'
+import { AnnotationTree, FilterFunction, PartialExportOptions, Standoff, StandoffAnnotation } from '../standoff-annotations'
+import { CreateEntryProps, ExtractedEntity, ExtractedEntry, ExtractedFacsimile, FacsimileLayerConfig, ID, LayerConfig, TextLayerConfig } from '../entry'
 
 interface ExtractFacsimilesProps {
 	config: DocereConfig

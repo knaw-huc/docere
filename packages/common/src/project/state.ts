@@ -1,7 +1,6 @@
-import { FooterTab, SearchTab, Viewport, DocereConfig, GetComponents, AsideTab } from '..';
+import { FooterTab, SearchTab, Viewport, DocereConfig, GetComponents, AsideTab, UIComponentsMap } from '..';
 import { initialProjectContext, initialUIContext, initialEntryContextValue, initialEntitiesContextValue, ActiveEntities, initialFacsimileContextValue, initialEntrySettingsContextValue, initialAsideTabContextValue, initialLayersContextValue } from './context';
 import { Entry, ActiveFacsimile, Layers, TriggerContainer } from '../entry'
-import { UIComponentsMap } from '../types';
 import { Page } from '../page';
 
 export interface ProjectState {

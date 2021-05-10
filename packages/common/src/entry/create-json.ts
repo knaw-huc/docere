@@ -1,6 +1,6 @@
 import { DocereConfig, AnnotationTree } from '..'
-import { isFacsimileLayerConfig, isTextLayerConfig } from '../utils'
-import { FacsimileLayer, ID, SerializedEntry, TextLayer } from '.'
+import { isTextLayerConfig } from '../utils'
+import { FacsimileLayer, ID, JsonEntry, TextLayer } from '.'
 import { ExtractedFacsimile } from './facsimile'
 import { StandoffAnnotation } from '../standoff-annotations'
 
@@ -10,12 +10,8 @@ export type CreateEntryProps = {
 	tree: AnnotationTree
 }
 
-export function createEntry(props: CreateEntryProps): SerializedEntry {
-	// const entities = props.tree.exportAnnotations()
-	// 	.filter(a => a.metadata.hasOwnProperty('_entityId'))
-
+export function createJsonEntry(props: CreateEntryProps): JsonEntry {
 	const facsimiles = props.config.createFacsimiles(props)
-	// const facsimileIds = facsimiles.map(f => f.id)
 
 	return {
 		id: props.id,
@@ -23,23 +19,11 @@ export function createEntry(props: CreateEntryProps): SerializedEntry {
 			if (isTextLayerConfig(layerConfig)) {
 				return {
 					...layerConfig,
-					// facsimileIds: facsimileIds,
-					// entityIds: entities.map(a => a.metadata._entityId),
 					tree: props.tree.exportReactTree()
 				} as TextLayer
-			} else if (isFacsimileLayerConfig(layerConfig)) {
-				return {
-					...layerConfig,
-					// facsimileIds,
-					// entityIds: entities
-					// 	.filter(a =>
-					// 		Array.isArray(a.metadata._areas) &&
-					// 		a.metadata._areas.length > 0
-					// 	)
-					// 	.map(a => a.metadata._entityId),
-				} as FacsimileLayer
+			} 
 
-			}
+			return layerConfig as FacsimileLayer
 		}),
 		// @ts-ignore
 		metadata: props.config.metadata2.map(config => {
@@ -50,7 +34,6 @@ export function createEntry(props: CreateEntryProps): SerializedEntry {
 			}
 		}),
 		textData: {
-			// entities: entities.reduce(toSerializedMap, []),
 			facsimiles: facsimiles.reduce(toSerializedMap, []),
 		}
 	}

@@ -4,7 +4,7 @@ import { fetchPageXml } from '../utils'
 import { ProjectContext } from '../project/context'
 
 import type { Page, PageConfig } from './index'
-import type { DocereConfig } from '../types/config-data/config'
+import type { DocereConfig } from '../config'
 import type { ID } from '../entry/layer'
 
 const pageCache = new Map<string, Page>()

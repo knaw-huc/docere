@@ -1,23 +1,8 @@
 import type { ID } from './layer'
-import type { SerializedEntry, Entry, Entity } from './index'
+import type { JsonEntry, Entry, Entity } from './index'
 import { DocereAnnotation } from '../standoff-annotations'
 import { generateId, isTextLayer } from '../utils'
-import { DocereConfig } from '../types/config-data/config'
-
-// function deserializeEntities(entities: SerializedLayer['entities']): Layer['entities'] {
-// 	const settedEntities: [Type, Set<ID>][] = entities.map(x => [x[0], new Set(x[1])])
-// 	return new Map(settedEntities)
-// }
-
-// function deserializeLayer(layer: SerializedLayer): Layer {
-// 	return {
-// 		...layer,
-// 		// entityIds: new Set(layer.entityIds),
-// 		// facsimileIds: new Set(layer.facsimileIds),
-// 		// entities: deserializeEntities(layer.entities),
-// 		// facsimiles: new Set(layer.facsimiles),
-// 	}
-// }
+import { DocereConfig } from '../config'
 
 /**
  * Converts the serialized entry, which is stored in the database to 
@@ -28,7 +13,7 @@ import { DocereConfig } from '../types/config-data/config'
  * @return Entry - the deserialized entry, used in the client
  * @todo fix the type errors on the layer conversion
  */
-export function deserializeEntry(entry: SerializedEntry, config: DocereConfig): Entry {
+export function createEntry(entry: JsonEntry, config: DocereConfig): Entry {
 	// const layers = entry.layers.map(deserializeLayer)
 
 	return ({

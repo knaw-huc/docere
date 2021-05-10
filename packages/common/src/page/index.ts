@@ -1,5 +1,5 @@
 import { ComponentProps } from '../standoff-annotations'
-import { BaseConfig } from '../types/config-data/config'
+import { BaseConfig } from '../config'
 
 export * from './use-page'
 

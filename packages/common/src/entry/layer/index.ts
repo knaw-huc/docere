@@ -1,5 +1,5 @@
 import { LayerType } from '../../enum'
-import { BaseConfig, DocereConfig } from '../../types/config-data/config'
+import { BaseConfig, DocereConfig } from '../../config'
 import type { ExtractedEntry, ExtractedFacsimile, ExtractedEntity } from '..'
 import { DocereAnnotation } from '../../standoff-annotations'
 

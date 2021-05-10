@@ -1,5 +1,5 @@
 import { EsDataType, SortBy, SortDirection } from "../../enum"
-import { BaseConfig } from '../config-data/config'
+import { BaseConfig } from '../../config'
 
 export type FacetValues = ListFacetValues | BooleanFacetValues | RangeFacetValue[]
 
