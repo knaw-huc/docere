@@ -1,10 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
-import { EntityTag, LbCommon, Pb } from '@docere/text-components'
+import { LbCommon } from '@docere/text-components'
 
-import { DocereConfig, ComponentProps, DispatchContext, useEntity, EntitiesContext, ContainerContext, Colors } from '@docere/common'
+import { DispatchContext, useEntity, EntitiesContext, ContainerContext, EntityAnnotationComponentProps } from '@docere/common'
 
-const LbWrapper = styled.div`
+export const LbWrapper = styled.div`
 	&:before {
 		content: counter(session);
 		counter-increment: session;
@@ -20,99 +20,61 @@ const LbWrapper = styled.div`
 
 `
 
-function RepublicLb(props: ComponentProps) {
+export function RepublicLb(props: EntityAnnotationComponentProps) {
 	const dispatch = React.useContext(DispatchContext)
 	const container = React.useContext(ContainerContext)
 	const activeEntities = React.useContext(EntitiesContext)
 
-	const entity = useEntity(props.attributes['docere:id'])
+	const { entity, entityConfig } = useEntity(props._entityId)
 
 	const handleClick = React.useCallback(ev => {
 		ev.stopPropagation()
 		dispatch({
 			type: 'ADD_ENTITY',
-			entityId: entity.id,
+			entityId: entity.props._entityId,
 			triggerContainer: container.type,
 			triggerContainerId: container.id,
 		})
-	}, [entity?.id])
+	}, [entity])
 
 	if (entity == null) return null
 
 	return (
 		<LbWrapper
-			active={activeEntities.has(entity.id)}
-			color={entity.color}
-			data-entity-id={entity.id}
+			active={activeEntities.has(entity.props._entityId)}
+			color={entityConfig.color}
+			data-entity-id={entity.props._entityId}
 			onClick={handleClick}
 		/>
 	)
 }
 
-export default function (_config: DocereConfig) {
-	return {
-		attendant: EntityTag,
-		line: RepublicLb,
-		scan: Pb,
-		attendance_list: AttendanceList,
-		resolution: Resolution,
-		paragraph: styled.div`
-			margin-bottom: 1rem;
-		`
-	}
-}
-
-function AttendanceList(props: ComponentProps) {
-	return (
-		<SessionPart
-			{...props}
-			color={Colors.Red}
-			title="Attendance list"
-		>
-			{props.children}
-		</SessionPart>	
-	)
-}
-
-function Resolution(props: ComponentProps) {
-	return (
-		<SessionPart
-			{...props}
-			color={Colors.Red}
-			title="Resolution"
-		>
-			{props.children}
-		</SessionPart>	
-	)
-}
-
-
-function SessionPart(props: ComponentProps & { color: string, title: string }) {
+export function SessionPart(props: EntityAnnotationComponentProps) {
 	const activeEntities = React.useContext(EntitiesContext)
 	const dispatch = React.useContext(DispatchContext)
 	const container = React.useContext(ContainerContext)
 
-	const entity = useEntity(props.attributes['docere:id'])
+	const { entity, entityConfig } = useEntity(props._entityId)
 
 	const handleClick = React.useCallback(ev => {
 		ev.stopPropagation()
 
 		dispatch({
 			type: 'ADD_ENTITY',
-			entityId: entity.id,
+			entityId: entity.props._entityId,
 			triggerContainer: container.type,
 			triggerContainerId: container.id,
 		})
-	}, [entity?.id])
+	}, [entity])
 
 	if (entity == null) return null
 
 	return (
 		<SessionPartWrapper
-			active={activeEntities.has(entity.id)}
-			color={props.color}
+			active={activeEntities.has(entity.props._entityId)}
+			color={entityConfig.color}
 		>
-			<h4 onClick={handleClick}>{props.title}</h4>
+			<h4 onClick={handleClick}>{entityConfig.title}</h4>
 			{props.children}
 		</SessionPartWrapper>
 	)

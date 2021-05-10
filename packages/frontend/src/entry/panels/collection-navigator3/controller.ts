@@ -41,7 +41,7 @@ export default class CollectionNavigatorController {
 			.map(f => ({
 				entryIds: new Set([entry.id]),
 				facsimileId: f.id,
-				facsimilePath: f.versions[0].path
+				facsimilePath: f.path
 			}))
 		this.tiledImages = new TiledImages(this.viewer, hits, entry, facsimile)
 	}

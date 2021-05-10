@@ -38,39 +38,41 @@ export const NoteTag = React.memo(function NotePopup(props: ComponentProps) {
 		!settings['panels.text.showNotes']
 	) return <span>{props.children}</span>
 
-	const note = useEntity(props.attributes['docere:id'])
+	const { entity, entityConfig } = useEntity(props.attributes['docere:id'])
 
-	const active = activeEntities.has(note?.id)
+	const active = activeEntities.has(entity?.props._entityId)
 	const openToAside = active && !settings['panels.text.openPopupAsTooltip']
 
 	const handleClick = React.useCallback(() => {
 		dispatch({
-			entityId: note.id,
+			entityId: entity.props._entityId,
 			type: 'ADD_ENTITY',
 			triggerContainer: container.type,
 			triggerContainerId: container.id,
 		})
-	}, [note, active])
+	}, [entity, active])
 
-	if (note == null) return null
+	if (entity == null) return null
 
 	return (
 		<Wrapper
 			active={active}
 			className="note"
-			color={note.color}
-			id={note.id}
+			color={entityConfig.color}
+			id={entity.props._entityId}
 			onClick={handleClick}
 			openToAside={openToAside}
 		>
-			{note.n}
+			{entity.props.n}
 			{
 				active &&
 				<EntityTooltip
-					entity={note}
+					entity={entity}
 					settings={settings}
 				>
-					<XmlEntity entity={note} />
+					<XmlEntity
+						entity={entity}
+					/>
 				</EntityTooltip>
 			}
 		</Wrapper>

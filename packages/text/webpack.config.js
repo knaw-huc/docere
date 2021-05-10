@@ -2,7 +2,7 @@ const path = require('path')
 
 module.exports = {
 	entry: {
-		bundle: "./src/index.tsx",
+		bundle: "./src/index.ts",
 	},
 	mode: "development",
 	output: {

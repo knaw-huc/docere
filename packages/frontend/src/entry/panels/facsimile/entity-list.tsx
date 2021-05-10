@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import React from 'react'
-import { EntitiesContext, ActiveEntity, useUIComponent, UIComponentType } from '@docere/common'
+import { EntitiesContext, useUIComponent, UIComponentType } from '@docere/common'
+import { EntityComponentProps } from '@docere/ui-components'
 
 const Wrapper = styled.ul`
 	display: none;
@@ -16,11 +17,11 @@ export function EntityList() {
 		<Wrapper>
 			{
 				Array.from(activeEntities.values())
-					.filter(entity => Array.isArray(entity.facsimileAreas))
+					.filter(entity => Array.isArray(entity.props._areas))
 					.map(entity =>
 						<EntityItem
 							entity={entity}
-							key={entity.id}
+							key={entity.props.key}
 						/>
 					)
 			}
@@ -32,8 +33,8 @@ const Item = styled.div`
 	z-index: 1;
 `
 
-function EntityItem(props: { entity: ActiveEntity }) {
-	const Component = useUIComponent(UIComponentType.Entity, props.entity.configId)
+function EntityItem(props: EntityComponentProps) {
+	const Component = useUIComponent(UIComponentType.Entity, props.entity.props._entityConfigId)
 	if (Component == null) {
 		console.error('[EntityItem] Component not found!')
 		return null
@@ -41,7 +42,7 @@ function EntityItem(props: { entity: ActiveEntity }) {
 
 	return (
 		<Item
-			data-id={`entity_${props.entity.id}`}
+			data-id={`entity_${props.entity.props._entityId}`}
 		>
 			<Component entity={props.entity} />
 		</Item>

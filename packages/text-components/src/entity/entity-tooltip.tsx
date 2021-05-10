@@ -1,10 +1,9 @@
 import React from "react"
 
-import { ActiveEntities, DocereConfig, EntitiesContext, Entity, getTextPanelWidth, indexOfIterator, Tooltip } from '@docere/common'
+import { ActiveEntities, DocereConfig, EntitiesContext, getTextPanelWidth, indexOfIterator, Tooltip } from '@docere/common'
+import { EntityComponentProps } from "@docere/ui-components"
 
-interface Props {
-	children: React.ReactNode
-	entity: Entity
+interface Props extends EntityComponentProps {
 	settings: DocereConfig['entrySettings']
 	zIndexOffset?: number
 }
@@ -15,10 +14,10 @@ export function EntityTooltip(props: Props) {
 
 	return (
 		<Tooltip
-			color={props.entity.color}
+			color={props.entity.props._config.color}
 			offset={offset}
 			ref={wrapperRef}
-			zIndexOffset={indexOfIterator(activeEntities, props.entity.id)}
+			zIndexOffset={indexOfIterator(activeEntities, props.entity.props._entityId)}
 		>
 			{props.children}
 		</Tooltip>

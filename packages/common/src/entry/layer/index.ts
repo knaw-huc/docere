@@ -1,8 +1,9 @@
 import { LayerType } from '../../enum'
 import { BaseConfig, DocereConfig } from '../../types/config-data/config'
 import type { ExtractedEntry, ExtractedFacsimile, ExtractedEntity } from '..'
+import { DocereAnnotation } from '../../standoff-annotations'
 
-export * from './serialize'
+// export * from './serialize'
 
 // TODO move to index.ts or something
 export type ID = string
@@ -44,39 +45,40 @@ export type ExtractedLayer = ExtractedTextLayer | ExtractedFacsimileLayer
  * This is a stringified version of the layer. It is used to transfer the layer
  * between the API server and Puppeteer and for storing in Postgres.
  */ 
-interface SerializedLayerTextData {
-	facsimiles: ID[]
-	entities: [Type, ID[]][]
-}
+// interface SerializedLayerTextData {
+	// facsimileIds: ID[]
+	// entities: [Type, ID[]][]
+	// entityIds: ID[]
+// }
 export type SerializedBaseLayer =
 	Required<BaseConfig> &
-	Required<Pick<LayerConfig, 'active' | 'pinned' | 'type'>> &
-	SerializedLayerTextData
+	Required<Pick<LayerConfig, 'active' | 'pinned' | 'type'>> //&
+	// SerializedLayerTextData
 
-export type SerializedTextLayer = SerializedBaseLayer & {
-	content: string
-	type: LayerType.Text
-}
+// export type SerializedTextLayer = SerializedBaseLayer & {
+// 	type: LayerType.Text
+// }
 
-export type SerializedFacsimileLayer = SerializedBaseLayer & {
-	type: LayerType.Facsimile
-}
+// export type SerializedFacsimileLayer = SerializedBaseLayer & {
+// 	type: LayerType.Facsimile
+// }
 
-export type SerializedLayer = SerializedTextLayer | SerializedFacsimileLayer
+// export type SerializedLayer = SerializedTextLayer | SerializedFacsimileLayer
 
 // Layer
-export interface TextLayer extends Omit<SerializedTextLayer, 'facsimiles' | 'entities'>, LayerTextData {
+export interface TextLayer extends SerializedBaseLayer {//extends Omit<SerializedTextLayer, 'facsimileIds' | 'entityIds'>, LayerTextData {
+	tree: DocereAnnotation
 	type: LayerType.Text
 }
 
-export interface FacsimileLayer extends Omit<SerializedBaseLayer, 'facsimiles' | 'entities'>, LayerTextData {
+export interface FacsimileLayer extends SerializedBaseLayer {//extends Omit<SerializedBaseLayer, 'facsimileIds' | 'entityIds'>, LayerTextData {
 	type: LayerType.Facsimile
 }
 
-interface LayerTextData {
-	facsimiles: Set<ID>
-	entities: Map<Type, Set<ID>>
-}
+// interface LayerTextData {
+// 	entityIds: Set<ID> //Map<Type, Set<ID>>
+// 	facsimileIds: Set<ID>
+// }
 export type Layer = TextLayer | FacsimileLayer
 // export type ExtractedLayer = Pick<Layer, 'id'> & Partial<Layer>
 

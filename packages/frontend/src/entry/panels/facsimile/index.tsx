@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { PANEL_HEADER_HEIGHT, FacsimileLayer, EntrySettingsContext, ProjectContext, DispatchContext, ContainerType } from '@docere/common'
+import { PANEL_HEADER_HEIGHT, FacsimileLayer, EntrySettingsContext, ProjectContext, DispatchContext, ContainerType, EntryContext } from '@docere/common'
 
 import PanelHeader from '../header'
 import CollectionNavigator3 from '../collection-navigator3'
@@ -36,6 +36,7 @@ function FacsimilePanel(props: Props) {
 	const dispatch = React.useContext(DispatchContext)
 	const { config } = React.useContext(ProjectContext)
 	const settings = React.useContext(EntrySettingsContext)
+	const entry = React.useContext(EntryContext)
 	const [osd, OpenSeadragon] = useOpenSeadragon()
 
 	const areaRenderer = useAreaRenderer(osd, OpenSeadragon, dispatch)
@@ -58,7 +59,7 @@ function FacsimilePanel(props: Props) {
 					id="openseadragon"
 				/>
 				{
-					props.layer.facsimiles.size > 1 &&
+					entry.textData.facsimiles.size > 1 &&
 					config.collection == null &&
 					<CollectionNavigator3 />
 				}

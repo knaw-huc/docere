@@ -5,12 +5,10 @@ import { getProjectIndexMapping } from '../es'
 
 import handleAnalyzeApi from './analyze'
 
-import { addRemoteFiles } from '../db/add-documents'
-import { addPagesToDb } from '../db/add-pages'
+import { addRemoteStandoffToDb } from '../db/add-standoff'
 import { initProject } from '../db/init-project'
 import { initProjectIndex } from '../es'
 import { castUrlQueryToNumber } from '../utils'
-import Puppenv from '../puppenv'
 import { getPool } from '../db'
 import { dtapMap } from '../../../projects/src/dtap'
 import { DTAP } from '@docere/common'
@@ -19,7 +17,7 @@ import { PROJECT_BASE_PATH } from '../constants'
 // @ts-ignore
 const DOCERE_DTAP = DTAP[process.env.DOCERE_DTAP]
 
-export default function handleProjectApi(app: Express, puppenv: Puppenv) {
+export default function handleProjectApi(app: Express) {
 	app.use(PROJECT_BASE_PATH, (req, res, next) => {
 		if (dtapMap[req.params.projectId] < DOCERE_DTAP) res.sendStatus(404)
 		else next()
@@ -53,21 +51,39 @@ export default function handleProjectApi(app: Express, puppenv: Puppenv) {
 		sendJson(pageConfig, res)
 	})
 
-	app.get(`${PROJECT_BASE_PATH}/xml/:documentId`, async (req, res) => {
-		const pool = await getPool(req.params.projectId)
-		const { rows } = await pool.query(`SELECT content FROM xml WHERE name=$1;`, [req.params.documentId])
-		if (!rows.length) res.sendStatus(404)
-		else res.send(rows[0].content)
-	})
+	// app.get(`${PROJECT_BASE_PATH}/xml/:documentId`, async (req, res) => {
+	// 	const pool = await getPool(req.params.projectId)
+	// 	const { rows } = await pool.query(`SELECT content FROM xml WHERE name=$1;`, [req.params.documentId])
+	// 	if (!rows.length) res.sendStatus(404)
+	// 	else res.send(rows[0].content)
+	// })
 
-	app.get(`${PROJECT_BASE_PATH}/xml_prepared/:documentId`, async (req, res) => {
-		const pool = await getPool(req.params.projectId)
-		const { rows } = await pool.query(`SELECT document.content FROM document, xml WHERE xml.name=$1 AND xml.id=document.xml_id;`, [req.params.documentId])
-		if (!rows.length) res.sendStatus(404)
-		else res.send(rows[0].content)
-	})
+	// app.get(`${PROJECT_BASE_PATH}/xml_prepared/:documentId`, async (req, res) => {
+	// 	const pool = await getPool(req.params.projectId)
+	// 	const { rows } = await pool.query(`SELECT document.content FROM document, xml WHERE xml.name=$1 AND xml.id=document.xml_id;`, [req.params.documentId])
+	// 	if (!rows.length) res.sendStatus(404)
+	// 	else res.send(rows[0].content)
+	// })
 
-	app.post(`${PROJECT_BASE_PATH}/xml`, async (req, res) => {
+	// app.post(`${PROJECT_BASE_PATH}/xml`, async (req, res) => {
+	// 	const { projectId } = req.params
+	// 	const config = await getProjectConfig(projectId)
+	// 	if (isError(config)) return sendJson(config, res)
+
+	// 	// Return an async ACCEPTED immediately, the server will handle it from here
+	// 	res.sendStatus(202).end()
+
+	// 	for (const remotePath of config.documents.remoteDirectories) {
+	// 		await addRemoteFiles(remotePath, projectId, puppenv, config, {
+	// 			force: req.query.force === '',
+	// 			maxPerDir: castUrlQueryToNumber(req.query.max_per_dir as string),
+	// 			maxPerDirOffset: castUrlQueryToNumber(req.query.max_per_dir_offset as string)
+	// 		})
+	// 	}
+	// 	await addPagesToDb(config)
+	// })
+
+	app.post(`${PROJECT_BASE_PATH}/standoff`, async (req, res) => {
 		const { projectId } = req.params
 		const config = await getProjectConfig(projectId)
 		if (isError(config)) return sendJson(config, res)
@@ -76,13 +92,13 @@ export default function handleProjectApi(app: Express, puppenv: Puppenv) {
 		res.sendStatus(202).end()
 
 		for (const remotePath of config.documents.remoteDirectories) {
-			await addRemoteFiles(remotePath, projectId, puppenv, config, {
+			await addRemoteStandoffToDb(remotePath, config, {
 				force: req.query.force === '',
 				maxPerDir: castUrlQueryToNumber(req.query.max_per_dir as string),
 				maxPerDirOffset: castUrlQueryToNumber(req.query.max_per_dir_offset as string)
 			})
 		}
-		await addPagesToDb(config)
+		// await addPagesToDb(config)
 	})
 
 	app.post(`${PROJECT_BASE_PATH}/init`, async (req, res) => {

@@ -1,4 +1,4 @@
-import { DocereConfig, MetadataConfig, EntityConfig, defaultEntityConfig, defaultMetadata } from './types/config-data/config'
+import { DocereConfig, MetadataConfig, defaultEntityConfig, defaultMetadata, EntityConfig2 } from './types/config-data/config'
 import { isTextLayerConfig } from './utils'
 import { PageConfig } from './page'
 
@@ -63,8 +63,8 @@ function setPath(page: PageConfig, config: DocereConfig) {
 	return page
 }
 
-function extendEntities<T extends EntityConfig>(td: T) {
-	const textDataConfig = {...defaultEntityConfig, ...td } as EntityConfig
+function extendEntities<T extends EntityConfig2>(td: T) {
+	const textDataConfig = {...defaultEntityConfig, ...td } as EntityConfig2
 	return setTitle(textDataConfig)
 }
 
@@ -89,13 +89,20 @@ export function extendConfigData(configDataRaw: DocereConfig): DocereConfig {
 		}
 		return setTitle(layer)
 	})
+	config.layers2 = config.layers2.map(layerConfig => {
+		if (layerConfig.active == null) layerConfig.active = true
+		if (layerConfig.pinned == null) layerConfig.pinned = false
+		return setTitle(layerConfig)
+	})
 
 	config.metadata = config.metadata.map(md => {
 		const metadataConfig = {...defaultMetadata, ...md} as MetadataConfig
 		return setTitle(metadataConfig)
 	})
 
+	// @ts-ignore
 	config.entities = config.entities.map(extendEntities)
+	config.entities2 = config.entities2.map(extendEntities)
 
 	if (config.pages != null) {
 		config.pages = {

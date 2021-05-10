@@ -2,20 +2,33 @@ import styled from 'styled-components'
 import React from 'react'
 
 import { EntityWrapper, EntityComponentProps } from './wrapper'
+import { DocereAnnotation } from '@docere/common'
 
 export const TextBody = styled.div`
 	padding: .25rem .5rem;
 `
 export const TextEntity = React.memo(function TextEntity(props: EntityComponentProps) {
-	// console.log(props.entity)
 	return (
-		<EntityWrapper entity={props.entity}>
+		<EntityWrapper
+			entity={props.entity}
+		>
 			{
-				props.entity.content?.length > 0 &&
 				<TextBody>
-					{props.entity.content}
+					{extractText(props.entity)}
 				</TextBody>
 			}
 		</EntityWrapper>
 	)
 })
+
+function extractText(annotation: DocereAnnotation): string {
+	if (annotation.props._textContent?.length) {
+		return annotation.props._textContent
+	}
+
+	return annotation.children?.map(child =>
+		(typeof child === 'string') ?
+			child :
+			extractText(child)
+	).join('')
+}

@@ -1,4 +1,4 @@
-import { FacsimileType, ExtractFacsimiles } from '@docere/common'
+import { ExtractFacsimiles } from '@docere/common'
 
 export default (function extractFacsimiles({ layerElement, entry, config }) {
 	return Array.from(layerElement.querySelectorAll(config.facsimiles.selector))
@@ -9,17 +9,17 @@ export default (function extractFacsimiles({ layerElement, entry, config }) {
 			if (graphic == null) return
 
 			const fileName = graphic.getAttribute('url').slice(0, -5)
-			const thumbFileName = fileName.concat('t.jpg')
+			// const thumbFileName = fileName.concat('t.jpg')
 			const fullFileName = fileName.concat('f.png')
 
 			return {
 				anchor: pb,
 				id, /* TODO set ID in generic extractor like entities? use docere:id? */
-				versions: [{
-					thumbnailPath: `/iiif/vangogh/${thumbFileName}`,
-					path: `/iiif/vangogh/${fullFileName}`,
-					type: FacsimileType.Image,
-				}]
+				// versions: [{
+				// 	thumbnailPath: `/iiif/vangogh/${thumbFileName}`,
+				path: `/iiif/vangogh/${fullFileName}`,
+				// 	type: FacsimileType.Image,
+				// }]
 			}
 		})
 }) as ExtractFacsimiles

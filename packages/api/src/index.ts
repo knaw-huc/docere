@@ -3,7 +3,7 @@ import path from 'path'
 import express from 'express'
 import chalk from 'chalk'
 
-import Puppenv from './puppenv'
+// import Puppenv from './puppenv'
 import { listProjects, sendJson } from './utils'
 import projectApi from './api/project'
 import documentApi from './api/document'
@@ -45,8 +45,8 @@ app.use((req, _res, next) => {
 async function main() {
 	console.log(chalk.green(copyright))
 
-	const puppenv = new Puppenv()
-	await puppenv.start()
+	// const puppenv = new Puppenv()
+	// await puppenv.start()
 
 	app.get(BASE_PATH, (_req, res) => {
 		const pkg = fs.readFileSync(path.resolve('./packages/api/package.json'), 'utf8')
@@ -63,8 +63,8 @@ async function main() {
 
 	app.get(`${BASE_PATH}/projects`, (_req, res) => sendJson(listProjects(), res))
 
-	projectApi(app, puppenv)
-	documentApi(app, puppenv)
+	projectApi(app)
+	documentApi(app)
 	dtsApi(app)
 	otherApi(app)
 

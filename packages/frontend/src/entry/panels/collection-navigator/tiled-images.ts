@@ -59,16 +59,11 @@ export default class TiledImages {
 	}
 
 	setActiveFacsimile(facsimile: ActiveFacsimile) {
-		if (
-			facsimile == null ||
-			!Array.isArray(facsimile.versions) ||
-			!facsimile.versions.length
-		) return
+		if (facsimile == null) return
 
 		this.activeFacsimile = facsimile
 
-		const { path } = facsimile.versions[0]
-		const activeTileOption = this.activeTileOptions.find(to => to.tileSource === path)
+		const activeTileOption = this.activeTileOptions.find(to => to.tileSource === facsimile.path)
 		if (activeTileOption == null || activeTileOption.bounds == null) return
 
 		this.viewer.removeOverlay(ACTIVE_FACSIMILE_OVERLAY_ID)

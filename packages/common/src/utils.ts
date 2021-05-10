@@ -2,7 +2,7 @@ import { DEFAULT_SPACING, TEXT_PANEL_ASIDE_WIDTH, TEXT_PANEL_MINIMAP_WIDTH, TEXT
 import { LayerType } from './enum'
 import { ActiveEntities } from './project/context'
 
-import type { ExtractedEntity, EntrySettings, ExtractedFacsimile, LayerConfig, TextLayerConfig, Layer, TextLayer, SerializedLayer, SerializedTextLayer, FacsimileLayerConfig, SerializedFacsimileLayer, FacsimileLayer, ID } from '.'
+import type { ExtractedEntity, EntrySettings, ExtractedFacsimile, LayerConfig, TextLayerConfig, Layer, TextLayer, FacsimileLayerConfig, FacsimileLayer, ID } from '.'
 import { getProjectPagePath } from './url'
 
 export function getTextPanelLeftSpacing(settings: EntrySettings) {
@@ -72,17 +72,17 @@ export function isTextLayer(layer: Layer): layer is TextLayer {
 	return layer.type === LayerType.Text
 }
 
-export function isSerializedTextLayer(layer: SerializedLayer): layer is SerializedTextLayer {
-	return layer.type === LayerType.Text
-}
+// export function isSerializedTextLayer(layer: SerializedLayer): layer is SerializedTextLayer {
+// 	return layer.type === LayerType.Text
+// }
 
 export function isFacsimileLayerConfig(layer: LayerConfig): layer is FacsimileLayerConfig {
 	return layer.type === LayerType.Facsimile
 }
 
-export function isSerializedFacsimileLayer(layer: SerializedLayer): layer is SerializedFacsimileLayer {
-	return layer.type === LayerType.Facsimile
-}
+// export function isSerializedFacsimileLayer(layer: SerializedLayer): layer is SerializedFacsimileLayer {
+// 	return layer.type === LayerType.Facsimile
+// }
 
 export function isFacsimileLayer(layer: Layer): layer is FacsimileLayer {
 	return layer.type === LayerType.Facsimile

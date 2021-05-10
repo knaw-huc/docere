@@ -17,7 +17,7 @@ export function useChildren(entityValue: React.ReactNode, entity: Entity): [Reac
 		if (entity == null) return
 		let children = React.Children.toArray(entityValue)
 		let restOfFirstChild: string
-		if (IconsByType.hasOwnProperty(entity.type) && children.length) {
+		if (IconsByType.hasOwnProperty(entity.props._config.type) && children.length) {
 			if (typeof children[0] !== 'string') {
 				setFirstWord(' ')
 				setRestOfFirstChild(children)

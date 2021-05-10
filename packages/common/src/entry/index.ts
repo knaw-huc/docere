@@ -1,15 +1,15 @@
 import { BooleanFacetConfig, ListFacetConfig, HierarchyFacetConfig, RangeFacetConfig, DateFacetConfig } from '../types/search'
-import { SerializedLayer, Layer, ID, ExtractedLayer } from './layer'
-import { ExtractedEntity, Entity } from './entity'
+import { Layer, ID, ExtractedLayer } from './layer'
+import { Entity, ExtractedEntity } from './entity'
 import { ExtractedFacsimile, Facsimile } from './facsimile'
 
-export * from './deserialize'
+// export * from './deserialize'
 export * from './entity'
 export * from './extract'
 export * from './facsimile'
 export * from './layer'
 export * from './metadata'
-export * from './serialize'
+// export * from './serialize'
 export * from './use-entry'
 
 // TODO move
@@ -35,15 +35,15 @@ export type EntryParts = Map<string, ExtractedEntry>
 
 // Serialized entry
 export interface SerializedEntry {
-	content: string
+	// content: string
 	id: ID
-	layers: SerializedLayer[]
-	metadata: ExtractedEntry['metadata']
-	parts: SerializedEntry[]
-	plainText: string
+	layers: Layer[]
+	metadata: Entry['metadata']
+	// parts: SerializedEntry[]
+	// plainText: string
 	textData: {
-		entities: [ID, Entity][]
-		facsimiles: [ID, Facsimile][]
+		// entities?: [ID, Entity][]
+		facsimiles: [ID, ExtractedFacsimile][]
 	}
 }
 

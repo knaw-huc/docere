@@ -13,12 +13,10 @@ export default (function extractFacsimiles({ layerElement }) {
 			if (!fileName.length) return null
 			const imgPath = fileName.slice(0, fileName.indexOf('_')) + '/' + fileName
 			const path = `/iiif/isidore/${imgPath}/info.json`
-			// console.log(path)
+
 			return {
-				// TODO find anchors
-				anchor: null,
 				id: surfaceId,
-				versions: [{ path }]
+				path
 			}
 		})
 		.filter(facs => facs != null)

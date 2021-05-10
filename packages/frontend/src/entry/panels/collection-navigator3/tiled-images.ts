@@ -71,8 +71,7 @@ export default class TiledImages {
 		this.activeFacsimile = facsimile
 		if (this.activeFacsimile == null) return
 
-		const { path } = facsimile.versions[0]
-		const activeTileOption = this.activeTileOptions.find(to => to.tileSource === path)
+		const activeTileOption = this.activeTileOptions.find(to => to.tileSource === facsimile.path)
 		
 		if (activeTileOption == null || activeTileOption.bounds == null) return
 

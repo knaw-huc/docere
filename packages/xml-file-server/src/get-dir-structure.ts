@@ -1,6 +1,6 @@
 import fs from 'fs'
 import path from 'path'
-import { BASE_PATH } from '.'
+import { BASE_FILE_PATH } from '.'
 
 import type { XmlDirectoryStructure } from '@docere/common'
 
@@ -14,15 +14,8 @@ function getDirents(dirPath: string) {
 	return projectDirs
 }
 
-/**
- * Check if dirent is XML file
- */
-function isXmlFile(dirent: fs.Dirent) {
-	return dirent.isFile() && path.extname(dirent.name) === '.xml'
-}
-
 const pathCreator = (dir: string) => {
-	const relativePath = dir.replace(BASE_PATH, '')
+	const relativePath = dir.replace(BASE_FILE_PATH, '')
 	return (dirEnt: fs.Dirent) =>  path.resolve(relativePath, dirEnt.name)
 }
 
@@ -32,15 +25,25 @@ const pathCreator = (dir: string) => {
  */
 export function getDirStructure(
 	dir: string,
+	filterByExt: string,
 	maxPerDir: number = null,
 ): XmlDirectoryStructure {
 	const toPath = pathCreator(dir)
-	const dirents = getDirents(dir)
+	let dirents = getDirents(dir)
 	if (dirents == null) return
 
-	let xmlFiles = dirents.filter(isXmlFile)
-	if (maxPerDir != null && !isNaN(maxPerDir)) xmlFiles = xmlFiles.slice(0, maxPerDir)
-	const files = xmlFiles.map(toPath)
+	let files = dirents
+
+	if (filterByExt != null) {
+		files = dirents
+			.filter(dirent =>
+				dirent.isFile() && path.extname(dirent.name) === `.${filterByExt}`
+			)
+	} 
+
+	if (maxPerDir != null && !isNaN(maxPerDir)) {
+		files = files.slice(0, maxPerDir)
+	}
 
 	const directories = dirents
 		.filter(x => x.isDirectory() || x.isSymbolicLink())
@@ -48,6 +51,6 @@ export function getDirStructure(
 
 	return {
 		directories,
-		files
+		files: files.map(toPath)
 	}
 }

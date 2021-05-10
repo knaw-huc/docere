@@ -1,18 +1,13 @@
 import React from 'react'
 import { useComponents, ContainerType, usePage, DispatchContext } from '@docere/common'
-import DocereTextView from '@docere/text'
+import { DocereTextView } from '@docere/text'
 
 import { LinkFooter, EntityWithLinkWrapper } from './link-wrapper'
 
-import type { Entity } from '@docere/common'
 import { EntityComponentProps, EntityWrapper } from './wrapper'
 
 
-interface PageLinkProps {
-	entity: Entity
-	children: React.ReactNode
-}
-function PageLink(props: PageLinkProps) {
+function PageLink(props: EntityComponentProps) {
 	const dispatch = React.useContext(DispatchContext)
 
 	const goToPage = React.useCallback((ev: React.MouseEvent) => {
@@ -21,8 +16,8 @@ function PageLink(props: PageLinkProps) {
 		dispatch({
 			type: 'SET_PAGE_ID',
 			setPage: {
-				entityIds: new Set([props.entity.id]),
-				pageId: props.entity.configId,
+				entityIds: new Set([props.entity.props._entityId]),
+				pageId: props.entity.props._config.id,
 			}
 		})
 	}, [props.entity])
@@ -45,17 +40,20 @@ function PageLink(props: PageLinkProps) {
  * visualise (relatively simple and small sized) structured data.
  */
 export const PagePartEntity = React.memo(function(props: EntityComponentProps) {
-	const page = usePage(props.entity.configId)
+	const page = usePage(props.entity.props._config.id)
 	const components = useComponents(ContainerType.Page, page?.id)
 
 	if (page == null) return null
 
+	// TODO add tree
 	return (
-		<EntityWrapper entity={props.entity}>
+		<EntityWrapper
+			entity={props.entity}
+		>
 			<EntityWithLinkWrapper>
 				<DocereTextView
 					components={components}
-					node={page.parts.get(props.entity.id)}
+					tree={null}
 				/>
 				<PageLink
 					entity={props.entity}

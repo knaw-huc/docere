@@ -2,7 +2,7 @@
 Opionated file server which serves the directory structure per level and XML files only.
 
 ## Example output
-`$ curl localhost:3003/<some-dir>`
+`$ curl localhost:3003/xml/<some-dir>`
 ```json
 {
 	"directories": ["/<some-dir>/subdir1", "/<some-dir>/subdir2"],

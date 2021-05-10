@@ -23,9 +23,9 @@ export const EntityWithLinkWrapper = styled.div`
 `
 
 export const LinkFooter = styled.button`
-	background: ${(props: EntityComponentProps) => props.entity.color}22;
+	background: ${(props: EntityComponentProps) => props.entity.props._config.color}22;
 	border: none;
-	border-top: 1px solid ${props => props.entity.color}66;
+	border-top: 1px solid ${props => props.entity.props._config.color}66;
 	color: gray;
 	cursor: pointer;
 	font-size: inherit;

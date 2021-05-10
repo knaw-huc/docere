@@ -2,6 +2,7 @@ import React from 'react'
 import type { DocereComponents } from './types'
 import { ContainerType, UIComponentType } from './enum'
 import { ProjectContext } from './project/context'
+import { ActiveEntity, Entity } from './entry/entity'
 
 export function useComponents(container: ContainerType, id?: string) {
 	const [components, setComponents] = React.useState<DocereComponents>(null)
@@ -14,13 +15,18 @@ export function useComponents(container: ContainerType, id?: string) {
 	return components
 }
 
+// TODO memo or React.useEffect?
 export function useUIComponent(componentType: UIComponentType.SearchResult): React.FC<any> 
-export function useUIComponent(componentType: UIComponentType.Entity, id: string): React.FC<any> 
+export function useUIComponent(componentType: UIComponentType.Entity, id: string): React.FC<{ entity: Entity | ActiveEntity, children?: React.ReactNode }> 
 export function useUIComponent(componentType: UIComponentType, id?: string) {
 	const { uiComponents } = React.useContext(ProjectContext)
 
-	return id == null ?
-		// TODO export should be a React.FC<any> not a Map
-		uiComponents?.get(componentType) : 
-		uiComponents?.get(componentType)?.get(id)
+	return React.useMemo(
+		() =>
+			id == null ?
+				uiComponents?.get(componentType) : 
+				uiComponents?.get(componentType)?.get(id)
+		,
+		[uiComponents, componentType, id]
+	)
 }

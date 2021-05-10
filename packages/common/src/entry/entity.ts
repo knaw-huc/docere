@@ -1,8 +1,8 @@
 import React from 'react'
-import { ID } from '.'
-import { EntityConfig, FacsimileArea, EntryContext } from '..'
-import { defaultEntityConfig } from '../types/config-data/config'
+import { FacsimileArea, ID } from '.'
+import { EntityConfig, EntityConfig2, EntryContext, ProjectContext } from '..'
 import { ContainerType } from '../enum'
+import { DocereAnnotation } from '../standoff-annotations'
 
 // Extracted entity
 export interface ExtractedCommon {
@@ -20,19 +20,18 @@ export interface ExtractedEntity extends ExtractedCommon, Omit<EntityConfig, 'ex
 	n?: string
 }
 
-// Entity
-export type Entity = Required<Omit<ExtractedEntity, 'anchor'>>
-
-export const defaultEntity: Entity = {
-	...defaultEntityConfig,
-	attributes: null,
-	configId: null,
-	content: null,
-	count: null,
-	facsimileAreas: null,
-	id: null,
-	layerId: null,
-	n: null
+/**
+ * An Entity is a kind of {@link DocereAnnotation}. After
+ * an entry is fetched from the server, the DocereAnnotation's
+ * which are entities are extended with a reference to the 
+ * entities config (found in {@link DocereConfig}). The config is needed
+ * often because it contains information on the render: the color,
+ * if should be rendered on the aside, etc.
+ */
+export interface Entity extends DocereAnnotation {
+	props: DocereAnnotation['props'] & {
+		_config: EntityConfig2
+	}
 }
 
 // Active entity
@@ -43,14 +42,22 @@ export interface TriggerContainer {
 	triggerContainerId?: ID
 }
 
+interface Output {
+	entity: Entity,
+	entityConfig: EntityConfig2
+}
+
 export function useEntity(id: string) {
 	const entry = React.useContext(EntryContext)
-	const [entity, setEntity] = React.useState<Entity>(null)
+	const { config } = React.useContext(ProjectContext)
+
+	const [output, setOutput] = React.useState<Output>({ entity: null, entityConfig: null })
 
 	React.useEffect(() => {
-		const _entity = entry.textData.entities.get(id)
-		setEntity(_entity)
+		const entity = entry.textData.entities.get(id)
+		const entityConfig = config.entities2.find(e => e.id === entity.props._entityConfigId)
+		setOutput({ entity, entityConfig })
 	}, [entry, id])
 
-	return entity
+	return output
 }

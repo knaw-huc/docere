@@ -58,12 +58,12 @@ export default (function extractFacsimiles({ layerElement }) {
 	const pb = layerElement.querySelector('pb')
 
 	facsimiles.push({
-		anchor: pb,
+		// anchor: pb,
 		id: pb.getAttribute('path'),
-		versions: [{
+		// versions: [{
 			// areas: extractFacsimileAreas(entry.document, config),
 			path: `https://demo.docere.diginfra.net/iiif/gheys/${pb.getAttribute('path')}/info.json`,
-		}]
+		// }]
 	})
 
 	return facsimiles

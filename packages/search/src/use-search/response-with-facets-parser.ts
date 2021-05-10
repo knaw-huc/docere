@@ -72,7 +72,7 @@ export default function ESResponseWithFacetsParser(response: any, facets: Facets
 				{ key: 'false', count: falseCount },
 			]
 		}
-		else if (isDateFacetData(facet)) {
+		else if (isDateFacetData(facet) && facet.value != null) {
 			const lastFilter = facet.filters[facet.filters.length - 1]
 			if (lastFilter != null) {
 				buckets = buckets.filter(b => {

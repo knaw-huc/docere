@@ -21,6 +21,7 @@ export default (function extractFacsimiles({ layerElement, entry }) {
 			return {
 				anchor: pb,
 				id,
-				versions: [{ path }] }
+				path
+			}
 		})
 }) as ExtractFacsimiles

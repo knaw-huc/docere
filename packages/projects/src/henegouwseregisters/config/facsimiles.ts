@@ -59,13 +59,13 @@ export default (function extractFacsimiles({ layerElement, entry }) {
 	const z = getRectoVersoSequence(x.folia).map((rv,i) => {
 		return {
 			// TODO add anchors
-			anchor: null,
+			// anchor: null,
 			id: rv,
-			versions: [
-				{
+			// versions: [
+			// 	{
 					path: `/iiif//henegouwseregisters/${region}/${x.regioCode}_G_bewerkt/${x.regioCode}_G_X${rv}_${x.n}_${i + 1}.jpg/info.json`
-				}
-			]
+				// }
+			// ]
 		}
 	})
 

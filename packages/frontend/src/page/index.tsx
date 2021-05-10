@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import DocereTextView from '../../../text/src'
+import { DocereTextView } from '@docere/text'
 import { TOP_OFFSET, DEFAULT_SPACING, ContainerType, useComponents, PageContext, DispatchContext } from '@docere/common'
 import { ContainerProvider } from '../entry/panels/text/layer-provider'
 import { useHistory } from 'react-router'
@@ -37,8 +37,6 @@ const Close = styled.div`
 	top: ${DEFAULT_SPACING * 1.5}px;
 `
 
-// TODO useQuery is used to pass activeId to Page, but that should not be necessary
-
 export default function PageView() {
 	const dispatch = React.useContext(DispatchContext)
 	const page = React.useContext(PageContext)
@@ -52,12 +50,13 @@ export default function PageView() {
 
 	if (page == null) return null
 
+	// TODO add tree
 	return (
 		<Wrapper id="page-container">
 			<ContainerProvider id={page.id} type={ContainerType.Page}>
 				<DocereTextView
 					components={components}
-					node={page.doc}
+					tree={null}
 				/>
 			</ContainerProvider>
 			<Close onClick={closePage}>✕</Close>

@@ -8,13 +8,12 @@ export async function initProject(projectId: string) {
 	await transactionQuery(client, `DROP TABLE IF EXISTS xml, document, page, page_item, tag, attribute cascade;`)
 	await transactionQuery(
 		client,
-		`CREATE TABLE xml (
+		`CREATE TABLE source (
 			id SERIAL PRIMARY KEY,
 			name TEXT UNIQUE,
 			hash TEXT, 
 			content TEXT,
-			standoff_text TEXT,
-			standoff_annotations TEXT,
+			standoff JSON,
 			updated TIMESTAMP WITH TIME ZONE
 		);
 	`)
@@ -22,13 +21,10 @@ export async function initProject(projectId: string) {
 		client,
 		`CREATE TABLE document (
 			id SERIAL PRIMARY KEY,
-			xml_id SERIAL REFERENCES xml,
+			source_id SERIAL REFERENCES source,
 			order_number INT,
 			name TEXT UNIQUE,
-			content TEXT,
-			json JSONB,
-			standoff_text TEXT,
-			standoff_annotations TEXT,
+			entry JSON,
 			updated TIMESTAMP WITH TIME ZONE
 		);
 	`)
@@ -38,10 +34,8 @@ export async function initProject(projectId: string) {
 			id SERIAL PRIMARY KEY,
 			name TEXT UNIQUE,
 			hash TEXT, 
-			content TEXT,
-			prepared TEXT,
-			standoff_text TEXT,
-			standoff_annotations TEXT,
+			xml TEXT,
+			standoff TEXT,
 			updated TIMESTAMP WITH TIME ZONE
 		);
 	`)

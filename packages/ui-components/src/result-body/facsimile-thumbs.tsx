@@ -30,12 +30,7 @@ export function FacsimileThumbs(props: Props) {
 							id: null
 						}}
 						entryId={props.entryId}
-						facsimile={{
-							id: facs.id,
-							versions: [{
-								path: facs.path
-							}]
-						}}
+						facsimile={facs}
 						key={index}
 					/>
 				)

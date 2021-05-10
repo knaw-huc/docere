@@ -22,7 +22,7 @@ function MondrianLb(props: ComponentProps) {
 const AddWrapper = styled.span`
 	color: ${(props: { hasLb: boolean }) => props.hasLb ? Colors.Green : 'initial'};
 `
-function Add(props: { children: React.ReactNode }) {
+function Add(props: ComponentProps) {
 	const settings = React.useContext(EntrySettingsContext)
 	return (
 		<AddWrapper hasLb={settings["panels.text.showLineBeginnings"]}>
@@ -35,7 +35,7 @@ const DelWrapper = styled.span`
 	color: ${Colors.Red};
 	display: ${(props: { hasLb: boolean }) => props.hasLb ? 'inline' : 'none'};
 `
-function Del(props: { children: React.ReactNode} ) {
+function Del(props: ComponentProps ) {
 	const settings = React.useContext(EntrySettingsContext)
 
 	return (

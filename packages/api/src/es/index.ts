@@ -4,6 +4,7 @@ import { EsDataType, SerializedEntry, isHierarchyFacetConfig } from '../../../co
 import { getType, isError, getElasticSearchDocument, getProjectConfig } from '../utils'
 
 import type { Mapping, DocereApiError } from '../types'
+import { Standoff } from '@docere/common'
 
 
 export async function initProjectIndex(projectId: string) {
@@ -66,8 +67,13 @@ export async function getProjectIndexMapping(projectId: string): Promise<Mapping
 	}
 }
 
-export async function indexDocument(projectId: string, extractedEntry: SerializedEntry, esClient: es.Client) {
-	const esDocument = getElasticSearchDocument(extractedEntry)
+export async function indexDocument(
+	projectId: string,
+	extractedEntry: SerializedEntry,
+	standoff: Standoff,
+	esClient: es.Client
+) {
+	const esDocument = getElasticSearchDocument(extractedEntry, standoff)
 	if (isError(esDocument)) return esDocument
 
 	try {

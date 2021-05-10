@@ -1,6 +1,9 @@
 import { extendConfigData, ExtractEntitiesProps, FacsimileArea, Colors, EntityType } from '@docere/common'
 import { LayerType, EsDataType, ExtractMetadata } from '@docere/common'
 import extractFacsimiles from './facsimiles'
+import { prepareSource, prepareTree } from './prepare'
+
+const annotationHierarchy = ['scan', 'attendance_list', 'resolution', 'paragraph', 'text_region', 'line', 'attendant']
 
 function extractMetadata(key: string): ExtractMetadata {
 	return entry =>
@@ -8,6 +11,17 @@ function extractMetadata(key: string): ExtractMetadata {
 }
 
 export default extendConfigData({
+	standoff: {
+		prepareSource,
+		prepareTree,
+		exportOptions: {
+			annotationHierarchy,
+			rootNodeName: 'session',
+			metadata: {
+				exclude: ['coords', 'para_id', 'scan_id', 'text_region_id']
+			}
+		}
+	},
 	slug: 'republic',
 	title: 'Republic',
 	collection: {
@@ -15,6 +29,26 @@ export default extendConfigData({
 		sortBy: 'inventory_num',
 	},
 	metadata: [
+		{
+			datatype: EsDataType.Date,
+			extract: extractMetadata('session_date'),
+			id: 'date',
+			interval: 'd'
+		},
+		{
+			extract: extractMetadata('inventory_num'),
+			id: 'inventory_num',
+		},
+		{
+			extract: extractMetadata('session_weekday'),
+			id: 'session_weekday',
+		},	
+		{
+			extract: extractMetadata('president'),
+			id: 'president',
+		}	
+	],
+	metadata2: [
 		{
 			datatype: EsDataType.Date,
 			extract: extractMetadata('session_date'),
@@ -84,7 +118,57 @@ export default extendConfigData({
 		extractFacsimiles,
 		selector: 'scan[id]'
 	},
-	layers: [
+
+	createFacsimiles: (props) => props.tree
+		.filter(a => a.name === 'scan')
+		.map((curr) => ({
+			id: curr.id,
+			path: curr.metadata._facsimilePath,
+		})),
+
+	entities2: [
+		{
+			color: Colors.Green,
+			filter: (a => a.name === 'line'),
+			id: 'line',
+			showAsFacet: false,
+			showInAside: false,
+		},
+		{
+			color: Colors.Red,
+			filter: (a => a.name === 'resolution'),
+			id: 'resolution',
+			showInAside: false,
+			showAsFacet: false,
+		},
+		{
+			color: Colors.Red,
+			filter: (a => a.name === 'attendance_list'),
+			id: 'attendance_list',
+			showInAside: false,
+			showAsFacet: false,
+			title: 'Attendance list'
+		},
+		{
+			id: 'attendant',
+			filter: a => a.name === 'attendant',
+			getId: a => a.metadata.delegate_id,
+			type: EntityType.Person,
+		}
+	],
+	
+	// createLayers: (props) => [
+	// 	{
+	// 		id: 'scan',
+	// 		type: LayerType.Facsimile
+	// 	},
+	// 	{
+	// 		id: 'text',
+	// 		type: LayerType.Text
+	// 	},
+	// ],
+
+	layers2: [
 		{
 			id: 'scan',
 			type: LayerType.Facsimile
@@ -93,7 +177,7 @@ export default extendConfigData({
 			id: 'text',
 			type: LayerType.Text
 		},
-	]
+	],
 })
 
 // function coordsToFacsimileArea(el: Element) {

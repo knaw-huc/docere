@@ -2,7 +2,7 @@ import * as React from 'react'
 import styled from 'styled-components'
 import debounce from 'lodash.debounce'
 import { isTextLayer, useComponents, DEFAULT_SPACING, TEXT_PANEL_TEXT_WIDTH, ContainerType, getTextPanelLeftSpacing, PANEL_HEADER_HEIGHT, StatefulTextLayer, EntrySettingsContext, EntryContext, SearchContext } from '@docere/common'
-import DocereTextView from '../../../../../text/src'
+import { DocereTextView } from '../../../../../text/src/index'
 
 import { useScrollEntityIntoView, useScrollFacsimileIntoView } from '../../use-scroll-into-view'
 import PanelHeader from '../header'
@@ -58,7 +58,9 @@ function Text(props: any) {
 		<Text2
 			settings={props.settings}
 		>
+			<div>
 				{props.children}
+			</div>
 		</Text2>
 	)
 }
@@ -129,7 +131,7 @@ function TextPanel(props: Props) {
 						<DocereTextView
 							components={components}
 							highlight={searchContext.state.query}
-							xml={layer.content}
+							tree={layer.tree}
 							onLoad={setDocereTextViewReady}
 							setHighlightAreas={setHighlightAreas}
 						/>

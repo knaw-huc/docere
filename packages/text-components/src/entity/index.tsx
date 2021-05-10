@@ -1,12 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
-import { EntrySettingsContext, EntitiesContext, useUIComponent, UIComponentType, ComponentProps, ContainerContext, DispatchContext, useEntity } from '@docere/common'
+import { EntrySettingsContext, EntitiesContext, useUIComponent, UIComponentType, ContainerContext, DispatchContext, useEntity, EntityAnnotationComponentProps, EntityConfig2 } from '@docere/common'
 
 import { useChildren } from './hooks'
 import IconsByType from './icons'
 import { EntityTooltip } from './entity-tooltip'
-
-import type { Entity } from '@docere/common'
 
 interface NWProps { openToAside: boolean }
 const NoWrap = styled.span`
@@ -15,19 +13,19 @@ const NoWrap = styled.span`
 	white-space: nowrap;
 `
 
-interface WProps { entity: Entity, active: boolean }
+interface WProps { entityConfig: EntityConfig2, active: boolean }
 const Wrapper = styled.span`
 	background-color: ${(props: WProps) => {
-		return props.active ? props.entity.color : 'rgba(0, 0, 0, 0)'
+		return props.active ? props.entityConfig.color : 'rgba(0, 0, 0, 0)'
 	}};
 	${(props: WProps) => 
 		props.active ?
-			`border-bottom: 3px solid ${props.entity.color};` :
-			props.entity.revealOnHover ?
+			`border-bottom: 3px solid ${props.entityConfig.color};` :
+			props.entityConfig.revealOnHover ?
 				`&:hover {
-					border-bottom: 3px solid ${props.entity.color};
+					border-bottom: 3px solid ${props.entityConfig.color};
 				}` :
-				`border-bottom: 3px solid ${props.entity.color};`
+				`border-bottom: 3px solid ${props.entityConfig.color};`
 	}
 	color: ${props => props.active ? 'white' : 'inherit'};
 	cursor: pointer;
@@ -51,7 +49,7 @@ const Wrapper = styled.span`
 // }
 
 // export function getEntity(PopupBody?: React.FC<EntityComponentProps>) {
-export const EntityTag = React.memo(function EntityComp(props: ComponentProps) {
+export const EntityTag = React.memo(function EntityComp(props: EntityAnnotationComponentProps) {
 	const dispatch = React.useContext(DispatchContext)
 	const activeEntities = React.useContext(EntitiesContext)
 	const settings = React.useContext(EntrySettingsContext)
@@ -60,10 +58,10 @@ export const EntityTag = React.memo(function EntityComp(props: ComponentProps) {
 	// const entityValue = preProps.extractValue(props)
 	if (!settings['panels.entities.show']) return <span>{props.children}</span>
 
-	const entity = useEntity(props.attributes['docere:id'])
+	const { entity, entityConfig } = useEntity(props._entityId)
 	const [firstWord, restOfFirstChild] = useChildren(props.children, entity)
 
-	const Component = useUIComponent(UIComponentType.Entity, entity?.configId)
+	const Component = useUIComponent(UIComponentType.Entity, entityConfig?.id)
 
 	// The entity can be active, but without the need to show the tooltip.
 	// In case there are several entities with the same ID, we only want to 
@@ -74,7 +72,7 @@ export const EntityTag = React.memo(function EntityComp(props: ComponentProps) {
 
 	React.useEffect(() => {
 		if (entity == null) return
-		const nextActive = activeEntities?.has(entity.id)
+		const nextActive = activeEntities?.has(entity.props._entityId)
 		setActive(nextActive === true)
 		if (!nextActive && showTooltip) setShowTooltip(false)
 	}, [entity, activeEntities])
@@ -83,24 +81,24 @@ export const EntityTag = React.memo(function EntityComp(props: ComponentProps) {
 		ev.stopPropagation()
 		dispatch({
 			type: 'ADD_ENTITY',
-			entityId: entity.id,
+			entityId: entity.props._entityId,
 			triggerContainer: container.type,
 			triggerContainerId: container.id,
 		})
 		setShowTooltip(true)
-	}, [entity?.id])
+	}, [entity])
 
 	if (entity == null) return null
 
-	const Icon = IconsByType[entity.type]
+	const Icon = IconsByType[entityConfig.type]
 
 	const openToAside = active && !settings['panels.text.openPopupAsTooltip']
 
 	return (
 		<Wrapper
 			active={active}
-			data-entity-id={entity.id}
-			entity={entity}
+			data-entity-id={entity.props._entityId}
+			entityConfig={entityConfig}
 			onClick={handleClick}
 		>
 			<NoWrap
@@ -111,6 +109,7 @@ export const EntityTag = React.memo(function EntityComp(props: ComponentProps) {
 					<Icon
 						active={active}
 						entity={entity}
+						entityConfig={entityConfig}
 					/>
 				}
 				{firstWord}
@@ -121,7 +120,9 @@ export const EntityTag = React.memo(function EntityComp(props: ComponentProps) {
 						entity={entity}
 						settings={settings}
 					>
-						<Component entity={entity} />
+						<Component
+							entity={entity}
+						/>
 					</EntityTooltip>
 				}
 			</NoWrap>

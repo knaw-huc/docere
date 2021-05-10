@@ -1,15 +1,13 @@
 import React from 'react'
-import { useComponents, ContainerType, Entity, useEntry, ProjectContext } from '@docere/common'
-import DocereTextView from '@docere/text'
+import { useComponents, ContainerType } from '@docere/common'
+import { DocereTextView } from '../../../text/src/index'
 
 import { LinkFooter, EntityWithLinkWrapper } from './link-wrapper'
 
 import { EntityComponentProps, EntityWrapper } from './wrapper'
 
-interface NoteLinkProps {
-	entity: Entity
+interface NoteLinkProps extends EntityComponentProps {
 	entryId: string
-	children: React.ReactNode
 }
 function NoteLink(props: NoteLinkProps) {
 	// const { setEntry } = React.useContext(EntryContext)
@@ -31,25 +29,27 @@ function NoteLink(props: NoteLinkProps) {
 	)
 }
 
+// TODO add tree from entry.layers[0].tree lookup?
 export const NoteLinkEntity = React.memo(function(props: EntityComponentProps) {
-	const { config } = React.useContext(ProjectContext)
-	const [fileName] = props.entity.id.split('#')
-	const entry = useEntry(config.slug, fileName.replace(/\.xml$/, ''))
+	const [fileName] = props.entity.props._entityId.split('#')
+	// TODO this does not work anymore with standoff
+	const entryId = fileName.replace(/\.xml$/, '')
 	const components = useComponents(ContainerType.Layer)
 
 	return (
-		<EntityWrapper entity={props.entity}>
+		<EntityWrapper
+			entity={props.entity}
+		>
 			<EntityWithLinkWrapper>
 				<DocereTextView
-					customProps={props}
 					components={components}
-					xml={props.entity.content}
+					tree={null}
 				/>
 				<NoteLink
 					entity={props.entity}
-					entryId={entry.id}
+					entryId={entryId}
 				>
-					Go to note in entry {entry.id}
+					Go to note in entry {entryId}
 				</NoteLink>
 			</EntityWithLinkWrapper>
 		</EntityWrapper>

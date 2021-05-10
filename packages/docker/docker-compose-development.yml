@@ -31,6 +31,23 @@ services:
       - ../../:/app
     working_dir: /app
 
+  xml_file_server:
+    # command: ["npx", "@docere/xml-file-server"]
+    command: ["npx", "nodemon", "./build"]
+    container_name: docere_xml_file_server
+    env_file:
+      - ../../.env
+    environment:
+      - DOCERE_XML_BASE_PATH=/xml
+    ports:
+      - 3003:3003
+    image: node:14-alpine
+    restart: always
+    volumes:
+      - /data/xml:/xml
+      - ../../:/app
+    working_dir: /app/packages/xml-file-server
+
   db:
     container_name: docere_db
     env_file:

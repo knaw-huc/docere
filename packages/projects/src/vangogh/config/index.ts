@@ -36,7 +36,6 @@ export default extendConfigData({
 		},
 		{
 			color: Colors.BlueBright,
-			// TODO querySelectorAll the anchors (lb)
 			extractId: el => el.getAttribute('xml:id'),
 			extract: extractNote,
 			id: 'editor',

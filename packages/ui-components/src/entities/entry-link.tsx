@@ -1,5 +1,5 @@
 import React from 'react'
-import { useUIComponent, UIComponentType, Hit, Entity, DispatchContext } from '@docere/common'
+import { useUIComponent, UIComponentType, Hit, DispatchContext } from '@docere/common'
 import { EntityWithLinkWrapper, LinkFooter } from './link-wrapper'
 import { EntityComponentProps, EntityWrapper } from './wrapper'
 
@@ -15,11 +15,7 @@ function useSearchResult(id: string) {
 	return result
 }
 
-interface EntryLinkProps {
-	entity: Entity
-	children: React.ReactNode
-}
-function EntryLink(props: EntryLinkProps) {
+function EntryLink(props: EntityComponentProps) {
 	const dispatch = React.useContext(DispatchContext)
 
 	const goToEntry = React.useCallback((ev: React.MouseEvent) => {
@@ -27,7 +23,7 @@ function EntryLink(props: EntryLinkProps) {
 		dispatch({
 			type: 'SET_ENTRY_ID',
 			setEntry: {
-				entryId: props.entity.id
+				entryId: props.entity.props._entityId
 			}
 		})
 	}, [props.entity])
@@ -46,13 +42,15 @@ function EntryLink(props: EntryLinkProps) {
  * Represents a link to an entry in a text layer.
  */
 export const EntryLinkEntity = React.memo(function(props: EntityComponentProps) {
-	const result = useSearchResult(props.entity.id)
+	const result = useSearchResult(props.entity.props._entityId)
 	const ResultBodyComponent = useUIComponent(UIComponentType.SearchResult)
 
 	if (ResultBodyComponent == null || result == null) return null
 
 	return (
-		<EntityWrapper entity={props.entity}>
+		<EntityWrapper
+			entity={props.entity}
+		>
 			<EntityWithLinkWrapper>
 				<ResultBodyComponent {...props} result={result} />
 				<EntryLink

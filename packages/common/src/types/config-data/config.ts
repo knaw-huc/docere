@@ -1,7 +1,9 @@
 import { EntityType, Colors, EsDataType } from '../../enum'
 import type { FacetConfig } from '../search/facets'
 import { PageConfig } from '../../page'
-import { FacsimileLayerConfig, TextLayerConfig, ExtractedEntry, ID, ExtractedEntity, ExtractedFacsimile } from '../..'
+import { FacsimileLayerConfig, TextLayerConfig, ExtractedEntry, ID, ExtractedEntity, ExtractedFacsimile, Standoff } from '../..'
+import { AnnotationTree, FilterFunction, PartialExportOptions, StandoffAnnotation } from '../../standoff-annotations'
+import { CreateEntryProps, LayerConfig } from '../../entry'
 
 interface ExtractFacsimilesProps {
 	config: DocereConfig
@@ -45,6 +47,12 @@ export interface DocereConfig {
 
 	entities?: EntityConfig[]
 	entrySettings?: EntrySettings
+
+	createFacsimiles?: (props: CreateEntryProps) => ExtractedFacsimile[]
+	layers2?: LayerConfig[]
+	entities2?: EntityConfig2[]
+	metadata2?: DocereConfig['metadata']
+
 	facsimiles?: {
 		extractFacsimileId: (el: Element) => string
 		extractFacsimiles: ExtractFacsimiles
@@ -77,6 +85,11 @@ export interface DocereConfig {
 	}
 	plainText?: (entry: ExtractedEntry, config: DocereConfig) => string
 	prepare?: (entry: ExtractedEntry, config: DocereConfig) => Element
+	standoff?: {
+		exportOptions?: PartialExportOptions
+		prepareSource?: (source: any) => Standoff
+		prepareTree?: (tree: AnnotationTree) => void
+	}
 	private?: boolean
 	searchResultCount?: number
 	slug: ID
@@ -148,6 +161,14 @@ export type EntityConfig = TmpConfig & {
 	type?: EntityType | string
 }
 
+export type EntityConfig2 = Omit<EntityConfig, 'extractId' | 'extract' | 'selector'> & {
+	filter: FilterFunction
+
+	// Set the ID of the entity. Not te be confused with the annotation ID!
+	// An entity can consist of multiple annotations. Defaults to a.metadata._id
+	getId?: (a: StandoffAnnotation) => string
+}
+
 export const defaultMetadata: Required<MetadataConfig> = {
 	datatype: EsDataType.Keyword,
 	extract: () => null,
@@ -164,12 +185,14 @@ export const defaultMetadata: Required<MetadataConfig> = {
 	title: null,
 }
 
-export const defaultEntityConfig: Required<Omit<EntityConfig, 'extract' | 'extractId'>> = {
+export const defaultEntityConfig: Required<EntityConfig2> = {
 	...defaultMetadata,
 	color: Colors.Blue,
 	description: null,
+	filter: null,
+	getId: (a: StandoffAnnotation) => a.id,
 	revealOnHover: false,
-	selector: null,
+	// selector: null,
 	type: EntityType.None,
 }
 

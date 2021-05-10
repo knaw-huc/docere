@@ -7,6 +7,7 @@ import { DTAP, EsDataType, PageConfig } from '@docere/common'
 import type { DocereApiError } from './types'
 import type { DocereConfig, ElasticSearchDocument, MetadataItem, SerializedEntry } from '@docere/common'
 import { dtapMap } from '../../projects/src/dtap'
+import { Standoff } from '@docere/common'
 
 // @ts-ignore
 const DOCERE_DTAP = DTAP[process.env.DOCERE_DTAP]
@@ -53,8 +54,13 @@ export function getEntryIdFromFilePath(xmlFilePath: string, projectId: string) {
 	return `${dir}/${base}`.replace(/^\//, '')
 }
 
-export function getDocumentIdFromRemoteXmlFilePath(filePath: string, remoteDir: string, stripRemoteDir: boolean) {
-	let documentId = path.resolve(path.dirname(filePath), path.basename(filePath, '.xml'))
+export function getDocumentIdFromRemoteFilePath(
+	filePath: string,
+	ext: string,
+	remoteDir: string,
+	stripRemoteDir: boolean
+) {
+	let documentId = path.resolve(path.dirname(filePath), path.basename(filePath, `.${ext}`))
 
 	// Return null if withoutExtension and filePath are equal,
 	// which means it's a dir or not an XML file
@@ -174,24 +180,29 @@ export async function getProjectPageConfig(projectId: string, pageId: string): P
 		.find(p => p.id === pageId)
 }
 
-export function getElasticSearchDocument(extractedEntry: SerializedEntry | DocereApiError): ElasticSearchDocument | DocereApiError {
+export function getElasticSearchDocument(
+	extractedEntry: SerializedEntry | DocereApiError,
+	standoff: Standoff
+): ElasticSearchDocument | DocereApiError {
 	if (isError(extractedEntry)) return extractedEntry
 
-	const entities = Object.values(extractedEntry.textData.entities)
-		.reduce((agg, [_id, entity]) => {
-			agg[entity.configId] = (agg.hasOwnProperty(entity.configId)) ?
-				agg[entity.configId].concat(entity.content) :
-				[entity.content]
-			return agg
-		}, {} as Record<string, string[]>)
+	// const entities = Object.values(extractedEntry.textData.entities)
+	// 	.reduce((agg, [_id, entity]) => {
+	// 		agg[entity.configId] = (agg.hasOwnProperty(entity.configId)) ?
+	// 			agg[entity.configId].concat(entity.content) :
+	// 			[entity.content]
+	// 		return agg
+	// 	}, {} as Record<string, string[]>)
 
-	const facsimiles: ElasticSearchDocument['facsimiles'] = Object.values(extractedEntry.textData.facsimiles)
-		.reduce((agg, [id, facsimile]) => {
-			return agg.concat(facsimile.versions.map(v => ({
-				id,
-				path: v.thumbnailPath != null ? v.thumbnailPath : v.path
-			})))
-		}, [])
+	// const facsimiles: ElasticSearchDocument['facsimiles'] = Object.values(extractedEntry.textData.facsimiles)
+	// 	.reduce((agg, [id, facsimile]) => {
+	// 		return agg.concat(facsimile.versions.map(v => ({
+	// 			id,
+	// 			path: v.thumbnailPath != null ? v.thumbnailPath : v.path
+	// 		})))
+	// 	}, [])
+
+	const facsimiles = extractedEntry.textData.facsimiles.map(f => f[1])
 
 	const metadata = extractedEntry.metadata?.reduce((prev, curr) => {
 			if (curr.datatype === EsDataType.Hierarchy) {
@@ -206,21 +217,22 @@ export function getElasticSearchDocument(extractedEntry: SerializedEntry | Docer
 			return prev
 		}, {} as Record<string, MetadataItem['value']>)
 
-	const text = extractedEntry.plainText
-		.replace(/\s+/g, ' ')
-		.split(' ')
-		.map(t => t.trim())
-		.join(' ')
-		.trim()
+	// const text = extractedEntry.plainText
+	// 	.replace(/\s+/g, ' ')
+	// 	.split(' ')
+	// 	.map(t => t.trim())
+	// 	.join(' ')
+	// 	.trim()
 
 	return {
 		id: extractedEntry.id,
 		facsimiles,
-		text,
+		text: standoff.text,
 		text_suggest: {
-			input: Array.from(new Set(text.replace(/\.|\,|\;/g, '').split(' '))),
+			input: Array.from(new Set(standoff.text.replace(/\.|\,|\;/g, '').split(' '))),
 		},
-		...entities,
+		// TODO index entities (extract value?)
+		// ...entities,
 		...metadata,
 	}
 }

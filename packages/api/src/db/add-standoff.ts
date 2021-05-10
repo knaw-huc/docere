@@ -5,13 +5,13 @@ import fetch from 'node-fetch'
 
 import { SerializedEntry, XmlDirectoryStructure } from '../../../common/src'
 
-import { isError, getDocumentIdFromRemoteFilePath } from '../utils'
-import Puppenv from '../puppenv'
+import { getDocumentIdFromRemoteFilePath } from '../utils'
 
 import { getPool, transactionQuery } from './index'
 import { indexDocument } from '../es'
-import { DocereConfig, ID } from '@docere/common'
+import { AnnotationTree, createEntry, DocereConfig, ID } from '@docere/common'
 import { XML_SERVER_ENDPOINT } from '../constants'
+import { createDocereAnnotationTree } from '../api/document'
 
 type AddRemoteFilesOptions = {
 	force?: boolean
@@ -25,17 +25,15 @@ const defaultAddRemoteFilesOptions: Required<AddRemoteFilesOptions> = {
 	maxPerDirOffset: 0,
 }
 
-async function xmlExists(fileName: string, content: string, client: PoolClient) {
+async function documentExists(fileName: string, content: string, client: PoolClient) {
 	const hash = crypto.createHash('md5').update(content)
 	const hex = hash.digest('hex')
-	const existsResult = await client.query(`SELECT EXISTS(SELECT 1 FROM xml WHERE name='${fileName}' AND hash='${hex}')`)
+	const existsResult = await client.query(`SELECT EXISTS(SELECT 1 FROM source WHERE name='${fileName}' AND hash='${hex}')`)
 	return existsResult.rows[0].exists
 }
 
-export async function addRemoteFiles(
+export async function addRemoteStandoffToDb(
 	remotePath: string,
-	projectId: string,
-	puppenv: Puppenv,
 	projectConfig: DocereConfig,
 	options?: AddRemoteFilesOptions
 ) {
@@ -46,7 +44,7 @@ export async function addRemoteFiles(
 	const xmlEndpoint = `${XML_SERVER_ENDPOINT}/${remotePath}`
 	const result = await fetch(xmlEndpoint)
 	if (result.status === 404) {
-		console.log(`[${projectId}] remote path not found: '${remotePath}'`)
+		console.log(`[${projectConfig.slug}] remote path not found: '${remotePath}'`)
 		return
 	}
 	const dirStructure: XmlDirectoryStructure = await result.json()
@@ -60,37 +58,42 @@ export async function addRemoteFiles(
 
 	// Add every XML file to the database
 	for (const filePath of files) {
-		const entryId = getDocumentIdFromRemoteFilePath(filePath, 'xml', remotePath, projectConfig.documents.stripRemoteDirectoryFromDocumentId)
+		const entryId = getDocumentIdFromRemoteFilePath(filePath, 'json', remotePath, projectConfig.documents.stripRemoteDirectoryFromDocumentId)
 		const result = await fetch(`${XML_SERVER_ENDPOINT}${filePath}`)
-		const content = await result.text()	
-		await addXmlToDb(content, projectId, entryId, puppenv, options.force)
+		const source = await result.json()	
+		await addStandoffToDb(source, projectConfig, entryId, options.force)
 	}
 
 	// Recursively add sub dirs
 	for (const dirPath of dirStructure.directories) {
-		await addRemoteFiles(dirPath, projectId, puppenv, projectConfig, options)
+		await addRemoteStandoffToDb(dirPath, projectConfig, options)
 	}
 }
 
-export async function addXmlToDb(content: string, projectId: string, documentId: string, puppenv: Puppenv, force = false) {
-	const pool = await getPool(projectId)
+async function addStandoffToDb(
+	source: any,
+	projectConfig: DocereConfig,
+	documentId: string,
+	force = false
+) {
+	const pool = await getPool(projectConfig.slug)
 	const client = await pool.connect()
 	
-	const isUpdate = await xmlExists(documentId, content, client)
+	const isUpdate = await documentExists(documentId, JSON.stringify(source), client)
 	if (isUpdate && !force) {
-		console.log(`[${projectId}] document '${documentId}' exists`)
+		console.log(`[${projectConfig.slug}] document '${documentId}' exists`)
 		client.release()
 		return
 	}
 
-	const prepareAndExtractOutput = await puppenv.prepareAndExtract(content, projectId, documentId)
-	if (isError(prepareAndExtractOutput)) {
-		// TODO log error
-		client.release()
-		console.log(prepareAndExtractOutput.__error)
-		return
-	}
-	const [serializedEntry, extractedXml] = prepareAndExtractOutput
+	const standoff = projectConfig.standoff.prepareSource(source)
+	const tree = createDocereAnnotationTree(standoff, projectConfig)
+
+	const entry = createEntry({
+		config: projectConfig,
+		id: documentId,
+		tree,
+	})
 
 	const esClient = new es.Client({ node: 'http://es01:9200' })
 
@@ -98,32 +101,33 @@ export async function addXmlToDb(content: string, projectId: string, documentId:
 
 	const { rows } = await transactionQuery(
 		client,
-		`INSERT INTO xml
-			(name, hash, content, updated)
+		`INSERT INTO source
+			(name, hash, content, standoff, updated)
 		VALUES
-			($1, md5($2), $2, NOW())
+			($1, md5($2), $2, $3, NOW())
 		ON CONFLICT (name) DO UPDATE
 		SET
 			hash=md5($2),
 			content=$2,
+			standoff=$3,
 			updated=NOW()
 		RETURNING id;`,
-		[documentId, extractedXml.original]
+		[documentId, JSON.stringify(source), JSON.stringify(standoff)]
 	)
-	const xml_id = rows[0].id
+	const sourceId = rows[0].id
 
-	await addDocumentToDb({ client, documentId, xml_id, order_number: null, entry: serializedEntry, content: extractedXml.prepared })
-	await indexDocument(projectId, serializedEntry, esClient)
+	await addDocumentToDb({ client, documentId, order_number: null, entry, tree, sourceId })
+	await indexDocument(projectConfig.slug, entry, tree.getStandoff(), esClient)
 
-	let i = 0
-	for (const part of serializedEntry.parts) {
-		await addDocumentToDb({ client, documentId: part.id, xml_id, order_number: i++, entry: part, content: part.content })
-		await indexDocument(projectId, part, esClient)
-	}
+	// let i = 0
+	// for (const part of serializedEntry.parts) {
+	// 	await addDocumentToDb({ client, documentId: part.id, xml_id, order_number: i++, entry: part, content: part.content })
+	// 	await indexDocument(projectId, part, esClient)
+	// }
 
 	await transactionQuery(client, 'COMMIT')
 
-	console.log(`[${projectId}] ${isUpdate ? 'Updated' : 'Added'}: '${documentId}'`)
+	console.log(`[${projectConfig.slug}] ${isUpdate ? 'Updated' : 'Added'}: '${documentId}'`)
 
 	client.release()
 }
@@ -135,28 +139,30 @@ export async function addXmlToDb(content: string, projectId: string, documentId:
  */
 async function addDocumentToDb(props: {
 	client: PoolClient,
-	content: string
-	entry: SerializedEntry,
+	tree: AnnotationTree,
 	documentId: ID,
+	entry: SerializedEntry,
 	order_number: number,
-	xml_id: ID,
+	sourceId: string
 }) {
-	const { plainText, parts, content, ...dbEntry } = props.entry
-
 	await transactionQuery(
 		props.client,
 		`INSERT INTO document
-			(name, xml_id, order_number, content, json, updated)
+			(name, source_id, order_number, entry, updated)
 		VALUES
-			($1, $2, $3, $4, $5, NOW())
+			($1, $2, $3, $4, NOW())
 		ON CONFLICT (name) DO UPDATE
 		SET
-			xml_id=$2,
+			source_id=$2,
 			order_number=$3,
-			content=$4,
-			json=$5,
+			entry=$4,
 			updated=NOW()
 		RETURNING id;`,
-		[props.documentId, props.xml_id, props.order_number, props.content, JSON.stringify(dbEntry)]
+		[
+			props.documentId,
+			props.sourceId,
+			props.order_number,
+			JSON.stringify(props.entry)
+		]
 	)
 }

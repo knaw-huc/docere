@@ -8,16 +8,20 @@ const Wrapper = styled.div`
 
 function AttendantEntityBody(props: EntityComponentProps) {
 	return (
-		<EntityWrapper entity={props.entity}>
+		<EntityWrapper
+			entity={props.entity}
+		>
 			<EntityWithLinkWrapper>
 				<Wrapper>
-					<h2>{props.entity.attributes.delegate_name}</h2>
+					<h2>{props.entity.props.delegate_name}</h2>
 					<div>
-						<div>ID: {props.entity.attributes.delegate_id}</div>
-						<div>CLASS: {props.entity.attributes.class}</div>
+						<div>ID: {props.entity.props.delegate_id}</div>
+						<div>CLASS: {props.entity.props.class}</div>
 					</div>
 				</Wrapper>
-				<LinkFooter entity={props.entity}>
+				<LinkFooter
+					entity={props.entity}
+				>
 					<a
 						href=""
 						onClick={ev => ev.stopPropagation()}

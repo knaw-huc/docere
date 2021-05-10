@@ -101,13 +101,14 @@ export class AreaRenderer {
 		// Activate all active <rect>s
 		let index = -1
 		activeEntities.forEach((entity) => {
+			console.log(entity)
 			index += 1
 			let rect: SVGRectElement
 			let currentBounds: any
 
 			const lastEntity = activeEntities.size === index + 1
 
-			entity.facsimileAreas?.forEach(fa => {
+			entity.props._areas?.forEach(fa => {
 				rect = this.overlay.node().querySelector(`#${fa.id}`)
 				if (rect == null) return
 				rect.classList.add('active')
@@ -117,7 +118,7 @@ export class AreaRenderer {
 				// (could be multiple areas) is set to fully opague
 				rect.setAttribute(
 					'fill',
-					lastEntity ? `${entity.color}66` : `${entity.color}66`
+					lastEntity ? `${entity.props._config.color}66` : `${entity.props._config.color}66`
 				)
 
 				// Update combined bounds
@@ -128,7 +129,7 @@ export class AreaRenderer {
 
 			if (lastEntity) {
 				if (currentBounds == null) return
-				const element = document.querySelector(`[data-id="entity_${entity.id}"]`).cloneNode(true)
+				const element = document.querySelector(`[data-id="entity_${entity.props._entityId}"]`).cloneNode(true)
 
 				if (element != null) {
 					this.osd.addOverlay({
@@ -208,9 +209,9 @@ export class AreaRenderer {
 			const areas: AreaCache = []
 
 			for (const entity of entry.textData.entities.values()) {
-				if (entity.facsimileAreas == null) continue
+				if (entity.props._areas == null) continue
 
-				entity.facsimileAreas.forEach(area => {
+				entity.props._areas.forEach(area => {
 					if (area.facsimileId !== facsimile.id) return
 
 					if (isFacsimileAreaRectangle(area)) {
@@ -236,7 +237,7 @@ export class AreaRenderer {
 
 						areas.push({
 							entryId: entry.id,
-							entityId: entity.id,
+							entityId: entity.props._entityId,
 							points,
 						})
 					}

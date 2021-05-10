@@ -5,11 +5,8 @@ export default (function extractFacsimiles({ layerElement }) {
 	const path = pb.getAttribute('path')
 	return [
 		{
-			anchor: pb,
 			id: path, 
-			versions: [{
-				path
-			}]
+			path
 		}
 	]
 }) as ExtractFacsimiles

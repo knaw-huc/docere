@@ -1,4 +1,4 @@
-import { ExtractedCommon } from '.'
+// import { ExtractedCommon } from '.'
 import { TriggerContainer } from './entity'
 
 export function isFacsimileAreaRectangle(area: FacsimileArea): area is FacsimileAreaRectangle {
@@ -38,21 +38,22 @@ export type FacsimileArea = FacsimileAreaRectangle | FacsimileAreaPolygon
 // 	y: number
 // }
 
-export enum FacsimileType {
-	IIIF = 'IIIF',
-	Image = 'image',
-}
+// export enum FacsimileType {
+// 	IIIF = 'IIIF',
+// 	Image = 'image',
+// }
 
-interface FacsimileVersion {
-	path: string
-	thumbnailPath?: string
-	type?: FacsimileType
-}
+// interface FacsimileVersion {
+// 	path: string
+// 	thumbnailPath?: string
+// 	type?: FacsimileType
+// }
 export interface Facsimile {
 	id: string
-	versions: FacsimileVersion[]
+	path: string
+	// versions: FacsimileVersion[]
 }
 
-export type ExtractedFacsimile = Facsimile & ExtractedCommon
+export type ExtractedFacsimile = Facsimile //& ExtractedCommon
 
 export type ActiveFacsimile = Facsimile & TriggerContainer

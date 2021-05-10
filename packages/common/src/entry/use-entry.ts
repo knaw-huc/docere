@@ -1,31 +1,34 @@
-import React from 'react'
+// import React from 'react'
 
 import { Entry } from './index'
 import { fetchJson } from '../utils'
-import { SerializedEntry } from '..'
+import { DocereConfig, SerializedEntry } from '..'
 import { deserializeEntry } from './deserialize'
+// import { ProjectContext } from '../project/context'
 
 const entryCache = new Map<string, Entry>()
 
-export async function fetchEntry(projectId: string, entryId: string) {
+export async function fetchEntry(entryId: string, config: DocereConfig) {
 	if (entryCache.has(entryId)) return entryCache.get(entryId)
 
-	const serializedEntry: SerializedEntry = await fetchJson(`/api/projects/${projectId}/documents/${encodeURIComponent(entryId)}`)
+	const url = `/api/projects/${config.slug}/documents/${encodeURIComponent(entryId)}`
+	const serializedEntry: SerializedEntry = await fetchJson(url)
 	if (serializedEntry == null) return
 
-	const entry = deserializeEntry(serializedEntry)
+	const entry = deserializeEntry(serializedEntry, config)
 	entryCache.set(entry.id, entry)
 
 	return entry
 }
 
-export function useEntry(projectId: string, entryId: string) {
-	const [entry, setEntry] = React.useState<Entry>(null)
+// export function useEntry(entryId: string) {
+// 	const { config } = React.useContext(ProjectContext)
+// 	const [entry, setEntry] = React.useState<Entry>(null)
 
-	React.useEffect(() => {
-		if (projectId == null || entryId == null) return
-		fetchEntry(projectId, entryId).then(setEntry)
-	}, [projectId, entryId])
+// 	React.useEffect(() => {
+// 		if (config == null || entryId == null) return
+// 		fetchEntry(entryId, config).then(setEntry)
+// 	}, [config, entryId])
 
-	return entry
-}
+// 	return entry
+// }

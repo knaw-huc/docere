@@ -41,8 +41,7 @@ export function FacsimileThumb(props: FacsimileThumbProps) {
 		})
 	}, [props.container, props.entryId])
 
-	const version = props.facsimile.versions[0]
-	const src = version.thumbnailPath != null ? version.thumbnailPath : version.path
+	const src = props.facsimile.path.replace('/info.json', '/full/,32/0/default.jpg')
 	const active = activeFacsimile?.id === props.facsimile.id
 
 	return (
@@ -52,7 +51,7 @@ export function FacsimileThumb(props: FacsimileThumbProps) {
 			key={props.facsimile.id}
 			onClick={onClick}
 			ref={imgRef}
-			src={src.slice(-10) === '/info.json' ? src.replace('/info.json', '/full/,32/0/default.jpg') : src}
+			src={src}
 		/>
 	)
 }

@@ -24,11 +24,11 @@ export function EntityListAside() {
 			>
 				{
 					Array.from(entry.textData.entities.values())
-						.filter(e => e.showInAside)
+						.filter(e => e.props._config.showInAside)
 						.map((entity) =>
 							<ItemInText
 								entity={entity}
-								key={entity.id}
+								key={entity.props._entityId}
 							/>
 						)
 				}

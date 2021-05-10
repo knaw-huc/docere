@@ -1,10 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Entity, EntitiesContext } from '@docere/common'
+import { Entity, EntitiesContext, EntityConfig2 } from '@docere/common'
 
 const TooltipBody = styled.div`
 	background: white;
-	border-color: ${(props: { entity: Entity, active?: boolean }) => props.entity.color};
+	border-color: ${(props: { entityConfig: EntityConfig2, active?: boolean }) => props.entityConfig.color};
 	border-style: solid;
 	border-width: 2px;
 	box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
@@ -40,32 +40,29 @@ const Header = styled.header`
 	text-transform: uppercase;
 `
 
+// TODO move to common
 export interface EntityComponentProps {
 	entity: Entity
+	children?: React.ReactNode
 }
-
-interface Props {
-	children: React.ReactNode
-	entity: Entity
-}
-export const EntityWrapper = React.memo(function EntityWrapper(props: Props) {
+export const EntityWrapper = React.memo(function EntityWrapper(props: EntityComponentProps) {
 	const activeEntities = React.useContext(EntitiesContext)
 	const ref = React.useRef<HTMLDivElement>()
-	const active = activeEntities.has(props.entity.id)
+	const active = activeEntities.has(props.entity.props._entityId)
 
 	return (
 		<Wrapper
 			active={active}
-			entity={props.entity}
+			entityConfig={props.entity.props._config}
 			ref={ref}
 		>
 			{
-				props.entity.title != null &&
+				props.entity.props._config.title != null &&
 				<Header
-					color={props.entity.color}
+					color={props.entity.props._config.color}
 				>
 					<span></span>
-					<span>{props.entity.title}</span>
+					<span>{props.entity.props._config.title}</span>
 					<span></span>
 				</Header>
 			}

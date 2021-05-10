@@ -17,9 +17,9 @@ export default (function extractFacsimiles({ layerElement, config }) {
 			return {
 				anchor: pb,
 				id,
-				versions: [{
+				// versions: [{
 					path
-				}]
+				// }]
 			}
 		})
 		.filter(facs => facs != null)

@@ -23,7 +23,7 @@ export function useProjectState(): [ProjectState, React.Dispatch<ProjectAction>]
 	React.useEffect(() => {
 		if (state.config == null || state.setEntry?.entryId == null) return
 
-		fetchEntry(state.config.slug, state.setEntry.entryId)
+		fetchEntry(state.setEntry.entryId, state.config)
 			.then(entry => {
 				if (entry == null) return
 				dispatch({
@@ -41,7 +41,7 @@ export function useProjectState(): [ProjectState, React.Dispatch<ProjectAction>]
 			state.entry?.id === entryId	/** Entry is already loaded */
 		) return
 
-		fetchEntry(state.config.slug, entryId)
+		fetchEntry(entryId, state.config)
 			.then(entry => {
 				if (entry == null) return
 				dispatch({
@@ -133,6 +133,14 @@ export function useProjectState(): [ProjectState, React.Dispatch<ProjectAction>]
 			})
 		})
 	}, [projectId])
+
+
+	if (DOCERE_DTAP === DTAP.Development) {
+		React.useEffect(() => {
+			// @ts-ignore
+			window.projectState = state
+		}, [state])
+	}
 
 	return [state, dispatch]
 }

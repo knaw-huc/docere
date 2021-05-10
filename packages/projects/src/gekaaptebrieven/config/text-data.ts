@@ -13,7 +13,7 @@ export default function extractTextData(doc: XMLDocument, _config: DocereConfig)
 
 					if (entities.has(id)) {
 						const entity = entities.get(id)
-						entity.count += 1
+						entity.props.count += 1
 						entities.set(id, entity)
 					}
 					else {
