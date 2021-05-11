@@ -32,7 +32,7 @@ const Paragraph = styled.div`
 	margin-bottom: 2.25rem;
 `
 
-export * from './note'
+// export * from './note'
 export * from './lb'
 export * from './entity'
 export * from './pb'

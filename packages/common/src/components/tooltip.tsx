@@ -6,7 +6,7 @@ import { Colors } from '../enum'
 interface P { offset: number, zIndexOffset?: number }
 const Wrapper = styled.div`
 	margin-left: calc(50% - 160px + ${(p: P) => { return p.offset ? p.offset : 0}}px);
-	margin-top: 1rem;
+	margin-top: .6rem;
 	opacity: ${p => p.offset == null ? 0 : 1};
 	padding-bottom: 10vh;
 	position: absolute;

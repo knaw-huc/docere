@@ -1,15 +1,24 @@
 import React from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { EntrySettingsContext, EntitiesContext, useUIComponent, UIComponentType, ContainerContext, DispatchContext, useEntity, EntityAnnotationComponentProps, EntityConfig2 } from '@docere/common'
 
 import { useChildren } from './hooks'
 import IconsByType from './icons'
 import { EntityTooltip } from './entity-tooltip'
 
-interface NWProps { openToAside: boolean }
-const NoWrap = styled.span`
+const tooltipContainerStyle = css`
 	display: inline-block;
-	position: ${(props: NWProps) => props.openToAside ? 'static' : 'relative'};
+	position: relative;
+`
+
+const TooltipContainer = styled.span`
+	${tooltipContainerStyle}
+`
+
+const NoWrap = styled.span`
+	${(props: { hasTooltip: boolean }) =>
+		props.hasTooltip ? tooltipContainerStyle : ''
+	}
 	white-space: nowrap;
 `
 
@@ -36,32 +45,18 @@ const Wrapper = styled.span`
 	}
 `
 
-// const defaultPreProps: Omit<PreProps, 'extractType'> = {
-// 	extractKey: (props) => props.attributes.key,
-// 	extractValue: (props) => props.children
-// }
-
-// interface PreProps {
-// 	// extractType: ExtractEntityType
-// 	extractKey?: ExtractEntityKey // Extract the entity ID 
-// 	extractValue?: ExtractEntityValue // Extract the entity text content (not the note body!)
-// 	PopupBody?: React.FC<PopupBodyProps>
-// }
-
-// export function getEntity(PopupBody?: React.FC<EntityComponentProps>) {
 export const EntityTag = React.memo(function EntityComp(props: EntityAnnotationComponentProps) {
 	const dispatch = React.useContext(DispatchContext)
 	const activeEntities = React.useContext(EntitiesContext)
 	const settings = React.useContext(EntrySettingsContext)
 	const container = React.useContext(ContainerContext)
 
-	// const entityValue = preProps.extractValue(props)
 	if (!settings['panels.entities.show']) return <span>{props.children}</span>
 
-	const { entity, entityConfig } = useEntity(props._entityId)
-	const [firstWord, restOfFirstChild] = useChildren(props.children, entity)
+	const entity = useEntity(props._entityId)
+	const [firstChild, middleChildren, lastChild] = useChildren(props.children, entity)
 
-	const Component = useUIComponent(UIComponentType.Entity, entityConfig?.id)
+	const Component = useUIComponent(UIComponentType.Entity, entity?.props._config.id)
 
 	// The entity can be active, but without the need to show the tooltip.
 	// In case there are several entities with the same ID, we only want to 
@@ -90,44 +85,49 @@ export const EntityTag = React.memo(function EntityComp(props: EntityAnnotationC
 
 	if (entity == null) return null
 
-	const Icon = IconsByType[entityConfig.type]
+	const Icon = IconsByType[entity.props._config.type]
 
-	const openToAside = active && !settings['panels.text.openPopupAsTooltip']
+	const tooltip = active && showTooltip ?
+		<EntityTooltip
+			entity={entity}
+			settings={settings}
+		>
+			<Component
+				entity={entity}
+			/>
+		</EntityTooltip> : null
 
 	return (
 		<Wrapper
 			active={active}
 			data-entity-id={entity.props._entityId}
-			entityConfig={entityConfig}
+			entityConfig={entity.props._config}
 			onClick={handleClick}
 		>
-			<NoWrap
-				openToAside={openToAside}
-			>
+			<NoWrap hasTooltip={lastChild == null}>
 				{
 					Icon != null &&
 					<Icon
 						active={active}
 						entity={entity}
-						entityConfig={entityConfig}
+						entityConfig={entity.props._config}
 					/>
 				}
-				{firstWord}
+				{firstChild}
 				{
-					active &&
-					showTooltip &&
-					<EntityTooltip
-						entity={entity}
-						settings={settings}
-					>
-						<Component
-							entity={entity}
-						/>
-					</EntityTooltip>
+					lastChild == null &&
+					tooltip
 				}
 			</NoWrap>
-			{restOfFirstChild}
-			{/* {children.slice(1)} */}
+			{middleChildren}
+			{
+				lastChild != null &&
+				<TooltipContainer className="last">
+					{lastChild}
+					{tooltip}
+				</TooltipContainer>
+
+			}
 		</Wrapper>
 	)
 })

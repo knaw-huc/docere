@@ -21,10 +21,15 @@ export function useUIComponent(componentType: UIComponentType, id?: string) {
 	const { uiComponents } = React.useContext(ProjectContext)
 
 	return React.useMemo(
-		() =>
-			id == null ?
+		() => {
+			if (componentType === UIComponentType.Entity && id == null) {
+				return null
+			}
+
+			return id == null ?
 				uiComponents?.get(componentType) : 
 				uiComponents?.get(componentType)?.get(id)
+		}
 		,
 		[uiComponents, componentType, id]
 	)

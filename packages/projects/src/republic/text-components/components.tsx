@@ -25,7 +25,7 @@ export function RepublicLb(props: EntityAnnotationComponentProps) {
 	const container = React.useContext(ContainerContext)
 	const activeEntities = React.useContext(EntitiesContext)
 
-	const { entity, entityConfig } = useEntity(props._entityId)
+	const entity = useEntity(props._entityId)
 
 	const handleClick = React.useCallback(ev => {
 		ev.stopPropagation()
@@ -42,7 +42,7 @@ export function RepublicLb(props: EntityAnnotationComponentProps) {
 	return (
 		<LbWrapper
 			active={activeEntities.has(entity.props._entityId)}
-			color={entityConfig.color}
+			color={entity.props._config.color}
 			data-entity-id={entity.props._entityId}
 			onClick={handleClick}
 		/>
@@ -54,7 +54,7 @@ export function SessionPart(props: EntityAnnotationComponentProps) {
 	const dispatch = React.useContext(DispatchContext)
 	const container = React.useContext(ContainerContext)
 
-	const { entity, entityConfig } = useEntity(props._entityId)
+	const entity = useEntity(props._entityId)
 
 	const handleClick = React.useCallback(ev => {
 		ev.stopPropagation()
@@ -72,9 +72,9 @@ export function SessionPart(props: EntityAnnotationComponentProps) {
 	return (
 		<SessionPartWrapper
 			active={activeEntities.has(entity.props._entityId)}
-			color={entityConfig.color}
+			color={entity.props._config.color}
 		>
-			<h4 onClick={handleClick}>{entityConfig.title}</h4>
+			<h4 onClick={handleClick}>{entity.props._config.title}</h4>
 			{props.children}
 		</SessionPartWrapper>
 	)

@@ -38,7 +38,7 @@ export const NoteTag = React.memo(function NotePopup(props: ComponentProps) {
 		!settings['panels.text.showNotes']
 	) return <span>{props.children}</span>
 
-	const { entity, entityConfig } = useEntity(props.attributes['docere:id'])
+	const entity = useEntity(props.attributes['docere:id'])
 
 	const active = activeEntities.has(entity?.props._entityId)
 	const openToAside = active && !settings['panels.text.openPopupAsTooltip']

@@ -4,6 +4,18 @@ import { EntityComponentProps, EntityWithLinkWrapper, LinkFooter, EntityWrapper 
 
 const Wrapper = styled.div`
 	padding: 1rem;
+
+	h2 {
+		font-size: 1rem;
+		margin: 0 0 .5rem 0;
+
+		small {
+			color: gray;
+			font-size: .85rem;
+			padding-left: .3rem;
+		}
+
+	}
 `
 
 function AttendantEntityBody(props: EntityComponentProps) {
@@ -13,11 +25,16 @@ function AttendantEntityBody(props: EntityComponentProps) {
 		>
 			<EntityWithLinkWrapper>
 				<Wrapper>
-					<h2>{props.entity.props.delegate_name}</h2>
-					<div>
-						<div>ID: {props.entity.props.delegate_id}</div>
-						<div>CLASS: {props.entity.props.class}</div>
-					</div>
+					{
+						props.entity.props.delegate_name.length > 0 &&
+						<h2>
+							{props.entity.props.delegate_name}
+							<small>
+								({props.entity.props.delegate_id})
+							</small>
+						</h2>
+					}
+					<div>{props.entity.props.class}</div>
 				</Wrapper>
 				<LinkFooter
 					entity={props.entity}
