@@ -1,5 +1,4 @@
 import { DocereConfig, MetadataConfig, defaultEntityConfig, defaultMetadata, EntityConfig2 } from './config'
-import { isTextLayerConfig } from './utils'
 import { PageConfig } from './page'
 
 import type { FacetConfigBase } from './types/search/facets'
@@ -17,11 +16,11 @@ export const defaultEntrySettings: DocereConfig['entrySettings'] = {
 
 const defaultConfig: DocereConfig = {
 	collection: null,
-	entities: [],
+	entities2: [],
 	entrySettings: {},
-	layers: [],
-	metadata: [],
-	parts: null,
+	layers2: [],
+	metadata2: [],
+	// parts: null,
 	pages: null,
 	private: false,
 	searchResultCount: 20,
@@ -80,13 +79,13 @@ export function extendConfigData(configDataRaw: DocereConfig): DocereConfig {
 	}
 
 	config.entrySettings = { ...defaultEntrySettings, ...config.entrySettings }
-	config.layers = config.layers.map(layer => {
+	config.layers2 = config.layers2.map(layer => {
 		if (layer.active == null) layer.active = true
 		if (layer.pinned == null) layer.pinned = false
 
-		if (isTextLayerConfig(layer) && layer.extractElement == null) {
-			layer.extractElement = (entry) => entry.preparedElement
-		}
+		// if (isTextLayerConfig(layer) && layer.extractElement == null) {
+		// 	layer.extractElement = (entry) => entry.preparedElement
+		// }
 		return setTitle(layer)
 	})
 	config.layers2 = config.layers2.map(layerConfig => {
@@ -95,13 +94,11 @@ export function extendConfigData(configDataRaw: DocereConfig): DocereConfig {
 		return setTitle(layerConfig)
 	})
 
-	config.metadata = config.metadata.map(md => {
+	config.metadata2 = config.metadata2.map(md => {
 		const metadataConfig = {...defaultMetadata, ...md} as MetadataConfig
 		return setTitle(metadataConfig)
 	})
 
-	// @ts-ignore
-	config.entities = config.entities.map(extendEntities)
 	config.entities2 = config.entities2.map(extendEntities)
 
 	if (config.pages != null) {
@@ -111,16 +108,17 @@ export function extendConfigData(configDataRaw: DocereConfig): DocereConfig {
 		}
 	}
 
-	if (config.parts != null) {
-		config.parts = {
-			keepSource: false,
-			...config.parts
-		}
-	}
+	// if (config.parts != null) {
+	// 	config.parts = {
+	// 		keepSource: false,
+	// 		...config.parts
+	// 	}
+	// }
 
-	return {
-		prepare: entry => entry.document.documentElement,
-		plainText: entry => entry.preparedElement.textContent,
-		...config,
-	}
+	// return {
+	// 	// prepare: entry => entry.document.documentElement,
+	// 	// plainText: entry => entry.preparedElement.textContent,
+	// 	...config,
+	// }
+	return config
 }

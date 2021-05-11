@@ -22,7 +22,7 @@ export default function useFacetsConfig() {
 	const [fields, setFields] = React.useState<FacetsConfig>({})
 
 	React.useEffect(() => {
-		const facetsConfig = [...config.metadata, ...config.entities]
+		const facetsConfig = [...config.metadata2, ...config.entities2]
 			.filter(filterNonFacets)
 			.sort(sortByOrder)
 			.reduce((prev, curr) => {

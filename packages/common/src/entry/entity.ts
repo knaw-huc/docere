@@ -1,24 +1,24 @@
 import React from 'react'
-import { FacsimileArea, ID } from '.'
-import { EntityConfig, EntityConfig2, EntryContext, ProjectContext } from '..'
+import { ID } from '.'
+import { EntityConfig2, EntryContext, ProjectContext } from '..'
 import { ContainerType } from '../enum'
 import { DocereAnnotation } from '../standoff-annotations'
 
 // Extracted entity
-export interface ExtractedCommon {
-	anchor: Element
-	layerId?: ID
-}
+// export interface ExtractedCommon {
+// 	anchor: Element
+// 	layerId?: ID
+// }
 
-export interface ExtractedEntity extends ExtractedCommon, Omit<EntityConfig, 'extract' | 'extractId' | 'id' | 'selector'> {
-	attributes?: Record<string, string>
-	configId?: string
-	content: string
-	count?: number
-	facsimileAreas?: FacsimileArea[]
-	id?: string /* ID is optional, because it is extracted by EntityConfig.extractId */
-	n?: string
-}
+// export interface ExtractedEntity extends ExtractedCommon, Omit<EntityConfig, 'extract' | 'extractId' | 'id' | 'selector'> {
+// 	attributes?: Record<string, string>
+// 	configId?: string
+// 	content: string
+// 	count?: number
+// 	facsimileAreas?: FacsimileArea[]
+// 	id?: string /* ID is optional, because it is extracted by EntityConfig.extractId */
+// 	n?: string
+// }
 
 /**
  * An Entity is a kind of {@link DocereAnnotation}. After

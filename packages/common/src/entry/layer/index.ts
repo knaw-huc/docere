@@ -1,6 +1,5 @@
 import { LayerType } from '../../enum'
-import { BaseConfig, DocereConfig } from '../../config'
-import type { ExtractedEntry, ExtractedFacsimile, ExtractedEntity } from '..'
+import { BaseConfig } from '../../config'
 import { DocereAnnotation } from '../../standoff-annotations'
 
 // export * from './serialize'
@@ -20,24 +19,24 @@ export interface FacsimileLayerConfig extends LayerConfig {
 	type: LayerType.Facsimile
 }
 
-export type ExtractTextLayerElement = (entry: ExtractedEntry, config: DocereConfig) => Element
+// export type ExtractTextLayerElement = (entry: ExtractedEntry, config: DocereConfig) => Element
 export interface TextLayerConfig extends LayerConfig {
-	extractElement?: ExtractTextLayerElement
+	// extractElement?: ExtractTextLayerElement
 	type: LayerType.Text
 }
 
-export interface ExtractedTextLayer extends TextLayerConfig {
-	el: Element
-	facsimiles: ExtractedFacsimile[]
-	entities: ExtractedEntity[]
-}
+// export interface ExtractedTextLayer extends TextLayerConfig {
+// 	el: Element
+// 	facsimiles: ExtractedFacsimile[]
+// 	entities: ExtractedEntity[]
+// }
 
-export interface ExtractedFacsimileLayer extends FacsimileLayerConfig {
-	facsimiles: ExtractedFacsimile[]
-	entities: ExtractedEntity[]
-}
+// export interface ExtractedFacsimileLayer extends FacsimileLayerConfig {
+// 	facsimiles: ExtractedFacsimile[]
+// 	entities: ExtractedEntity[]
+// }
 
-export type ExtractedLayer = ExtractedTextLayer | ExtractedFacsimileLayer
+// export type ExtractedLayer = ExtractedTextLayer | ExtractedFacsimileLayer
 
 /**
  * Serialized layer

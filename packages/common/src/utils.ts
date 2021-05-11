@@ -2,7 +2,7 @@ import { DEFAULT_SPACING, TEXT_PANEL_ASIDE_WIDTH, TEXT_PANEL_MINIMAP_WIDTH, TEXT
 import { LayerType } from './enum'
 import { ActiveEntities } from './project/context'
 
-import type { ExtractedEntity, EntrySettings, ExtractedFacsimile, LayerConfig, TextLayerConfig, Layer, TextLayer, FacsimileLayerConfig, FacsimileLayer, ID } from '.'
+import type { EntrySettings, LayerConfig, TextLayerConfig, Layer, TextLayer, FacsimileLayerConfig, FacsimileLayer, ID } from '.'
 import { getProjectPagePath } from './url'
 
 export function getTextPanelLeftSpacing(settings: EntrySettings) {
@@ -60,9 +60,9 @@ export function generateId(len = 10) {
 	return `${head}${tail}`
 }
 
-export function isExtractedEntity(entity: ExtractedEntity | ExtractedFacsimile): entity is ExtractedEntity {
-	return entity.hasOwnProperty('type')
-}
+// export function isExtractedEntity(entity: ExtractedEntity | ExtractedFacsimile): entity is ExtractedEntity {
+// 	return entity.hasOwnProperty('type')
+// }
 
 export function isTextLayerConfig(layer: LayerConfig): layer is TextLayerConfig {
 	return layer.type === LayerType.Text

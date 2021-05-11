@@ -2,15 +2,7 @@ import { EntityType, Colors, EsDataType } from '../enum'
 import type { FacetConfig } from '../types/search/facets'
 import { PageConfig } from '../page'
 import { AnnotationTree, FilterFunction, PartialExportOptions, Standoff, StandoffAnnotation } from '../standoff-annotations'
-import { CreateEntryProps, ExtractedEntity, ExtractedEntry, ExtractedFacsimile, FacsimileLayerConfig, ID, LayerConfig, TextLayerConfig } from '../entry'
-
-interface ExtractFacsimilesProps {
-	config: DocereConfig
-	entry: ExtractedEntry
-	layer: TextLayerConfig
-	layerElement: Element
-}
-export type ExtractFacsimiles = (props: ExtractFacsimilesProps) => ExtractedFacsimile[]
+import { CreateEntryProps, ExtractedFacsimile, ID, LayerConfig } from '../entry'
 
 // TODO rename to ProjectConfig
 // TODO rename slug to id
@@ -44,21 +36,13 @@ export interface DocereConfig {
 		stripRemoteDirectoryFromDocumentId?: boolean
 	}
 
-	entities?: EntityConfig[]
+	// entities?: EntityConfig[]
 	entrySettings?: EntrySettings
 
 	createFacsimiles?: (props: CreateEntryProps) => ExtractedFacsimile[]
 	layers2?: LayerConfig[]
 	entities2?: EntityConfig2[]
-	metadata2?: DocereConfig['metadata']
-
-	facsimiles?: {
-		extractFacsimileId: (el: Element) => string
-		extractFacsimiles: ExtractFacsimiles
-		selector: string
-	}
-	layers?: (TextLayerConfig | FacsimileLayerConfig)[]
-	metadata?: MetadataConfig[]
+	metadata2?: MetadataConfig[]
 
 	/**
 	 * Configure the background pages of the project, for example:
@@ -82,8 +66,6 @@ export interface DocereConfig {
 		 */
 		getRemotePath?: (config: PageConfig) => string
 	}
-	plainText?: (entry: ExtractedEntry, config: DocereConfig) => string
-	prepare?: (entry: ExtractedEntry, config: DocereConfig) => Element
 	standoff?: {
 		exportOptions?: PartialExportOptions
 		prepareSource?: (source: any) => Standoff
@@ -92,14 +74,8 @@ export interface DocereConfig {
 	private?: boolean
 	searchResultCount?: number
 	slug: ID
-	parts?: {
-		extract: ExtractEntryPartElements
-		keepSource?: boolean /* Keep the source document and store as an entry */
-	},
 	title?: string
 }
-
-export type ExtractEntryPartElements = (entry: ExtractedEntry, config: DocereConfig) => Map<string, Element>
 
 export interface EntrySettings {
 	'panels.showHeaders'?: boolean
@@ -128,10 +104,8 @@ type TmpConfig = FacetConfig & {
 	showAsFacet?: boolean /* Show data as a facet? */
 }
 
-export type ExtractMetadata = (entry: ExtractedEntry, config?: DocereConfig) => string | number | string[] | number[] | boolean
-export type MetadataConfig = TmpConfig & {
-	extract: ExtractMetadata
-}
+// export type ExtractMetadata = (entry: ExtractedEntry, config?: DocereConfig) => string | number | string[] | number[] | boolean
+export type MetadataConfig = TmpConfig
 
 // export type ExtractTextData = (entry: ConfigEntry, config?: DocereConfig) => ExtractedTextData[]
 
@@ -141,26 +115,27 @@ export type MetadataConfig = TmpConfig & {
 // }
 	// extractEntities?: (layer: SerializedTextLayer, entry: ConfigEntry, config: DocereConfig) => ExtractedEntity[]
 
-export interface ExtractEntitiesProps {
-	config: DocereConfig
-	entityConfig: EntityConfig
-	entry: ExtractedEntry
-	layer: TextLayerConfig
-	layerElement: Element
-}
-export type ExtractEntities = (props: ExtractEntitiesProps) => ExtractedEntity[]
-type ExtractEntityId = (el: Element) => string
+// export interface ExtractEntitiesProps {
+// 	config: DocereConfig
+// 	entityConfig: EntityConfig
+// 	entry: ExtractedEntry
+// 	layer: TextLayerConfig
+// 	layerElement: Element
+// }
+// export type ExtractEntities = (props: ExtractEntitiesProps) => ExtractedEntity[]
+// type ExtractEntityId = (el: Element) => string
 
-export type EntityConfig = TmpConfig & {
+// export type EntityConfig = TmpConfig & {
+// 	// extractId: ExtractEntityId
+// 	// extract: ExtractEntities
+// 	// selector: string
+// }
+
+export type EntityConfig2 = TmpConfig & {
 	color?: string
-	extractId: ExtractEntityId
-	extract: ExtractEntities
 	revealOnHover?: boolean
-	selector: string
 	type?: EntityType | string
-}
 
-export type EntityConfig2 = Omit<EntityConfig, 'extractId' | 'extract' | 'selector'> & {
 	filter: FilterFunction
 
 	// Set the ID of the entity. Not te be confused with the annotation ID!
@@ -170,7 +145,6 @@ export type EntityConfig2 = Omit<EntityConfig, 'extractId' | 'extract' | 'select
 
 export const defaultMetadata: Required<MetadataConfig> = {
 	datatype: EsDataType.Keyword,
-	extract: () => null,
 	id: null,
 	// TODO fixate the order number, which means: if there is no order than increment the order number: 999, 1000, 1001, 1002 (import for example the sort setting in the FS)
 	order: 9999,
@@ -191,7 +165,6 @@ export const defaultEntityConfig: Required<EntityConfig2> = {
 	filter: null,
 	getId: (a: StandoffAnnotation) => a.id,
 	revealOnHover: false,
-	// selector: null,
 	type: EntityType.None,
 }
 
