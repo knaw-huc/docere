@@ -40,8 +40,8 @@ export default class CollectionNavigatorController {
 		const hits: CollectionDocument[] = Array.from(entry.textData.facsimiles.values())
 			.map(f => ({
 				entryIds: new Set([entry.id]),
-				facsimileId: f.id,
-				facsimilePath: f.path
+				facsimileId: f.props._facsimileId,
+				facsimilePath: f.props._facsimilePath
 			}))
 		this.tiledImages = new TiledImages(this.viewer, hits, entry, facsimile)
 	}

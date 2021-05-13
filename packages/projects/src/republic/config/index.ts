@@ -1,18 +1,18 @@
-import { extendConfigData, Colors, EntityType } from '@docere/common'
+import { extendConfig, Colors, EntityType } from '@docere/common'
 import { LayerType, EsDataType } from '@docere/common'
-import { prepareSource, prepareTree } from './prepare'
+import { prepareAnnotations, prepareSource } from './prepare'
 
 const annotationHierarchy = ['scan', 'attendance_list', 'resolution', 'paragraph', 'text_region', 'line', 'attendant']
 
-export default extendConfigData({
+export default extendConfig({
 	standoff: {
 		prepareSource,
-		prepareTree,
+		prepareAnnotations,
 		exportOptions: {
 			annotationHierarchy,
 			rootNodeName: 'session',
 			metadata: {
-				exclude: ['coords', 'para_id', 'scan_id', 'text_region_id']
+				exclude: ['coords', 'para_id', 'scan_id', 'text_region_id', 'iiif_url', 'filepath', 'iiif_info_url']
 			}
 		}
 	},
@@ -43,12 +43,17 @@ export default extendConfigData({
 		}	
 	],
 
-	createFacsimiles: (props) => props.tree
-		.filter(a => a.name === 'scan')
-		.map((curr) => ({
-			id: curr.id,
-			path: curr.metadata._facsimilePath,
-		})),
+	// createFacsimiles: (props) => props.tree
+	// 	.filter(a => a.name === 'scan')
+	// 	.map((curr) => ({
+	// 		id: curr.id,
+	// 		path: curr.metadata._facsimilePath,
+	// 	})),
+
+	facsimiles: {
+		filter: a => a.name === 'scan',
+		getPath: a => a.metadata.iiif_info_url
+	},
 
 	entities2: [
 		{

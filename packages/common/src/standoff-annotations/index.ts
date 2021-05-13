@@ -9,10 +9,28 @@ export const ROOT_NODE_NAME = 'root'
 export const TEXT_NODE_NAME = '__TEXT_NODE__'
 export const RANGE_TAG_NAME = '_range'
 
-export interface Standoff {
+
+/**
+ * The source for {@link AnnotationList} and {@link AnnotationTree}
+ */
+export interface PartialStandoff2<T extends PartialStandoffAnnotation> {
+	annotations: T[]
+	metadata: Record<string, any>
+	text: string
+}
+
+export interface PartialStandoff {
 	annotations: PartialStandoffAnnotation[]
 	metadata: Record<string, any>
 	text: string
+}
+
+/**
+ * Annotations in {@link AnnotationTree} are extends with {@link extendStandoffAnnotation}
+ * resulting in {@link StandoffAnnotation}s.
+ */
+export interface Standoff extends PartialStandoff {
+	annotations: StandoffAnnotation[]
 }
 
 export interface AnnotationNode extends PartialStandoffAnnotation {
@@ -26,16 +44,23 @@ export interface StandoffAnnotationMetadata {
 	_entityId?: string
 	_entityConfigId?: string
 	_facsimileId?: string
+	_facsimilePath?: string
 	_range?: Set<string>
 	_textContent?: string
 	[prop: string]: any
 }
 
+/**
+ * Partial standoff annotations are used in {@link StandoffWrapper}.
+ * When used in {@link StandoffTree} the annotations are extended
+ * to a {@link StandoffAnnotation}.
+ * 
+ * @todo remove index, because it is added by AnnotationList and should only be present on StandoffAnnotation?
+ */
 export interface PartialStandoffAnnotation {
 	end?: number
 	endOrder?: number
 	id?: string
-	index?: number
 	isSelfClosing?: boolean
 	metadata?: StandoffAnnotationMetadata
 	name: string
@@ -43,9 +68,20 @@ export interface PartialStandoffAnnotation {
 	startOrder?: number
 }
 
-export type StandoffAnnotation = Required<PartialStandoffAnnotation>
+/**
+ * A standoff annotation as present in an {@link StandoffWrapper}
+ * or {@link StandoffTree}
+ * 
+ * The StandoffAnnotation is created from the {@link PartialStandoffAnnotation}
+ * in the constructor of the {@link StandoffTree} with {@link extendStandoffAnnotation}
+ */
+// export type StandoffAnnotation = Required<PartialStandoffAnnotation>
+export interface StandoffAnnotation extends Required<PartialStandoffAnnotation> {
+	index: number
+}
 
-export type FilterFunction = (a: StandoffAnnotation) => boolean
+// export type FilterFunction = (a: PartialStandoffAnnotation) => boolean
+export type FilterFunction<T extends PartialStandoffAnnotation> = (a: T) => boolean
 
 export type PartialExportOptions = Partial<Omit<ExportOptions, 'metadata'>> & { metadata?: Partial<ExportOptions['metadata']> }
 

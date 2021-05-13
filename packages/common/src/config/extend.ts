@@ -1,7 +1,7 @@
-import { DocereConfig, MetadataConfig, defaultEntityConfig, defaultMetadata, EntityConfig2 } from './config'
-import { PageConfig } from './page'
+import { DocereConfig, MetadataConfig, defaultEntityConfig, defaultMetadata, EntityConfig2 } from '.'
+import { PageConfig } from '../page'
 
-import type { FacetConfigBase } from './types/search/facets'
+import type { FacetConfigBase } from '../types/search/facets'
 
 export const defaultEntrySettings: DocereConfig['entrySettings'] = {
 	'panels.showHeaders': true,
@@ -67,14 +67,15 @@ function extendEntities<T extends EntityConfig2>(td: T) {
 	return setTitle(textDataConfig)
 }
 
-// TODO rename to extendConfig
-export function extendConfigData(configDataRaw: DocereConfig): DocereConfig {
+// TODO make PartialDocereConfig and return DocereConfig
+export function extendConfig(configDataRaw: DocereConfig): DocereConfig {
 	const config = { ...defaultConfig, ...configDataRaw }
 	if (config.title == null) config.title = config.slug.charAt(0).toUpperCase() + config.slug.slice(1)
 
 	config.documents = {
 		remoteDirectories: [config.slug],
 		stripRemoteDirectoryFromDocumentId: true,
+		type: 'standoff',
 		...(config.documents || {})
 	}
 
@@ -106,6 +107,22 @@ export function extendConfigData(configDataRaw: DocereConfig): DocereConfig {
 			...config.pages,
 			config: config.pages.config.map(extendPage(config))
 		}
+	}
+
+	if (config.standoff == null) config.standoff = {}
+	if (config.standoff.exportOptions == null) config.standoff.exportOptions = {}
+	config.standoff = {
+		exportOptions: {
+			...config.standoff.exportOptions
+		},
+		prepareSource: source => source,
+		prepareAnnotations: () => undefined,
+		prepareExport: () => undefined,
+		...config.standoff
+	}
+
+	if (config.facsimiles.getId == null) {
+		config.facsimiles.getId = a => a.id
 	}
 
 	// if (config.parts != null) {

@@ -14,7 +14,7 @@ export default function getComponents(_config: DocereConfig) {
 			resolution: SessionPart,
 			paragraph: styled.div`
 				margin-bottom: 1rem;
-			`
+			`,
 		}
 	}
 }

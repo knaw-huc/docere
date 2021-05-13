@@ -1,4 +1,4 @@
-import { AnnotationTree, PartialStandoffAnnotation, Standoff, StandoffAnnotation } from '@docere/common'
+import { FacsimileArea, PartialStandoff, PartialStandoffAnnotation, Standoff, StandoffWrapper } from '@docere/common'
 
 interface RepublicAnnotation {
 	end_offset: number
@@ -26,12 +26,12 @@ function toDocereAnnotation(annotation: RepublicAnnotation): PartialStandoffAnno
 		annotation.metadata.coords = annotation.coords
 	}
 
-	if (annotation.type === 'scan') {
-		annotation.metadata = {
-			_facsimileId: annotation.id,
-			_facsimilePath: annotation.metadata.iiif_info_url
-		}
-	}
+	// if (annotation.type === 'scan') {
+	// 	annotation.metadata = {
+	// 		_facsimileId: annotation.id,
+	// 		_facsimilePath: annotation.metadata.iiif_info_url
+	// 	}
+	// }
 
 	return {
 		end: annotation.end_offset,
@@ -46,7 +46,7 @@ interface RepublicStandoff extends Omit<Standoff, 'annotations'> {
 	annotations: RepublicAnnotation[]
 }
 
-export function prepareSource(republicStandoff: RepublicStandoff): Standoff {
+export function prepareSource(republicStandoff: RepublicStandoff): PartialStandoff {
 	return {
 		metadata: republicStandoff.metadata,
 		text: republicStandoff.text,
@@ -54,27 +54,27 @@ export function prepareSource(republicStandoff: RepublicStandoff): Standoff {
 	}
 }
 
-function createFacsimileArea(textRegion: StandoffAnnotation) {
+function createFacsimileArea(textRegion: PartialStandoffAnnotation): FacsimileArea {
 	return {
 		facsimileId: textRegion.metadata.scan_id,
 		points: textRegion.metadata.coords
 	}
 }
 
-// ToDO move to prepareSource
-export function prepareTree(tree: AnnotationTree) {
-	tree.convertToMilestone(a => a.name === 'line', true)
-	tree.convertToMilestone(a => a.name === 'scan')
-	tree
+export function prepareAnnotations(standoff: StandoffWrapper<PartialStandoffAnnotation>) {
+	standoff.convertToMilestone(a => a.name === 'line', true)
+	standoff.convertToMilestone(a => a.name === 'scan')
+
+	standoff.annotations
 		.filter(a => a.name === 'attendance_list' || a.name === 'resolution')
 		.forEach(parent => {
-			const textRegions = tree
+			const textRegions = standoff
 				.getChildren(parent, a => a.name === 'text_region')
 
 			parent.metadata._areas = textRegions.map(createFacsimileArea)
 		})
 
-	tree
+	standoff.annotations
 		.filter(a => a.name === 'line')
 		.forEach(a => {
 			a.metadata._areas = [createFacsimileArea(a)]

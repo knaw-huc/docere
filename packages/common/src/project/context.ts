@@ -1,5 +1,5 @@
 import React from 'react'
-import { defaultEntrySettings } from '../extend-config-data'
+import { defaultEntrySettings } from '../config/extend'
 import { AsideTab, Viewport, ContainerType } from '../enum'
 import { DocereConfig, Entry, ActiveFacsimile, ID, ActiveEntity, Layers, Page } from '..'
 import type { ProjectState } from './state'

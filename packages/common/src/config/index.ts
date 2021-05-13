@@ -1,8 +1,10 @@
 import { EntityType, Colors, EsDataType } from '../enum'
 import type { FacetConfig } from '../types/search/facets'
 import { PageConfig } from '../page'
-import { AnnotationTree, FilterFunction, PartialExportOptions, Standoff, StandoffAnnotation } from '../standoff-annotations'
-import { CreateEntryProps, ExtractedFacsimile, ID, LayerConfig } from '../entry'
+import { PartialExportOptions, PartialStandoff, PartialStandoffAnnotation, StandoffAnnotation, StandoffTree, StandoffWrapper } from '../standoff-annotations'
+import { FacsimileLayerConfig, ID, TextLayerConfig } from '../entry'
+
+export * from './extend'
 
 // TODO rename to ProjectConfig
 // TODO rename slug to id
@@ -34,13 +36,28 @@ export interface DocereConfig {
 		 * @example if remote directory is a/b and the file is in a/b/c/d/e.xml, the ID will be c/d/e.xml
 		 */
 		stripRemoteDirectoryFromDocumentId?: boolean
+
+		/**
+		 * Type of documents. XML documents are converted to standoff
+		 * 
+		 * @default standoff
+		 */
+		type?: 'standoff' | 'xml'
 	}
 
 	// entities?: EntityConfig[]
 	entrySettings?: EntrySettings
 
-	createFacsimiles?: (props: CreateEntryProps) => ExtractedFacsimile[]
-	layers2?: LayerConfig[]
+	// createFacsimiles?: (props: CreateEntryProps) => ExtractedFacsimile[]
+
+	// TODO entities also have filter and getId, share?
+	facsimiles?: {
+		filter: (annotation: PartialStandoffAnnotation) => boolean
+		getId?: (annotation: PartialStandoffAnnotation) => string
+		getPath: (annotation: PartialStandoffAnnotation) => string
+	}
+
+	layers2?: (TextLayerConfig | FacsimileLayerConfig)[]
 	entities2?: EntityConfig2[]
 	metadata2?: MetadataConfig[]
 
@@ -68,8 +85,28 @@ export interface DocereConfig {
 	}
 	standoff?: {
 		exportOptions?: PartialExportOptions
-		prepareSource?: (source: any) => Standoff
-		prepareTree?: (tree: AnnotationTree) => void
+
+		/**
+		 * Function to convert any input to {@link PartialStandoff}
+		 */
+		prepareSource?: (source: any) => PartialStandoff
+
+		/**
+		 * Function to prepare the annotations using the thin wrapper of
+		 * {@link StandoffWrapper}. The class allows alteration of the annotations
+		 * before it is added to the {@link StandoffTree}. Using a StandoffWrapper
+		 * is faster than using a StandoffTree, with almost the same functionality.
+		 * If the StandoffTree is needed, use {@link DocereConfig.standoff.prepareExport}
+		 */
+		prepareAnnotations?: (standoffWrapper: StandoffWrapper<PartialStandoffAnnotation>) => void
+
+		/**
+		 * Function to prepare the export of the {@link StandoffTree}. Most changes
+		 * to the {@link StandoffAnnotation}s should be done using the {@link DocereConfig.standoff.prepareAnnotations}
+		 * function, but some need the tree, for example when finding annotations
+		 * {@link StandoffTree.findBefore | before} and {@link StandoffTree.findAfter | after}.
+		 */
+		prepareExport?: (standoffTree: StandoffTree) => void
 	}
 	private?: boolean
 	searchResultCount?: number
@@ -136,11 +173,11 @@ export type EntityConfig2 = TmpConfig & {
 	revealOnHover?: boolean
 	type?: EntityType | string
 
-	filter: FilterFunction
+	filter: (annotation: PartialStandoffAnnotation) => boolean
 
 	// Set the ID of the entity. Not te be confused with the annotation ID!
 	// An entity can consist of multiple annotations. Defaults to a.metadata._id
-	getId?: (a: StandoffAnnotation) => string
+	getId?: (a: PartialStandoffAnnotation) => string
 }
 
 export const defaultMetadata: Required<MetadataConfig> = {

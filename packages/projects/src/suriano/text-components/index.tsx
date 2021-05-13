@@ -2,8 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { ContainerType, ContainerContext, ContainerContextValue, EntitiesContext, ProjectContext } from '@docere/common'
 import type { DocereConfig } from '@docere/common'
-import { Lb, Pb, NoteTag, EntityTag, Hi } from '@docere/text-components'
-import { NoOp } from '../../utils'
+import { Lb, Pb, EntityTag, Hi } from '@docere/text-components'
 
 interface PWProps {
 	active: boolean
@@ -30,7 +29,7 @@ function Person(props: any) {
 	const container = React.useContext(ContainerContext)
 	const activeEntities = React.useContext(EntitiesContext)
 	const { config } = React.useContext(ProjectContext)
-	const entityConfig = config.entities.find(c => c.id === 'personography')
+	const entityConfig = config.entities2.find(c => c.id === 'personography')
 
 	return (
 		<PersonWrapper
@@ -53,16 +52,16 @@ export default function getComponents(_config: DocereConfig) {
 		}
 
 		return {
-			teiHeader: NoOp,
-			'section.footnotes': NoOp,
-			head: NoOp,
-			header: NoOp,
+			// teiHeader: NoOp,
+			// 'section.footnotes': NoOp,
+			// head: NoOp,
+			// header: NoOp,
 			hi: Hi,
 			// 'a.footnote-ref': Note,
 			pb: Pb,
 			lb: Lb,
-			ptr: NoteTag,
-			'rs[type="pers"]': EntityTag,
+			ptr: EntityTag,
+			rs: EntityTag,
 		}
 	}
 }

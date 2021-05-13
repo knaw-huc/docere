@@ -1,30 +1,30 @@
 import React from 'react'
 
-import { DocereComponents, DocereAnnotation } from '@docere/common'
+import { DocereComponents, DocereAnnotation, DocereAnnotationProps } from '@docere/common'
 
 export type { DocereComponents } from '@docere/common'
 
-function Empty(props: any) {
+function Empty(props: DocereAnnotationProps) {
 	if (props.children == null) return null
 	return props.children
 }
 
-function renderComponentTree(tree: DocereAnnotation, props: DocereTextViewProps): JSX.Element
-function renderComponentTree(tree: string, props: DocereTextViewProps): string
-function renderComponentTree(tree: DocereAnnotation | string, props: DocereTextViewProps): JSX.Element | string
-function renderComponentTree(tree: DocereAnnotation | string, props: DocereTextViewProps): JSX.Element | string {
-	if (typeof tree === 'string') return tree
+function renderComponentTree(root: DocereAnnotation, props: DocereTextViewProps): JSX.Element
+function renderComponentTree(textNode: string, props: DocereTextViewProps): string
+function renderComponentTree(root: DocereAnnotation | string, props: DocereTextViewProps): JSX.Element | string
+function renderComponentTree(root: DocereAnnotation | string, props: DocereTextViewProps): JSX.Element | string {
+	if (typeof root === 'string') return root
 
-	let component = props.components[tree.type]
+	let component = props.components[root.type]
 	if (component == null && props.components._find != null) {
-		component = props.components._find(tree)
+		component = props.components._find(root)
 	}
 	if (component == null) component = Empty
 
 	return React.createElement(
 		component,
-		tree.props,
-		tree.children?.map(child => renderComponentTree(child, props))
+		root.props,
+		root.children?.map(child => renderComponentTree(child, props))
 	)
 }
 

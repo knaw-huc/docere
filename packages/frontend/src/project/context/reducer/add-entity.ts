@@ -19,7 +19,7 @@ export function addEntity(state: ProjectState, action: AddEntity): ProjectState 
 
 		if (
 			Array.isArray(activeEntity.props._areas) &&
-			!activeEntity.props._areas.some(fa => fa.facsimileId === state.activeFacsimile.id)
+			!activeEntity.props._areas.some(fa => fa.facsimileId === state.activeFacsimile.props._facsimileId)
 		) {
 			const facsimileArea = activeEntity.props._areas.find(fa => fa.facsimileId != null)
 			if (facsimileArea != null) {

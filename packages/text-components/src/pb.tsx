@@ -57,8 +57,11 @@ export function Pb(props: DocereAnnotationProps) {
 					{
 						facsimiles.map(facsimile =>
 							<FacsimileThumb
-								facsimile={facsimile}
-								key={facsimile.id}
+								facsimile={{
+									id: facsimile.props._facsimileId,
+									path: facsimile.props._facsimilePath
+								}}
+								key={facsimile.props.key}
 								container={container}
 							/>	
 						)

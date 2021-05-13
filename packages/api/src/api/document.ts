@@ -1,21 +1,8 @@
 import { Express } from 'express'
 import { getPool } from '../db'
 import { DOCUMENT_BASE_PATH } from '../constants'
-import { AnnotationTree, DocereConfig, Standoff } from '@docere/common'
 import { getProjectConfig, isError, sendJson } from '../utils'
-
-export function createDocereAnnotationTree(standoff: Standoff, projectConfig: DocereConfig) {
-	const tree = new AnnotationTree(standoff, projectConfig.standoff.exportOptions)
-	tree.annotations.forEach(a => {
-		const config = projectConfig.entities2.find(ec => ec.filter(a))
-		if (config != null) {
-			a.metadata._entityConfigId = config.id
-			a.metadata._entityId = config.getId(a)
-		}
-	})
-	projectConfig.standoff.prepareTree(tree)
-	return tree
-}
+import { StandoffTree } from '@docere/common'
 
 export default function handleDocumentApi(app: Express) {
 	app.get(DOCUMENT_BASE_PATH, async (req, res) => {
@@ -35,7 +22,7 @@ export default function handleDocumentApi(app: Express) {
 		if (!rows.length) res.sendStatus(404)
 		else {
 			const standoff = rows[0].standoff
-			const tree = createDocereAnnotationTree(standoff, config)
+			const tree = new StandoffTree(standoff, config.standoff.exportOptions)
 			res.send(tree.exportXml())
 		}
 	})

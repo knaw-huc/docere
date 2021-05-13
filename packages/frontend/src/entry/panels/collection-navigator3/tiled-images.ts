@@ -65,13 +65,13 @@ export default class TiledImages {
 	}
 
 	setActiveFacsimile(facsimile?: ActiveFacsimile) {
-		if (facsimile == null && this.currentOverlay !== this.activeFacsimile?.id) {
+		if (facsimile == null && this.currentOverlay !== this.activeFacsimile?.props._facsimileId) {
 			facsimile = this.activeFacsimile
 		}
 		this.activeFacsimile = facsimile
 		if (this.activeFacsimile == null) return
 
-		const activeTileOption = this.activeTileOptions.find(to => to.tileSource === facsimile.path)
+		const activeTileOption = this.activeTileOptions.find(to => to.tileSource === facsimile.props._facsimilePath)
 		
 		if (activeTileOption == null || activeTileOption.bounds == null) return
 
@@ -90,7 +90,7 @@ export default class TiledImages {
 
 		this.viewer.viewport.fitBounds(activeTileOption.bounds)
 
-		this.currentOverlay = this.activeFacsimile.id
+		this.currentOverlay = this.activeFacsimile.props._facsimileId
 	}
 
 	// Set a new entry. When this.highlightActive returns false, not all tiles of that entry are loaded.

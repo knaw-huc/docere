@@ -3,7 +3,7 @@ import { Express } from 'express'
 import { sendJson, isError, getProjectConfig, getProjectPageConfig } from '../utils'
 import { getProjectIndexMapping } from '../es'
 
-import handleAnalyzeApi from './analyze'
+// import handleAnalyzeApi from './analyze'
 
 import { addRemoteStandoffToDb } from '../db/add-standoff'
 import { initProject } from '../db/init-project'
@@ -13,6 +13,7 @@ import { getPool } from '../db'
 import { dtapMap } from '../../../projects/src/dtap'
 import { DTAP } from '@docere/common'
 import { PROJECT_BASE_PATH } from '../constants'
+import { performance } from 'perf_hooks'
 
 // @ts-ignore
 const DOCERE_DTAP = DTAP[process.env.DOCERE_DTAP]
@@ -83,7 +84,7 @@ export default function handleProjectApi(app: Express) {
 	// 	await addPagesToDb(config)
 	// })
 
-	app.post(`${PROJECT_BASE_PATH}/standoff`, async (req, res) => {
+	app.post(`${PROJECT_BASE_PATH}/upsert`, async (req, res) => {
 		const { projectId } = req.params
 		const config = await getProjectConfig(projectId)
 		if (isError(config)) return sendJson(config, res)
@@ -91,6 +92,7 @@ export default function handleProjectApi(app: Express) {
 		// Return an async ACCEPTED immediately, the server will handle it from here
 		res.sendStatus(202).end()
 
+		const t0 = performance.now()
 		for (const remotePath of config.documents.remoteDirectories) {
 			await addRemoteStandoffToDb(remotePath, config, {
 				force: req.query.force === '',
@@ -98,7 +100,7 @@ export default function handleProjectApi(app: Express) {
 				maxPerDirOffset: castUrlQueryToNumber(req.query.max_per_dir_offset as string)
 			})
 		}
-		// await addPagesToDb(config)
+		const t1 = performance.now(); console.log('Performance: ', `${t1 - t0}ms`)
 	})
 
 	app.post(`${PROJECT_BASE_PATH}/init`, async (req, res) => {
@@ -110,5 +112,5 @@ export default function handleProjectApi(app: Express) {
 		res.end()
 	})
 
-	handleAnalyzeApi(app)
+	// handleAnalyzeApi(app)
 }

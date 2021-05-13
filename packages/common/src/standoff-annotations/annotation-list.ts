@@ -1,59 +1,43 @@
-import { extendStandoffAnnotation, extendExportOptions, isAnnotation, isFunction } from './utils'
-import { Standoff, PartialStandoffAnnotation } from "."
+import { isChild, isPartialAnnotation } from './utils'
+import { PartialStandoffAnnotation, PartialStandoff2, FilterFunction } from "."
 
-import type { StandoffAnnotation, FilterFunction, ExportOptions, PartialExportOptions } from '.'
-
-export class AnnotationList {
-	options: ExportOptions
-	protected _annotations: StandoffAnnotation[]
-	private lookup: Map<string, StandoffAnnotation>
-
+/**
+ * A thin wrapper around a {@link PartialStandoff} or {@link Standoff}
+ * 
+ * It adds basic functionality to alter the annotations. Pure standoff
+ * annotations don't have fixed (sorting) order, so changing the annotations
+ * is fast. When used as a {@link StandoffTree} this changes and alterations
+ * have to be accompanied by an {@link StandoffTree.update} in order to 
+ * keep the StandoffTree valid
+ */
+export class StandoffWrapper<T extends PartialStandoffAnnotation> {
 	get annotations() {
-		return this._annotations
+		return this.standoff.annotations
 	}
 
-	get length() {
-		return this._annotations.length
+	constructor(public standoff: PartialStandoff2<T>) {}
+
+	add(annotation: T) {
+		this.standoff.annotations.push(annotation)
 	}
 
-	constructor(protected standoff: Standoff, options: PartialExportOptions = {}) {
-		this.options = extendExportOptions(options)
-		this._annotations = standoff.annotations.map(extendStandoffAnnotation)
-		this.update()
-	}
-
-	getStandoff(): Standoff {
-		return {
-			...this.standoff,
-			annotations: this._annotations
+	remove(annotation: T): void
+	remove(predicate: FilterFunction<T>): void
+	remove(predicate: T | FilterFunction<T>): void {
+		if (isPartialAnnotation(predicate)) {
+			predicate = (a) => predicate === a
 		}
+
+		this.standoff.annotations = this.standoff.annotations.filter(predicate)
 	}
 
-	add(annotation: PartialStandoffAnnotation, update = true) {
-		const next = extendStandoffAnnotation(annotation)
-		this._annotations.push(next)
-		if (update) this.update()
-	}
-
-	remove(annotation: FilterFunction, update?: boolean): void
-	remove(annotation: StandoffAnnotation, update?: boolean): void
-	remove(annotation: StandoffAnnotation | FilterFunction, update = true): void {
-		if (isAnnotation(annotation)) {
-			this._annotations.splice(annotation.index, 1)
-		} else if (isFunction(annotation)) {
-			this._annotations = this._annotations.filter(a => !annotation(a))
-		}
-		if (update) this.update()
-	}
-
-	updateOffsets(annotation: StandoffAnnotation, start: number, end?: number, update = true) {
+	updateOffsets(annotation: T, start: number, end?: number) {
 		if (start != null) annotation.start = start
 		if (end != null) annotation.end = end
-		if (update) this.update()
 	}
 
-	convertToMilestone(predicate: FilterFunction, transferTextContent = false, update = true) {
-		this._annotations
+	convertToMilestone(predicate: (a: T) => boolean, transferTextContent = false) {
+		this.standoff.annotations
 			.filter(predicate)
 			.forEach(a => {
 				if (transferTextContent) {
@@ -62,52 +46,84 @@ export class AnnotationList {
 				a.end = a.start
 				a.isSelfClosing = true
 			})
-		if (update) this.update()
 	}
 
-	split(annotation: StandoffAnnotation, offset: number, update = true) {
+	split(annotation: T, offset: number) {
 		if (annotation == null || offset == null) return
 
-		const newAnnotation = JSON.parse(JSON.stringify(annotation))
+		const newAnnotation: T = JSON.parse(JSON.stringify(annotation))
 		newAnnotation.id = Math.random().toString().slice(2)
 		newAnnotation.start = offset
-		this.add(newAnnotation, false)
+		this.add(newAnnotation)
 
-		this.updateOffsets(annotation, null, offset, false)
-
-		if (update) this.update()
+		this.updateOffsets(annotation, null, offset)
 	}
 
-	update() {
-		this._annotations
-			.forEach((a, i) => { a.index = i })
-
-		this.lookup = this._annotations
-			.reduce<Map<string, StandoffAnnotation>>((prev, curr) => {
-				prev.set(curr.id, curr)
-				return prev
-			}, new Map())
-	}
-
-	atIndex(index: number) {
-		return this._annotations[index]
-	}
-
-	byId(id: string) {
-		return this.lookup.get(id)
-	}
-
-	find(filter: FilterFunction) {
-		return this._annotations.find(filter)
-	}
-
-	filter(filter: FilterFunction) {
-		return this._annotations.filter(filter)
-	}
-
-	getTextContent(annotation?: StandoffAnnotation) {
+	getTextContent(annotation?: T) {
 		if (annotation == null) return this.standoff.text
+		if (annotation.isSelfClosing) return ''
 		return this.standoff.text.slice(annotation.start, annotation.end)
+	}
+
+	addRoot(annotation: T) {
+		this.add({
+			...annotation,
+			end: this.standoff.text.length,
+			start: 0,
+		})
+	}
+
+	getSibling(a: T) {
+		const parent = this.findParent(a)
+		const children = this.getDirectChildren(parent)
+		return children.find(child => child !== a && a.end <= child.start)
+	}
+
+	getPreviousSibling(a: T) {
+		const parent = this.findParent(a)
+		const children = this.getDirectChildren(parent)
+		return children.reduce((prev, child) => {
+			if (child !== a && child.end <= a.start) {
+				if (prev == null) return child
+				return child.end >= prev.end ? child : prev
+			}
+			return prev
+		}, null)
+	}
+
+	findParent(annotation: T, subset = this.standoff.annotations) {
+		return subset
+			.reduce<T>((prev, curr) => {
+				if (!isChild(annotation, curr)) return prev
+
+				if (prev == null) return curr
+
+				if (
+					prev.start <= curr.start && 
+					prev.end >= curr.end
+				) return curr
+
+				return prev
+			}, null)
+	}
+
+	getDirectChildren(parent: T) {
+		const children = this.getChildren(parent)
+		const possibleParents = children.concat(parent)
+
+		return children
+			.filter(child =>
+				this.findParent(child, possibleParents) === parent
+			)
+	}
+
+	getChildren(parent: T, filter?: FilterFunction<T>) {
+		if (filter == null) filter = () => true
+
+		return this.standoff.annotations.filter(annotation =>
+			filter(annotation) &&
+			isChild(annotation, parent)
+		)
 	}
 }
 

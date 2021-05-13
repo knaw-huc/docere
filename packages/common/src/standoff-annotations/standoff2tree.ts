@@ -1,19 +1,18 @@
-import { AnnotationList } from "./annotation-list"
-import { PartialStandoffAnnotation, AnnotationNode, Standoff, TEXT_NODE_NAME, StandoffAnnotation } from "."
+import { PartialStandoffAnnotation, AnnotationNode, TEXT_NODE_NAME, StandoffAnnotation, StandoffTree } from "."
 import { ExportOptions } from "."
 import { extendStandoffAnnotation, createAnnotationNode, isChild } from "./utils"
 
 const annotationNodeLookup: Record<string, AnnotationNode> = {}
 
-export function standoff2tree(annotationList: AnnotationList, standoff: Standoff, _options: ExportOptions): AnnotationNode {
+export function standoff2tree(annotationTree: StandoffTree, text: string, _options: ExportOptions): AnnotationNode {
 	let tree: AnnotationNode
 
 	function findParent(annotation: StandoffAnnotation, startIndex: number): StandoffAnnotation {
 		let index = startIndex - 1
-		let parent = annotationList.atIndex(index)
+		let parent = annotationTree.atIndex(index)
 
 		while (parent != null && !isChild(annotation, parent)) {
-			parent = annotationList.atIndex(index--)
+			parent = annotationTree.atIndex(index--)
 		}
 
 		return parent
@@ -21,7 +20,7 @@ export function standoff2tree(annotationList: AnnotationList, standoff: Standoff
 
 	// setOrder(standoff.annotations, options.annotationHierarchy)
 
-	annotationList.annotations.forEach((annotation, index) => {
+	annotationTree.annotations.forEach((annotation, index) => {
 		const parent = findParent(annotation, index)
 
 		const annotationNode = createAnnotationNode(annotation)
@@ -36,7 +35,7 @@ export function standoff2tree(annotationList: AnnotationList, standoff: Standoff
 	})
 
 	if (tree == null) return
-	return addTextNodes(tree, standoff.text)
+	return addTextNodes(tree, text)
 }
 
 function addText(agg: AnnotationNode[], text: string, start: number, end: number) {

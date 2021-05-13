@@ -41,7 +41,11 @@ export interface ElasticSearchRequestOptions {
 	sortOrder: SortOrder
 }
 
-export interface ElasticSearchFacsimile { id: string, path: string }
+export interface ElasticSearchFacsimile {
+	id: string,
+	path: string
+}
+
 /**
  * JSON object which represents a ElasticSearch document
  */

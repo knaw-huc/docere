@@ -50,11 +50,11 @@ const projectList: ProjectList = {
 		getTextComponents: async function() { return await import('./republic/text-components') },
 		getUIComponents: async function() { return await import('./republic/ui-components') },
 	},
-	// suriano: {
-	// 	config: async function() { return await import('./suriano/config') },
-	// 	getTextComponents: async function() { return await import('./suriano/text-components') },
-	// 	getUIComponents: async function() { return await import('./suriano/ui-components') },
-	// },
+	suriano: {
+		config: async function() { return await import('./suriano/config') },
+		getTextComponents: async function() { return await import('./suriano/text-components') },
+		getUIComponents: async function() { return await import('./suriano/ui-components') },
+	},
 	// utrechtpsalter: {
 	// 	config: async function() { return await import('./utrechtpsalter/config') },
 	// 	getTextComponents: async function() { return await import('./utrechtpsalter/text-components') },

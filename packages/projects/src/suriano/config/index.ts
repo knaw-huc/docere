@@ -1,12 +1,14 @@
-import { extendConfigData, LayerType, Colors, EntityType, xmlToString, EsDataType } from '@docere/common'
-import extractFacsimiles from './facsimiles'
+import { extendConfig, LayerType, Colors, EntityType, EsDataType } from '@docere/common'
+import { hasMetadataValue } from '../../utils'
+// import { createFacsimiles } from './facsimiles'
 
-export default extendConfigData({
+export default extendConfig({
 	// collection: {
 	// 	metadataId: 'filza',
 	// 	sortBy: 'letterno',
 	// },
 	documents: {
+		type: 'xml',
 		remoteDirectories: [
 			'suriano/letters',
 		],
@@ -14,7 +16,7 @@ export default extendConfigData({
 	slug: 'suriano',
 	title: "Suriano",
 	private: true,
-	metadata: [
+	metadata2: [
 		// {
 		// 	id: 'summary',
 		// 	extract: entry => entry.preparedElement.querySelector('div[type="summary"] > p').textContent
@@ -22,65 +24,67 @@ export default extendConfigData({
 		{
 			description: 'Dit is een test om wat te zien',
 			id: 'sender',
-			extract: entry => entry.preparedElement.querySelector('correspAction[type="sent"] name').textContent
+			// extract: entry => entry.preparedElement.querySelector('correspAction[type="sent"] name').textContent
 		},
 		{
 			id: 'sender_place',
-			extract: entry => entry.preparedElement.querySelector('correspAction[type="sent"] settlement').textContent
+			// extract: entry => entry.preparedElement.querySelector('correspAction[type="sent"] settlement').textContent
 		},
 		{
 			datatype: EsDataType.Date,
-			extract: entry => entry.preparedElement.querySelector('correspAction[type="sent"] date')?.getAttribute('when'),
+			// extract: entry => entry.preparedElement.querySelector('correspAction[type="sent"] date')?.getAttribute('when'),
 			id: 'sender_date',
 			interval: 'y',
 		},
 		{
 			id: 'filza',
-			extract: entry => entry.preparedElement.querySelector('idno[type="filza"]').textContent
+			// extract: entry => entry.preparedElement.querySelector('idno[type="filza"]').textContent
 		},
 		{
 			id: 'letterno',
-			extract: entry => entry.preparedElement.querySelector('idno[type="letterno"]').textContent
+			// extract: entry => entry.preparedElement.querySelector('idno[type="letterno"]').textContent
 		},
 		{
 			id: 'settlement',
-			extract: entry => entry.preparedElement.querySelector('msIdentifier > settlement').textContent
+			// extract: entry => entry.preparedElement.querySelector('msIdentifier > settlement').textContent
 		},
 		{
 			id: 'insitution',
-			extract: entry => entry.preparedElement.querySelector('msIdentifier > institution').textContent
+			// extract: entry => entry.preparedElement.querySelector('msIdentifier > institution').textContent
 		},
 		{
 			id: 'collection',
-			extract: entry => entry.preparedElement.querySelector('msIdentifier > collection').textContent
+			// extract: entry => entry.preparedElement.querySelector('msIdentifier > collection').textContent
 		},
 		{
 			id: 'biblScope',
-			extract: entry => entry.preparedElement.querySelector('biblScope').textContent
+			// extract: entry => entry.preparedElement.querySelector('biblScope').textContent
 		},
 		{
 			id: 'summary',
-			extract: entry => entry.preparedElement.querySelector('div[type="summary"]')?.textContent,
+			// extract: entry => entry.preparedElement.querySelector('div[type="summary"]')?.textContent,
 			showAsFacet: false
 		}
 	],
-	entities: [
+	entities2: [
 		{
 			color: Colors.BlueBright,
 			id: 'note',
-			extract: ({ layerElement, entityConfig, entry }) => Array.from(layerElement.querySelectorAll(entityConfig.selector))
-				.map(el => {
-					const n = el.getAttribute('n')
-					const id = entityConfig.extractId(el)
-					return {
-						anchor: el,
-						content: xmlToString(entry.preparedElement.querySelector(`note[*|id="${id}"]`)),
-						n,
-						title: `Note ${n}`,
-					}
-				}),
-			extractId: el => el.getAttribute('target').slice(1),
-			selector: 'ptr[target]',
+			filter: a => a.name === 'ptr' && hasMetadataValue(a, 'target'),
+			getId: a => a.metadata.target.slice(1),
+			// extract: ({ layerElement, entityConfig, entry }) => Array.from(layerElement.querySelectorAll(entityConfig.selector))
+			// 	.map(el => {
+			// 		const n = el.getAttribute('n')
+			// 		const id = entityConfig.extractId(el)
+			// 		return {
+			// 			anchor: el,
+			// 			content: xmlToString(entry.preparedElement.querySelector(`note[*|id="${id}"]`)),
+			// 			n,
+			// 			title: `Note ${n}`,
+			// 		}
+			// 	}),
+			// extractId: el => el.getAttribute('target').slice(1),
+			// selector: 'ptr[target]',
 			title: "Notes",
 			type: EntityType.Note,
 			showInAside: false,
@@ -89,34 +93,57 @@ export default extendConfigData({
 		{
 			color: Colors.Pink,
 			id: 'personography',
-			extract: ({ layerElement, entityConfig }) => Array.from(layerElement.querySelectorAll(entityConfig.selector))
-				.map(el => ({
-					anchor: el,
-					content: el.getAttribute('key'),
-				})),
-			extractId: el => el.getAttribute('key'),
-			selector: 'rs[type="pers"]',
+			filter: a => a.name === 'rs' && a.metadata.type === 'pers',
+			getId: a => a.metadata.key,
+			// extract: ({ layerElement, entityConfig }) => Array.from(layerElement.querySelectorAll(entityConfig.selector))
+			// 	.map(el => ({
+			// 		anchor: el,
+			// 		content: el.getAttribute('key'),
+			// 	})),
+			// extractId: el => el.getAttribute('key'),
+			// selector: 'rs[type="pers"]',
 			title: "Persons",
 			type: EntityType.Person,
 		},
 	],
+	// facsimiles: {
+	// 	extractFacsimileId: el => el.getAttribute('xml:id'),
+	// 	extractFacsimiles,
+	// 	selector: 'pb',
+	// },
+	// createFacsimiles,
+
 	facsimiles: {
-		extractFacsimileId: el => el.getAttribute('xml:id'),
-		extractFacsimiles,
-		selector: 'pb',
+		filter: a => a.name === 'pb',
+		getId: a => a.metadata['xml:id'],
+		getPath: (a) => {
+			const { _facsimileId: id } = a.metadata
+
+			const pageNumber = parseInt(id.slice(1, 3))
+			const rv = id.slice(3)
+
+			let irrelevantNumber = (pageNumber * 2) + 5
+			if (rv === 'v') irrelevantNumber += 1
+			
+			const imgPath = 'Senato-dispacci-ambasciatori-e-residenti-Signori-Stati-filza-2' //0271_133-r'
+			return `/iiif/suriano/${imgPath}/${imgPath}_0${irrelevantNumber}_0${pageNumber}-${rv}.jpg/info.json`
+		}
 	},
-	layers: [
+
+	layers2: [
 		{
 			id: 'facsimile',
 			type: LayerType.Facsimile,
 		},
 		{
-			extractElement: entry => entry.preparedElement.querySelector('div[type="original"]'),
+			// extractElement: entry => entry.preparedElement.querySelector('div[type="original"]'),
+			findRoot: a => a.name === 'div' && a.metadata.type === 'original',
 			id: 'text',
 			type: LayerType.Text,
 		},
 		{
-			extractElement: entry => entry.preparedElement.querySelector('div[type="summary"]'),
+			// extractElement: entry => entry.preparedElement.querySelector('div[type="summary"]'),
+			findRoot: a => a.name === 'div' && a.metadata.type === 'summary',
 			id: 'summary',
 			type: LayerType.Text,
 		},
@@ -126,19 +153,19 @@ export default extendConfigData({
 			{
 				id: 'biblio',
 				remotePath: 'suriano/pages/Biblio.xml',
-				split: {
-					extractId: (el) => el.getAttribute('xml:id'),
-					selector: 'bibl',
-				},
+				// split: {
+				// 	extractId: (el) => el.getAttribute('xml:id'),
+				// 	selector: 'bibl',
+				// },
 				title: 'Bibliography'
 			},
 			{
 				id: 'personography',
 				remotePath: 'suriano/pages/Personography.xml',
-				split: {
-					extractId: (el) => el.getAttribute('xml:id'),
-					selector: 'person',
-				},
+				// split: {
+				// 	extractId: (el) => el.getAttribute('xml:id'),
+				// 	selector: 'person',
+				// },
 				title: 'Personography'
 			},
 		],

@@ -1,10 +1,10 @@
 import { exportMetadata } from "./export-xml"
 import { AnnotationNode, DocereAnnotation, ExportOptions, TEXT_NODE_NAME } from "."
 
-const invalidKeys = new Set(['ref'])
+const invalidKeys = new Set(['ref', 'key'])
 
 export function exportReactTree(root: AnnotationNode, options: ExportOptions): DocereAnnotation {
-	const { id, name, children } = root
+	const { id, name, children, metadata } = root
 
 	const annotationClone: DocereAnnotation = {
 		type: name,
@@ -12,6 +12,8 @@ export function exportReactTree(root: AnnotationNode, options: ExportOptions): D
 			key: id
 		}
 	} 
+
+	if (metadata.key != null) annotationClone.props._key = metadata.key
 
 	if (children.length) {
 		annotationClone.children = children
@@ -47,8 +49,6 @@ export function exportReactTree(root: AnnotationNode, options: ExportOptions): D
 			prev[key] = value
 			return prev
 		}, annotationClone.props)
-
-	// }
 
 	return annotationClone
 }

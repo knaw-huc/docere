@@ -1,4 +1,4 @@
-import { AnnotationTree } from "./annotation-tree"
+import { StandoffTree } from "./annotation-tree"
 import { ExportOptions, OverlapReport, StandoffAnnotation } from "."
 import { hasOverlap, sortByOffset } from "./utils"
 
@@ -6,11 +6,11 @@ import { hasOverlap, sortByOffset } from "./utils"
 import { simpleAnno } from "./utils"
 
 export class OverlapController {
-	constructor(private tree: AnnotationTree) {}
+	constructor(private tree: StandoffTree) {}
 
 	report() {
 		const report: OverlapReport = []
-		const listLength = this.tree.length
+		const listLength = this.tree.annotations.length
 
 		for (let i = 0; i < listLength; i++) {
 			const a_i = this.tree.atIndex(i)
@@ -48,7 +48,7 @@ export class OverlapController {
 	}
 
 	private findFirstOverlap(): [StandoffAnnotation, StandoffAnnotation] {
-		const listLength = this.tree.length
+		const listLength = this.tree.annotations.length
 
 		for (let i = 0; i < listLength; i++) {
 			const a_i = this.tree.atIndex(i)

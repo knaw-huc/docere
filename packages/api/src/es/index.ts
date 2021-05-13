@@ -4,7 +4,7 @@ import { EsDataType, JsonEntry, isHierarchyFacetConfig } from '../../../common/s
 import { getType, isError, getElasticSearchDocument, getProjectConfig } from '../utils'
 
 import type { Mapping, DocereApiError } from '../types'
-import { Standoff } from '@docere/common'
+import { DocereConfig, Standoff } from '@docere/common'
 
 
 export async function initProjectIndex(projectId: string) {
@@ -46,7 +46,7 @@ export async function getProjectIndexMapping(projectId: string): Promise<Mapping
 		}
 	};
 
-	[...config.metadata, ...config.entities]
+	[...config.metadata2, ...config.entities2]
 		.forEach(md => {
 			const type = getType(md.id, config)
 			if (type != null) {
@@ -68,18 +68,18 @@ export async function getProjectIndexMapping(projectId: string): Promise<Mapping
 }
 
 export async function indexDocument(
-	projectId: string,
+	projectConfig: DocereConfig,
 	extractedEntry: JsonEntry,
 	standoff: Standoff,
 	esClient: es.Client
 ) {
-	const esDocument = getElasticSearchDocument(extractedEntry, standoff)
+	const esDocument = getElasticSearchDocument(extractedEntry, standoff, projectConfig)
 	if (isError(esDocument)) return esDocument
 
 	try {
 		await esClient.update({
 			id: esDocument.id,
-			index: projectId,
+			index: projectConfig.slug,
 			body: {
 				doc: esDocument,
 				doc_as_upsert: true,

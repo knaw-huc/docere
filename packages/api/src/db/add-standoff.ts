@@ -2,15 +2,15 @@ import crypto from 'crypto'
 import * as es from '@elastic/elasticsearch'
 import { PoolClient } from 'pg'
 import fetch from 'node-fetch'
-import { JsonEntry, XmlDirectoryStructure, AnnotationTree, createJsonEntry, DocereConfig, ID } from '@docere/common'
-
+import { JsonEntry, XmlDirectoryStructure, StandoffTree, createJsonEntry, DocereConfig, ID } from '@docere/common'
 
 import { getDocumentIdFromRemoteFilePath } from '../utils'
+import { xml2standoff } from '../utils/xml2standoff'
 
 import { getPool, transactionQuery } from './index'
 import { indexDocument } from '../es'
 import { XML_SERVER_ENDPOINT } from '../constants'
-import { createDocereAnnotationTree } from '../api/document'
+import { createStandoff } from '../utils/source2entry'
 
 type AddRemoteFilesOptions = {
 	force?: boolean
@@ -39,9 +39,10 @@ export async function addRemoteStandoffToDb(
 	options = { ...defaultAddRemoteFilesOptions, ...options }
 	if (remotePath.charAt(0) === '/') remotePath = remotePath.slice(1)
 
+	// TODO rename XML_SERVER_ENDPOINT to FILE_SERVER_ENDPOINT
 	// Fetch directory structure
-	const xmlEndpoint = `${XML_SERVER_ENDPOINT}/${remotePath}`
-	const result = await fetch(xmlEndpoint)
+	const endpoint = `${XML_SERVER_ENDPOINT}/${remotePath}`
+	const result = await fetch(endpoint)
 	if (result.status === 404) {
 		console.log(`[${projectConfig.slug}] remote path not found: '${remotePath}'`)
 		return
@@ -55,13 +56,26 @@ export async function addRemoteStandoffToDb(
 		files = files.slice(maxPerDirOffset, maxPerDirOffset + options.maxPerDir)
 	}
 
-	// Add every XML file to the database
+	const pool = await getPool(projectConfig.slug)
+	const client = await pool.connect()
+	const esClient = new es.Client({ node: 'http://es01:9200' })
+
+	// Add every file to the database
 	for (const filePath of files) {
-		const entryId = getDocumentIdFromRemoteFilePath(filePath, 'json', remotePath, projectConfig.documents.stripRemoteDirectoryFromDocumentId)
+		const entryId = getDocumentIdFromRemoteFilePath(filePath, remotePath, projectConfig)
 		const result = await fetch(`${XML_SERVER_ENDPOINT}${filePath}`)
-		const source = await result.json()	
-		await addStandoffToDb(source, projectConfig, entryId, options.force)
+
+		let source: any
+		if (projectConfig.documents.type === 'xml') {
+			const xml = await result.text()	
+			source = await xml2standoff(xml)
+		} else {
+			source = await result.json()
+		}
+
+		await addStandoffToDb(source, projectConfig, entryId, client, esClient, options.force)
 	}
+	client.release()
 
 	// Recursively add sub dirs
 	for (const dirPath of dirStructure.directories) {
@@ -73,28 +87,26 @@ async function addStandoffToDb(
 	source: any,
 	projectConfig: DocereConfig,
 	documentId: string,
+	client: PoolClient,
+	esClient: es.Client,
 	force = false
 ) {
-	const pool = await getPool(projectConfig.slug)
-	const client = await pool.connect()
 	
 	const isUpdate = await documentExists(documentId, JSON.stringify(source), client)
 	if (isUpdate && !force) {
 		console.log(`[${projectConfig.slug}] document '${documentId}' exists`)
-		client.release()
 		return
 	}
 
-	const standoff = projectConfig.standoff.prepareSource(source)
-	const tree = createDocereAnnotationTree(standoff, projectConfig)
+	const standoff = createStandoff(source, projectConfig)
+	const tree = new StandoffTree(standoff, projectConfig.standoff.exportOptions)
+	projectConfig.standoff.prepareExport(tree)
 
 	const entry = createJsonEntry({
 		config: projectConfig,
 		id: documentId,
 		tree,
 	})
-
-	const esClient = new es.Client({ node: 'http://es01:9200' })
 
 	await transactionQuery(client, 'BEGIN')
 
@@ -116,7 +128,7 @@ async function addStandoffToDb(
 	const sourceId = rows[0].id
 
 	await addDocumentToDb({ client, documentId, order_number: null, entry, tree, sourceId })
-	await indexDocument(projectConfig.slug, entry, tree.getStandoff(), esClient)
+	await indexDocument(projectConfig, entry, tree.standoff, esClient)
 
 	// let i = 0
 	// for (const part of serializedEntry.parts) {
@@ -127,8 +139,6 @@ async function addStandoffToDb(
 	await transactionQuery(client, 'COMMIT')
 
 	console.log(`[${projectConfig.slug}] ${isUpdate ? 'Updated' : 'Added'}: '${documentId}'`)
-
-	client.release()
 }
 
 /**
@@ -138,7 +148,7 @@ async function addStandoffToDb(
  */
 async function addDocumentToDb(props: {
 	client: PoolClient,
-	tree: AnnotationTree,
+	tree: StandoffTree,
 	documentId: ID,
 	entry: JsonEntry,
 	order_number: number,

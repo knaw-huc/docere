@@ -63,7 +63,7 @@ export default class TiledImages {
 
 		this.activeFacsimile = facsimile
 
-		const activeTileOption = this.activeTileOptions.find(to => to.tileSource === facsimile.path)
+		const activeTileOption = this.activeTileOptions.find(to => to.tileSource === facsimile.props._facsimilePath)
 		if (activeTileOption == null || activeTileOption.bounds == null) return
 
 		this.viewer.removeOverlay(ACTIVE_FACSIMILE_OVERLAY_ID)

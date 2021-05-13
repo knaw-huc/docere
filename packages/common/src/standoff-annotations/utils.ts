@@ -19,22 +19,27 @@ export function extendExportOptions(options: PartialExportOptions): ExportOption
 
 export function simpleAnno({ name, start, end }: StandoffAnnotation) {return { name, start, end }}
 
-export function isAnnotation(annotation: any): annotation is StandoffAnnotation {
+export function isPartialAnnotation(annotation: any): annotation is PartialStandoffAnnotation {
 	return (
 		annotation.hasOwnProperty('name') &&
-		annotation.hasOwnProperty('start') &&
-		annotation.hasOwnProperty('end') &&
-		annotation.hasOwnProperty('index')
+		annotation.hasOwnProperty('start')
+	)
+}
+
+export function isAnnotation(annotation: any): annotation is StandoffAnnotation {
+	return (
+		annotation.hasOwnProperty('index') && // check index first, because it is not present in a PartialStandoffAnnotation
+		isPartialAnnotation(annotation)
 	)
 }
 
 // Implementation from _underscore
-export function isFunction(obj: any): boolean {
-	return !!(obj && obj.constructor && obj.call && obj.apply)
-}
+// export function isFunction(obj: any): boolean {
+// 	return !!(obj && obj.constructor && obj.call && obj.apply)
+// }
 
 /** Check if annotation is child of parent */
-export function isChild(child: StandoffAnnotation, parent: StandoffAnnotation): boolean {
+export function isChild(child: PartialStandoffAnnotation, parent: PartialStandoffAnnotation): boolean {
 	if (parent == null || child == null || parent === child) return false
 	if (parent.isSelfClosing) return false
 	if (child.isSelfClosing) {
@@ -89,11 +94,19 @@ export function sortByOffset(options: ExportOptions) {
 	}
 }
 
+/**
+ * Convert a {@link PartialStandoffAnnotation} to a {@link StandoffAnnotation}
+ * 
+ * @param annotation 
+ * @returns 
+ * 
+ * @todo add clone (and add tests to check if cloning works properly)
+ */
 export function extendStandoffAnnotation(annotation: PartialStandoffAnnotation): StandoffAnnotation {
 	return {
 		end: annotation.start,
 		endOrder: null,
-		id: Math.random().toString().slice(2),
+		id: annotation.id == null ? Math.random().toString().slice(2) : null,
 		index: null,
 		isSelfClosing: false,
 		metadata: {},

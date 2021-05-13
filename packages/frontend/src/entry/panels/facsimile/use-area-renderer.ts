@@ -203,7 +203,7 @@ export class AreaRenderer {
 		this.rectTpl.setAttribute('stroke-width', this.strokeWidth.toString())
 
 		// Create the <rect>s, but skip if the <rect>s are already in the cache
-		if (!this.cache.has(facsimile.id)) {
+		if (!this.cache.has(facsimile.props._facsimileId)) {
 			const fragment = document.createDocumentFragment()
 			const areas: AreaCache = []
 
@@ -211,7 +211,7 @@ export class AreaRenderer {
 				if (entity.props._areas == null) continue
 
 				entity.props._areas.forEach(area => {
-					if (area.facsimileId !== facsimile.id) return
+					if (area.facsimileId !== facsimile.props._facsimileId) return
 
 					if (isFacsimileAreaRectangle(area)) {
 						const vpRect = this.osd.viewport.imageToViewportRectangle(area.x, area.y, area.w, area.h)
@@ -244,11 +244,11 @@ export class AreaRenderer {
 			}
 
 			// Add the created fragment to the cache
-			this.cache.set(facsimile.id, { fragment, areas })
+			this.cache.set(facsimile.props._facsimileId, { fragment, areas })
 		}
 
 		// Add the <rect>s to the overlay element
-		const { fragment, areas } = this.cache.get(facsimile.id)
+		const { fragment, areas } = this.cache.get(facsimile.props._facsimileId)
 		this.areas = areas
 		this.overlay.node().appendChild(fragment.cloneNode(true) as DocumentFragment)
 	}

@@ -1,25 +1,33 @@
-import { DocereConfig, AnnotationTree } from '..'
+import { DocereConfig, StandoffTree } from '..'
 import { isTextLayerConfig } from '../utils'
 import { FacsimileLayer, ID, JsonEntry, TextLayer } from '.'
-import { ExtractedFacsimile } from './facsimile'
-import { StandoffAnnotation } from '../standoff-annotations'
 
 export type CreateEntryProps = {
 	config: DocereConfig
 	id: ID
-	tree: AnnotationTree
+	tree: StandoffTree
 }
 
+/**
+ * Create JSON entry to store in the database and send over the wire. 
+ * 
+ * @param props 
+ * @returns 
+ */
 export function createJsonEntry(props: CreateEntryProps): JsonEntry {
-	const facsimiles = props.config.createFacsimiles(props)
+	// const facsimiles = props.config.createFacsimiles(props)
 
 	return {
 		id: props.id,
 		layers: props.config.layers2.map(layerConfig => {
 			if (isTextLayerConfig(layerConfig)) {
+				let tree = props.tree
+				if (layerConfig.findRoot != null) {
+					tree = props.tree.createStandoffTreeFromAnnotation(layerConfig.findRoot)
+				}
 				return {
 					...layerConfig,
-					tree: props.tree.exportReactTree()
+					tree: tree.exportReactTree()
 				} as TextLayer
 			} 
 
@@ -33,16 +41,16 @@ export function createJsonEntry(props: CreateEntryProps): JsonEntry {
 				value: props.tree.annotations[0].metadata[config.id]
 			}
 		}),
-		textData: {
-			facsimiles: facsimiles.reduce(toSerializedMap, []),
-		}
+		// textData: {
+			// facsimiles: facsimiles.reduce(toSerializedMap, []),
+		// }
 	}
 }
 
-function toSerializedMap<T extends StandoffAnnotation & ExtractedFacsimile>(prev: [ID, T][], curr: T) {
-	prev.push([curr.id, curr])
-	return prev
-}
+// function toSerializedMap<T extends StandoffAnnotation & ExtractedFacsimile>(prev: [ID, T][], curr: T) {
+// 	prev.push([curr.id, curr])
+// 	return prev
+// }
 
 // export type GetDefaultExtractedEntry = (id: string) => ExtractedEntry
 // export function getDefaultExtractedEntry(id: string): ExtractedEntry {

@@ -14,6 +14,8 @@ import { DocereAnnotation } from '../standoff-annotations'
  */
 export interface Entity extends DocereAnnotation {
 	props: DocereAnnotation['props'] & {
+		_entityId: DocereAnnotation['props']['_entityId']
+		_entityConfigId: DocereAnnotation['props']['_entityConfigId']
 		_config: EntityConfig2
 	}
 }

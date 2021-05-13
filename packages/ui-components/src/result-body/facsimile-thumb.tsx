@@ -1,5 +1,5 @@
 import React from "react"
-import { Facsimile, ContainerContextValue, DispatchContext, FacsimileContext, ContainerType, Colors, ID } from "@docere/common"
+import { ContainerContextValue, DispatchContext, FacsimileContext, ContainerType, Colors, ID, ElasticSearchFacsimile } from "@docere/common"
 import styled from "styled-components"
 
 const Img = styled.img`
@@ -20,7 +20,7 @@ const Img = styled.img`
 
 interface FacsimileThumbProps {
 	entryId?: ID
-	facsimile: Facsimile
+	facsimile: ElasticSearchFacsimile
 	container: ContainerContextValue
 }
 export function FacsimileThumb(props: FacsimileThumbProps) {
@@ -41,8 +41,10 @@ export function FacsimileThumb(props: FacsimileThumbProps) {
 		})
 	}, [props.container, props.entryId])
 
+	console.log(props.facsimile)
+	if (props.facsimile.path == null) return null
 	const src = props.facsimile.path.replace('/info.json', '/full/,32/0/default.jpg')
-	const active = activeFacsimile?.id === props.facsimile.id
+	const active = activeFacsimile?.props._facsimileId === props.facsimile.id
 
 	return (
 		<Img

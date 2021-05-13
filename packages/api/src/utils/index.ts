@@ -4,9 +4,9 @@ import { Response as ExpressResponse } from 'express'
 import chalk from 'chalk'
 import { DTAP, EsDataType, PageConfig } from '@docere/common'
 
-import { dtapMap } from '../../projects/src/dtap'
+import { dtapMap } from '../../../projects/src/dtap'
 
-import type { DocereApiError } from './types'
+import type { DocereApiError } from '../types'
 import type { Standoff, DocereConfig, ElasticSearchDocument, MetadataItem, JsonEntry } from '@docere/common'
 
 // @ts-ignore
@@ -56,17 +56,17 @@ export function getEntryIdFromFilePath(xmlFilePath: string, projectId: string) {
 
 export function getDocumentIdFromRemoteFilePath(
 	filePath: string,
-	ext: string,
 	remoteDir: string,
-	stripRemoteDir: boolean
+	config: DocereConfig
 ) {
+	const ext = config.documents.type === 'xml' ? 'xml' : 'json'
 	let documentId = path.resolve(path.dirname(filePath), path.basename(filePath, `.${ext}`))
 
 	// Return null if withoutExtension and filePath are equal,
 	// which means it's a dir or not an XML file
 	if (documentId === filePath) return null
 
-	if (stripRemoteDir) {
+	if (config.documents.stripRemoteDirectoryFromDocumentId) {
 		const re = new RegExp(`^/?${remoteDir}/?`)
 		documentId = documentId.replace(re, '')
 	}
@@ -83,10 +83,10 @@ export function readFileContents(filePath: string) {
 export function getType(key: string, config: DocereConfig): EsDataType {
 	let type = EsDataType.Keyword
 
-	const mdConfig = config.metadata.find(md => md.id === key)
+	const mdConfig = config.metadata2.find(md => md.id === key)
 	if (mdConfig != null && mdConfig.datatype != null) type = mdConfig.datatype
 
-	const tdConfig = config.entities.find(md => md.id === key)
+	const tdConfig = config.entities2.find(md => md.id === key)
 	if (tdConfig != null && tdConfig.datatype != null) type = tdConfig.datatype
 
 	if (key === 'text') type = EsDataType.Text
@@ -182,7 +182,8 @@ export async function getProjectPageConfig(projectId: string, pageId: string): P
 
 export function getElasticSearchDocument(
 	extractedEntry: JsonEntry | DocereApiError,
-	standoff: Standoff
+	standoff: Standoff,
+	projectConfig: DocereConfig
 ): ElasticSearchDocument | DocereApiError {
 	if (isError(extractedEntry)) return extractedEntry
 
@@ -202,7 +203,15 @@ export function getElasticSearchDocument(
 	// 		})))
 	// 	}, [])
 
-	const facsimiles = extractedEntry.textData.facsimiles.map(f => f[1])
+	// const facsimiles = extractedEntry.textData.facsimiles.map(f => f[1])
+	const facsimiles = projectConfig.facsimiles != null ? 
+		standoff.annotations
+			.filter(projectConfig.facsimiles.filter)
+			.map(a => ({
+				id: a.metadata._facsimileId,
+				path: a.metadata._facsimilePath
+			})) :
+		[]
 
 	const metadata = extractedEntry.metadata?.reduce((prev, curr) => {
 			if (curr.datatype === EsDataType.Hierarchy) {
