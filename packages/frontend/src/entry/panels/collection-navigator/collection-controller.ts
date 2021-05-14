@@ -1,34 +1,32 @@
-import { ProjectContextValue, fetchPost, ActiveFacsimile, ID, ElasticSearchFacsimile, ProjectAction, ContainerType } from '@docere/common'
+import { ProjectContextValue, fetchPost, ActiveFacsimile, ID, ElasticSearchFacsimile, ProjectAction } from '@docere/common'
 import { isHierarchyFacetConfig, isListFacetConfig, isRangeFacetConfig } from '../../../../../search/src'
 import OpenSeadragon from 'openseadragon';
 import TiledImages from './tiled-images'
+import { CollectionNavigatorBaseController } from './base-controller'
 
-import type { DocereConfig, Entry } from '@docere/common'
+import type { Entry } from '@docere/common'
 
-export type CollectionDocument = { entryIds: Set<ID>, facsimileId: string, facsimilePath: string }
+export type CollectionDocument = {
+	entryIds: Set<ID>,
+	facsimileId: string,
+	facsimilePath: string
+}
 
-export default class CollectionNavigatorController {
+/**
+ * Controller for fetching all facsimile IDs and facsimile paths from a collection
+ * of entries. The collection is defined in {@link DocereConfig.collection} and used
+ * to give the user an overview of the position of an entry within a collection.
+ */
+export class CollectionNavigatorController extends CollectionNavigatorBaseController {
 	private entry: Entry
 	private payload: string
-	private tiledImages: TiledImages
 
 	constructor(
-		private viewer: OpenSeadragon.Viewer,
-		private config: DocereConfig['collection'],
-		private searchUrl: ProjectContextValue['searchUrl'],
-		private dispatch: React.Dispatch<ProjectAction>
+		viewer: OpenSeadragon.Viewer,
+		dispatch: React.Dispatch<ProjectAction>,
+		projectContext: ProjectContextValue
 	) {
-		this.viewer.addHandler('canvas-click', this.canvasClickHandler)
-		this.viewer.addHandler('full-screen', this.fullScreenHandler)
-	}
-
-	destroy() {
-		this.viewer.removeHandler('canvas-click', this.canvasClickHandler)
-		this.viewer.removeHandler('full-screen', this.fullScreenHandler)
-	}
-
-	setActiveFacsimile(facsimile: ActiveFacsimile) {
-		this.tiledImages?.setActiveFacsimile(facsimile)
+		super(viewer, dispatch, projectContext)
 	}
 
 	async setEntry(entry: Entry, facsimile: ActiveFacsimile) {
@@ -44,6 +42,8 @@ export default class CollectionNavigatorController {
 			this.tiledImages = new TiledImages(this.viewer, entries, this.entry, facsimile)
 		} else {
 			const success = this.tiledImages.setEntry(entry, facsimile)
+			// TODO what happens here? When is this triggered? Should it than create
+			// a whole new TiledImages?
 			if (!success) {
 				this.tiledImages.removeListeners()
 				this.tiledImages = new TiledImages(this.viewer, this.tiledImages.hits, entry, facsimile)
@@ -51,62 +51,28 @@ export default class CollectionNavigatorController {
 		}
 	}
 
-	private canvasClickHandler = (event: OpenSeadragon.ViewerEvent) => {
-		// TODO what does quick do/tell?
-		if (!event.quick) return
-
-		const mousePosData = this.tiledImages.getEntryFromMousePosition(event.position)
-		if (mousePosData == null) return
-
-		const { entryIds, facsimileId } = mousePosData 
-		const entryId = entryIds.values().next().value
-		
-		this.dispatch({
-			type: 'SET_ENTRY_ID',
-			setEntry: {
-				entryId,
-				facsimileId,
-				triggerContainer: ContainerType.CollectionNavigator,
-			}
-		})
-	}
-
-	private fullScreenHandler = (event: OpenSeadragon.ViewerEvent) => {
-		if (event.fullScreen) {
-			// @ts-ignore
-			this.viewer.gestureSettingsMouse.scrollToZoom = true
-			// @ts-ignore
-			this.viewer.panVertical = true
-		} else {
-			// @ts-ignore
-			this.viewer.gestureSettingsMouse.scrollToZoom = false
-			// @ts-ignore
-			this.viewer.panVertical = false
-		}
-
-		setTimeout(() => this.tiledImages.center(), 0)
-	}
-
 	private getPayload() {
+		const { collection } = this.projectContext.config
 		const payload: { size: number, query: any, sort: string, _source: { include: string[] }} = {
 			query: null,
 			size: 10000,
-			sort: this.config.sortBy || 'id',
+			sort: collection.sortBy || 'id',
 			_source: {
 				include: ['id', 'facsimiles']
 			}
 		}
 
-		if (this.config.metadataId == null) {
+
+		if (collection.metadataId == null) {
 			payload.query = { match_all: {} }
 		} else {
-			const metadata = this.entry.metadata.find(md => md.id === this.config.metadataId)
+			const metadata = this.entry.metadata.find(md => md.id === collection.metadataId)
 
 			if (metadata == null) return
 
 			if (isHierarchyFacetConfig(metadata)) {
 				const term = metadata.value.reduce((prev, curr, index) => {
-					prev.push({ term: { [`${this.config.metadataId}_level${index}`]: curr }})
+					prev.push({ term: { [`${collection.metadataId}_level${index}`]: curr }})
 					return prev
 				}, [])
 
@@ -131,7 +97,7 @@ export default class CollectionNavigatorController {
 			}
 		}
 
-		if (this.config.sortBy != null) payload.sort = this.config.sortBy
+		if (collection.sortBy != null) payload.sort = collection.sortBy
 		return JSON.stringify(payload)
 	}
 
@@ -145,7 +111,7 @@ export default class CollectionNavigatorController {
 	 * user clicks 
 	 */
 	private async fetchCollectionDocuments(): Promise<CollectionDocument[]> {
-		const data = await fetchPost(this.searchUrl, this.payload)
+		const data = await fetchPost(this.projectContext.searchUrl, this.payload)
 		const facsMap = data.hits.hits.reduce((prev: Map<ID, CollectionDocument>, hit: any) => {
 			hit._source.facsimiles.forEach((f: ElasticSearchFacsimile) => {
 				if (prev.has(f.id)) {

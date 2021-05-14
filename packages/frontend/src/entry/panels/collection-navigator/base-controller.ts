@@ -1,28 +1,31 @@
-import { ActiveFacsimile, ID, ProjectAction, ContainerType } from '@docere/common'
-import OpenSeadragon from 'openseadragon'
+import { ActiveFacsimile, ProjectAction, ContainerType, ProjectContextValue, Entry } from '@docere/common'
+import OpenSeadragon from 'openseadragon';
 import TiledImages from './tiled-images'
 
-import type { Entry } from '@docere/common'
-
-export type CollectionDocument = {
-	entryIds: Set<ID>,
-	facsimileId: string,
-	facsimilePath: string
-}
-
-export default class CollectionNavigatorController {
-	// private entry: Entry
-	// private payload: string
-	private tiledImages: TiledImages
+/**
+ * Base class for CollectionNavigator Controller
+ * 
+ * It should be an abstract class ;(, but TypeScript doesn't handle that well.
+ * This class handles the generic part. An instance of it should at least
+ * implement an async method `setEntry`
+ */
+export class CollectionNavigatorBaseController {
+	protected tiledImages: TiledImages
 
 	constructor(
-		private viewer: OpenSeadragon.Viewer,
-		// private config: DocereConfig['collection'],
-		// private searchUrl: ProjectContextValue['searchUrl'],
-		private dispatch: React.Dispatch<ProjectAction>
+		protected viewer: OpenSeadragon.Viewer,
+		private dispatch: React.Dispatch<ProjectAction>,
+		protected projectContext: ProjectContextValue
 	) {
 		this.viewer.addHandler('canvas-click', this.canvasClickHandler)
 		this.viewer.addHandler('full-screen', this.fullScreenHandler)
+	}
+
+	async setEntry(_entry: Entry, _facsimile: ActiveFacsimile) {
+		throw new Error(`
+			THIS SHOULD BE AN ABSTRACT CLASS WHICH SHOULD BE EXTENDED
+			BY A CLASS WHICH IMPLEMENTS THE ASYNC setEntry METHOD!
+		`)
 	}
 
 	destroy() {
@@ -31,19 +34,7 @@ export default class CollectionNavigatorController {
 	}
 
 	setActiveFacsimile(facsimile: ActiveFacsimile) {
-		this.tiledImages?.setActiveFacsimile(facsimile)
-	}
-
-	async setEntry(entry: Entry, facsimile: ActiveFacsimile) {
-		// this.entry = entry
-
-		const hits: CollectionDocument[] = Array.from(entry.textData.facsimiles.values())
-			.map(f => ({
-				entryIds: new Set([entry.id]),
-				facsimileId: f.props._facsimileId,
-				facsimilePath: f.props._facsimilePath
-			}))
-		this.tiledImages = new TiledImages(this.viewer, hits, entry, facsimile)
+		this.tiledImages?.setFacsimile(facsimile)
 	}
 
 	private canvasClickHandler = (event: OpenSeadragon.ViewerEvent) => {

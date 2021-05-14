@@ -3,7 +3,8 @@ import styled from 'styled-components'
 import { PANEL_HEADER_HEIGHT, FacsimileLayer, EntrySettingsContext, ProjectContext, DispatchContext, ContainerType, EntryContext } from '@docere/common'
 
 import PanelHeader from '../header'
-import CollectionNavigator3 from '../collection-navigator3'
+import CollectionNavigator from '../collection-navigator'
+import { FacsimileNavigatorController } from '../collection-navigator/facsimile-controller'
 import { ContainerProvider } from '../text/layer-provider'
 
 import useAreaRenderer from './use-area-renderer'
@@ -18,6 +19,12 @@ const Wrapper = styled.div`
 	top: 0;
 	height: 100%;
 	z-index: 1;
+
+	.collection-navigator {
+		bottom: 0;
+		position: absolute;
+		width: 100%;
+	}
 `
 
 const Container = styled.div`
@@ -32,7 +39,7 @@ type Props = {
 	layer: FacsimileLayer
 }
 
-function FacsimilePanel(props: Props) {
+export const FacsimilePanel = React.memo(function FacsimilePanel(props: Props) {
 	const dispatch = React.useContext(DispatchContext)
 	const { config } = React.useContext(ProjectContext)
 	const settings = React.useContext(EntrySettingsContext)
@@ -61,12 +68,12 @@ function FacsimilePanel(props: Props) {
 				{
 					entry.textData.facsimiles.size > 1 &&
 					config.collection == null &&
-					<CollectionNavigator3 />
+					<CollectionNavigator
+						Controller={FacsimileNavigatorController}
+					/>
 				}
 				<EntityList />
 			</Wrapper>
 		</ContainerProvider>
 	)
-}
-
-export default React.memo(FacsimilePanel)
+})

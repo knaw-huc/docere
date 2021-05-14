@@ -5,6 +5,7 @@ import { DEFAULT_SPACING, Colors, FooterTab, FOOTER_HANDLE_HEIGHT, ProjectContex
 import LayersFooterTab from '../footer/body/layers'
 import Panel from './panel'
 import CollectionNavigator from './collection-navigator'
+import { CollectionNavigatorController } from './collection-navigator/collection-controller'
 
 interface WProps {
 	hasCollection: boolean
@@ -29,6 +30,10 @@ const Wrapper = styled.div`
 	height: calc(100% - ${FOOTER_HANDLE_HEIGHT}px);
 	padding: 0 8px;
 	width: 100%;
+
+	.collection-navigator {
+		grid-column: 1 / -1;
+	}
 `
 
 const PanelsCommon = styled.div`
@@ -142,7 +147,9 @@ function Panels() {
 			}
 			{
 				(context.config.collection != null) &&
-				<CollectionNavigator/>
+				<CollectionNavigator
+					Controller={CollectionNavigatorController}
+				/>
 			}
 			{
 				!activeLayers.length &&

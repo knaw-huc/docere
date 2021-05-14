@@ -41,8 +41,6 @@ export function FacsimileThumb(props: FacsimileThumbProps) {
 		})
 	}, [props.container, props.entryId])
 
-	console.log(props.facsimile)
-	if (props.facsimile.path == null) return null
 	const src = props.facsimile.path.replace('/info.json', '/full/,32/0/default.jpg')
 	const active = activeFacsimile?.props._facsimileId === props.facsimile.id
 

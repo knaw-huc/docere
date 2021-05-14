@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { Colors, EntryContext, FacsimileContext, DispatchContext } from '@docere/common'
 
-import CollectionNavigatorController from './controller'
+import { CollectionNavigatorController } from './controller'
 
 function useOpenSeadragonController() {
 	const dispatch = React.useContext(DispatchContext)
@@ -51,8 +51,8 @@ function useEntry(controller: CollectionNavigatorController) {
 
 const Container = styled.div`
 	background: ${Colors.Grey};
-	bottom: 0;
 	height: 64px;
+	bottom: 0;
 	position: absolute;
 	width: 100%;
 `

@@ -2,11 +2,11 @@ import React from 'react'
 import styled from 'styled-components'
 import { ProjectContext, Colors, EntryContext, FacsimileContext, DispatchContext } from '@docere/common'
 
-import CollectionNavigatorController from './controller'
+import { CollectionNavigatorBaseController } from './base-controller'
 
-function useOpenSeadragonController() {
+function useController(Controller: typeof CollectionNavigatorBaseController, id: string) {
 	const dispatch = React.useContext(DispatchContext)
-	const { config, searchUrl } = React.useContext(ProjectContext)
+	const projectContext = React.useContext(ProjectContext)
 	const [controller, setController] = React.useState<any>(null)
 
 	React.useEffect(() => {
@@ -17,7 +17,7 @@ function useOpenSeadragonController() {
 						clickToZoom: false,
 						scrollToZoom: false,
 					},
-					id: "osd_collection_navigator",
+					id,
 					prefixUrl: "/static/images/osd/",
 					panVertical: false,
 					preserveImageSizeOnResize: true,
@@ -25,7 +25,7 @@ function useOpenSeadragonController() {
 					showZoomControl: false,
 				})
 
-				const collectionNavigatorController = new CollectionNavigatorController(viewer, config.collection, searchUrl, dispatch)
+				const collectionNavigatorController = new Controller(viewer, dispatch, projectContext)
 
 				if (controller != null) controller.destroy()
 				setController(collectionNavigatorController)
@@ -35,7 +35,7 @@ function useOpenSeadragonController() {
 	return controller
 }
 
-function useEntry(controller: CollectionNavigatorController) {
+function useEntry(controller: CollectionNavigatorBaseController) {
 	const entry = React.useContext(EntryContext)
 	const activeFacsimile = React.useContext(FacsimileContext)
 
@@ -52,17 +52,22 @@ function useEntry(controller: CollectionNavigatorController) {
 
 const Container = styled.div`
 	background: ${Colors.Grey};
-	grid-column: 1 / -1;
 	height: 64px;
 `
 
-function CollectionNavigator() {
-	const controller = useOpenSeadragonController()
+interface Props {
+	Controller: typeof CollectionNavigatorBaseController
+}
+function CollectionNavigator(props: Props) {
+	const [containerId] = React.useState('cn' + Math.random().toString().slice(2))
+
+	const controller = useController(props.Controller, containerId)
 	useEntry(controller)
 
 	return (
 		<Container
-			id="osd_collection_navigator"
+			className="collection-navigator"
+			id={containerId}
 		/>
 	)
 }

@@ -1,7 +1,7 @@
 import React from 'react'
 import { isTextLayer, isFacsimileLayer } from '@docere/common'
 
-import FacsimilePanel from './facsimile'
+import { FacsimilePanel } from './facsimile'
 import TextPanel from './text'
 
 import type { Layer } from '@docere/common'

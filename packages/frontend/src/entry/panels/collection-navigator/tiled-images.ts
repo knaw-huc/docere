@@ -1,7 +1,7 @@
-import OpenSeadragon from 'openseadragon';
+import OpenSeadragon from 'openseadragon'
 
-import { Entry, ActiveFacsimile, Colors } from '@docere/common';
-import { CollectionDocument } from './controller';
+import { Entry, ActiveFacsimile, Colors, ID } from '@docere/common'
+import { CollectionDocument } from './collection-controller'
 
 interface TiledImageOptions {
 	bounds: OpenSeadragon.Rect
@@ -14,17 +14,22 @@ const ACTIVE_FACSIMILE_OVERLAY_ID = 'active_facsimile_overlay'
 const ACTIVE_ENTRY_OVERLAY_ID = 'active_entry_overlay'
 
 export default class TiledImages {
+	/** The facsimile currently visible in the facsimile panel */
 	private activeFacsimile: ActiveFacsimile
 
-	// The bounds of the currently loaded thumbs
+	/** The bounds of the currently loaded thumbs */
 	private loadedBounds = new OpenSeadragon.Rect(0, 0, 0, 0)
 
-	// Map of options for OpenSeadragon.TiledImage
+	/** List of tile options. A tile represents a facsimile */
 	private tileOptions: TiledImageOptions[] = []
+
+	/** List of active tile options */
 	private activeTileOptions: TiledImageOptions[] = []
 
-	// Flags to remember if tiles are being loaded and if there is a queue.
-	// The queue flag is set when the user pans while thumbs are being loaded.
+	/**
+	 * Flags to remember if tiles are being loaded and if there is a queue.
+	 * The queue flag is set when the user pans while thumbs are being loaded.
+	 */
 	private isLoadingTiles = false
 	private hasQueue = false
 
@@ -35,7 +40,24 @@ export default class TiledImages {
 
 	private entry: Entry
 
-	constructor(private viewer: OpenSeadragon.Viewer, public hits: CollectionDocument[], entry: Entry, facsimile: ActiveFacsimile) {
+	// Keep track of which facsimile is currently active
+	// and thus has an orange border drawn around it
+	private activeFacsimileID: ID
+
+	constructor(
+		private viewer: OpenSeadragon.Viewer,
+		public hits: CollectionDocument[],
+		entry: Entry,
+		facsimile: ActiveFacsimile,
+		 
+		/**
+		 * Highlight the facsimiles that are part of the current entry.
+		 * When using the TiledImages as a collection navigator that is useful,
+		 * but when using the TiledImages as a overview of the facsimiles within
+		 * an entry, not so much.
+		 */
+		private highlightEntryFacsimiles = true
+	) {
 		// Add event handlers
 		this.viewer.world.addHandler('add-item', this.addItemHandler)
 		this.viewer.addHandler('add-item-failed', this.tileLoadFailedHandler)
@@ -47,23 +69,59 @@ export default class TiledImages {
 		this.init()
 	}
 
-	private tileLoadFailedHandler = () => {
-		this.addTiledImage()
-	}
+	/**
+	 * Set a new entry. 
+	 * 
+	 * When this.highlightActive returns false, not all tiles of that entry are loaded.
+	 * The controller will than initiate a new TiledImages with that entry as centre for
+	 * loading tiles. TiledImages can only load consecutive images (next on left or next
+	 * on the right), so when there is a gap between the currently loaded tiles and the 
+	 * requested tiles, we start all over again. 
+	 * 
+	 * @param entry 
+	 * @param facsimile 
+	 * @returns 
+	 */
+	setEntry(entry: Entry, facsimile: ActiveFacsimile) {
+		this.entry = entry
 
-	// Set the active options from this.entry.facsimiles. Used to calculate this.startIndex and this.highlightActive
-	setActiveOptions() {
+		// Set the active options from this.entry.facsimiles. Used to calculate
+		// this.startIndex and this.highlightActive
 		this.activeTileOptions = this.tileOptions.filter(
 			option => option.userData.entryIds.has(this.entry.id)
 		)
+
+		this.setFacsimile(facsimile)
+
+		// If highlightEntryFacsimiles is not set, don't
+		// this.hightlightActiveEntryFacsimiles (duh) and return true.
+		// Without true the whole TiledImages will be destroyed and re-created
+		// TODO refactor :)
+		return this.highlightEntryFacsimiles ?
+			this.highlightActiveEntryFacsimiles()	:
+			true
 	}
 
-	setActiveFacsimile(facsimile: ActiveFacsimile) {
-		if (facsimile == null) return
 
+	/**
+	 * Set and highlight the active facsimile by adding a HTMLDivElement as an overlay
+	 * with an orange border
+	 * 
+	 * @param facsimile 
+	 * @returns 
+	 */
+	setFacsimile(facsimile?: ActiveFacsimile) {
+		if (
+			facsimile == null &&
+			this.activeFacsimileID !== this.activeFacsimile?.props._facsimileId
+		) {
+			facsimile = this.activeFacsimile
+		}
 		this.activeFacsimile = facsimile
+		if (this.activeFacsimile == null) return
 
-		const activeTileOption = this.activeTileOptions.find(to => to.tileSource === facsimile.props._facsimilePath)
+		const activeTileOption = this.activeTileOptions
+			.find(to => to.tileSource === facsimile.props._facsimilePath)
 		if (activeTileOption == null || activeTileOption.bounds == null) return
 
 		this.viewer.removeOverlay(ACTIVE_FACSIMILE_OVERLAY_ID)
@@ -80,19 +138,16 @@ export default class TiledImages {
 		})
 
 		this.viewer.viewport.fitBounds(activeTileOption.bounds)
+
+		this.activeFacsimileID = this.activeFacsimile.props._facsimileId
 	}
 
-	// Set a new entry. When this.highlightActive returns false, not all tiles of that entry are loaded.
-	// The controller will than initiate a new TiledImages with that entry as centre for loading tiles.
-	// TiledImages can only load consecutive images (next on left or next on the right), so when there is
-	// a gap between the currently loaded tiles and the requested tiles, we start all over again. 
-	setEntry(entry: Entry, facsimile: ActiveFacsimile) {
-		this.entry = entry
-		this.setActiveOptions()
-		this.setActiveFacsimile(facsimile)
-		return this.highlightActiveTiles()	
-	}
-
+	/**
+	 * Returns the {@link CollectionDocument} of the tile clicked
+	 * 
+	 * @param mousePosition 
+	 * @returns
+	 */
 	getEntryFromMousePosition(mousePosition: OpenSeadragon.Point): TiledImageOptions['userData'] {
 		// Convert mouse pixel position to viewport coordinates
 		const point = this.viewer.viewport.pointFromPixel(mousePosition)
@@ -101,10 +156,14 @@ export default class TiledImages {
 		const clickedTiledImageOption = this.tileOptions.find(option => option.bounds?.containsPoint(point))
 		if (clickedTiledImageOption == null) return null
 
-		// Return the entry ID
 		return clickedTiledImageOption.userData
 	}
 
+	/**
+	 * Center on the active tiles/facsimiles
+	 * 
+	 * @returns 
+	 */
 	center() {
 		const bounds = this.activeTileOptions.reduce((prev, curr) => {
 			if (prev == null) return curr.bounds
@@ -117,11 +176,21 @@ export default class TiledImages {
 		return bounds
 	}
 
+	/**
+	 * Remove the event listeners
+	 * 
+	 * There are two instances when the listeners are removed:
+	 * 1. all the tiled images have been loaded
+	 * 2. the TiledImages object is destroyed
+	 */
 	removeListeners() {
 		this.viewer.removeHandler('animation-finish', this.animationFinishHandler)
 		this.viewer.addHandler('add-item-failed', this.tileLoadFailedHandler)
 		this.viewer.world.removeHandler('add-item', this.addItemHandler)
-		this.viewer.world.removeHandler('add-item', this.highlightActiveTiles)
+
+		if (this.highlightEntryFacsimiles) {
+			this.viewer.world.removeHandler('add-item', this.highlightActiveEntryFacsimiles)
+		}
 	}
 
 	private init() {
@@ -144,8 +213,27 @@ export default class TiledImages {
 		this.addTiledImage()
 	}
 
-	// Add the highlight overlay
-	private addHighlightOverlay() {
+	/**
+	 * Highlight the facsimiles of the active entry. The highlight is a transparent
+	 * light blue covering the facsimile thumb.
+	 * 
+	 * If need be, wait for the tiles to be
+	 * loaded. Returns true when the highlight is directly set and false when via
+	 * event listener, this is used to determine if a new TiledImages object needs
+	 * to be created from the controller (see {@link TiledImages.setEntry}). 
+	 * 
+	 * @returns 
+	 */
+	private highlightActiveEntryFacsimiles = () => {
+		// Remove the handler is present, it is being re-created everytime one of 
+		// the tiles is not loaded yet
+		this.viewer.world.removeHandler('add-item', this.highlightActiveEntryFacsimiles)
+
+		if (this.activeTileOptions.some(option => option.bounds == null)) {
+			this.viewer.world.addHandler('add-item', this.highlightActiveEntryFacsimiles)
+			return false
+		}
+
 		this.viewer.removeOverlay(ACTIVE_ENTRY_OVERLAY_ID)
 
 		const bounds = this.center()
@@ -162,29 +250,15 @@ export default class TiledImages {
 		})
 
 		if (this.viewer.getOverlayById(ACTIVE_FACSIMILE_OVERLAY_ID) == null && this.activeFacsimile != null) {
- 			this.setActiveFacsimile(this.activeFacsimile)
-		}
-	}
-
-	// Highlights the active tiled images. If need be, wait for the tiles to be loaded
-	// Returns true when the highlight is directly set and false when via event listener,
-	// this is used to determine if a new TiledImages object needs to be created from
-	// the controller (see this.setEntry). 
-	private highlightActiveTiles = () => {
-		// Remove the handler is present, it is being re-created everytime one of 
-		// the tiles is not loaded yet
-		this.viewer.world.removeHandler('add-item', this.highlightActiveTiles)
-
-		if (this.activeTileOptions.some(option => option.bounds == null)) {
-			this.viewer.world.addHandler('add-item', this.highlightActiveTiles)
-			return false
+ 			this.setFacsimile(this.activeFacsimile)
 		}
 
-		this.addHighlightOverlay()
 		return true
 	}
 
-	// Remove tiles currently loaded in OpenSeadragon.World
+	/**
+	 * Remove tiles currently loaded in OpenSeadragon.World
+	 */
 	private removeTiledImages() {
 		const count = this.viewer.world.getItemCount();
 		for (let i = count; i > 0; i--) {
@@ -193,58 +267,55 @@ export default class TiledImages {
 		}
 	}
 
-	// Set the tiled image options. Every entry (_source) can have multiple
-	// facsimiles, which means there can be more thumbs than entries.
-	// The search result (hits) is 'reduced' to tiled image options.
-	// The options are build prior to loading thumbs, because the order of the
-	// thumbs needs to be known in advance.
+	/**
+	 * Set the tiled image options. Every entry (_source) can have multiple
+	 * facsimiles, which means there can be more thumbs than entries.
+	 * The search result (hits) is 'reduced' to tiled image options.
+	 * The options are build prior to loading thumbs, because the order of the
+	 * thumbs needs to be known in advance.
+	 * 
+	 * @param hits 
+	 */
 	private setOptions(hits: CollectionDocument[]) {
 		this.tileOptions = hits.map((collectionDocument, index) => ({
 			bounds: null,
 			index,
 			tileSource: collectionDocument.facsimilePath,
 			userData: collectionDocument,
-		})) //, [] as TiledImageOptions[])
-		// this.tileOptions = hits.reduce((prev, curr, index) => {
-		// 	curr.facsimiles.forEach(f => {
-		// 		prev.push({
-		// 			bounds: null,
-		// 			index,
-		// 			tileSource: f.path,
-		// 			userData: {
-		// 				entryId: curr.id,
-		// 				facsimileId: f.id,
-		// 			},
-		// 		})
-		// 	})
-		// 	return prev
-		// }, [] as TiledImageOptions[])
+		}))
 	}
 
-	// If an animation is finished (pan, zoom, etc) check if thumbs have to be loaded.
-	// When images are already being loaded, flag there is a queue, otherwise check if 
-	// new thumbs should be loaded
+	/**
+	 * If an animation is finished (pan, zoom, etc) check if thumbs have to be loaded.
+	 * When images are already being loaded, flag there is a queue, otherwise check if 
+	 * new thumbs should be loaded
+	 */
 	private animationFinishHandler = () => {
 		if (this.isLoadingTiles) this.hasQueue = true
 		else this.addTiledImage()
 	}
 
-	// Calculate if there is space on the left and/or right side of this.loadedBounds to
-	// add more thumbs
+	/**
+	 * Calculate if there is space on the left and/or right side of this.loadedBounds
+	 * to add more thumbs
+	 */
 	private hasSpace(viewportBounds: OpenSeadragon.Rect) {
 		const right = this.loadedBounds.x + this.loadedBounds.width < viewportBounds.x + viewportBounds.width * 2
 		const left = this.loadedBounds.x > viewportBounds.x - viewportBounds.width
 		return [left, right]
 	}
 
-	// Handler for when a new tile is added to OpenSeadragon.World.
-	// The tile is placed at Point(0,0) so it has to be moved to the 
-	// available space on the left or right side of the current thumbs
+	/**
+	 * Handler for when a new tile is added to {@link OpenSeadragon.World}.
+	 * The tile is placed at Point(0,0) so it has to be moved to the 
+	 * available space on the left or right side of the current thumbs
+	 * 
+	 * @param ev 
+	 * @returns 
+	 */
 	private addItemHandler = (ev: OpenSeadragon.WorldEvent) => {
 		const tiledImage = ev.item as OpenSeadragon.TiledImage
 		tiledImage.setHeight(1)
-
-		// console.log(this.startIndex, this.leftIndex, this.rightIndex, this.currentIndex)
 
 		let position: OpenSeadragon.Point
 		// Set position to the left side
@@ -284,10 +355,12 @@ export default class TiledImages {
 		this.addTiledImage()
 	}
 
-	// Initiate a new tile, either on the left or the right side of the start index,
-	// depending on if there is space (ie the required thumbs aren't already loaded),
-	// which tile (left or right) was loaded last and of course if there are more
-	// tiles to load (0 < index < options.length)
+	/**
+	 * Initiate a new tile, either on the left or the right side of the start index,
+	 * depending on if there is space (ie the required thumbs aren't already loaded),
+	 * which tile (left or right) was loaded last and of course if there are more
+	 * tiles to load (0 < index < options.length)
+	 */
 	private addTiledImage = () => {
 		this.isLoadingTiles = true
 		const viewportBounds = this.viewer.viewport.getBounds()
@@ -317,10 +390,18 @@ export default class TiledImages {
 		// on the left or right side and more tiles will be loaded
 		} else {
 			this.isLoadingTiles = false
+			this.setFacsimile()
 			if (this.hasQueue) {
 				this.hasQueue = false
 				this.addTiledImage()
 			}
 		}
+	}
+
+	/**
+	 * When a tile fails move to the next
+	 */
+	private tileLoadFailedHandler = () => {
+		this.addTiledImage()
 	}
 }
