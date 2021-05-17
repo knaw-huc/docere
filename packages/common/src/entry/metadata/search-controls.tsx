@@ -9,10 +9,11 @@ const Wrapper = styled.div`
 	align-self: end;
 	color: #444;
 	cursor: pointer;
-	font-size: .75em;
 	display: grid;
+	font-size: .75em;
 	grid-template-columns: auto auto;
 	margin-left: 1em;
+	white-space: nowrap;
 
 	&:hover {
 		.buttons {

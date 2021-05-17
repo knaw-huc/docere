@@ -20,26 +20,22 @@ export function StringMetadata(props: Props) {
 	return (
 		<MetadataWrapper title={facet.config.title}>
 			{
-				Array.isArray(props.value) ?
-					<>
-						{
-							props.value.length === 0 ?
-							'-' :
-							props.value.map(v =>
-								<Value
-									active={filters?.has(v)}
-									id={props.metadataId}
-									key={`${props.metadataId}${v}`}
-									value={v}
-								/>
-							)
-						}
-					</> :
-					<Value
-						active={filters?.has(props.value)}
-						id={props.metadataId}
-						value={props.value}
-					/>
+				props.value.length === 0 ?
+					'-' :
+					Array.isArray(props.value) ?
+						props.value.map(v =>
+							<Value
+								active={filters?.has(v)}
+								id={props.metadataId}
+								key={`${props.metadataId}${v}`}
+								value={v}
+							/>
+						) :
+						<Value
+							active={filters?.has(props.value)}
+							id={props.metadataId}
+							value={props.value}
+						/>
 			}
 		</MetadataWrapper>
 	)

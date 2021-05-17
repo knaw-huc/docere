@@ -10,6 +10,7 @@ import { isBooleanFacetData, isListFacetData, isRangeFacetData, isDateFacetData,
 import Header from './views/header'
 import SearchResult from './views/search-result'
 import { FullTextSearch } from './views/full-text-search'
+import { ToggleView } from './views/toggle-view'
 import useSearch from './use-search'
 import { ActiveFilters } from './views/header/active-filters'
 
@@ -74,33 +75,6 @@ const Wrapper = styled.div`
 	}
 `
 
-interface TVProps { showResults: boolean, small: boolean }
-const ToggleView = styled.div`
-	cursor: pointer;
-	display: ${props => props.small ? 'block' : 'none'};
-	font-size: .75rem;
-	position: absolute;
-	top: .75rem;
-	right: .75rem;
-
-	span {
-		display: block;
-	}
-
-	span:first-of-type {
-		color: ${(props: TVProps) => props.showResults ? '#BBB' : '#444'};
-		margin-right: .1rem;
-	}
-
-	span:last-of-type {
-		color: ${(props: TVProps) => props.showResults ? '#444' : '#BBB'};
-	}
-
-	@media (max-width: 972px) {
-		display: block;	
-	}
-`
-
 export default function FacetedSearch() {
 	const context = React.useContext(SearchPropsContext)
 	const searchContext = React.useContext(SearchContext)
@@ -114,10 +88,6 @@ export default function FacetedSearch() {
 		sortOrder,
 	})
 
-	const toggleView = React.useCallback(() => {
-		setShowResults(!showResults)
-	}, [showResults])
-
 	return (
 		<Wrapper
 			className={context.className}
@@ -126,13 +96,10 @@ export default function FacetedSearch() {
 			id="huc-fs"
 		>
 			<ToggleView
-				onClick={toggleView}
 				showResults={showResults}
+				setShowResults={setShowResults}
 				small={context.small}
-			>
-				<span>filters</span>
-				<span>results</span>
-			</ToggleView>
+			/>
 			<FullTextSearch />
 			<Header
 				currentPage={currentPage}
