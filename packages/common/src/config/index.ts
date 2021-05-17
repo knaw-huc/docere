@@ -175,9 +175,17 @@ export type EntityConfig2 = TmpConfig & {
 
 	filter: (annotation: PartialStandoffAnnotation) => boolean
 
-	// Set the ID of the entity. Not te be confused with the annotation ID!
-	// An entity can consist of multiple annotations. Defaults to a.metadata._id
+	/**
+	 * Set the ID of the entity. Not te be confused with the annotation ID!
+	 * An entity can consist of multiple annotations. Defaults to a.metadata._id
+	 */
 	getId?: (a: PartialStandoffAnnotation) => string
+
+	/**
+	 * Set the value of the entity. This is primarily used to show in 
+	 * the faceted search and in the metadata tab
+	 */ 
+	getValue?: (a: PartialStandoffAnnotation) => string
 }
 
 export const defaultMetadata: Required<MetadataConfig> = {
@@ -201,6 +209,7 @@ export const defaultEntityConfig: Required<EntityConfig2> = {
 	description: null,
 	filter: null,
 	getId: (a: StandoffAnnotation) => a.id,
+	getValue: (_a: StandoffAnnotation) => null,
 	revealOnHover: false,
 	type: EntityType.None,
 }

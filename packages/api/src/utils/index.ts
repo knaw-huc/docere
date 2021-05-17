@@ -2,12 +2,12 @@ import path from 'path'
 import fs from 'fs'
 import { Response as ExpressResponse } from 'express'
 import chalk from 'chalk'
-import { DTAP, EsDataType, PageConfig } from '@docere/common'
+import { DTAP, EsDataType } from '@docere/common'
 
 import { dtapMap } from '../../../projects/src/dtap'
 
 import type { DocereApiError } from '../types'
-import type { Standoff, DocereConfig, ElasticSearchDocument, MetadataItem, JsonEntry } from '@docere/common'
+import type { DocereConfig, PageConfig } from '@docere/common'
 
 // @ts-ignore
 const DOCERE_DTAP = DTAP[process.env.DOCERE_DTAP]
@@ -118,6 +118,7 @@ function getDirents(dirPath: string) {
 }
 
 export function listProjects() {
+	console.log(dtapMap, DOCERE_DTAP)
 	return Object.keys(dtapMap)
 		.filter(projectId => dtapMap[projectId] >= DOCERE_DTAP)
 }
@@ -163,7 +164,13 @@ export function isError(payload: any | DocereApiError): payload is DocereApiErro
 
 export async function getProjectConfig(id: string): Promise<DocereConfig> {
 	const configPath = path.resolve(process.cwd(), `./packages/projects/build/${id}/config`)
-	const { default: config } = await import(configPath)
+	let config: DocereConfig
+	try {
+		const { default: d } = await import(configPath)
+		config = d
+	} catch (error) {
+		console.log(error)
+	}
 	return config
 }
 
@@ -178,72 +185,6 @@ export async function getProjectPageConfig(projectId: string, pageId: string): P
 			return prev
 		}, [])
 		.find(p => p.id === pageId)
-}
-
-export function getElasticSearchDocument(
-	extractedEntry: JsonEntry | DocereApiError,
-	standoff: Standoff,
-	projectConfig: DocereConfig
-): ElasticSearchDocument | DocereApiError {
-	if (isError(extractedEntry)) return extractedEntry
-
-	// const entities = Object.values(extractedEntry.textData.entities)
-	// 	.reduce((agg, [_id, entity]) => {
-	// 		agg[entity.configId] = (agg.hasOwnProperty(entity.configId)) ?
-	// 			agg[entity.configId].concat(entity.content) :
-	// 			[entity.content]
-	// 		return agg
-	// 	}, {} as Record<string, string[]>)
-
-	// const facsimiles: ElasticSearchDocument['facsimiles'] = Object.values(extractedEntry.textData.facsimiles)
-	// 	.reduce((agg, [id, facsimile]) => {
-	// 		return agg.concat(facsimile.versions.map(v => ({
-	// 			id,
-	// 			path: v.thumbnailPath != null ? v.thumbnailPath : v.path
-	// 		})))
-	// 	}, [])
-
-	// const facsimiles = extractedEntry.textData.facsimiles.map(f => f[1])
-	const facsimiles = projectConfig.facsimiles != null ? 
-		standoff.annotations
-			.filter(projectConfig.facsimiles.filter)
-			.map(a => ({
-				id: a.metadata._facsimileId,
-				path: a.metadata._facsimilePath
-			})) :
-		[]
-
-	const metadata = extractedEntry.metadata?.reduce((prev, curr) => {
-			if (curr.datatype === EsDataType.Hierarchy) {
-				if (Array.isArray(curr.value)) {
-					curr.value.forEach((v, i) => {
-						prev[`${curr.id}_level${i}`] = v
-					})
-				}
-			} else {
-				prev[curr.id] = curr.value
-			}
-			return prev
-		}, {} as Record<string, MetadataItem['value']>)
-
-	// const text = extractedEntry.plainText
-	// 	.replace(/\s+/g, ' ')
-	// 	.split(' ')
-	// 	.map(t => t.trim())
-	// 	.join(' ')
-	// 	.trim()
-
-	return {
-		id: extractedEntry.id,
-		facsimiles,
-		text: standoff.text,
-		text_suggest: {
-			input: Array.from(new Set(standoff.text.replace(/\.|\,|\;/g, '').split(' '))),
-		},
-		// TODO index entities (extract value?)
-		// ...entities,
-		...metadata,
-	}
 }
 
 export function sendJson(payload: any | DocereApiError, expressResponse: ExpressResponse) {

@@ -29,8 +29,8 @@ export default extendConfig({
 	metadata2: [
 		{
 			datatype: EsDataType.Date,
-			id: 'date',
-			interval: 'd'
+			id: 'session_date',
+			interval: 'd',
 		},
 		{
 			id: 'inventory_num',
@@ -82,6 +82,7 @@ export default extendConfig({
 			id: 'attendant',
 			filter: a => a.name === 'attendant',
 			getId: a => a.metadata.delegate_id,
+			getValue: a => a.metadata.delegate_name,
 			type: EntityType.Person,
 		}
 	],

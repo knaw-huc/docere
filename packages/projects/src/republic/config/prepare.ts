@@ -50,7 +50,9 @@ export function prepareSource(republicStandoff: RepublicStandoff): PartialStando
 	return {
 		metadata: republicStandoff.metadata,
 		text: republicStandoff.text,
-		annotations: republicStandoff.annotations.map(toDocereAnnotation)
+		annotations: republicStandoff.annotations
+			.map(toDocereAnnotation)
+			.filter(a => !(a.name === 'attendant' && a.metadata.delegate_id === 0))
 	}
 }
 

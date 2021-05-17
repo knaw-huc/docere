@@ -1,7 +1,9 @@
 import * as es from '@elastic/elasticsearch'
 
 import { EsDataType, JsonEntry, isHierarchyFacetConfig } from '../../../common/src'
-import { getType, isError, getElasticSearchDocument, getProjectConfig } from '../utils'
+import { getType, isError, getProjectConfig } from '../utils'
+import { createElasticSearchDocument } from './create-document'
+
 
 import type { Mapping, DocereApiError } from '../types'
 import { DocereConfig, Standoff } from '@docere/common'
@@ -73,7 +75,7 @@ export async function indexDocument(
 	standoff: Standoff,
 	esClient: es.Client
 ) {
-	const esDocument = getElasticSearchDocument(extractedEntry, standoff, projectConfig)
+	const esDocument = createElasticSearchDocument(extractedEntry, standoff, projectConfig)
 	if (isError(esDocument)) return esDocument
 
 	try {

@@ -1,10 +1,17 @@
 import type { FacetedSearchProps, ElasticSearchRequestOptions } from '@docere/common'
 
-export default class ESRequest {
-	_source: { include?: FacetedSearchProps['resultFields'], exclude?: FacetedSearchProps['excludeResultFields'] }
+export default abstract class ESRequest {
+	_source: {
+		include?: FacetedSearchProps['resultFields'],
+		exclude?: FacetedSearchProps['excludeResultFields']
+	}
+
 	from: number
+
 	size: number
+
 	sort: any
+
 	track_total_hits: number
 
 	constructor(options: ElasticSearchRequestOptions, context: FacetedSearchProps) {

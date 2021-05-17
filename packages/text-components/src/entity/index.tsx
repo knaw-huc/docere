@@ -11,8 +11,16 @@ const tooltipContainerStyle = css`
 	position: relative;
 `
 
+/**
+ * The tooltip container is used when the tooltip is on the last child.
+ * The inline-block collapses the element, which means if the last Child
+ * is preceded by a white space, it disappears. This happens often:
+ * <frontname>Teddy</frontname></surname> Rooseveldt</surename>. That is 
+ * why the `padding-left` prop is added.
+ */
 const TooltipContainer = styled.span`
 	${tooltipContainerStyle}
+	padding-left: .25rem;
 `
 
 const NoWrap = styled.span`

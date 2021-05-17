@@ -72,7 +72,7 @@ export default function ESResponseWithFacetsParser(response: any, facets: Facets
 				{ key: 'false', count: falseCount },
 			]
 		}
-		else if (isDateFacetData(facet) && facet.value != null) {
+		else if (isDateFacetData(facet)) {
 			const lastFilter = facet.filters[facet.filters.length - 1]
 			if (lastFilter != null) {
 				buckets = buckets.filter(b => {
@@ -90,7 +90,7 @@ export default function ESResponseWithFacetsParser(response: any, facets: Facets
 			} else if (buckets.length === 1) {
 				firstBucketKey = buckets[0].key
 				lastBucketKey = getTo(new Date(buckets[0].key), 1, facet.interval).getTime()
-			} else {
+			} else if (facet.value != null) {
 				firstBucketKey = facet.value.from
 				lastBucketKey = facet.value.to
 			}
@@ -139,7 +139,6 @@ export default function ESResponseWithFacetsParser(response: any, facets: Facets
 			let values: RangeFacetValue[]
 			if (facet.filters.length) {
 				values = createRangeBuckets(facet)
-				console.log(values)
 
 				buckets.forEach(b => {
 					const ratio = (b.key as number - values[0].from) / (values[values.length - 1].to - values[0].from)

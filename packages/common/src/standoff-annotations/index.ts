@@ -9,7 +9,6 @@ export const ROOT_NODE_NAME = 'root'
 export const TEXT_NODE_NAME = '__TEXT_NODE__'
 export const RANGE_TAG_NAME = '_range'
 
-
 /**
  * The source for {@link AnnotationList} and {@link AnnotationTree}
  */
@@ -41,8 +40,9 @@ export interface AnnotationNode extends PartialStandoffAnnotation {
 
 export interface StandoffAnnotationMetadata {
 	_areas?: FacsimileArea[]
-	_entityId?: string
 	_entityConfigId?: string
+	_entityId?: string
+	_entityValue?: string
 	_facsimileId?: string
 	_facsimilePath?: string
 	_range?: Set<string>

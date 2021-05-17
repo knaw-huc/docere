@@ -10,19 +10,19 @@ import { DTAP } from "@docere/common"
  */
 export const dtapMap: Record<string, DTAP> = {
 	// Testing => demo.docere.diginfra.net
-	bosscheschepenprotocollen: DTAP.Testing,
-	mondrian: DTAP.Testing,
+	// bosscheschepenprotocollen: DTAP.Testing,
+	// mondrian: DTAP.Testing,
 	republic: DTAP.Testing,
 	suriano: DTAP.Testing,
-	vangogh: DTAP.Testing,
+	// vangogh: DTAP.Testing,
 
 	// Development => localhost(:4000)
-	'plakaatboek-guyana-1670-1816': DTAP.Development,
-	florariumtemporum: DTAP.Development,
-	gheys: DTAP.Development,
-	henegouwseregisters: DTAP.Development,
-	isidore: DTAP.Development,
-	kranten1700: DTAP.Development,
+	// 'plakaatboek-guyana-1670-1816': DTAP.Development,
+	// florariumtemporum: DTAP.Development,
+	// gheys: DTAP.Development,
+	// henegouwseregisters: DTAP.Development,
+	// isidore: DTAP.Development,
+	// kranten1700: DTAP.Development,
 
 	// Inactive
 	// ecodicesnl

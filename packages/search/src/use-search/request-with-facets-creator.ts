@@ -270,7 +270,7 @@ export default class ESRequestWithFacets extends ESRequest {
 
 	private setQuery(options: ElasticSearchRequestOptions) {
 		if (!options.query.length) return
-		this.query = { query_string: { query: options.query } }
+		this.query = { query_string: { query: `*${options.query}*` } }
 		this.highlight = { fields: { text: {} }, require_field_match: false }
 	}
 }

@@ -36,11 +36,16 @@ const defaultConfig: DocereConfig = {
 
 // Add a title to a config if the title is not explicitly set in the config
 export function setTitle<T extends FacetConfigBase>(entityConfig: T): T & { title: string } {
+	let title = entityConfig.title
+
+	if (title == null) {
+		title = (entityConfig.id.charAt(0).toUpperCase() + entityConfig.id.slice(1))
+			.replace(/_/g, ' ')
+	}
+
 	return {
 		...entityConfig,
-		title: entityConfig.title == null ? 
-			entityConfig.id.charAt(0).toUpperCase() + entityConfig.id.slice(1) :
-			entityConfig.title,
+		title,
 	}
 }
 
@@ -80,15 +85,7 @@ export function extendConfig(configDataRaw: DocereConfig): DocereConfig {
 	}
 
 	config.entrySettings = { ...defaultEntrySettings, ...config.entrySettings }
-	config.layers2 = config.layers2.map(layer => {
-		if (layer.active == null) layer.active = true
-		if (layer.pinned == null) layer.pinned = false
 
-		// if (isTextLayerConfig(layer) && layer.extractElement == null) {
-		// 	layer.extractElement = (entry) => entry.preparedElement
-		// }
-		return setTitle(layer)
-	})
 	config.layers2 = config.layers2.map(layerConfig => {
 		if (layerConfig.active == null) layerConfig.active = true
 		if (layerConfig.pinned == null) layerConfig.pinned = false

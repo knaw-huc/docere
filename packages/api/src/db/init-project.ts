@@ -5,7 +5,7 @@ export async function initProject(projectId: string) {
 	const client = await pool.connect()
 
 	await transactionQuery(client, 'BEGIN')
-	await transactionQuery(client, `DROP TABLE IF EXISTS xml, document, page, page_item, tag, attribute cascade;`)
+	await transactionQuery(client, `DROP TABLE IF EXISTS source, document, page, page_item, tag, attribute cascade;`)
 	await transactionQuery(
 		client,
 		`CREATE TABLE source (
