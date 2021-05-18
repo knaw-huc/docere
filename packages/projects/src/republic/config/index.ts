@@ -1,8 +1,9 @@
 import { extendConfig, Colors, EntityType } from '@docere/common'
 import { LayerType, EsDataType } from '@docere/common'
+// import config from '../../suriano/config'
 import { prepareAnnotations, prepareSource } from './prepare'
 
-const annotationHierarchy = ['scan', 'attendance_list', 'resolution', 'paragraph', 'text_region', 'line', 'attendant']
+const annotationHierarchy = ['attendance_list', 'resolution', 'paragraph', 'text_region', 'line', 'attendant', 'scan']
 
 export default extendConfig({
 	standoff: {
@@ -12,7 +13,8 @@ export default extendConfig({
 			annotationHierarchy,
 			rootNodeName: 'session',
 			metadata: {
-				exclude: ['coords', 'para_id', 'scan_id', 'text_region_id', 'iiif_url', 'filepath', 'iiif_info_url']
+				exclude: ['coords', 'para_id', 'scan_id', 'text_region_id', 'iiif_url', 'filepath', 'iiif_info_url'],
+				addOffsets: true,
 			}
 		}
 	},
@@ -39,16 +41,12 @@ export default extendConfig({
 			id: 'session_weekday',
 		},	
 		{
+			entityConfigId: 'attendant',
 			id: 'president',
+			// filterEntities: a => a.metadata.class === 'president',
+			getValue: _ => 'bla'
 		}	
 	],
-
-	// createFacsimiles: (props) => props.tree
-	// 	.filter(a => a.name === 'scan')
-	// 	.map((curr) => ({
-	// 		id: curr.id,
-	// 		path: curr.metadata._facsimilePath,
-	// 	})),
 
 	facsimiles: {
 		filter: a => a.name === 'scan',

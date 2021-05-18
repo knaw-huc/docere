@@ -1,6 +1,6 @@
 import { LayerType } from '../../enum'
-import { BaseConfig } from '../../config'
 import { DocereAnnotation, FilterFunction, StandoffAnnotation } from '../../standoff-annotations'
+import { BaseConfig } from '../metadata'
 
 // export * from './serialize'
 

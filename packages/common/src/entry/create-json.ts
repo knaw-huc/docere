@@ -38,7 +38,7 @@ export function createJsonEntry(props: CreateEntryProps): JsonEntry {
 			return {
 				...config,
 				// TODO replace with this as default, but function as option in config
-				value: props.tree.annotations[0].metadata[config.id]
+				value: config.getValue(config, props)
 			}
 		}),
 		// textData: {

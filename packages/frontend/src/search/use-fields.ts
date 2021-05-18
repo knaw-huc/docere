@@ -2,6 +2,7 @@ import React from 'react'
 import { EsDataType, ProjectContext } from '@docere/common'
 
 import type { FacetsConfig, MetadataConfig } from '@docere/common'
+import { FacetConfig } from '@docere/common/build/types/search/facets'
 
 function filterNonFacets(field: MetadataConfig) {
 	// Do not show facets if config says so
@@ -26,7 +27,7 @@ export default function useFacetsConfig() {
 			.filter(filterNonFacets)
 			.sort(sortByOrder)
 			.reduce((prev, curr) => {
-				prev[curr.id] = curr
+				prev[curr.id] = curr as FacetConfig
 				return prev
 			}, {} as FacetsConfig)
 

@@ -20,7 +20,7 @@ services:
     build:
       context: ../../
       dockerfile: ./packages/api/Dockerfile
-    command: ["npx", "nodemon", "./packages/api", "-w", "./packages/api/build"]
+    command: ["npx", "nodemon", "./packages/api", "-w", "./packages/api/build", "-w", "./packages/projects/build"]
     container_name: docere_api
     env_file:
       - ../../.env

@@ -1,10 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Entity, EntitiesContext, EntityConfig2 } from '@docere/common'
+import { Entity, EntitiesContext, EntityConfig } from '@docere/common'
 
 const TooltipBody = styled.div`
 	background: white;
-	border-color: ${(props: { entityConfig: EntityConfig2, active?: boolean }) => props.entityConfig.color};
+	border-color: ${(props: { entityConfig: EntityConfig, active?: boolean }) => props.entityConfig.color};
 	border-style: solid;
 	border-width: 2px;
 	box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);

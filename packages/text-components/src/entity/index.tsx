@@ -1,6 +1,6 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
-import { EntrySettingsContext, EntitiesContext, useUIComponent, UIComponentType, ContainerContext, DispatchContext, useEntity, EntityAnnotationComponentProps, EntityConfig2 } from '@docere/common'
+import { EntrySettingsContext, EntitiesContext, useUIComponent, UIComponentType, ContainerContext, DispatchContext, useEntity, EntityAnnotationComponentProps, EntityConfig } from '@docere/common'
 
 import { useChildren } from './hooks'
 import IconsByType from './icons'
@@ -30,7 +30,7 @@ const NoWrap = styled.span`
 	white-space: nowrap;
 `
 
-interface WProps { entityConfig: EntityConfig2, active: boolean }
+interface WProps { entityConfig: EntityConfig, active: boolean }
 const Wrapper = styled.span`
 	background-color: ${(props: WProps) => {
 		return props.active ? props.entityConfig.color : 'rgba(0, 0, 0, 0)'

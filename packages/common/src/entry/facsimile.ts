@@ -29,32 +29,6 @@ interface FacsimileAreaRectangle extends FacsimileAreaCommon {
 
 export type FacsimileArea = FacsimileAreaRectangle | FacsimileAreaPolygon
 
-// export interface FacsimileArea {
-// 	facsimileId: string
-// 	h: number
-// 	id?: string
-// 	unit?: 'px' | 'perc'
-// 	w: number
-// 	x: number
-// 	y: number
-// }
-
-// export enum FacsimileType {
-// 	IIIF = 'IIIF',
-// 	Image = 'image',
-// }
-
-// interface FacsimileVersion {
-// 	path: string
-// 	thumbnailPath?: string
-// 	type?: FacsimileType
-// }
-// export interface Facsimile {
-// 	id: string
-// 	path: string
-// 	// versions: FacsimileVersion[]
-// }
-
 /**
  * A Facsimile is a kind of {@link DocereAnnotation} with a
  * facsimile ID and a path to the image.

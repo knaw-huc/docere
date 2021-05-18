@@ -1,10 +1,10 @@
 import React from 'react'
-import { EntityType, Entity, EntityConfig2 } from '@docere/common'
+import { EntityType, Entity, EntityConfig } from '@docere/common'
 
 export type IconProps = {
 	active: boolean,
 	entity: Entity
-	entityConfig: EntityConfig2
+	entityConfig: EntityConfig
 }
 
 // Person

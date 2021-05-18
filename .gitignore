@@ -7,6 +7,7 @@ docs
 tsconfig.tsbuildinfo
 DEPLOY.md
 INTERNAL*
+README_INTERNAL.md
 .env*
 
 packages/docker/secrets

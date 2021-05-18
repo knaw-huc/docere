@@ -1,8 +1,43 @@
 import React from 'react'
-import { ID } from '.'
-import { EntityConfig2, EntryContext } from '..'
-import { ContainerType } from '../enum'
-import { DocereAnnotation } from '../standoff-annotations'
+import { defaultMetadata, ID } from '.'
+import { EntryContext } from '..'
+import { Colors, ContainerType, EntityType } from '../enum'
+import { DocereAnnotation, PartialStandoffAnnotation } from '../standoff-annotations'
+import { MetadataConfig } from './metadata'
+
+export type EntityConfig = Omit<MetadataConfig, 'getValue'> & {
+	color?: string
+	revealOnHover?: boolean
+	type?: EntityType | string
+
+	/**
+	 * Filter entities from annotations
+	 */
+	filter: (annotation: PartialStandoffAnnotation) => boolean
+
+	/**
+	 * Set the ID of the entity. Not te be confused with the annotation ID!
+	 * An entity can consist of multiple annotations. Defaults to a.metadata._id
+	 */
+	getId?: (a: PartialStandoffAnnotation) => string
+
+	/**
+	 * Get the value of the entity. This is primarily used to show in 
+	 * the faceted search and in the metadata tab
+	 */ 
+	getValue?: (a: PartialStandoffAnnotation) => string
+}
+
+export const defaultEntityConfig: Required<EntityConfig> = {
+	...defaultMetadata,
+	color: Colors.Blue,
+	description: null,
+	filter: null,
+	getId: a => a.id,
+	getValue: _a => null,
+	revealOnHover: false,
+	type: EntityType.None,
+}
 
 /**
  * An Entity is a kind of {@link DocereAnnotation}. After
@@ -16,7 +51,7 @@ export interface Entity extends DocereAnnotation {
 	props: DocereAnnotation['props'] & {
 		_entityId: DocereAnnotation['props']['_entityId']
 		_entityConfigId: DocereAnnotation['props']['_entityConfigId']
-		_config: EntityConfig2
+		_config: EntityConfig
 	}
 }
 

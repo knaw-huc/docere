@@ -116,7 +116,7 @@ export default extendConfig({
 	facsimiles: {
 		filter: a => a.name === 'pb',
 		getId: a => a.metadata['xml:id'],
-		getPath: (a) => {
+		getPath: a => {
 			const { _facsimileId: id } = a.metadata
 
 			const pageNumber = parseInt(id.slice(1, 3))

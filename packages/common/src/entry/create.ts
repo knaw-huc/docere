@@ -2,7 +2,8 @@ import type { ID } from './layer'
 import type { JsonEntry, Entry, Entity, Facsimile } from './index'
 import { DocereAnnotation } from '../standoff-annotations'
 import { generateId, isTextLayer } from '../utils'
-import { DocereConfig, EntityConfig2 } from '../config'
+import { DocereConfig } from '../config'
+import { EntityConfig } from './entity'
 
 /**
  * Converts the serialized entry, which is stored in the database to 
@@ -34,7 +35,7 @@ function isFacsimile(annotation: DocereAnnotation): annotation is Facsimile {
 function addEntity(
 	root: DocereAnnotation | string,
 	map: Map<ID, Entity>,
-	entityConfigs: Map<ID, EntityConfig2>
+	entityConfigs: Map<ID, EntityConfig>
 ) {
 	if (typeof root === 'string') return
 	if (isEntity(root)) {
@@ -49,7 +50,7 @@ function addEntity(
 
 function createEntityLookup(layers: Entry['layers'], config: DocereConfig): Map<ID, Entity> {
 	const entities = new Map<ID, Entity>()
-	const entityConfigs = config.entities2.reduce<Map<ID, EntityConfig2>>((prev, curr) => {
+	const entityConfigs = config.entities2.reduce<Map<ID, EntityConfig>>((prev, curr) => {
 		prev.set(curr.id, curr)
 		return prev
 	}, new Map())

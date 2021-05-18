@@ -1,4 +1,6 @@
-import { DocereConfig, MetadataConfig, defaultEntityConfig, defaultMetadata, EntityConfig2 } from '.'
+import { DocereConfig } from '.'
+import { defaultEntityConfig, EntityConfig } from '../entry/entity'
+import { defaultMetadata } from '../entry/metadata'
 import { PageConfig } from '../page'
 
 import type { FacetConfigBase } from '../types/search/facets'
@@ -67,8 +69,8 @@ function setPath(page: PageConfig, config: DocereConfig) {
 	return page
 }
 
-function extendEntities<T extends EntityConfig2>(td: T) {
-	const textDataConfig = {...defaultEntityConfig, ...td } as EntityConfig2
+function extendEntities<T extends EntityConfig>(td: T) {
+	const textDataConfig = {...defaultEntityConfig, ...td } as EntityConfig
 	return setTitle(textDataConfig)
 }
 
@@ -93,7 +95,7 @@ export function extendConfig(configDataRaw: DocereConfig): DocereConfig {
 	})
 
 	config.metadata2 = config.metadata2.map(md => {
-		const metadataConfig = {...defaultMetadata, ...md} as MetadataConfig
+		const metadataConfig = {...defaultMetadata, ...md}
 		return setTitle(metadataConfig)
 	})
 
