@@ -86,6 +86,7 @@ export class AreaRenderer {
 	 */
 	activate(activeEntities: ActiveEntities) {
 		// console.log(activeEntities.values().next().value?.facsimileAreas)
+
 		// Deactivate all active <rect>s
 		for (const rect of this.overlay.node().querySelectorAll('.active')) {
 			rect.classList.remove('active')
@@ -122,10 +123,12 @@ export class AreaRenderer {
 
 				// Update combined bounds
 				currentBounds = this.getRectBounds(fa)
-				if (combinedBounds != null) combinedBounds = combinedBounds.union(currentBounds)
-				else combinedBounds = currentBounds
+				combinedBounds = (combinedBounds != null) ?
+					combinedBounds.union(currentBounds) :
+					currentBounds
 			})
 
+			// Add the popup to the last entity
 			if (lastEntity) {
 				if (currentBounds == null) return
 				const element = document.querySelector(`[data-id="entity_${entity.props._entityId}"]`).cloneNode(true)
