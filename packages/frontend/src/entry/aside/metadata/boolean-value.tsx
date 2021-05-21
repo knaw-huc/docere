@@ -25,7 +25,8 @@ export default function BooleanFacetValue(props: Props) {
 		})
 	}, [])
 
-	const { id, value } = props.metadataItem
+	const { value } = props.metadataItem
+	const { id } = props.metadataItem.config
 
 	const facet = facets.get(id) as BooleanFacetData
 	const filters = facet?.filters
@@ -36,7 +37,7 @@ export default function BooleanFacetValue(props: Props) {
 			id={id}
 			onClick={handleSetSearchFilter}
 		>
-			{facet?.config.labels[value.toString() as 'true' | 'false']}
+			{facet?.config.facet.labels[value.toString() as 'true' | 'false']}
 		</Value>
 	)
 }

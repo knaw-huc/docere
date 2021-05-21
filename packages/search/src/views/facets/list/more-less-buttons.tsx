@@ -35,7 +35,7 @@ export default function(props: Props) {
 				</MoreButton>
 			}
 			{
-				props.facetData.config.size < props.facetData.size &&
+				props.facetData.config.facet.size < props.facetData.size &&
 				<MoreLessButton
 					onClick={handleLess}
 					spotColor={style.spotColor}

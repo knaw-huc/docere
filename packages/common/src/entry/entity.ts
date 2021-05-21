@@ -1,11 +1,10 @@
 import React from 'react'
-import { defaultMetadata, ID } from '.'
+import { BaseMetadataConfig, ID } from '.'
 import { EntryContext } from '..'
 import { Colors, ContainerType, EntityType } from '../enum'
 import { DocereAnnotation, PartialStandoffAnnotation } from '../standoff-annotations'
-import { MetadataConfig } from './metadata'
 
-export type EntityConfig = Omit<MetadataConfig, 'getValue'> & {
+export interface EntityConfig extends BaseMetadataConfig {
 	color?: string
 	revealOnHover?: boolean
 	type?: EntityType | string
@@ -29,13 +28,15 @@ export type EntityConfig = Omit<MetadataConfig, 'getValue'> & {
 }
 
 export const defaultEntityConfig: Required<EntityConfig> = {
-	...defaultMetadata,
 	color: Colors.Blue,
-	description: null,
+	facet: null,
 	filter: null,
 	getId: a => a.id,
-	getValue: _a => null,
+	getValue: () => null,
+	id: null,
 	revealOnHover: false,
+	showInAside: true,
+	title: null,
 	type: EntityType.None,
 }
 

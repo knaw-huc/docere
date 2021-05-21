@@ -84,10 +84,10 @@ export function getType(key: string, config: DocereConfig): EsDataType {
 	let type = EsDataType.Keyword
 
 	const mdConfig = config.metadata2.find(md => md.id === key)
-	if (mdConfig != null && mdConfig.datatype != null) type = mdConfig.datatype
+	if (mdConfig != null && mdConfig.facet.datatype != null) type = mdConfig.facet.datatype
 
 	const tdConfig = config.entities2.find(md => md.id === key)
-	if (tdConfig != null && tdConfig.datatype != null) type = tdConfig.datatype
+	if (tdConfig != null && tdConfig.facet.datatype != null) type = tdConfig.facet.datatype
 
 	if (key === 'text') type = EsDataType.Text
 	if (type === EsDataType.Hierarchy) type = EsDataType.Keyword

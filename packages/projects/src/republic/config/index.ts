@@ -30,21 +30,31 @@ export default extendConfig({
 
 	metadata2: [
 		{
-			datatype: EsDataType.Date,
+			facet: {
+				datatype: EsDataType.Date,
+				interval: 'd',
+			},
 			id: 'session_date',
-			interval: 'd',
 		},
 		{
+			facet: {
+				datatype: EsDataType.Keyword,
+			},
 			id: 'inventory_num',
 		},
 		{
+			facet: {
+				datatype: EsDataType.Keyword,
+			},
 			id: 'session_weekday',
 		},	
 		{
+			facet: {
+				datatype: EsDataType.Keyword,
+			},
 			entityConfigId: 'attendant',
 			id: 'president',
-			// filterEntities: a => a.metadata.class === 'president',
-			getValue: _ => 'bla'
+			filterEntities: a => a.metadata.class === 'president',
 		}	
 	],
 
@@ -58,7 +68,6 @@ export default extendConfig({
 			color: Colors.Green,
 			filter: (a => a.name === 'line'),
 			id: 'line',
-			showAsFacet: false,
 			showInAside: false,
 		},
 		{
@@ -66,17 +75,18 @@ export default extendConfig({
 			filter: (a => a.name === 'resolution'),
 			id: 'resolution',
 			showInAside: false,
-			showAsFacet: false,
 		},
 		{
 			color: Colors.Red,
 			filter: (a => a.name === 'attendance_list'),
 			id: 'attendance_list',
 			showInAside: false,
-			showAsFacet: false,
 			title: 'Attendance list'
 		},
 		{
+			facet: {
+				datatype: EsDataType.Keyword,
+			},
 			id: 'attendant',
 			filter: a => a.name === 'attendant',
 			getId: a => a.metadata.delegate_id,

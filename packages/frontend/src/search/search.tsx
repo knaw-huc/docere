@@ -43,7 +43,7 @@ function Search() {
 		<FS
 			autoSuggest={autoSuggest}
 			excludeResultFields={excludeResultFields}
-			language={Language.NL}
+			language={Language.EN}
 			onClickResult={onClickResult}
 			ResultBodyComponent={ResultBodyComponent}
 			resultBodyProps={{

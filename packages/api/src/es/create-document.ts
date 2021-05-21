@@ -1,4 +1,5 @@
-import { JsonEntry, Standoff, DocereConfig, ElasticSearchDocument, EsDataType, MetadataItem } from "@docere/common"
+import { JsonEntry, Standoff, DocereConfig, ElasticSearchDocument, MetadataItem } from "@docere/common"
+import { isHierarchyMetadataItem } from "@docere/common"
 import { DocereApiError } from "../types"
 import { isError } from "../utils"
 
@@ -39,14 +40,14 @@ export function createElasticSearchDocument(
 		[]
 
 	const metadata = jsonEntry.metadata?.reduce((prev, curr) => {
-			if (curr.datatype === EsDataType.Hierarchy) {
+			if (isHierarchyMetadataItem(curr)) {
 				if (Array.isArray(curr.value)) {
 					curr.value.forEach((v, i) => {
-						prev[`${curr.id}_level${i}`] = v
+						prev[`${curr.config.id}_level${i}`] = v
 					})
 				}
 			} else {
-				prev[curr.id] = curr.value
+				prev[curr.config.id] = curr.value
 			}
 			return prev
 		}, {} as Record<string, MetadataItem['value']>)

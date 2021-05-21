@@ -1,48 +1,98 @@
 import { EsDataType } from '../../enum'
 import { FilterFunction, PartialStandoffAnnotation } from '../../standoff-annotations'
+import { BooleanFacetConfig, DateFacetConfig, FacetConfig, HierarchyFacetConfig, ListFacetConfig, RangeFacetConfig } from '../../types/search/facets'
 // import { PartialStandoffAnnotation } from '../../standoff-annotations'
-import { FacetConfig } from '../../types/search/facets'
+// import { FacetConfig } from '../../types/search/facets'
 import { CreateEntryProps } from '../create-json'
 // import { Entity } from '../entity'
 import { ID } from '../layer'
 
 export * from './string'
 
+export type MetadataValue = string | string[] | number | number[] | boolean
+
 export interface BaseConfig {
+	/**
+	 * Thou shalt have an ID
+	 */
 	id: ID
+
+	/**
+	 * Title of the metadata or entity. When left blank, the title is constructed
+	 * from the ID by {@link setTitle}.
+	 */
 	title?: string
 }
 
-type DefaultMetadataConfig = FacetConfig & {
-	showInAside?: boolean /* Show data in the aside of the detail view? */
-	showAsFacet?: boolean /* Show data as a facet? */
- 	getValue?: (config: MetadataConfig, props: CreateEntryProps) => string | string[] | number | number[] | boolean
-	entityConfigId?: ID
-	filterEntities?: FilterFunction<PartialStandoffAnnotation>
+export interface BaseMetadataConfig extends BaseConfig {
+	/**
+	 * Configuration for the search facet. If there is no config,
+	 * no facet will be generated.
+	 */
+	facet?: FacetConfig 
+
+	/**
+	 * Show metadata or entity in the aside of the detail view.
+	 */ 
+	showInAside?: boolean 
 }
 
-// export type EntityMetadataConfig = Omit<DefaultMetadataConfig, 'getValue'> & {
-// 	entityConfigId: ID
-// 	filterEntities: FilterFunction<PartialStandoffAnnotation>
-// }
+interface DefaultMetadataConfig extends BaseMetadataConfig {
+	/**
+	 * Get the value of the metadata item.
+	 * 
+	 * Defaults to the property with
+	 * {@link BaseConfig.id} as name on the metadata of the root of the tree
+	 */
+ 	getValue?: (config: DefaultMetadataConfig, props: CreateEntryProps) => MetadataValue
+}
 
-// export function isEntityMetadataConfig<T>(config: FacetConfig): config is EntityMetadataConfig {
-// 	return config.hasOwnProperty('entityConfigId') && config.hasOwnProperty('filterEntities')
-// }
+/**
+ * A special kind of metadata which has a link to an {@link Entity}.
+ * 
+ * For example when a person has a special function which should be mentioned in the
+ * metadata, like chairman, sender, receiver, etc. Another example is the date of the
+ * document which is mentioned in the document. In the metadata aside 
+ */
+export interface EntityMetadataConfig extends BaseMetadataConfig {
+	entityConfigId: ID
+	filterEntities: FilterFunction<PartialStandoffAnnotation>
+}
 
-export type MetadataConfig = DefaultMetadataConfig //| EntityMetadataConfig
+export function isEntityMetadataConfig(config: MetadataConfig): config is EntityMetadataConfig {
+	return config.hasOwnProperty('entityConfigId')
+}
 
-export const defaultMetadata: Required<MetadataConfig> = {
+export type MetadataConfig = DefaultMetadataConfig | EntityMetadataConfig
+
+export const defaultFacetConfig: FacetConfig = {
 	datatype: EsDataType.Keyword,
 	description: null,
-	getValue: (config, props) => props.tree.annotations[0]?.metadata[config.id],
-	entityConfigId: null,
-	filterEntities: null,
-	id: null,
 	order: 9999, // TODO fixate the order number, which means: if there is no order than increment the order number: 999, 1000, 1001, 1002 (import for example the sort setting in the FS)
-	showAsFacet: true,
-	showInAside: true,
 	size: null,
 	sort: null,
+}
+
+export const defaultMetadata: Required<DefaultMetadataConfig> = {
+	facet: null,
+	getValue: (config, props) => props.tree.annotations[0]?.metadata[config.id],
+	id: null,
+	showInAside: true,
 	title: null,
+}
+
+export interface RangeMetadataConfig extends BaseMetadataConfig {
+	facet: RangeFacetConfig
+}
+export interface ListMetadataConfig extends BaseMetadataConfig {
+	facet: ListFacetConfig
+}
+export interface HierarchyMetadataConfig extends BaseMetadataConfig {
+	facet: HierarchyFacetConfig
+}
+export interface DateMetadataConfig extends BaseMetadataConfig {
+	facet: DateFacetConfig
+}
+export interface BooleanMetadataConfig extends BaseMetadataConfig {
+	facet: BooleanFacetConfig
 }

@@ -1,7 +1,8 @@
 import { ActiveFacsimile } from '../../entry/facsimile'
+import { BaseMetadataConfig } from '../../entry/metadata'
 import { SortDirection, SearchTab, Language } from '../../enum'
 
-import type { FacetsData, FacetConfig, FacetFilter } from './facets'
+import type { FacetsData, FacetFilter } from './facets'
 
 export * from './facets-data.action'
 export * from './facets'
@@ -29,7 +30,7 @@ export interface FacetedSearchProps {
 
 // type Filters = Map<string, Set<string>>
 export type Filters = Record<string, FacetFilter>
-export type FacetsConfig = Record<string, FacetConfig>
+export type FacetsConfig = Record<string, BaseMetadataConfig>
 
 export type SortOrder = Map<string, SortDirection>
 export type SetSortOrder = (sortOrder: SortOrder) => void

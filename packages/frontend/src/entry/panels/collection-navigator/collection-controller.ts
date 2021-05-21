@@ -1,5 +1,5 @@
 import { ProjectContextValue, fetchPost, ActiveFacsimile, ID, ElasticSearchFacsimile, ProjectAction } from '@docere/common'
-import { isHierarchyFacetConfig, isListFacetConfig, isRangeFacetConfig } from '../../../../../search/src'
+import { isHierarchyMetadataItem, isListMetadataItem, isRangeMetadataItem } from '../../../../../search/src'
 import OpenSeadragon from 'openseadragon';
 import TiledImages from './tiled-images'
 import { CollectionNavigatorBaseController } from './base-controller'
@@ -66,11 +66,11 @@ export class CollectionNavigatorController extends CollectionNavigatorBaseContro
 		if (collection.metadataId == null) {
 			payload.query = { match_all: {} }
 		} else {
-			const metadata = this.entry.metadata.find(md => md.id === collection.metadataId)
+			const metadata = this.entry.metadata.find(md => md.config.id === collection.metadataId)
 
 			if (metadata == null) return
 
-			if (isHierarchyFacetConfig(metadata)) {
+			if (isHierarchyMetadataItem(metadata)) {
 				const term = metadata.value.reduce((prev, curr, index) => {
 					prev.push({ term: { [`${collection.metadataId}_level${index}`]: curr }})
 					return prev
@@ -81,13 +81,13 @@ export class CollectionNavigatorController extends CollectionNavigatorBaseContro
 						must: term
 					}
 				}
-			} else if (isListFacetConfig(metadata)) {
+			} else if (isListMetadataItem(metadata)) {
 				payload.query = {
 					term: {
-						[metadata.id]: metadata.value
+						[metadata.config.id]: metadata.value
 					}
 				}
-			} else if (isRangeFacetConfig(metadata)) {
+			} else if (isRangeMetadataItem(metadata)) {
 				payload.query = {
 					match_all: {}
 				}

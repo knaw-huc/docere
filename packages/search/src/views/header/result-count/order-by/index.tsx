@@ -41,8 +41,8 @@ function SortBy(props: Props) {
 						const b = props.sortOrder.has(facetData2.config.id)
 
 						if (a === b) {
-							const order1 = facetData1.config.order
-							const order2 = facetData2.config.order
+							const order1 = facetData1.config.facet.order
+							const order2 = facetData2.config.facet.order
 							return order1 - order2
 						}
 

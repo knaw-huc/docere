@@ -1,59 +1,59 @@
-import { isListFacetConfig, isBooleanFacetConfig, isHierarchyFacetConfig, isRangeFacetConfig, isDateFacetConfig } from '../utils'
+import { isBooleanMetadataConfig, isDateMetadataConfig, isHierarchyMetadataConfig, isListMetadataConfig, isRangeMetadataConfig } from '../utils'
 
-import type { FacetConfig, FacetsConfig, BooleanFacetConfig, BooleanFacetData, DateFacetConfig, DateFacetData, HierarchyFacetConfig, HierarchyFacetData, ListFacetConfig, ListFacetData, RangeFacetConfig, RangeFacetData, FacetData, FacetsData } from '@docere/common'
+import type { FacetsConfig, BooleanFacetData, DateFacetData, HierarchyFacetData, ListFacetData, RangeFacetData, FacetData, FacetsData, BaseMetadataConfig, BooleanMetadataConfig, HierarchyMetadataConfig, ListMetadataConfig, DateMetadataConfig, RangeMetadataConfig } from '@docere/common'
 import { getRangeBucketSize } from '../use-search/get-buckets'
 
-function initBooleanFacet(config: BooleanFacetConfig): BooleanFacetData {
+function initBooleanFacet(config: BooleanMetadataConfig): BooleanFacetData {
 	return {
 		config,
 		filters: new Set(),
 	}
 }
 
-function initHierarchyFacet(config: HierarchyFacetConfig): HierarchyFacetData {
+function initHierarchyFacet(config: HierarchyMetadataConfig): HierarchyFacetData {
 	return {
 		config,
 		filters: new Set(),
-		size: config.size
+		size: config.facet.size
 	}
 }
 
-function initListFacet(config: ListFacetConfig): ListFacetData {
+function initListFacet(config: ListMetadataConfig): ListFacetData {
 	return {
 		config,
 		filters: new Set(),
 		query: '',
-		size: config.size,
-		sort: config.sort,
+		size: config.facet.size,
+		sort: config.facet.sort,
 	}
 }
 
-function initDateFacet(config: DateFacetConfig): DateFacetData {
+function initDateFacet(config: DateMetadataConfig): DateFacetData {
 	return {
-		collapseFilters: config.collapseFilters,
+		collapseFilters: config.facet.collapseFilters,
 		config,
 		filters: [],
-		interval: config.interval,
+		interval: config.facet.interval,
 		value: null,
 	}
 }
 
-function initRangeFacet(config: RangeFacetConfig): RangeFacetData {
+function initRangeFacet(config: RangeMetadataConfig): RangeFacetData {
 	return {
-		collapseFilters: config.collapseFilters,
+		collapseFilters: config.facet.collapseFilters,
 		config,
 		filters: [],
-		interval: getRangeBucketSize(config.range),
+		interval: getRangeBucketSize(config.facet.range),
 		value: null,
 	}
 }
 
-function initFacetData(facetConfig: FacetConfig): FacetData {
-	if		(isListFacetConfig(facetConfig))		return initListFacet(facetConfig)
-	else if (isBooleanFacetConfig(facetConfig))		return initBooleanFacet(facetConfig)
-	else if (isHierarchyFacetConfig(facetConfig))	return initHierarchyFacet(facetConfig)
-	else if (isRangeFacetConfig(facetConfig))		return initRangeFacet(facetConfig)
-	else if (isDateFacetConfig(facetConfig))		return initDateFacet(facetConfig)
+function initFacetData(metadataConfig: BaseMetadataConfig): FacetData {
+	if		(isListMetadataConfig(metadataConfig))		return initListFacet(metadataConfig)
+	else if (isBooleanMetadataConfig(metadataConfig))	return initBooleanFacet(metadataConfig)
+	else if (isHierarchyMetadataConfig(metadataConfig))	return initHierarchyFacet(metadataConfig)
+	else if (isRangeMetadataConfig(metadataConfig))		return initRangeFacet(metadataConfig)
+	else if (isDateMetadataConfig(metadataConfig))		return initDateFacet(metadataConfig)
 }
 
 export default function initFacetsData(facetsConfig: FacetsConfig) {

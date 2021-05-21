@@ -73,7 +73,7 @@ function FacetHeader(props: Props) {
 			<HelpButton
 				offset={73}
 			>
-				{props.facetData.config.description}
+				{props.facetData.config.facet.description}
 			</HelpButton>
 			{
 				!props.collapse &&

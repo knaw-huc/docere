@@ -24,6 +24,10 @@ export type {
 	ResultBodyProps
 }
 
+// declare global {
+// 	const DOCERE_DTAP: string
+// }
+
 const initialSearchPropsContextState: FacetedSearchProps = {
 	ResultBodyComponent: null,
 	excludeResultFields: [],

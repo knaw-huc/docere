@@ -1,7 +1,7 @@
 import React from 'react'
 import { MetadataItem, DEFAULT_SPACING, StringMetadata } from '@docere/common'
 import styled from 'styled-components'
-import { isListFacetConfig, isHierarchyFacetConfig, isBooleanFacetConfig, isRangeFacetConfig, isDateFacetConfig } from '../../../../../search/src'
+import { isListMetadataItem, isBooleanMetadataItem, isDateMetadataItem, isHierarchyMetadataItem, isRangeMetadataItem } from '../../../../../search/src'
 
 // import ListFacetValue from './list-facet'
 import HierarchyFacetValue from './hierarchy-value'
@@ -28,35 +28,35 @@ export default function MetadataItemComp(props: Props) {
 	return (
 		<Wrapper>
 			{
-				isListFacetConfig(props.metadataItem) &&
+				isListMetadataItem(props.metadataItem) &&
 				<StringMetadata
-					metadataId={props.metadataItem.id}
+					metadataId={props.metadataItem.config.id}
 					value={props.metadataItem.value}
 
 				/>
 			}
 			{
-				isHierarchyFacetConfig(props.metadataItem) &&
+				isHierarchyMetadataItem(props.metadataItem) &&
 				<>
-					<Title>{props.metadataItem.title}</Title>
+					<Title>{props.metadataItem.config.title}</Title>
 					<HierarchyFacetValue
 						metadataItem={props.metadataItem}
 					/>
 				</>
 			}
 			{
-				isBooleanFacetConfig(props.metadataItem) &&
+				isBooleanMetadataItem(props.metadataItem) &&
 				<>
-					<Title>{props.metadataItem.title}</Title>
+					<Title>{props.metadataItem.config.title}</Title>
 					<BooleanFacetValue
 						metadataItem={props.metadataItem}
 					/>
 				</>
 			}
 			{
-				(isRangeFacetConfig(props.metadataItem) || isDateFacetConfig(props.metadataItem)) &&
+				(isRangeMetadataItem(props.metadataItem) || isDateMetadataItem(props.metadataItem)) &&
 				<>
-					<Title>{props.metadataItem.title}</Title>
+					<Title>{props.metadataItem.config.title}</Title>
 					<DateFacetValue
 						metadataItem={props.metadataItem}
 					/>

@@ -13,7 +13,6 @@ export * from './use-page'
  * @interface
  */
 export interface PageConfig extends BaseConfig {
-
 	/**
 	 * Page configurations can be nested
 	 * 

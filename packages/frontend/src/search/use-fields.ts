@@ -2,20 +2,19 @@ import React from 'react'
 import { EsDataType, ProjectContext } from '@docere/common'
 
 import type { FacetsConfig, MetadataConfig } from '@docere/common'
-import { FacetConfig } from '@docere/common/build/types/search/facets'
 
 function filterNonFacets(field: MetadataConfig) {
-	// Do not show facets if config says so
-	if (!field.showAsFacet) return false
+	// Do not show facet if there is not facet config
+	if (field.facet == null) return false
 
 	// Do not show facets which datatype cannot be visualised
-	if (field.datatype === EsDataType.Null || field.datatype === EsDataType.Text) return false
+	if (field.facet.datatype === EsDataType.Null || field.facet.datatype === EsDataType.Text) return false
 
 	return true
 }
 
 function sortByOrder(f1: MetadataConfig, f2: MetadataConfig) {
-	return f1.order - f2.order
+	return f1.facet.order - f2.facet.order
 }
 
 export default function useFacetsConfig() {
@@ -27,7 +26,7 @@ export default function useFacetsConfig() {
 			.filter(filterNonFacets)
 			.sort(sortByOrder)
 			.reduce((prev, curr) => {
-				prev[curr.id] = curr as FacetConfig
+				prev[curr.id] = curr
 				return prev
 			}, {} as FacetsConfig)
 

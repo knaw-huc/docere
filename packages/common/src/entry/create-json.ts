@@ -1,6 +1,6 @@
 import { DocereConfig, StandoffTree } from '..'
 import { isTextLayerConfig } from '../utils'
-import { FacsimileLayer, ID, JsonEntry, TextLayer } from '.'
+import { FacsimileLayer, ID, isEntityMetadataConfig, JsonEntry, TextLayer } from '.'
 
 export type CreateEntryProps = {
 	config: DocereConfig
@@ -19,6 +19,7 @@ export function createJsonEntry(props: CreateEntryProps): JsonEntry {
 
 	return {
 		id: props.id,
+
 		layers: props.config.layers2.map(layerConfig => {
 			if (isTextLayerConfig(layerConfig)) {
 				let tree = props.tree
@@ -33,12 +34,24 @@ export function createJsonEntry(props: CreateEntryProps): JsonEntry {
 
 			return layerConfig as FacsimileLayer
 		}),
-		// @ts-ignore
-		metadata: props.config.metadata2.map(config => {
+
+		metadata: props.config.metadata2.map(metadataConfig => {
+			let value
+
+			if (isEntityMetadataConfig(metadataConfig)) {
+				const entityConfig = props.config.entities2.find(ec => ec.id === metadataConfig.entityConfigId)
+				console.log(metadataConfig.entityConfigId, metadataConfig.filterEntities)
+				value = props.tree.annotations
+					.filter(entityConfig.filter)
+					.filter(metadataConfig.filterEntities)
+					.map(entityConfig.getValue)
+			} else {
+				value = metadataConfig.getValue(metadataConfig, props)
+			}
+
 			return {
-				...config,
-				// TODO replace with this as default, but function as option in config
-				value: config.getValue(config, props)
+				config: metadataConfig,
+				value,
 			}
 		}),
 		// textData: {

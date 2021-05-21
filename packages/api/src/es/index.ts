@@ -1,12 +1,12 @@
 import * as es from '@elastic/elasticsearch'
 
-import { EsDataType, JsonEntry, isHierarchyFacetConfig } from '../../../common/src'
+import { EsDataType, JsonEntry } from '../../../common/src'
 import { getType, isError, getProjectConfig } from '../utils'
 import { createElasticSearchDocument } from './create-document'
 
 
 import type { Mapping, DocereApiError } from '../types'
-import { DocereConfig, Standoff } from '@docere/common'
+import { DocereConfig, isHierarchyFacetConfig, Standoff } from '@docere/common'
 
 
 export async function initProjectIndex(projectId: string) {
@@ -52,8 +52,8 @@ export async function getProjectIndexMapping(projectId: string): Promise<Mapping
 		.forEach(md => {
 			const type = getType(md.id, config)
 			if (type != null) {
-				if (isHierarchyFacetConfig(md)) {
-					let level = md.levels - 1
+				if (isHierarchyFacetConfig(md.facet)) {
+					let level = md.facet.levels - 1
 					while (level >= 0) {
 						properties[`${md.id}_level${level}`] = { type }
 						level--

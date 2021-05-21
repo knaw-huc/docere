@@ -75,7 +75,7 @@ export default function DateFacetValue(props: Props) {
 		[props.metadataItem.value]
 	if (!value.length) return <>-</>
 
-	const facet = (searchContext.state.facets?.get(props.metadataItem.id) as RangeFacetData)
+	const facet = (searchContext.state.facets?.get(props.metadataItem.config.id) as RangeFacetData)
 	if (facet?.value == null) return null
 
 	return (

@@ -1,7 +1,7 @@
 import React from 'react'
-import { initialSearchContextState } from '@docere/common'
+import { DTAP, initialSearchContextState } from '@docere/common'
 
-import { extendFacetConfig } from '../extend-facet-config'
+import { extendFacetConfig } from './extend-facet-config'
 import { isListFacetData, isBooleanFacetData, isRangeFacetData, isDateFacetData, isHierarchyFacetData } from '../utils'
 import { getRangeBucketSize } from '../use-search/get-buckets'
 import initFacetsData from './init-facets-data'
@@ -20,10 +20,8 @@ export default function useFacetsDataReducer(facetsConfig: FacetsConfig) {
 	return x
 }
 
-//@ts-ignore
-// window.DEBUG = true
 function facetsDataReducer(state: FacetsState, action: FacetsDataReducerAction): FacetsState {
-	 if ((window as any).DEBUG) console.log('[SearchContext]', action)
+	if (DOCERE_DTAP === DTAP.Development) console.log('[SearchContext]', action)
 
 	if (action.type === 'SET_CONFIG') {
 		return {
@@ -128,7 +126,7 @@ function facetsDataReducer(state: FacetsState, action: FacetsDataReducerAction):
 				}
 
 				// If filters are to be collapsed, only keep action.value
-				if (facet.config.collapseFilters) {
+				if (facet.config.facet.collapseFilters) {
 					facet.filters = [value]
 				}
 
@@ -167,7 +165,7 @@ function facetsDataReducer(state: FacetsState, action: FacetsDataReducerAction):
 
 			case 'REMOVE_FILTER': {
 				facet.filters = []
-				if (isRangeFacetData(facet)) facet.interval = getRangeBucketSize(facet.config.range)
+				if (isRangeFacetData(facet)) facet.interval = getRangeBucketSize(facet.config.facet.range)
 
 				return {
 					...state,
@@ -202,9 +200,9 @@ function facetsDataReducer(state: FacetsState, action: FacetsDataReducerAction):
 	if (isListFacetData(facet) || isHierarchyFacetData(facet)) {
 		switch(action.type) {
 			case 'view_less': {
-				if (facet.size > facet.config.size) {
-					facet.size -= facet.config.size
-					if (facet.size < facet.config.size) facet.size = facet.config.size
+				if (facet.size > facet.config.facet.size) {
+					facet.size -= facet.config.facet.size
+					if (facet.size < facet.config.facet.size) facet.size = facet.config.facet.size
 
 					return {
 						...state,
@@ -216,7 +214,7 @@ function facetsDataReducer(state: FacetsState, action: FacetsDataReducerAction):
 
 			case 'view_more': {
 				if (action.total - facet.size > 0) {
-					facet.size += facet.config.size
+					facet.size += facet.config.facet.size
 
 					return {
 						...state,

@@ -83,7 +83,7 @@ export default function HierarchyFacetValue(props: Props) {
 	return (
 		<HierarchyValue
 			facets={facets}
-			id={props.metadataItem.id}
+			id={props.metadataItem.config.id}
 			onClick={handleSetSearchFilter}
 			value={props.metadataItem.value}
 		/>

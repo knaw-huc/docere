@@ -1,9 +1,7 @@
 import { DocereConfig } from '.'
 import { defaultEntityConfig, EntityConfig } from '../entry/entity'
-import { defaultMetadata } from '../entry/metadata'
+import { BaseConfig, defaultFacetConfig, defaultMetadata } from '../entry/metadata'
 import { PageConfig } from '../page'
-
-import type { FacetConfigBase } from '../types/search/facets'
 
 export const defaultEntrySettings: DocereConfig['entrySettings'] = {
 	'panels.showHeaders': true,
@@ -37,7 +35,7 @@ const defaultConfig: DocereConfig = {
 // }
 
 // Add a title to a config if the title is not explicitly set in the config
-export function setTitle<T extends FacetConfigBase>(entityConfig: T): T & { title: string } {
+export function setTitle<T extends BaseConfig>(entityConfig: T): T & { title: string } {
 	let title = entityConfig.title
 
 	if (title == null) {
@@ -94,8 +92,20 @@ export function extendConfig(configDataRaw: DocereConfig): DocereConfig {
 		return setTitle(layerConfig)
 	})
 
+	// TODO remove getValue from EntityMetadataConfig
 	config.metadata2 = config.metadata2.map(md => {
-		const metadataConfig = {...defaultMetadata, ...md}
+		if (md.facet != null) {
+			md.facet = {
+				...defaultFacetConfig,
+				...md.facet,
+			}
+		}
+
+		const metadataConfig = {
+			...defaultMetadata,
+			...md
+		}
+
 		return setTitle(metadataConfig)
 	})
 

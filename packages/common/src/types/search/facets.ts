@@ -1,4 +1,12 @@
-import { BaseConfig } from "../../entry/metadata"
+import { HierarchyMetadata, MetadataItem } from "../../entry"
+import {
+	BooleanMetadataConfig,
+	DateMetadataConfig,
+	HierarchyMetadataConfig,
+	ListMetadataConfig,
+	RangeMetadataConfig
+} from "../../entry/metadata"
+
 import { EsDataType, SortBy, SortDirection } from "../../enum"
 
 export type FacetValues = ListFacetValues | BooleanFacetValues | RangeFacetValue[]
@@ -10,7 +18,7 @@ export type FacetsData = Map<string, FacetData>
  * BaseConfig is defined in @docere/common because it is also the
  * base for metadata and entities config
 */
-export interface FacetConfigBase extends BaseConfig {
+export interface FacetConfigBase {
 	readonly datatype?: EsDataType
 	readonly description?: string
 	readonly order?: number
@@ -34,7 +42,7 @@ export interface BooleanFacetConfig extends FacetConfigBase {
 }
 
 export interface BooleanFacetData {
-	config: BooleanFacetConfig
+	readonly config: BooleanMetadataConfig
 	filters: ListFacetFilter
 } 
 
@@ -43,10 +51,16 @@ export type BooleanFacetValues = [
 	{ key: 'false', count: number}
 ]
 
-// HIERARCHY FACET
-
+// TODO. This is used in @docere/api, but should come from @docere/search
+// or move guards from search to common
 export function isHierarchyFacetConfig(config: FacetConfigBase): config is HierarchyFacetConfig {
 	return config.datatype === EsDataType.Hierarchy
+}
+
+// TODO. This is used in @docere/api, but should come from @docere/search
+// or move guards from search to common
+export function isHierarchyMetadataItem(metadataItem: MetadataItem): metadataItem is HierarchyMetadata {
+	return metadataItem.config.facet.datatype === EsDataType.Hierarchy
 }
 
 export interface HierarchyFacetConfig extends FacetConfigBase {
@@ -56,7 +70,7 @@ export interface HierarchyFacetConfig extends FacetConfigBase {
 }
 
 export interface HierarchyFacetData {
-	config: HierarchyFacetConfig
+	readonly config: HierarchyMetadataConfig
 	filters: ListFacetFilter
 	size: number
 } 
@@ -64,7 +78,7 @@ export interface HierarchyFacetData {
 export interface HierarchyKeyCount {
 	child: HierarchyFacetValues
 	count: number
-	key: string,
+	key: string
 }
 
 export interface HierarchyFacetValues {
@@ -77,13 +91,13 @@ export interface ListFacetConfig extends FacetConfigBase {
 	readonly datatype: EsDataType.Keyword
 	size?: number
 	sort?: {
-		by: SortBy,
-		direction: SortDirection,
+		by: SortBy
+		direction: SortDirection
 	}
 }
 
 export interface ListFacetData {
-	config: ListFacetConfig
+	readonly config: ListMetadataConfig
 	filters: ListFacetFilter
 	query: string
 	size: ListFacetConfig['size']
@@ -120,7 +134,7 @@ export interface DateFacetConfig extends DateAndRangeFacetConfig {
 export type DateInterval = 'y' | 'q' | 'M' | 'd' | 'h' | 'm'
 
 export interface DateFacetData extends DateAndRangeFacetData {
-	config: DateFacetConfig
+	readonly config: DateMetadataConfig
 	interval: DateInterval
 } 
 
@@ -137,10 +151,8 @@ export interface RangeFacetValue {
 	toLabel: string
 	count: number
 }
-// export type RangeFacetValues = RangeFacetValue[]
 
 export interface RangeFacetData extends DateAndRangeFacetData {
+	readonly config: RangeMetadataConfig
 	interval: number
-	config: RangeFacetConfig
-	// interval: number
 } 

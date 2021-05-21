@@ -1,25 +1,81 @@
-import { EsDataType } from '@docere/common'
+import { BaseMetadataConfig, BooleanMetadata, BooleanMetadataConfig, DateMetadata, DateMetadataConfig, EsDataType, HierarchyMetadata, HierarchyMetadataConfig, ListMetadata, ListMetadataConfig, MetadataItem, RangeMetadata } from '@docere/common'
 
-import type { FacetData, FacetConfig, BooleanFacetConfig, DateFacetConfig, HierarchyFacetConfig, ListFacetConfig, RangeFacetConfig, BooleanFacetData, DateFacetData, HierarchyFacetData, ListFacetData, RangeFacetData } from '@docere/common'
+import type {
+	BooleanFacetConfig,
+	BooleanFacetData,
+	DateFacetConfig,
+	DateFacetData,
+	FacetConfig,
+	FacetData,
+	HierarchyFacetConfig,
+	HierarchyFacetData,
+	ListFacetConfig,
+	ListFacetData,
+	RangeFacetConfig,
+	RangeFacetData,
+	RangeMetadataConfig
+} from '@docere/common'
+
+export function isBooleanMetadataItem(metadataItem: MetadataItem): metadataItem is BooleanMetadata {
+	return isBooleanMetadataConfig(metadataItem.config)
+}
+
+export function isDateMetadataItem(metadataItem: MetadataItem): metadataItem is DateMetadata {
+	return isDateMetadataConfig(metadataItem.config)
+}
+
+export function isHierarchyMetadataItem(metadataItem: MetadataItem): metadataItem is HierarchyMetadata {
+	return isHierarchyMetadataConfig(metadataItem.config)
+}
+
+export function isListMetadataItem(metadataItem: MetadataItem): metadataItem is ListMetadata {
+	return isListMetadataConfig(metadataItem.config)
+}
+
+export function isRangeMetadataItem(metadataItem: MetadataItem): metadataItem is RangeMetadata {
+	return isRangeMetadataConfig(metadataItem.config)
+}
+
+// NEW
+export function isBooleanMetadataConfig(config: BaseMetadataConfig): config is BooleanMetadataConfig {
+	return config.facet.datatype === EsDataType.Boolean
+}
+
+export function isDateMetadataConfig(config: BaseMetadataConfig): config is DateMetadataConfig {
+	return config.facet.datatype === EsDataType.Date
+}
+
+export function isHierarchyMetadataConfig(config: BaseMetadataConfig): config is HierarchyMetadataConfig {
+	return config.facet.datatype === EsDataType.Hierarchy
+}
+
+export function isListMetadataConfig(config: BaseMetadataConfig): config is ListMetadataConfig {
+	return config.facet.datatype === EsDataType.Keyword || config.facet.datatype == null
+}
+
+export function isRangeMetadataConfig(config: BaseMetadataConfig): config is RangeMetadataConfig {
+	return config.facet.datatype === EsDataType.Integer
+}
+// \NEW
 
 export function isBooleanFacetData(facetData: FacetData): facetData is BooleanFacetData {
-	return isBooleanFacetConfig(facetData.config)
+	return isBooleanMetadataConfig(facetData.config)
 }
 
 export function isDateFacetData(facetData: FacetData): facetData is DateFacetData {
-	return isDateFacetConfig(facetData.config)
+	return isDateMetadataConfig(facetData.config)
 }
 
 export function isHierarchyFacetData(facetData: FacetData): facetData is HierarchyFacetData {
-	return isHierarchyFacetConfig(facetData.config)
+	return isHierarchyMetadataConfig(facetData.config)
 }
 
 export function isListFacetData(facetData: FacetData): facetData is ListFacetData {
-	return isListFacetConfig(facetData.config)
+	return isListMetadataConfig(facetData.config)
 }
 
 export function isRangeFacetData(facetData: FacetData): facetData is RangeFacetData {
-	return isRangeFacetConfig(facetData.config)
+	return isRangeMetadataConfig(facetData.config)
 }
 
 export function isBooleanFacetConfig(facetConfig: FacetConfig): facetConfig is BooleanFacetConfig {

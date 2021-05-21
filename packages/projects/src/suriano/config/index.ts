@@ -22,48 +22,59 @@ export default extendConfig({
 		// 	extract: entry => entry.preparedElement.querySelector('div[type="summary"] > p').textContent
 		// },
 		{
-			description: 'Dit is een test om wat te zien',
+			facet: {
+				description: 'Dit is een test om wat te zien',
+			},
 			id: 'sender',
 			// extract: entry => entry.preparedElement.querySelector('correspAction[type="sent"] name').textContent
 		},
 		{
+			facet: {},
 			id: 'sender_place',
 			// extract: entry => entry.preparedElement.querySelector('correspAction[type="sent"] settlement').textContent
 		},
 		{
-			datatype: EsDataType.Date,
+			facet: {
+				datatype: EsDataType.Date,
+				interval: 'y',
+			},
 			// extract: entry => entry.preparedElement.querySelector('correspAction[type="sent"] date')?.getAttribute('when'),
 			id: 'sender_date',
-			interval: 'y',
 		},
 		{
+			facet: {},
 			id: 'filza',
 			// extract: entry => entry.preparedElement.querySelector('idno[type="filza"]').textContent
 		},
 		{
+			facet: {},
 			id: 'letterno',
 			// extract: entry => entry.preparedElement.querySelector('idno[type="letterno"]').textContent
 		},
 		{
+			facet: {},
 			id: 'settlement',
 			// extract: entry => entry.preparedElement.querySelector('msIdentifier > settlement').textContent
 		},
 		{
+			facet: {},
 			id: 'insitution',
 			// extract: entry => entry.preparedElement.querySelector('msIdentifier > institution').textContent
 		},
 		{
+			facet: {},
 			id: 'collection',
 			// extract: entry => entry.preparedElement.querySelector('msIdentifier > collection').textContent
 		},
 		{
+			facet: {},
 			id: 'biblScope',
 			// extract: entry => entry.preparedElement.querySelector('biblScope').textContent
 		},
 		{
 			id: 'summary',
 			// extract: entry => entry.preparedElement.querySelector('div[type="summary"]')?.textContent,
-			showAsFacet: false
+			// showAsFacet: false
 		}
 	],
 	entities2: [
@@ -88,7 +99,7 @@ export default extendConfig({
 			title: "Notes",
 			type: EntityType.Note,
 			showInAside: false,
-			showAsFacet: false,
+			// showAsFacet: false,
 		},
 		{
 			color: Colors.Pink,
