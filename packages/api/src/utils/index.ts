@@ -12,19 +12,6 @@ import type { DocereConfig, PageConfig } from '@docere/common'
 // @ts-ignore
 const DOCERE_DTAP = DTAP[process.env.DOCERE_DTAP]
 
-// Object.keys(dtapMap).forEach(id => {
-	// const configPath = path.resolve(process.cwd(), `./packages/projects/src/suriano/config/index`)
-	// const configPath = '../../projects/src/suriano/config'
-	// import(configPath).then(x => console.log(x))
-
-// })
-
-// import { createLookup } from '../../common/src/types/entry'
-
-// const projects = require('esm')(module)(path.resolve(process.cwd(), './packages/projects')).default
-
-// import projects from '@docere/projects'
-
 export function getProjectsSourceDir() {
 	// The current working dir is api/, the projects/ dir shares the same parent as api/
 	return path.resolve(process.cwd(), `./packages/projects/src`)

@@ -1,6 +1,6 @@
 import * as es from '@elastic/elasticsearch'
 
-import { EsDataType, JsonEntry } from '../../../common/src'
+import { EsDataType, JsonEntry } from '@docere/common'
 import { getType, isError, getProjectConfig } from '../utils'
 import { createElasticSearchDocument } from './create-document'
 

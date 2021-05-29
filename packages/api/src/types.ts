@@ -1,4 +1,4 @@
-import type { JsonEntry, EsDataType } from '../../common/src'
+import type { JsonEntry, EsDataType } from '@docere/common'
 
 export type ExtractedXml = { original: string, prepared: string }
 export type PrepareAndExtractOutput = [JsonEntry, ExtractedXml]

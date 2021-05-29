@@ -3,7 +3,7 @@ import * as es from '@elastic/elasticsearch'
 import { PoolClient } from 'pg'
 import fetch from 'node-fetch'
 
-import { SerializedEntry, XmlDirectoryStructure } from '../../../common/src'
+import { SerializedEntry, XmlDirectoryStructure } from '@docere/common'
 
 import { isError, getDocumentIdFromRemoteFilePath } from '../utils'
 import Puppenv from '../puppenv'

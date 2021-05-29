@@ -66,10 +66,6 @@ const projectList: ProjectList = {
 	// },
 }
 
-declare global {
-	const DOCERE_DTAP: string
-}
-
 let currentProjects: ProjectList = {}
 
 for (const projectId of Object.keys(projectList)) {
