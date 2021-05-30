@@ -20,7 +20,10 @@ export function StringMetadata(props: Props) {
 	return (
 		<MetadataWrapper title={facet.config.title}>
 			{
-				props.value.length === 0 ?
+				(
+					props.value == null ||
+					props.value.length === 0
+				) ?
 					'-' :
 					Array.isArray(props.value) ?
 						props.value.map(v =>

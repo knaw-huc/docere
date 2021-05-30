@@ -2,7 +2,7 @@ import path from 'path'
 import fs from 'fs'
 import { Response as ExpressResponse } from 'express'
 import chalk from 'chalk'
-import { DTAP, EsDataType } from '@docere/common'
+import { DTAP } from '@docere/common'
 
 import { dtapMap } from '../../../projects/src/dtap'
 
@@ -67,22 +67,6 @@ export function readFileContents(filePath: string) {
 	return fs.readFileSync(filePath, 'utf8')
 }
 
-export function getType(key: string, config: DocereConfig): EsDataType {
-	let type = EsDataType.Keyword
-
-	const mdConfig = config.metadata2.find(md => md.id === key)
-	if (mdConfig != null && mdConfig.facet.datatype != null) type = mdConfig.facet.datatype
-
-	const tdConfig = config.entities2.find(md => md.id === key)
-	if (tdConfig != null && tdConfig.facet.datatype != null) type = tdConfig.facet.datatype
-
-	if (key === 'text') type = EsDataType.Text
-	if (type === EsDataType.Hierarchy) type = EsDataType.Keyword
-
-	if (type === EsDataType.Null) return null
-
-	return type
-}
 
 // TODO implement. Add to build.puppenv.utils?
 // export function createError(message: string) {

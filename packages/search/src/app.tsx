@@ -88,7 +88,6 @@ export default function FacetedSearch() {
 		sortOrder,
 	})
 
-	return null
 	return (
 		<Wrapper
 			className={context.className}

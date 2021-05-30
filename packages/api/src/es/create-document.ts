@@ -40,17 +40,17 @@ export function createElasticSearchDocument(
 		[]
 
 	const metadata = jsonEntry.metadata?.reduce((prev, curr) => {
-			if (isHierarchyMetadataItem(curr)) {
-				if (Array.isArray(curr.value)) {
-					curr.value.forEach((v, i) => {
-						prev[`${curr.config.id}_level${i}`] = v
-					})
-				}
-			} else {
-				prev[curr.config.id] = curr.value
+		if (isHierarchyMetadataItem(curr)) {
+			if (Array.isArray(curr.value)) {
+				curr.value.forEach((v, i) => {
+					prev[`${curr.config.id}_level${i}`] = v
+				})
 			}
-			return prev
-		}, {} as Record<string, MetadataItem['value']>)
+		} else {
+			prev[curr.config.id] = curr.value
+		}
+		return prev
+	}, {} as Record<string, MetadataItem['value']>)
 
 	return {
 		id: jsonEntry.id,

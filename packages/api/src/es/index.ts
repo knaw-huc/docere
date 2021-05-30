@@ -1,7 +1,7 @@
 import * as es from '@elastic/elasticsearch'
 
 import { EsDataType, JsonEntry } from '@docere/common'
-import { getType, isError, getProjectConfig } from '../utils'
+import { isError, getProjectConfig } from '../utils'
 import { createElasticSearchDocument } from './create-document'
 
 
@@ -50,7 +50,7 @@ export async function getProjectIndexMapping(projectId: string): Promise<Mapping
 
 	[...config.metadata2, ...config.entities2]
 		.forEach(md => {
-			const type = getType(md.id, config)
+			const type = getMetadataType(md.id, config)
 			if (type != null) {
 				if (isHierarchyFacetConfig(md.facet)) {
 					let level = md.facet.levels - 1
@@ -90,4 +90,35 @@ export async function indexDocument(
 	} catch (err) {
 		return { __error: err }
 	}
+}
+
+function getMetadataType(key: string, config: DocereConfig): EsDataType {
+	if (key === 'text') return EsDataType.Text
+
+	let type = EsDataType.Keyword
+
+	const mdConfig = config.metadata2.find(md => md.id === key)
+
+	if (mdConfig != null) {
+		if (mdConfig.facet == null) {
+			return null
+		} else if (mdConfig.facet.datatype != null) {
+			type = mdConfig.facet.datatype
+		}
+	} else {
+		const tdConfig = config.entities2.find(md => md.id === key)
+
+		if (tdConfig != null) {
+			if (tdConfig.facet == null) {
+				return null
+			} else if (tdConfig.facet.datatype != null) {
+				type = tdConfig.facet.datatype
+			}
+		}
+	}
+
+	if (type === EsDataType.Hierarchy) return EsDataType.Keyword
+	if (type === EsDataType.Null) return null
+
+	return type
 }

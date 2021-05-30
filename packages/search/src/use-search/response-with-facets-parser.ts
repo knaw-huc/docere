@@ -104,7 +104,10 @@ export default function ESResponseWithFacetsParser(response: any, facets: Facets
 				values[index].count += b.doc_count
 			})
 
-			if (facet.value == null || !facet.filters.length) {
+			if (
+				(facet.value == null || !facet.filters.length) &&
+				values.length > 1
+			) {
 				const min = values[0]
 				const max = values[values.length - 1]
 

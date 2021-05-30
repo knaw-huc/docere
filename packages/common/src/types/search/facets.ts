@@ -60,7 +60,7 @@ export function isHierarchyFacetConfig(config: FacetConfigBase): config is Hiera
 // TODO. This is used in @docere/api, but should come from @docere/search
 // or move guards from search to common
 export function isHierarchyMetadataItem(metadataItem: MetadataItem): metadataItem is HierarchyMetadata {
-	return metadataItem.config.facet.datatype === EsDataType.Hierarchy
+	return metadataItem.config.facet?.datatype === EsDataType.Hierarchy
 }
 
 export interface HierarchyFacetConfig extends FacetConfigBase {
