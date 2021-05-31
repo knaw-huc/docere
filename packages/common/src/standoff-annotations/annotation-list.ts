@@ -59,8 +59,24 @@ export class StandoffWrapper<T extends PartialStandoffAnnotation> {
 		this.updateOffsets(annotation, null, offset)
 	}
 
+	/**
+	 * Get the text content of an annotation
+	 * 
+	 * The text content corresponds to a substring of this.standoff.text
+	 * starting at offset annotation.start and ending at annotation.end.
+	 * 
+	 * If undefined is passed, the whole text is returned, because it is 
+	 * like asking the text content of the whole list:
+	 * AnnotationList.getTextContent(). When null is passed,
+	 * it is interpreted as asking for the text content of an annotation
+	 * which wasn't found: AnnotationList.getTextContent(null).
+	 * 
+	 * @param annotation 
+	 * @returns 
+	 */
 	getTextContent(annotation?: T) {
-		if (annotation == null) return this.standoff.text
+		if (annotation === undefined) return this.standoff.text
+		if (annotation == null) return null
 		if (annotation.isSelfClosing) return ''
 		return this.standoff.text.slice(annotation.start, annotation.end)
 	}
@@ -124,6 +140,14 @@ export class StandoffWrapper<T extends PartialStandoffAnnotation> {
 			filter(annotation) &&
 			isChild(annotation, parent)
 		)
+	}
+
+	findChild(parentFilter: FilterFunction<T>, childFilter: FilterFunction<T>) {
+		const parent = this.standoff.annotations.find(parentFilter)
+		if (parent == null) return null
+		return this.standoff.annotations.find(a =>
+			childFilter(a) && isChild(a, parent)
+		) || null
 	}
 }
 

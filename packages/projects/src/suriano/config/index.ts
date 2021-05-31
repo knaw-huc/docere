@@ -26,11 +26,25 @@ export default extendConfig({
 				description: 'Dit is een test om wat te zien',
 			},
 			id: 'sender',
+			getValue: (_config, props) => {
+				const annotation = props.tree.findChild(
+					a => a.name === 'correspAction' && a.metadata.type === 'sent',
+					a => a.name === 'name'
+				)
+				return props.tree.getTextContent(annotation)
+			}
 			// extract: entry => entry.preparedElement.querySelector('correspAction[type="sent"] name').textContent
 		},
 		{
 			facet: {},
 			id: 'sender_place',
+			getValue: (_config, props) => {
+				const annotation = props.tree.findChild(
+					a => a.name === 'correspAction' && a.metadata.type === 'sent',
+					a => a.name === 'settlement'
+				)
+				return props.tree.getTextContent(annotation)
+			}
 			// extract: entry => entry.preparedElement.querySelector('correspAction[type="sent"] settlement').textContent
 		},
 		{
@@ -38,40 +52,93 @@ export default extendConfig({
 				datatype: EsDataType.Date,
 				interval: 'y',
 			},
+			getValue: (_config, props) => {
+				const annotation = props.tree.findChild(
+					a => a.name === 'correspAction' && a.metadata.type === 'sent',
+					a => a.name === 'date'
+				)
+				return annotation.metadata.when.trim()
+			},
 			// extract: entry => entry.preparedElement.querySelector('correspAction[type="sent"] date')?.getAttribute('when'),
 			id: 'sender_date',
 		},
 		{
 			facet: {},
+			getValue: (_config, props) => {
+				const annotation = props.tree.annotations.find(
+					a => a.name === 'idno' && a.metadata.type === 'filza'
+				)
+				return props.tree.getTextContent(annotation)
+			},
 			id: 'filza',
 			// extract: entry => entry.preparedElement.querySelector('idno[type="filza"]').textContent
 		},
 		{
 			facet: {},
+			getValue: (_config, props) => {
+				const annotation = props.tree.annotations.find(
+					a => a.name === 'idno' && a.metadata.type === 'letterno'
+				)
+				return props.tree.getTextContent(annotation)
+			},
 			id: 'letterno',
 			// extract: entry => entry.preparedElement.querySelector('idno[type="letterno"]').textContent
 		},
 		{
 			facet: {},
 			id: 'settlement',
+			getValue: (_config, props) => {
+				const annotation = props.tree.findChild(
+					a => a.name === 'msIdentifier',
+					a => a.name === 'settlement'
+				)
+				return props.tree.getTextContent(annotation)
+			},
 			// extract: entry => entry.preparedElement.querySelector('msIdentifier > settlement').textContent
 		},
 		{
 			facet: {},
 			id: 'insitution',
+			getValue: (_config, props) => {
+				const annotation = props.tree.findChild(
+					a => a.name === 'msIdentifier',
+					a => a.name === 'institution'
+				)
+				return props.tree.getTextContent(annotation)
+			},
 			// extract: entry => entry.preparedElement.querySelector('msIdentifier > institution').textContent
 		},
 		{
 			facet: {},
 			id: 'collection',
+			getValue: (_config, props) => {
+				const annotation = props.tree.findChild(
+					a => a.name === 'msIdentifier',
+					a => a.name === 'collection'
+				)
+				return props.tree.getTextContent(annotation)
+			},
 			// extract: entry => entry.preparedElement.querySelector('msIdentifier > collection').textContent
 		},
 		{
 			facet: {},
+			getValue: (_config, props) => {
+				const annotation = props.tree.annotations.find(
+					a => a.name === 'biblScope'
+				)
+				return props.tree.getTextContent(annotation)
+			},
 			id: 'biblScope',
+
 			// extract: entry => entry.preparedElement.querySelector('biblScope').textContent
 		},
 		{
+			getValue: (_config, props) => {
+				const annotation = props.tree.annotations.find(
+					a => a.name === 'div' && a.metadata.type === 'summary'
+				)
+				return props.tree.getTextContent(annotation)
+			},
 			id: 'summary',
 			// extract: entry => entry.preparedElement.querySelector('div[type="summary"]')?.textContent,
 			// showAsFacet: false

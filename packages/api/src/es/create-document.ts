@@ -52,12 +52,20 @@ export function createElasticSearchDocument(
 		return prev
 	}, {} as Record<string, MetadataItem['value']>)
 
+	const textSuggestLines = standoff.text
+		.replace(/\s+/g, ' ')
+		.replace(/\.|\,|\;/g, '')
+		.split(' ')
+		.map(line => line.trim())
+		.filter(line => line.length > 0)
+	const textSuggestInput = Array.from(new Set(textSuggestLines))
+
 	return {
 		id: jsonEntry.id,
 		facsimiles,
 		text: standoff.text,
 		text_suggest: {
-			input: Array.from(new Set(standoff.text.replace(/\.|\,|\;/g, '').split(' '))),
+			input: textSuggestInput
 		},
 		...entities2,
 		...metadata,

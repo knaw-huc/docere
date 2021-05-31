@@ -4,7 +4,7 @@ import { PoolClient } from 'pg'
 import fetch from 'node-fetch'
 import { JsonEntry, XmlDirectoryStructure, StandoffTree, createJsonEntry, DocereConfig, ID } from '@docere/common'
 
-import { getDocumentIdFromRemoteFilePath } from '../utils'
+import { getDocumentIdFromRemoteFilePath, isError } from '../utils'
 import { xml2standoff } from '../utils/xml2standoff'
 
 import { getPool, transactionQuery } from './index'
@@ -128,7 +128,14 @@ async function addStandoffToDb(
 	const sourceId = rows[0].id
 
 	await addDocumentToDb({ client, documentId, order_number: null, entry, tree, sourceId })
-	await indexDocument(projectConfig, entry, tree.standoff, esClient)
+
+	const indexResult = await indexDocument(projectConfig, entry, tree.standoff, esClient)
+	if (isError(indexResult)) {
+		console.log(indexResult.__error.body.error)
+		await transactionQuery(client, 'ABORT')
+		console.log(`\n[${projectConfig.slug}] ${isUpdate ? 'Update' : 'Addition'} aborted: '${documentId}'\n`, indexResult.__error)
+		return
+	}
 
 	// let i = 0
 	// for (const part of serializedEntry.parts) {

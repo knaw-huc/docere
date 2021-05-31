@@ -40,7 +40,6 @@ export function createJsonEntry(props: CreateEntryProps): JsonEntry {
 
 			if (isEntityMetadataConfig(metadataConfig)) {
 				const entityConfig = props.config.entities2.find(ec => ec.id === metadataConfig.entityConfigId)
-				console.log(metadataConfig.entityConfigId, metadataConfig.filterEntities)
 				value = props.tree.annotations
 					.filter(entityConfig.filter)
 					.filter(metadataConfig.filterEntities)
