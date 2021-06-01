@@ -133,8 +133,14 @@ export class StandoffWrapper<T extends PartialStandoffAnnotation> {
 			)
 	}
 
-	getChildren(parent: T, filter?: FilterFunction<T>) {
+	getChildren(annotation: T, filter?: FilterFunction<T>): T[]
+	getChildren(parentFilter: FilterFunction<T>, filter?: FilterFunction<T>): T[]
+	getChildren(parentFilter: FilterFunction<T> | T, filter?: FilterFunction<T>): T[] {
 		if (filter == null) filter = () => true
+
+		const parent = (isPartialAnnotation(parentFilter)) ?
+			parentFilter :
+			this.standoff.annotations.find(parentFilter)
 
 		return this.standoff.annotations.filter(annotation =>
 			filter(annotation) &&

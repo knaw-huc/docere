@@ -1,6 +1,6 @@
-import { CreateEntryProps, Facsimile } from '@docere/common'
+import { CreateJsonEntryProps, Facsimile } from '@docere/common'
 
-export function createFacsimiles(props: CreateEntryProps): Facsimile[] {
+export function createFacsimiles(props: CreateJsonEntryProps): Facsimile[] {
 	return props.tree
 		.filter(a => a.name === 'pb')
 		.map(pb => {

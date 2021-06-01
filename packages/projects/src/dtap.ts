@@ -11,7 +11,7 @@ import { DTAP } from "@docere/common"
 export const dtapMap: Record<string, DTAP> = {
 	// Testing => demo.docere.diginfra.net
 	// bosscheschepenprotocollen: DTAP.Testing,
-	// mondrian: DTAP.Testing,
+	mondrian: DTAP.Testing,
 	republic: DTAP.Testing,
 	suriano: DTAP.Testing,
 	// vangogh: DTAP.Testing,

@@ -1,4 +1,4 @@
-import { JsonEntry, Standoff, DocereConfig, ElasticSearchDocument, MetadataItem } from "@docere/common"
+import { JsonEntry, ElasticSearchDocument, MetadataItem, CreateJsonEntryProps } from "@docere/common"
 import { isHierarchyMetadataItem } from "@docere/common"
 import { DocereApiError } from "../types"
 import { isError } from "../utils"
@@ -6,12 +6,13 @@ import { isError } from "../utils"
 
 export function createElasticSearchDocument(
 	jsonEntry: JsonEntry | DocereApiError,
-	standoff: Standoff,
-	projectConfig: DocereConfig
+	createJsonEntryProps: CreateJsonEntryProps
 ): ElasticSearchDocument | DocereApiError {
 	if (isError(jsonEntry)) return jsonEntry
 
-	const entities = standoff.annotations
+	const { tree, config } = createJsonEntryProps
+
+	const entities = tree.annotations
 		.reduce((map, curr) => {
 			if (curr.metadata._entityValue != null) {
 				const { _entityConfigId: configId } = curr.metadata;
@@ -30,9 +31,13 @@ export function createElasticSearchDocument(
 		return prev
 	}, {} as Record<string, string[]>)
 
-	const facsimiles = projectConfig.facsimiles != null ? 
-		standoff.annotations
-			.filter(projectConfig.facsimiles.filter)
+	const facsimiles = config.facsimiles != null ? 
+		tree.annotations
+			.filter(config.facsimiles.filter)
+			.filter(a =>
+				a.metadata._facsimileId != null &&
+				a.metadata._facsimilePath != null
+			)
 			.map(a => ({
 				id: a.metadata._facsimileId,
 				path: a.metadata._facsimilePath
@@ -52,7 +57,7 @@ export function createElasticSearchDocument(
 		return prev
 	}, {} as Record<string, MetadataItem['value']>)
 
-	const textSuggestLines = standoff.text
+	const textSuggestLines = tree.standoff.text
 		.replace(/\s+/g, ' ')
 		.replace(/\.|\,|\;/g, '')
 		.split(' ')
@@ -63,7 +68,7 @@ export function createElasticSearchDocument(
 	return {
 		id: jsonEntry.id,
 		facsimiles,
-		text: standoff.text,
+		text: tree.standoff.text,
 		text_suggest: {
 			input: textSuggestInput
 		},

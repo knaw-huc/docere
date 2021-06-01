@@ -36,11 +36,11 @@ const projectList: ProjectList = {
 	// 	config: async function() { return await import('./kranten1700/config') },
 	// 	getTextComponents: async function() { return await import('./kranten1700/text-components') },
 	// },
-	// mondrian: {
-	// 	config: async function() { return await import('./mondrian/config') },
-	// 	getTextComponents: async function() { return await import('./mondrian/text-components') },
-	// 	getUIComponents: async function() { return await import('./mondrian/ui-components') },
-	// },
+	mondrian: {
+		config: async function() { return await import('./mondrian/config') },
+		getTextComponents: async function() { return await import('./mondrian/text-components') },
+		getUIComponents: async function() { return await import('./mondrian/ui-components') },
+	},
 	// 'plakaatboek-guyana-1670-1816': {
 	// 	config: async function() { return await import('./plakaatboek-guyana-1670-1816/config') },
 	// 	getTextComponents: async function() { return await import('./plakaatboek-guyana-1670-1816/text-components') }

@@ -10,6 +10,7 @@ import {
 	MetadataValue,
 	RangeMetadataConfig
 } from './metadata'
+import { DocereAnnotation } from '../standoff-annotations'
 
 export * from './create-json'
 export * from './facsimile'
@@ -17,6 +18,15 @@ export * from './layer'
 export * from './metadata'
 export * from './entity'
 export * from './fetch'
+
+export function isEntityAnnotation(annotation: DocereAnnotation): annotation is Entity {
+	return annotation.props._entityId != null
+}
+
+export function isFacsimileAnnotation(annotation: DocereAnnotation): annotation is Facsimile {
+	return annotation.props._facsimileId != null && annotation.props._facsimilePath != null
+}
+
 
 export interface ListMetadata {
 	config: ListMetadataConfig,

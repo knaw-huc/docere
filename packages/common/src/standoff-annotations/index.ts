@@ -18,6 +18,7 @@ export interface PartialStandoff2<T extends PartialStandoffAnnotation> {
 	text: string
 }
 
+// TODO remove?
 export interface PartialStandoff {
 	annotations: PartialStandoffAnnotation[]
 	metadata: Record<string, any>
@@ -42,7 +43,7 @@ export interface StandoffAnnotationMetadata {
 	_areas?: FacsimileArea[]
 	_entityConfigId?: string
 	_entityId?: string
-	_entityValue?: string
+	// _entityValue?: string
 	_facsimileId?: string
 	_facsimilePath?: string
 	_range?: Set<string>

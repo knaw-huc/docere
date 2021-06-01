@@ -1,12 +1,12 @@
 import * as es from '@elastic/elasticsearch'
 
-import { EsDataType, JsonEntry } from '@docere/common'
+import { CreateJsonEntryProps, EsDataType, JsonEntry } from '@docere/common'
 import { isError, getProjectConfig } from '../utils'
 import { createElasticSearchDocument } from './create-document'
 
 
 import type { Mapping, DocereApiError } from '../types'
-import { DocereConfig, isHierarchyFacetConfig, Standoff } from '@docere/common'
+import { DocereConfig, isHierarchyFacetConfig } from '@docere/common'
 
 
 export async function initProjectIndex(projectId: string) {
@@ -70,18 +70,17 @@ export async function getProjectIndexMapping(projectId: string): Promise<Mapping
 }
 
 export async function indexDocument(
-	projectConfig: DocereConfig,
 	extractedEntry: JsonEntry,
-	standoff: Standoff,
+	createJsonEntryProps: CreateJsonEntryProps,
 	esClient: es.Client
 ) {
-	const esDocument = createElasticSearchDocument(extractedEntry, standoff, projectConfig)
+	const esDocument = createElasticSearchDocument(extractedEntry, createJsonEntryProps)
 	if (isError(esDocument)) return esDocument
 
 	try {
 		await esClient.update({
 			id: esDocument.id,
-			index: projectConfig.slug,
+			index: createJsonEntryProps.config.slug,
 			body: {
 				doc: esDocument,
 				doc_as_upsert: true,

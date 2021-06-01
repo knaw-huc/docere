@@ -3,6 +3,7 @@ import { BaseMetadataConfig, ID } from '.'
 import { EntryContext } from '..'
 import { Colors, ContainerType, EntityType } from '../enum'
 import { DocereAnnotation, PartialStandoffAnnotation } from '../standoff-annotations'
+import { CreateJsonEntryProps } from './create-json'
 
 export interface EntityConfig extends BaseMetadataConfig {
 	color?: string
@@ -24,7 +25,7 @@ export interface EntityConfig extends BaseMetadataConfig {
 	 * Get the value of the entity. This is primarily used to show in 
 	 * the faceted search and in the metadata tab
 	 */ 
-	getValue?: (a: PartialStandoffAnnotation) => string
+	getValue?: (a: PartialStandoffAnnotation, props: CreateJsonEntryProps) => string
 }
 
 export const defaultEntityConfig: Required<EntityConfig> = {

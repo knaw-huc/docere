@@ -3,7 +3,7 @@ import { FilterFunction, PartialStandoffAnnotation } from '../../standoff-annota
 import { BooleanFacetConfig, DateFacetConfig, FacetConfig, HierarchyFacetConfig, ListFacetConfig, RangeFacetConfig } from '../../types/search/facets'
 // import { PartialStandoffAnnotation } from '../../standoff-annotations'
 // import { FacetConfig } from '../../types/search/facets'
-import { CreateEntryProps } from '../create-json'
+import { CreateJsonEntryProps } from '../create-json'
 // import { Entity } from '../entity'
 import { ID } from '../layer'
 
@@ -44,7 +44,7 @@ interface DefaultMetadataConfig extends BaseMetadataConfig {
 	 * Defaults to the property with
 	 * {@link BaseConfig.id} as name on the metadata of the root of the tree
 	 */
- 	getValue?: (config: DefaultMetadataConfig, props: CreateEntryProps) => MetadataValue
+ 	getValue?: (config: DefaultMetadataConfig, props: CreateJsonEntryProps) => MetadataValue
 }
 
 /**

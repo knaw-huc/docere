@@ -1,5 +1,5 @@
 import type { ID } from './layer'
-import type { JsonEntry, Entry, Entity, Facsimile } from './index'
+import { JsonEntry, Entry, Entity, Facsimile, isEntityAnnotation, isFacsimileAnnotation } from './index'
 import { DocereAnnotation } from '../standoff-annotations'
 import { generateId, isTextLayer } from '../utils'
 import { DocereConfig } from '../config'
@@ -24,21 +24,13 @@ export function createEntry(entry: JsonEntry, config: DocereConfig): Entry {
 	})
 }
 
-function isEntity(annotation: DocereAnnotation): annotation is Entity {
-	return annotation.props._entityId != null
-}
-
-function isFacsimile(annotation: DocereAnnotation): annotation is Facsimile {
-	return annotation.props._facsimileId != null
-}
-
 function addEntity(
 	root: DocereAnnotation | string,
 	map: Map<ID, Entity>,
 	entityConfigs: Map<ID, EntityConfig>
 ) {
 	if (typeof root === 'string') return
-	if (isEntity(root)) {
+	if (isEntityAnnotation(root)) {
 		root.props._config = entityConfigs.get(root.props._entityConfigId)
 		root.props._areas?.forEach(a => {
 			if (a.id == null) a.id = generateId()
@@ -69,7 +61,7 @@ function addFacsimile(
 	map: Map<ID, DocereAnnotation>
 ) {
 	if (typeof root === 'string') return
-	if (isFacsimile(root)) {
+	if (isFacsimileAnnotation(root)) {
 		map.set(root.props._facsimileId, root)
 	}
 	root.children?.forEach(child => addFacsimile(child, map))

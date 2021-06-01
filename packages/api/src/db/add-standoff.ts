@@ -2,7 +2,7 @@ import crypto from 'crypto'
 import * as es from '@elastic/elasticsearch'
 import { PoolClient } from 'pg'
 import fetch from 'node-fetch'
-import { JsonEntry, XmlDirectoryStructure, StandoffTree, createJsonEntry, DocereConfig, ID } from '@docere/common'
+import { CreateJsonEntryProps, JsonEntry, XmlDirectoryStructure, StandoffTree, createJsonEntry, DocereConfig, ID } from '@docere/common'
 
 import { getDocumentIdFromRemoteFilePath, isError } from '../utils'
 import { xml2standoff } from '../utils/xml2standoff'
@@ -100,13 +100,30 @@ async function addStandoffToDb(
 
 	const standoff = createStandoff(source, projectConfig)
 	const tree = new StandoffTree(standoff, projectConfig.standoff.exportOptions)
-	projectConfig.standoff.prepareExport(tree)
 
-	const entry = createJsonEntry({
+	const createJsonEntryProps: CreateJsonEntryProps = {
 		config: projectConfig,
 		id: documentId,
 		tree,
+	}
+
+	tree.annotations.forEach(a => {
+		const entityConfig = projectConfig.entities2.find(ec => ec.filter(a))
+		if (entityConfig != null) {
+			a.metadata._entityConfigId = entityConfig.id
+			a.metadata._entityId = entityConfig.getId(a)
+			a.metadata._entityValue = entityConfig.getValue(a, createJsonEntryProps)
+		}
+
+		if (projectConfig.facsimiles.filter(a)) {
+			a.metadata._facsimileId = projectConfig.facsimiles.getId(a)
+			a.metadata._facsimilePath = projectConfig.facsimiles.getPath(a, createJsonEntryProps)
+		}
 	})
+
+	projectConfig.standoff.prepareExport(tree)
+
+	const entry = createJsonEntry(createJsonEntryProps)
 
 	await transactionQuery(client, 'BEGIN')
 
@@ -127,11 +144,10 @@ async function addStandoffToDb(
 	)
 	const sourceId = rows[0].id
 
-	await addDocumentToDb({ client, documentId, order_number: null, entry, tree, sourceId })
+	await addDocumentToDb({ client, documentId, order_number: null, entry, sourceId })
 
-	const indexResult = await indexDocument(projectConfig, entry, tree.standoff, esClient)
+	const indexResult = await indexDocument(entry, createJsonEntryProps, esClient)
 	if (isError(indexResult)) {
-		console.log(indexResult.__error.body.error)
 		await transactionQuery(client, 'ABORT')
 		console.log(`\n[${projectConfig.slug}] ${isUpdate ? 'Update' : 'Addition'} aborted: '${documentId}'\n`, indexResult.__error)
 		return
@@ -155,7 +171,6 @@ async function addStandoffToDb(
  */
 async function addDocumentToDb(props: {
 	client: PoolClient,
-	tree: StandoffTree,
 	documentId: ID,
 	entry: JsonEntry,
 	order_number: number,

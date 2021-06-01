@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Pb, Lb, Hi, Paragraph, Space, EntityTag, NoteTag } from '@docere/text-components'
+import { Pb, Lb, Hi, Paragraph, Space, EntityTag } from '@docere/text-components'
 import { Colors, EntrySettingsContext } from '@docere/common'
 
 import type { ComponentProps, DocereConfig } from '@docere/common'
@@ -12,7 +12,7 @@ function MondrianLb(props: ComponentProps) {
 			<Lb />
 			{
 				settings['panels.text.showLineBeginnings'] &&
-				props.attributes.rend?.indexOf('indent') > -1 &&
+				props.rend?.indexOf('indent') > -1 &&
 				<span>&nbsp;&nbsp;</span>
 			}
 		</>
@@ -62,7 +62,8 @@ export default async function entryComponents(_config: DocereConfig) {
 
 		p: Paragraph,
 
-		'ptr[type="note"][target]': NoteTag,
+		// TODO restore note
+		// 'ptr[type="note"][target]': NoteTag,
 		'ref[target^="bio.xml#"]': EntityTag,
 		'ref[target^="biblio.xml#"]': EntityTag,
 		'rs[type="artwork-m"][key]': EntityTag,

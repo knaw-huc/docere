@@ -1,6 +1,5 @@
 import { extendConfig, LayerType, Colors, EntityType, EsDataType } from '@docere/common'
 import { hasMetadataValue } from '../../utils'
-// import { createFacsimiles } from './facsimiles'
 
 export default extendConfig({
 	// collection: {
@@ -17,10 +16,6 @@ export default extendConfig({
 	title: "Suriano",
 	private: true,
 	metadata2: [
-		// {
-		// 	id: 'summary',
-		// 	extract: entry => entry.preparedElement.querySelector('div[type="summary"] > p').textContent
-		// },
 		{
 			facet: {
 				description: 'Dit is een test om wat te zien',
@@ -33,7 +28,6 @@ export default extendConfig({
 				)
 				return props.tree.getTextContent(annotation)
 			}
-			// extract: entry => entry.preparedElement.querySelector('correspAction[type="sent"] name').textContent
 		},
 		{
 			facet: {},
@@ -45,7 +39,6 @@ export default extendConfig({
 				)
 				return props.tree.getTextContent(annotation)
 			}
-			// extract: entry => entry.preparedElement.querySelector('correspAction[type="sent"] settlement').textContent
 		},
 		{
 			facet: {
@@ -59,7 +52,6 @@ export default extendConfig({
 				)
 				return annotation.metadata.when.trim()
 			},
-			// extract: entry => entry.preparedElement.querySelector('correspAction[type="sent"] date')?.getAttribute('when'),
 			id: 'sender_date',
 		},
 		{
@@ -71,7 +63,6 @@ export default extendConfig({
 				return props.tree.getTextContent(annotation)
 			},
 			id: 'filza',
-			// extract: entry => entry.preparedElement.querySelector('idno[type="filza"]').textContent
 		},
 		{
 			facet: {},
@@ -82,7 +73,6 @@ export default extendConfig({
 				return props.tree.getTextContent(annotation)
 			},
 			id: 'letterno',
-			// extract: entry => entry.preparedElement.querySelector('idno[type="letterno"]').textContent
 		},
 		{
 			facet: {},
@@ -94,7 +84,6 @@ export default extendConfig({
 				)
 				return props.tree.getTextContent(annotation)
 			},
-			// extract: entry => entry.preparedElement.querySelector('msIdentifier > settlement').textContent
 		},
 		{
 			facet: {},
@@ -106,7 +95,6 @@ export default extendConfig({
 				)
 				return props.tree.getTextContent(annotation)
 			},
-			// extract: entry => entry.preparedElement.querySelector('msIdentifier > institution').textContent
 		},
 		{
 			facet: {},
@@ -118,7 +106,6 @@ export default extendConfig({
 				)
 				return props.tree.getTextContent(annotation)
 			},
-			// extract: entry => entry.preparedElement.querySelector('msIdentifier > collection').textContent
 		},
 		{
 			facet: {},
@@ -129,8 +116,6 @@ export default extendConfig({
 				return props.tree.getTextContent(annotation)
 			},
 			id: 'biblScope',
-
-			// extract: entry => entry.preparedElement.querySelector('biblScope').textContent
 		},
 		{
 			getValue: (_config, props) => {
@@ -140,8 +125,6 @@ export default extendConfig({
 				return props.tree.getTextContent(annotation)
 			},
 			id: 'summary',
-			// extract: entry => entry.preparedElement.querySelector('div[type="summary"]')?.textContent,
-			// showAsFacet: false
 		}
 	],
 	entities2: [
@@ -150,46 +133,19 @@ export default extendConfig({
 			id: 'note',
 			filter: a => a.name === 'ptr' && hasMetadataValue(a, 'target'),
 			getId: a => a.metadata.target.slice(1),
-			// extract: ({ layerElement, entityConfig, entry }) => Array.from(layerElement.querySelectorAll(entityConfig.selector))
-			// 	.map(el => {
-			// 		const n = el.getAttribute('n')
-			// 		const id = entityConfig.extractId(el)
-			// 		return {
-			// 			anchor: el,
-			// 			content: xmlToString(entry.preparedElement.querySelector(`note[*|id="${id}"]`)),
-			// 			n,
-			// 			title: `Note ${n}`,
-			// 		}
-			// 	}),
-			// extractId: el => el.getAttribute('target').slice(1),
-			// selector: 'ptr[target]',
 			title: "Notes",
 			type: EntityType.Note,
 			showInAside: false,
-			// showAsFacet: false,
 		},
 		{
 			color: Colors.Pink,
 			id: 'personography',
 			filter: a => a.name === 'rs' && a.metadata.type === 'pers',
 			getId: a => a.metadata.key,
-			// extract: ({ layerElement, entityConfig }) => Array.from(layerElement.querySelectorAll(entityConfig.selector))
-			// 	.map(el => ({
-			// 		anchor: el,
-			// 		content: el.getAttribute('key'),
-			// 	})),
-			// extractId: el => el.getAttribute('key'),
-			// selector: 'rs[type="pers"]',
 			title: "Persons",
 			type: EntityType.Person,
 		},
 	],
-	// facsimiles: {
-	// 	extractFacsimileId: el => el.getAttribute('xml:id'),
-	// 	extractFacsimiles,
-	// 	selector: 'pb',
-	// },
-	// createFacsimiles,
 
 	facsimiles: {
 		filter: a => a.name === 'pb',
@@ -214,13 +170,11 @@ export default extendConfig({
 			type: LayerType.Facsimile,
 		},
 		{
-			// extractElement: entry => entry.preparedElement.querySelector('div[type="original"]'),
 			findRoot: a => a.name === 'div' && a.metadata.type === 'original',
 			id: 'text',
 			type: LayerType.Text,
 		},
 		{
-			// extractElement: entry => entry.preparedElement.querySelector('div[type="summary"]'),
 			findRoot: a => a.name === 'div' && a.metadata.type === 'summary',
 			id: 'summary',
 			type: LayerType.Text,
