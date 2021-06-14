@@ -36,6 +36,11 @@ const projectList: ProjectList = {
 	// 	config: async function() { return await import('./kranten1700/config') },
 	// 	getTextComponents: async function() { return await import('./kranten1700/text-components') },
 	// },
+	gemeentearchiefkampen: {
+		config: async function() { return await import('./gemeentearchiefkampen/config') },
+		getTextComponents: async function() { return await import('./mondrian/text-components') },
+		getUIComponents: async function() { return await import('./mondrian/ui-components') },
+	},
 	mondrian: {
 		config: async function() { return await import('./mondrian/config') },
 		getTextComponents: async function() { return await import('./mondrian/text-components') },
