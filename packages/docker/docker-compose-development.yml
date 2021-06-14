@@ -31,6 +31,12 @@ services:
       - ../../:/app
     working_dir: /app
 
+    # For inspecting use: (and go to chrome://inspect)
+    # build:
+      # command: ["npx", "nodemon", "--inspect=0.0.0.0:9229", "./packages/api", "-w", "./packages/api/build", "-w", "./packages/projects/build", "-w", "./packages/common/build"]
+    # ports:
+      # - 9229:9229
+
   xml_file_server:
     # command: ["npx", "@docere/xml-file-server"]
     command: ["npx", "nodemon", "./build"]
