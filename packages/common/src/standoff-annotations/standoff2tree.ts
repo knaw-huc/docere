@@ -2,10 +2,10 @@ import { PartialStandoffAnnotation, AnnotationNode, TEXT_NODE_NAME, StandoffAnno
 import { ExportOptions } from "."
 import { extendStandoffAnnotation, createAnnotationNode, isChild } from "./utils"
 
-const annotationNodeLookup: Record<string, AnnotationNode> = {}
 
 export function standoff2tree(annotationTree: StandoffTree, text: string, _options: ExportOptions): AnnotationNode {
 	let tree: AnnotationNode
+	const annotationNodeLookup: Record<string, AnnotationNode> = {}
 
 	function findParent(annotation: StandoffAnnotation, startIndex: number): StandoffAnnotation {
 		let index = startIndex - 1
