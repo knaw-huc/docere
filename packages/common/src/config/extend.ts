@@ -130,7 +130,7 @@ export function extendConfig(configDataRaw: DocereConfig): DocereConfig {
 		...config.standoff
 	}
 
-	if (config.facsimiles.getId == null) {
+	if (config.facsimiles != null && config.facsimiles.getId == null) {
 		config.facsimiles.getId = a => a.id
 	}
 

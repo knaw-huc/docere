@@ -67,10 +67,23 @@ export async function addRemoteStandoffToDb(
 
 		let source: any
 		if (projectConfig.documents.type === 'xml') {
-			const xml = await result.text()	
-			source = await xml2standoff(xml)
+			source = await result.text()	
 		} else {
 			source = await result.json()
+		}
+
+		if (projectConfig.standoff.prepareSource != null) {
+			source = projectConfig.standoff.prepareSource(source)
+		}
+
+		if (typeof source === 'string') {
+			try {
+				// console.log(source)
+				source = await xml2standoff(source)
+			} catch (error) {
+				console.log('[XML2standoff]', error)	
+				continue
+			}
 		}
 
 		await addStandoffToDb(source, projectConfig, entryId, client, esClient, options.force)
@@ -115,7 +128,7 @@ async function addStandoffToDb(
 			a.metadata._entityValue = entityConfig.getValue(a, createJsonEntryProps)
 		}
 
-		if (projectConfig.facsimiles.filter(a)) {
+		if (projectConfig.facsimiles?.filter(a)) {
 			a.metadata._facsimileId = projectConfig.facsimiles.getId(a)
 			a.metadata._facsimilePath = projectConfig.facsimiles.getPath(a, createJsonEntryProps)
 		}

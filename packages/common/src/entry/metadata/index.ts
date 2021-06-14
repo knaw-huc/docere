@@ -37,7 +37,7 @@ export interface BaseMetadataConfig extends BaseConfig {
 	showInAside?: boolean 
 }
 
-interface DefaultMetadataConfig extends BaseMetadataConfig {
+export interface DefaultMetadataConfig extends BaseMetadataConfig {
 	/**
 	 * Get the value of the metadata item.
 	 * 

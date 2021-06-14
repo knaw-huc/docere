@@ -40,7 +40,7 @@ export interface DocereConfig {
 		 * 
 		 * @default standoff
 		 */
-		type?: 'standoff' | 'xml'
+		type?: 'standoff' | 'xml' | 'json'
 	}
 
 	entrySettings?: EntrySettings
@@ -80,8 +80,12 @@ export interface DocereConfig {
 
 		/**
 		 * Function to convert any input to {@link PartialStandoff}
+		 * 
+		 * The source can be either standoff, xml or json. The json
+		 * must be converted to standoff or xml in the prepareSource
+		 * function.
 		 */
-		prepareSource?: (source: any) => PartialStandoff
+		prepareSource?: (source: any) => PartialStandoff | string
 
 		/**
 		 * Function to prepare the annotations using the thin wrapper of
