@@ -14,20 +14,21 @@ export function prepareSource(elaborateSource: ElaborateSource): string {
 			const layer = elaborateSource.paralleltexts[layerId]
 			let notes = ''
 			if (Array.isArray(layer.annotationData)) {
-				notes = `<notes>
-					${layer.annotationData.map(ad =>
-						`<note type="${ad.type.name}">
-							${ad.text}
-						</note>`
-					).join('')}
-				</notes>`
+				notes = layer.annotationData.map(ad =>
+					`<note type="${ad.type.name}">
+						${ad.text}
+					</note>`
+				).join('')
 			}
 			return `<div id="${layerId.toLowerCase()}">
 				${layer.text.replace(/<br>/g, '<br />')}
-				otes}
+				<notes>${notes}</notes>
 			</div>`
 		})
 		.join('')
 
-	return `<root><metadata>${metadata}</metadata><text>${texts}</text></root>`
+	return `<root>
+		<metadata>${metadata}</metadata>
+		<text>${texts}</text>
+	</root>`
 }
