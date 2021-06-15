@@ -1,4 +1,3 @@
-import 'expect-puppeteer'
 import { isSerializedTextLayer, isSerializedFacsimileLayer } from '@docere/common'
 
 import { fetchEntry } from '../../../../tests/src/utils'

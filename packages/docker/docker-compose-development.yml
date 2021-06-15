@@ -17,13 +17,14 @@ services:
       - ../../public:/var/www/html
 
   api:
-    build:
-      context: ../../
-      dockerfile: ./packages/api/Dockerfile
+    # build:
+    #   context: ../../
+    #   dockerfile: ./packages/api/Dockerfile
     command: ["npx", "nodemon", "./packages/api", "-w", "./packages/api/build", "-w", "./packages/projects/build", "-w", "./packages/common/build"]
     container_name: docere_api
     env_file:
       - ../../.env
+    image: node:14-alpine
     ports:
       - 3000:3000
     restart: always
@@ -45,9 +46,9 @@ services:
       - ../../.env
     environment:
       - DOCERE_XML_BASE_PATH=/xml
+    image: node:14-alpine
     ports:
       - 3003:3003
-    image: node:14-alpine
     restart: always
     volumes:
       - /data/xml:/xml

@@ -14,11 +14,7 @@
     "removeComments": true,
     "resolveJsonModule": true,
     "target": "es2017",
-    "types": [
-      "puppeteer",
-      "jest-environment-puppeteer",
-      "expect-puppeteer"
-    ]
+    "types": []
   },
   "exclude": [
     "node_modules"
