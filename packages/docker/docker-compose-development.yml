@@ -17,9 +17,6 @@ services:
       - ../../public:/var/www/html
 
   api:
-    # build:
-    #   context: ../../
-    #   dockerfile: ./packages/api/Dockerfile
     command: ["npx", "nodemon", "./packages/api", "-w", "./packages/api/build", "-w", "./packages/projects/build", "-w", "./packages/common/build"]
     container_name: docere_api
     env_file:

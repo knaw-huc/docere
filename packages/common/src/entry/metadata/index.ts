@@ -3,7 +3,7 @@ import { FilterFunction, PartialStandoffAnnotation } from '../../standoff-annota
 import { BooleanFacetConfig, DateFacetConfig, FacetConfig, HierarchyFacetConfig, ListFacetConfig, RangeFacetConfig } from '../../types/search/facets'
 // import { PartialStandoffAnnotation } from '../../standoff-annotations'
 // import { FacetConfig } from '../../types/search/facets'
-import { CreateJsonEntryProps } from '../create-json'
+import { CreateJsonEntryPartProps, CreateJsonEntryProps, isEntryPart } from '../create-json'
 // import { Entity } from '../entity'
 import { ID } from '../layer'
 
@@ -44,7 +44,7 @@ export interface DefaultMetadataConfig extends BaseMetadataConfig {
 	 * Defaults to the property with
 	 * {@link BaseConfig.id} as name on the metadata of the root of the tree
 	 */
- 	getValue?: (config: DefaultMetadataConfig, props: CreateJsonEntryProps) => MetadataValue
+ 	getValue?: (config: DefaultMetadataConfig, props: CreateJsonEntryProps | CreateJsonEntryPartProps) => MetadataValue
 }
 
 /**
@@ -75,7 +75,13 @@ export const defaultFacetConfig: FacetConfig = {
 
 export const defaultMetadata: Required<DefaultMetadataConfig> = {
 	facet: null,
-	getValue: (config, props) => props.tree.annotations[0]?.metadata[config.id],
+	getValue: (config, props) => {
+		const tree = isEntryPart(props) ?
+			props.sourceProps.tree :
+			props.tree
+
+		return tree.annotations[0]?.metadata[config.id]
+	},
 	id: null,
 	showInAside: true,
 	title: null,

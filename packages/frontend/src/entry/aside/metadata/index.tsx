@@ -1,8 +1,8 @@
-import * as React from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import { DEFAULT_SPACING, TOP_OFFSET, MetadataItem, EntryContext } from '@docere/common'
 
-import MetadataItemComp from './get-metadata-value'
+import { MetadataItemComp } from './get-metadata-value'
 
 const Wrapper = styled.ul`
 	box-sizing: border-box;

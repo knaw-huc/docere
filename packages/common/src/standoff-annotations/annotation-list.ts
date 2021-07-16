@@ -90,13 +90,13 @@ export class StandoffWrapper<T extends PartialStandoffAnnotation> {
 	}
 
 	getSibling(a: T) {
-		const parent = this.findParent(a)
+		const parent = this.getParent(a)
 		const children = this.getDirectChildren(parent)
 		return children.find(child => child !== a && a.end <= child.start)
 	}
 
 	getPreviousSibling(a: T) {
-		const parent = this.findParent(a)
+		const parent = this.getParent(a)
 		const children = this.getDirectChildren(parent)
 		return children.reduce((prev, child) => {
 			if (child !== a && child.end <= a.start) {
@@ -107,7 +107,7 @@ export class StandoffWrapper<T extends PartialStandoffAnnotation> {
 		}, null)
 	}
 
-	findParent(annotation: T, subset = this.standoff.annotations) {
+	private getParent(annotation: T, subset = this.standoff.annotations) {
 		return subset
 			.reduce<T>((prev, curr) => {
 				if (!isChild(annotation, curr)) return prev
@@ -129,7 +129,7 @@ export class StandoffWrapper<T extends PartialStandoffAnnotation> {
 
 		return children
 			.filter(child =>
-				this.findParent(child, possibleParents) === parent
+				this.getParent(child, possibleParents) === parent
 			)
 	}
 

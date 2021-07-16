@@ -134,12 +134,12 @@ export function extendConfig(configDataRaw: DocereConfig): DocereConfig {
 		config.facsimiles.getId = a => a.id
 	}
 
-	// if (config.parts != null) {
-	// 	config.parts = {
-	// 		keepSource: false,
-	// 		...config.parts
-	// 	}
-	// }
+	if (Array.isArray(config.parts)) {
+		config.parts.map(part => ({
+			keepSource: false,
+			...part
+		}))
+	}
 
 	// return {
 	// 	// prepare: entry => entry.document.documentElement,

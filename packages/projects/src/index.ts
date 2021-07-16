@@ -28,10 +28,11 @@ const projectList: ProjectList = {
 	// 	config: async function() { return await import('./henegouwseregisters/config') },
 	// 	getTextComponents: async function() { return await import('./plakaatboek-guyana-1670-1816/text-components') }
 	// },
-	// isidore: {
-	// 	config: async function() { return await import('./isidore/config') },
-	// 	getTextComponents: async function() { return await import('./isidore/text-components') },
-	// },
+	isidore: {
+		config: async function() { return await import('./isidore/config') },
+		getTextComponents: async function() { return await import('./isidore/text-components') },
+		getUIComponents: async function() { return await import('./mondrian/ui-components') },
+	},
 	// kranten1700: {
 	// 	config: async function() { return await import('./kranten1700/config') },
 	// 	getTextComponents: async function() { return await import('./kranten1700/text-components') },

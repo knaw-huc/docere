@@ -1,4 +1,4 @@
-import { createRoot, extendExportOptions, extendStandoffAnnotation, isAnnotation, sortByOffset } from './utils'
+import { createRoot, extendExportOptions, extendStandoffAnnotation, isAnnotation, isChild, sortByOffset } from './utils'
 import { StandoffWrapper } from './annotation-list'
 import { standoff2tree } from './standoff2tree'
 import { exportXml } from './export-xml'
@@ -97,8 +97,12 @@ export class StandoffTree extends StandoffWrapper<StandoffAnnotation> {
 	 * @param findRoot 
 	 * @returns 
 	 */
-	createStandoffTreeFromAnnotation(findRoot: TextLayerConfig['findRoot']) {
-		const root = this.standoff.annotations.find(findRoot)
+	createStandoffTreeFromAnnotation(findRoot: StandoffAnnotation): StandoffTree 
+	createStandoffTreeFromAnnotation(findRoot: TextLayerConfig['findRoot']): StandoffTree 
+	createStandoffTreeFromAnnotation(findRoot: StandoffAnnotation | TextLayerConfig['findRoot']): StandoffTree {
+		const root = (isAnnotation(findRoot)) ? 
+			findRoot :
+			this.standoff.annotations.find(findRoot)
 		if (root == null) return
 
 		// Get the text first, because the root's offsets are to be shifted
@@ -108,9 +112,12 @@ export class StandoffTree extends StandoffWrapper<StandoffAnnotation> {
 		const offset = root.start
 		const annotations = [root].concat(this.getChildren(root))
 			.map(a => {
-				a.start = a.start - offset
-				a.end = a.end - offset
-				return a
+				// TODO replace by "cloneAnnotation"?
+				return {
+					...a,
+					start: a.start - offset,
+					end: a.end - offset,
+				}
 			})
 
 		// Create a new StandoffTree with the shifted annotations and text
@@ -128,6 +135,15 @@ export class StandoffTree extends StandoffWrapper<StandoffAnnotation> {
 			this,
 			this.standoff.text,
 			this.options
+		)
+	}
+
+	findParent(
+		predicate: FilterFunction<StandoffAnnotation>,
+		startAnnotation: StandoffAnnotation
+	) {
+		return this.annotations.find(a =>
+			predicate(a) && isChild(startAnnotation, a)
 		)
 	}
 
@@ -191,6 +207,12 @@ export class StandoffTree extends StandoffWrapper<StandoffAnnotation> {
 
 	byId(id: string) {
 		return this.lookup.get(id)
+	}
+
+	getRoot() {
+		return this.standoff.annotations.find(a =>
+			a.start === 0 && a.end === this.standoff.text.length
+		)
 	}
 
 	private hasRoot() {

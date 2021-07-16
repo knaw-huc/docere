@@ -15,6 +15,7 @@ export const dtapMap: Record<string, DTAP> = {
 	republic: DTAP.Testing,
 	suriano: DTAP.Testing,
 	gemeentearchiefkampen: DTAP.Development,
+	isidore: DTAP.Development,
 	// vangogh: DTAP.Testing,
 
 	// Development => localhost(:4000)

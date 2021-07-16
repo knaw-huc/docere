@@ -105,4 +105,12 @@ export default extendConfig({
 			type: LayerType.Text
 		},
 	],
+
+	parts: [
+		{
+			id: 'resolution',
+			filter: a => a.name === 'resolution',
+			getId: a => a.metadata._entityId
+		}
+	]
 })

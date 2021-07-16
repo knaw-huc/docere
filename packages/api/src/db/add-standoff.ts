@@ -2,7 +2,7 @@ import crypto from 'crypto'
 import * as es from '@elastic/elasticsearch'
 import { PoolClient } from 'pg'
 import fetch from 'node-fetch'
-import { CreateJsonEntryProps, JsonEntry, XmlDirectoryStructure, StandoffTree, createJsonEntry, DocereConfig, ID } from '@docere/common'
+import { CreateJsonEntryProps, JsonEntry, XmlDirectoryStructure, StandoffTree, createJsonEntry, DocereConfig, ID, CreateJsonEntryPartProps } from '@docere/common'
 
 import { getDocumentIdFromRemoteFilePath, isError } from '../utils'
 import { xml2standoff } from '../utils/xml2standoff'
@@ -29,6 +29,41 @@ async function documentExists(fileName: string, content: string, client: PoolCli
 	const hex = hash.digest('hex')
 	const existsResult = await client.query(`SELECT EXISTS(SELECT 1 FROM source WHERE name='${fileName}' AND hash='${hex}')`)
 	return existsResult.rows[0].exists
+}
+
+/**
+ * Fetch source file
+ * 
+ * The source file can be one of three types: standoff, xml or json
+ * 
+ * @param filePath 
+ * @param projectConfig 
+ */
+async function fetchSource(filePath: string, projectConfig: DocereConfig) {
+	const result = await fetch(`${XML_SERVER_ENDPOINT}${filePath}`)
+
+	let source: any
+	if (projectConfig.documents.type === 'xml') {
+		source = await result.text()	
+	} else {
+		source = await result.json()
+	}
+
+	if (projectConfig.standoff.prepareSource != null) {
+		source = projectConfig.standoff.prepareSource(source)
+	} else if (projectConfig.documents.type === 'json') {
+		console.log("[xml2standoff] prepareSource can't be empty when the source is of type JSON")
+	}
+
+	if (typeof source === 'string') {
+		try {
+			source = await xml2standoff(source)
+		} catch (error) {
+			console.log('[xml2standoff]', error)	
+		}
+	}
+
+	return source
 }
 
 export async function addRemoteStandoffToDb(
@@ -62,31 +97,10 @@ export async function addRemoteStandoffToDb(
 
 	// Add every file to the database
 	for (const filePath of files) {
+		const source = await fetchSource(filePath, projectConfig)
+		if (source == null) continue
 		const entryId = getDocumentIdFromRemoteFilePath(filePath, remotePath, projectConfig)
-		const result = await fetch(`${XML_SERVER_ENDPOINT}${filePath}`)
-
-		let source: any
-		if (projectConfig.documents.type === 'xml') {
-			source = await result.text()	
-		} else {
-			source = await result.json()
-		}
-
-		if (projectConfig.standoff.prepareSource != null) {
-			source = projectConfig.standoff.prepareSource(source)
-		}
-
-		if (typeof source === 'string') {
-			try {
-				// console.log(source)
-				source = await xml2standoff(source)
-			} catch (error) {
-				console.log('[XML2standoff]', error)	
-				continue
-			}
-		}
-
-		await addStandoffToDb(source, projectConfig, entryId, client, esClient, options.force)
+		await addSourceToDb(source, projectConfig, entryId, client, esClient, options.force)
 	}
 	client.release()
 
@@ -96,7 +110,7 @@ export async function addRemoteStandoffToDb(
 	}
 }
 
-async function addStandoffToDb(
+async function addSourceToDb(
 	source: any,
 	projectConfig: DocereConfig,
 	documentId: string,
@@ -134,8 +148,6 @@ async function addStandoffToDb(
 		}
 	})
 
-	projectConfig.standoff.prepareExport(tree)
-
 	const entry = createJsonEntry(createJsonEntryProps)
 
 	await transactionQuery(client, 'BEGIN')
@@ -166,11 +178,38 @@ async function addStandoffToDb(
 		return
 	}
 
-	// let i = 0
-	// for (const part of serializedEntry.parts) {
-	// 	await addDocumentToDb({ client, documentId: part.id, xml_id, order_number: i++, entry: part, content: part.content })
-	// 	await indexDocument(projectId, part, esClient)
-	// }
+	let i = 0
+	if (Array.isArray(projectConfig.parts)) {
+		for (const partConfig of projectConfig.parts) {
+			for (const root of tree.annotations.filter(partConfig.filter).slice(0, 10)) {
+				const createJsonEntryPartProps: CreateJsonEntryPartProps = {
+					config: projectConfig,
+					id: partConfig.getId(root),
+					partConfig,
+					root,
+					sourceProps: createJsonEntryProps,
+				}
+
+				const entry = createJsonEntry(createJsonEntryPartProps)
+				await addDocumentToDb({
+					client,
+					documentId: entry.id,
+					entry,
+					order_number: i++,
+					sourceId,
+				})
+
+				const indexResult = await indexDocument(entry, createJsonEntryProps, esClient)
+				if (isError(indexResult)) {
+					await transactionQuery(client, 'ABORT')
+					console.log(`Index ${partConfig.id}: ${entry.id} aborted`, indexResult)
+					return
+				}
+
+				console.log(`[${projectConfig.slug}] Added ${partConfig.id}: '${entry.id}'`)
+			}
+		}
+	}
 
 	await transactionQuery(client, 'COMMIT')
 

@@ -1,5 +1,5 @@
 import { PageConfig } from '../page'
-import { PartialExportOptions, PartialStandoff, PartialStandoffAnnotation, StandoffTree, StandoffWrapper } from '../standoff-annotations'
+import { PartialExportOptions, PartialStandoff, PartialStandoffAnnotation, StandoffAnnotation, StandoffTree, StandoffWrapper } from '../standoff-annotations'
 import { EntityConfig, FacsimileLayerConfig, ID, MetadataConfig, TextLayerConfig } from '../entry'
 
 export * from './extend'
@@ -75,6 +75,9 @@ export interface DocereConfig {
 		 */
 		getRemotePath?: (config: PageConfig) => string
 	}
+
+	parts?: PartConfig[],
+
 	standoff?: {
 		exportOptions?: PartialExportOptions
 
@@ -127,4 +130,11 @@ export interface EntrySettings {
 
 	/** Show/hide entities */
 	'panels.entities.show'?: boolean,
+}
+
+export interface PartConfig {
+	id: ID
+	filter: (a: StandoffAnnotation) => boolean
+	getId: (a: StandoffAnnotation) => string
+	keepSource?: boolean
 }

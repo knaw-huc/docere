@@ -24,7 +24,7 @@ const Title = styled.div`
 interface Props {
 	metadataItem: MetadataItem
 }
-export default function MetadataItemComp(props: Props) {
+export function MetadataItemComp(props: Props) {
 	return (
 		<Wrapper>
 			{

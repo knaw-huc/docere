@@ -3,17 +3,24 @@ import { BaseMetadataConfig, ID } from '.'
 import { EntryContext } from '..'
 import { Colors, ContainerType, EntityType } from '../enum'
 import { DocereAnnotation, PartialStandoffAnnotation } from '../standoff-annotations'
-import { CreateJsonEntryProps } from './create-json'
+import { CreateJsonEntryPartProps, CreateJsonEntryProps } from './create-json'
 
 export interface EntityConfig extends BaseMetadataConfig {
 	color?: string
-	revealOnHover?: boolean
-	type?: EntityType | string
 
 	/**
 	 * Filter entities from annotations
 	 */
 	filter: (annotation: PartialStandoffAnnotation) => boolean
+
+	/**
+	 * Get the content of the entity. The content is shown in the body
+	 * of the entity visualisation
+	 */ 
+	getBody?: (
+		a: PartialStandoffAnnotation,
+		props: CreateJsonEntryProps | CreateJsonEntryPartProps
+	) => PartialStandoffAnnotation
 
 	/**
 	 * Set the ID of the entity. Not te be confused with the annotation ID!
@@ -25,7 +32,15 @@ export interface EntityConfig extends BaseMetadataConfig {
 	 * Get the value of the entity. This is primarily used to show in 
 	 * the faceted search and in the metadata tab
 	 */ 
-	getValue?: (a: PartialStandoffAnnotation, props: CreateJsonEntryProps) => string
+	getValue?: (
+		a: PartialStandoffAnnotation,
+		props: CreateJsonEntryProps | CreateJsonEntryPartProps,
+		content?: PartialStandoffAnnotation
+	) => string
+
+	revealOnHover?: boolean
+
+	type?: EntityType | string
 }
 
 export const defaultEntityConfig: Required<EntityConfig> = {
@@ -34,6 +49,7 @@ export const defaultEntityConfig: Required<EntityConfig> = {
 	filter: null,
 	getId: a => a.id,
 	getValue: () => null,
+	getBody: (a) => a,
 	id: null,
 	revealOnHover: false,
 	showInAside: true,

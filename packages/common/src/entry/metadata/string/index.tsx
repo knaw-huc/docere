@@ -11,7 +11,6 @@ interface Props {
 export function StringMetadata(props: Props) {
 	const searchContext = React.useContext(SearchContext)
 	const { facets } = searchContext.state
-
 	const facet = facets.get(props.metadataId)
 	if (facet == null) return null
 
