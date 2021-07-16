@@ -4,13 +4,13 @@ import { PoolClient } from 'pg'
 import fetch from 'node-fetch'
 import { CreateJsonEntryProps, JsonEntry, XmlDirectoryStructure, StandoffTree, createJsonEntry, DocereConfig, ID, CreateJsonEntryPartProps } from '@docere/common'
 
-import { getDocumentIdFromRemoteFilePath, isError } from '../utils'
-import { xml2standoff } from '../utils/xml2standoff'
+import { getDocumentIdFromRemoteFilePath, isError } from '../../utils'
+import { fetchSource } from './fetch-source'
 
-import { getPool, transactionQuery } from './index'
-import { indexDocument } from '../es'
-import { XML_SERVER_ENDPOINT } from '../constants'
-import { createStandoff } from '../utils/source2entry'
+import { getPool, transactionQuery } from '../index'
+import { indexDocument } from '../../es'
+import { XML_SERVER_ENDPOINT } from '../../constants'
+import { createStandoff } from '../../utils/source2entry'
 
 type AddRemoteFilesOptions = {
 	force?: boolean
@@ -29,41 +29,6 @@ async function documentExists(fileName: string, content: string, client: PoolCli
 	const hex = hash.digest('hex')
 	const existsResult = await client.query(`SELECT EXISTS(SELECT 1 FROM source WHERE name='${fileName}' AND hash='${hex}')`)
 	return existsResult.rows[0].exists
-}
-
-/**
- * Fetch source file
- * 
- * The source file can be one of three types: standoff, xml or json
- * 
- * @param filePath 
- * @param projectConfig 
- */
-async function fetchSource(filePath: string, projectConfig: DocereConfig) {
-	const result = await fetch(`${XML_SERVER_ENDPOINT}${filePath}`)
-
-	let source: any
-	if (projectConfig.documents.type === 'xml') {
-		source = await result.text()	
-	} else {
-		source = await result.json()
-	}
-
-	if (projectConfig.standoff.prepareSource != null) {
-		source = projectConfig.standoff.prepareSource(source)
-	} else if (projectConfig.documents.type === 'json') {
-		console.log("[xml2standoff] prepareSource can't be empty when the source is of type JSON")
-	}
-
-	if (typeof source === 'string') {
-		try {
-			source = await xml2standoff(source)
-		} catch (error) {
-			console.log('[xml2standoff]', error)	
-		}
-	}
-
-	return source
 }
 
 export async function addRemoteStandoffToDb(
@@ -102,6 +67,7 @@ export async function addRemoteStandoffToDb(
 		const entryId = getDocumentIdFromRemoteFilePath(filePath, remotePath, projectConfig)
 		await addSourceToDb(source, projectConfig, entryId, client, esClient, options.force)
 	}
+
 	client.release()
 
 	// Recursively add sub dirs
@@ -118,7 +84,6 @@ async function addSourceToDb(
 	esClient: es.Client,
 	force = false
 ) {
-	
 	const isUpdate = await documentExists(documentId, JSON.stringify(source), client)
 	if (isUpdate && !force) {
 		console.log(`[${projectConfig.slug}] document '${documentId}' exists`)

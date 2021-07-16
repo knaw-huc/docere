@@ -5,7 +5,7 @@ import { getProjectIndexMapping } from '../es'
 
 // import handleAnalyzeApi from './analyze'
 
-import { addRemoteStandoffToDb } from '../db/add-standoff'
+import { addRemoteStandoffToDb } from '../db/handle-source'
 import { initProject } from '../db/init-project'
 import { initProjectIndex } from '../es'
 import { castUrlQueryToNumber } from '../utils'
