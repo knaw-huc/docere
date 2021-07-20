@@ -1,6 +1,6 @@
 import * as es from '@elastic/elasticsearch'
 
-import { CreateJsonEntryProps, EsDataType, JsonEntry } from '@docere/common'
+import { CreateJsonEntryPartProps, EsDataType, JsonEntry } from '@docere/common'
 import { isError, getProjectConfig } from '../utils'
 import { createElasticSearchDocument } from './create-document'
 
@@ -71,7 +71,7 @@ export async function getProjectIndexMapping(projectId: string): Promise<Mapping
 
 export async function indexDocument(
 	extractedEntry: JsonEntry,
-	createJsonEntryProps: CreateJsonEntryProps,
+	createJsonEntryProps: CreateJsonEntryPartProps,
 	esClient: es.Client
 ) {
 	const esDocument = createElasticSearchDocument(extractedEntry, createJsonEntryProps)

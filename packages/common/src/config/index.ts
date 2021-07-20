@@ -134,7 +134,7 @@ export interface EntrySettings {
 
 export interface PartConfig {
 	id: ID
-	filter: (a: StandoffAnnotation) => boolean
-	getId: (a: StandoffAnnotation) => string
+	filter?: (a: StandoffAnnotation) => boolean
+	getId?: (a: StandoffAnnotation) => string
 	keepSource?: boolean
 }

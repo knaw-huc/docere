@@ -31,9 +31,9 @@ export async function transactionQuery(client: pg.PoolClient, query: string, val
 	try {
 		result = await client.query(query, values)
 	} catch (error) {
+		console.log(`ROLLING BACK`, query)
 		console.log(error)
-		console.log('ROLLING BACK')
-		await client.query('ROLLBACK')		
+		await client.query('ROLLBACK')
 	}
 	return result
 }

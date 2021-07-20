@@ -20,7 +20,7 @@ const defaultConfig: DocereConfig = {
 	entrySettings: {},
 	layers2: [],
 	metadata2: [],
-	// parts: null,
+	parts: null,
 	pages: null,
 	private: false,
 	searchResultCount: 20,
@@ -124,7 +124,7 @@ export function extendConfig(configDataRaw: DocereConfig): DocereConfig {
 		exportOptions: {
 			...config.standoff.exportOptions
 		},
-		prepareSource: source => source,
+		// prepareSource: source => source,
 		prepareAnnotations: () => undefined,
 		prepareExport: () => undefined,
 		...config.standoff

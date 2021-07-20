@@ -45,9 +45,6 @@ app.use((req, _res, next) => {
 async function main() {
 	console.log(chalk.green(copyright))
 
-	// const puppenv = new Puppenv()
-	// await puppenv.start()
-
 	app.get(BASE_PATH, (_req, res) => {
 		const pkg = fs.readFileSync(path.resolve('./packages/api/package.json'), 'utf8')
 

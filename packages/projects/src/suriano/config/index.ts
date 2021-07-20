@@ -22,22 +22,22 @@ export default extendConfig({
 			},
 			id: 'sender',
 			getValue: (_config, props) => {
-				const annotation = props.tree.findChild(
+				const annotation = props.sourceTree.findChild(
 					a => a.name === 'correspAction' && a.metadata.type === 'sent',
 					a => a.name === 'name'
 				)
-				return props.tree.getTextContent(annotation)
+				return props.sourceTree.getTextContent(annotation)
 			}
 		},
 		{
 			facet: {},
 			id: 'sender_place',
 			getValue: (_config, props) => {
-				const annotation = props.tree.findChild(
+				const annotation = props.sourceTree.findChild(
 					a => a.name === 'correspAction' && a.metadata.type === 'sent',
 					a => a.name === 'settlement'
 				)
-				return props.tree.getTextContent(annotation)
+				return props.sourceTree.getTextContent(annotation)
 			}
 		},
 		{
@@ -46,7 +46,7 @@ export default extendConfig({
 				interval: 'y',
 			},
 			getValue: (_config, props) => {
-				const annotation = props.tree.findChild(
+				const annotation = props.sourceTree.findChild(
 					a => a.name === 'correspAction' && a.metadata.type === 'sent',
 					a => a.name === 'date'
 				)
@@ -57,20 +57,20 @@ export default extendConfig({
 		{
 			facet: {},
 			getValue: (_config, props) => {
-				const annotation = props.tree.annotations.find(
+				const annotation = props.sourceTree.annotations.find(
 					a => a.name === 'idno' && a.metadata.type === 'filza'
 				)
-				return props.tree.getTextContent(annotation)
+				return props.sourceTree.getTextContent(annotation)
 			},
 			id: 'filza',
 		},
 		{
 			facet: {},
 			getValue: (_config, props) => {
-				const annotation = props.tree.annotations.find(
+				const annotation = props.sourceTree.annotations.find(
 					a => a.name === 'idno' && a.metadata.type === 'letterno'
 				)
-				return props.tree.getTextContent(annotation)
+				return props.sourceTree.getTextContent(annotation)
 			},
 			id: 'letterno',
 		},
@@ -78,51 +78,51 @@ export default extendConfig({
 			facet: {},
 			id: 'settlement',
 			getValue: (_config, props) => {
-				const annotation = props.tree.findChild(
+				const annotation = props.sourceTree.findChild(
 					a => a.name === 'msIdentifier',
 					a => a.name === 'settlement'
 				)
-				return props.tree.getTextContent(annotation)
+				return props.sourceTree.getTextContent(annotation)
 			},
 		},
 		{
 			facet: {},
 			id: 'insitution',
 			getValue: (_config, props) => {
-				const annotation = props.tree.findChild(
+				const annotation = props.sourceTree.findChild(
 					a => a.name === 'msIdentifier',
 					a => a.name === 'institution'
 				)
-				return props.tree.getTextContent(annotation)
+				return props.sourceTree.getTextContent(annotation)
 			},
 		},
 		{
 			facet: {},
 			id: 'collection',
 			getValue: (_config, props) => {
-				const annotation = props.tree.findChild(
+				const annotation = props.sourceTree.findChild(
 					a => a.name === 'msIdentifier',
 					a => a.name === 'collection'
 				)
-				return props.tree.getTextContent(annotation)
+				return props.sourceTree.getTextContent(annotation)
 			},
 		},
 		{
 			facet: {},
 			getValue: (_config, props) => {
-				const annotation = props.tree.annotations.find(
+				const annotation = props.sourceTree.annotations.find(
 					a => a.name === 'biblScope'
 				)
-				return props.tree.getTextContent(annotation)
+				return props.sourceTree.getTextContent(annotation)
 			},
 			id: 'biblScope',
 		},
 		{
 			getValue: (_config, props) => {
-				const annotation = props.tree.annotations.find(
+				const annotation = props.sourceTree.annotations.find(
 					a => a.name === 'div' && a.metadata.type === 'summary'
 				)
-				return props.tree.getTextContent(annotation)
+				return props.sourceTree.getTextContent(annotation)
 			},
 			id: 'summary',
 		}

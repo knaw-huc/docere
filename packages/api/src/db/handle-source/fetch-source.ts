@@ -1,3 +1,4 @@
+import fetch from 'node-fetch'
 import { DocereConfig, PartialStandoff } from '@docere/common'
 import { XML_SERVER_ENDPOINT } from '../../constants'
 import { xml2standoff } from '../../utils/xml2standoff'
@@ -28,7 +29,7 @@ export async function fetchSource(
 	if (projectConfig.standoff.prepareSource != null) {
 		source = projectConfig.standoff.prepareSource(source)
 	} else if (projectConfig.documents.type === 'json') {
-		console.log("[xml2standoff] prepareSource can't be empty when the source is of type JSON")
+		throw new Error("[xml2standoff] prepareSource can't be empty when the source is of type JSON")
 	}
 
 	if (typeof source === 'string') {

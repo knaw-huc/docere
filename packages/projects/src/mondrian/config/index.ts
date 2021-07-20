@@ -10,7 +10,7 @@ export default extendConfig({
 			},
 			// extract: entry => entry.document.querySelector('correspAction[type="sent"] > date')?.getAttribute('when'),
 			getValue: (_config, props) => {
-				const annotation = props.tree.findChild(
+				const annotation = props.sourceTree.findChild(
 					a => a.name === 'correspAction' && a.metadata.type === 'sent',
 					a => a.name === 'date'
 				)
@@ -31,11 +31,11 @@ export default extendConfig({
 				order: 20,
 			},
 			getValue: (_config, props) => {
-				const annotation = props.tree.findChild(
+				const annotation = props.sourceTree.findChild(
 					a => a.name === 'correspAction' && a.metadata.type === 'sent',
 					a => a.name === 'name'
 				)
-				return props.tree.getTextContent(annotation)
+				return props.sourceTree.getTextContent(annotation)
 			},
 			id: 'author',
 		},
@@ -44,11 +44,11 @@ export default extendConfig({
 				order: 30,
 			},
 			getValue: (_config, props) => {
-				const annotation = props.tree.findChild(
+				const annotation = props.sourceTree.findChild(
 					a => a.name === 'correspAction' && a.metadata.type === 'received',
 					a => a.name === 'name'
 				)
-				return props.tree.getTextContent(annotation)
+				return props.sourceTree.getTextContent(annotation)
 			},
 			id: 'addressee',
 		},
@@ -57,17 +57,17 @@ export default extendConfig({
 				order: 40,
 			},
 			getValue: (_config, props) => {
-				const annotation = props.tree.findChild(
+				const annotation = props.sourceTree.findChild(
 					a => a.name === 'correspAction' && a.metadata.type === 'sent',
 					a => a.name === 'placeName'
 				)
-				return props.tree.getTextContent(annotation)
+				return props.sourceTree.getTextContent(annotation)
 			},
 			id: 'place',
 		},
 		{
 			getValue: (_config, props) => {
-				const children = props.tree.getChildren(
+				const children = props.sourceTree.getChildren(
 					a => a.name === 'div' && a.metadata.type === 'notes',
 					a => a.name === 'note'
 				)
@@ -77,7 +77,7 @@ export default extendConfig({
 		},
 		{
 			getValue: (_config, props) => {
-				const children = props.tree.getChildren(
+				const children = props.sourceTree.getChildren(
 					a => a.name === 'div' && a.metadata.type === 'ogtnotes',
 					a => a.name === 'note'
 				)
@@ -87,7 +87,7 @@ export default extendConfig({
 		},
 		{
 			getValue: (_config, props) => {
-				const children = props.tree.getChildren(
+				const children = props.sourceTree.getChildren(
 					a => a.name === 'div' && a.metadata.type === 'typednotes',
 					a => a.name === 'note'
 				)
@@ -100,8 +100,8 @@ export default extendConfig({
 				datatype: EsDataType.Boolean,
 			},
 			getValue: (_config, props) => {
-				const annotation = props.tree.annotations.find(a => a.name === 'div' && a.metadata.type === 'translation')
-				return props.tree.getTextContent(annotation).trim().length > 0
+				const annotation = props.sourceTree.annotations.find(a => a.name === 'div' && a.metadata.type === 'translation')
+				return props.sourceTree.getTextContent(annotation).trim().length > 0
 			},
 			id: 'hasTranslation',
 		}

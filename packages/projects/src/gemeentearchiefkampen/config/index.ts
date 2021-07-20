@@ -1,10 +1,10 @@
-import { CreateJsonEntryProps, extendConfig, LayerType, MetadataConfig } from '@docere/common'
+import { CreateJsonEntryPartProps, extendConfig, LayerType, MetadataConfig } from '@docere/common'
 // import { LayerType, EsDataType } from '@docere/common'
 // import config from '../../suriano/config'
 import { prepareSource } from './prepare'
 
-function getValue(config: MetadataConfig, props: CreateJsonEntryProps) {
-	const annotation = props.tree.annotations.find(
+function getValue(config: MetadataConfig, props: CreateJsonEntryPartProps) {
+	const annotation = props.sourceTree.annotations.find(
 		a => a.name === 'item' && a.metadata.key === config.id
 	)
 	return annotation.metadata.value

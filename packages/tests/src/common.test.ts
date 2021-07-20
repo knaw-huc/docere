@@ -1,11 +1,34 @@
-import { indexOfIterator, getQueryString, getProjectPath, getRectoVersoSequence, getPagePath, getEntryPath } from "../../common/src"
+import { indexOfIterator, getQueryString, getProjectPath, getRectoVersoSequence, getPagePath, getEntryPath, DocereConfig, extendConfig } from "../../common/src"
 
 describe('Common', () => {
+	describe('Config', () => {
+		describe('Defaults', () => {
+			let config: DocereConfig
+
+			beforeAll(() => {
+				config = extendConfig({ slug: 'test' })
+			})
+
+			it('Should have sane defaults', () => {
+				expect(config.collection).toBeNull()
+				expect(config.documents.remoteDirectories[0]).toBe('test')
+				expect(config.documents.stripRemoteDirectoryFromDocumentId).toBeTruthy()
+				expect(config.entities2).toHaveLength(0)
+				expect(config.layers2).toHaveLength(0)
+				expect(config.metadata2).toHaveLength(0)
+				expect(config.pages).toBeNull()
+				expect(config.parts).toBeNull()
+				expect(config.private).toBeFalsy()
+				expect(config.searchResultCount).toBe(20)
+				expect(config.slug).toBe('test')
+				expect(config.title).toBe('Test')
+			})
+		})
+	})
+
 	describe('URL', () => {
 		describe('Get paths', () => {
 			it('Should handle getPath', () => {
-				// expect(() => getPath(null)).toThrow('[getPath] Project ID cannot be null')
-				// expect(() => getPath({ projectId: null })).toThrow('[getPath] Project ID cannot be null')
 				expect(getProjectPath('p')).toBe('/projects/p')
 				expect(getEntryPath('p', 'e' )).toBe('/projects/p/entries/e')
 				expect(getPagePath('p', 'a' )).toBe('/projects/p/pages/a')

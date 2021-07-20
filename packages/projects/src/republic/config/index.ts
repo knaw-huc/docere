@@ -108,9 +108,12 @@ export default extendConfig({
 
 	parts: [
 		{
+			id: 'session',
+		},
+		{
 			id: 'resolution',
 			filter: a => a.name === 'resolution',
-			getId: a => a.metadata._entityId
+			getId: a => a.metadata._entityId,
 		}
 	]
 })

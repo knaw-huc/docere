@@ -27,6 +27,7 @@ export function isPartialAnnotation(annotation: any): annotation is PartialStand
 }
 
 export function isAnnotation(annotation: any): annotation is StandoffAnnotation {
+	if (annotation == null) return false
 	return (
 		annotation.hasOwnProperty('index') && // check index first, because it is not present in a PartialStandoffAnnotation
 		isPartialAnnotation(annotation)

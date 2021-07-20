@@ -14,12 +14,13 @@
     "removeComments": true,
     "resolveJsonModule": true,
     "target": "es2017",
-    "types": []
+    "types": ["jest"]
   },
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "../common/build"
   ],
   "include": [
-    "src/**/*.ts", "../projects/src/**/tests/*.test.ts",
+    "src/*.test.ts" //, "../projects/src/**/tests/*.test.ts",
   ],
 }

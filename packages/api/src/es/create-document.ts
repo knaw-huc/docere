@@ -1,4 +1,4 @@
-import { JsonEntry, ElasticSearchDocument, MetadataItem, CreateJsonEntryProps } from "@docere/common"
+import { JsonEntry, ElasticSearchDocument, MetadataItem, CreateJsonEntryPartProps } from "@docere/common"
 import { isHierarchyMetadataItem } from "@docere/common"
 import { DocereApiError } from "../types"
 import { isError } from "../utils"
@@ -6,11 +6,13 @@ import { isError } from "../utils"
 
 export function createElasticSearchDocument(
 	jsonEntry: JsonEntry | DocereApiError,
-	createJsonEntryProps: CreateJsonEntryProps
+	createJsonEntryProps: CreateJsonEntryPartProps
 ): ElasticSearchDocument | DocereApiError {
 	if (isError(jsonEntry)) return jsonEntry
 
-	const { tree, config } = createJsonEntryProps
+	// TODO FIXME this is wrong, not the whole tree should be indexed when 
+	// the document is part of a source
+	const { sourceTree: tree, config } = createJsonEntryProps
 
 	const entities = tree.annotations
 		.reduce((map, curr) => {

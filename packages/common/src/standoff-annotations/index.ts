@@ -101,7 +101,6 @@ export type OverlapReport = [StandoffAnnotation, StandoffAnnotation][]
 
 export interface LintReport {
 	overlap: OverlapReport
-	hasRoot: boolean
 }
 
 export type DocereAnnotationProps = AnnotationNode['metadata'] & {

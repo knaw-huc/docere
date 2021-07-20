@@ -3,7 +3,7 @@ import { BaseMetadataConfig, ID } from '.'
 import { EntryContext } from '..'
 import { Colors, ContainerType, EntityType } from '../enum'
 import { DocereAnnotation, PartialStandoffAnnotation } from '../standoff-annotations'
-import { CreateJsonEntryPartProps, CreateJsonEntryProps } from './create-json'
+import { CreateJsonEntryPartProps, GetValueProps } from './create-json'
 
 export interface EntityConfig extends BaseMetadataConfig {
 	color?: string
@@ -19,7 +19,7 @@ export interface EntityConfig extends BaseMetadataConfig {
 	 */ 
 	getBody?: (
 		a: PartialStandoffAnnotation,
-		props: CreateJsonEntryProps | CreateJsonEntryPartProps
+		props: CreateJsonEntryPartProps
 	) => PartialStandoffAnnotation
 
 	/**
@@ -34,8 +34,8 @@ export interface EntityConfig extends BaseMetadataConfig {
 	 */ 
 	getValue?: (
 		a: PartialStandoffAnnotation,
-		props: CreateJsonEntryProps | CreateJsonEntryPartProps,
-		content?: PartialStandoffAnnotation
+		props: GetValueProps,
+		// body?: PartialStandoffAnnotation
 	) => string
 
 	revealOnHover?: boolean

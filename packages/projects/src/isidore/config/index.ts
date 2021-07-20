@@ -1,4 +1,4 @@
-import { extendConfig, isEntryPart, LayerType } from '@docere/common'
+import { extendConfig, LayerType } from '@docere/common'
 
 export default extendConfig({
 	documents: {
@@ -38,14 +38,12 @@ export default extendConfig({
 			facet: {},
 			id: 'chapter',
 			getValue: (_config, props) => {
-				if (!isEntryPart(props)) return
-
 				if (props.partConfig.id === 'chapter') {
 					return props.root.metadata.n
 				}
 
 				if (props.partConfig.id === 'lemma') {
-					const parent = props.sourceProps.tree.findParent(
+					const parent = props.sourceTree.findParent(
 						a => a.name === 'div' && a.metadata.type === 'chapter',
 						props.root
 					)
@@ -54,13 +52,13 @@ export default extendConfig({
 				}
 
 				if (props.partConfig.id === 'gloss') {
-					const glossGroup = props.sourceProps.tree.findParent(a => a.name === 'hi:glossGrp', props.root)
+					const glossGroup = props.sourceTree.findParent(a => a.name === 'hi:glossGrp', props.root)
 
-					const seg = props.sourceProps.tree.annotations.find(a =>
+					const seg = props.sourceTree.annotations.find(a =>
 						a.name === 'seg' && a.metadata['xml:id'] === glossGroup.metadata.target.slice(1)
 					)
 
-					const parent = props.sourceProps.tree.findParent(
+					const parent = props.sourceTree.findParent(
 						a => a.name === 'div' && a.metadata.type === 'chapter',
 						seg
 					)
@@ -72,16 +70,13 @@ export default extendConfig({
 		{
 			facet: {},
 			id: 'unit',
-			getValue: (_config, props) => {
-				if (!isEntryPart(props)) return
-				return props.partConfig.id
-			},
+			getValue: (_config, props) => props.partConfig.id,
 		},
 		{
 			facet: {},
 			id: 'gloss_sim',
 			getValue: (_config, props) => {
-				if (isEntryPart(props) && props.partConfig.id === 'gloss') {
+				if (props.partConfig.id === 'gloss') {
 					return props.root.metadata.sim
 				}
 			},
@@ -90,7 +85,7 @@ export default extendConfig({
 			facet: {},
 			id: 'gloss_weight',
 			getValue: (_config, props) => {
-				if (isEntryPart(props) && props.partConfig.id === 'gloss') {
+				if (props.partConfig.id === 'gloss') {
 					return props.root.metadata.weight
 				}
 			},
@@ -99,7 +94,7 @@ export default extendConfig({
 			facet: {},
 			id: 'gloss_manuscript',
 			getValue: (_config, props) => {
-				if (isEntryPart(props) && props.partConfig.id === 'gloss') {
+				if (props.partConfig.id === 'gloss') {
 					return props.root.metadata.corresp
 				}
 			},
@@ -108,7 +103,7 @@ export default extendConfig({
 			facet: {},
 			id: 'gloss_hand',
 			getValue: (_config, props) => {
-				if (isEntryPart(props) && props.partConfig.id === 'gloss') {
+				if (props.partConfig.id === 'gloss') {
 					return props.root.metadata.hand
 				}
 			},

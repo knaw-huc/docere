@@ -1,11 +1,8 @@
 import { EsDataType } from '../../enum'
 import { FilterFunction, PartialStandoffAnnotation } from '../../standoff-annotations'
 import { BooleanFacetConfig, DateFacetConfig, FacetConfig, HierarchyFacetConfig, ListFacetConfig, RangeFacetConfig } from '../../types/search/facets'
-// import { PartialStandoffAnnotation } from '../../standoff-annotations'
-// import { FacetConfig } from '../../types/search/facets'
-import { CreateJsonEntryPartProps, CreateJsonEntryProps, isEntryPart } from '../create-json'
-// import { Entity } from '../entity'
-import { ID } from '../layer'
+import { CreateJsonEntryPartProps } from '../create-json'
+import { ID, Layer } from '../layer'
 
 export * from './string'
 
@@ -44,7 +41,11 @@ export interface DefaultMetadataConfig extends BaseMetadataConfig {
 	 * Defaults to the property with
 	 * {@link BaseConfig.id} as name on the metadata of the root of the tree
 	 */
- 	getValue?: (config: DefaultMetadataConfig, props: CreateJsonEntryProps | CreateJsonEntryPartProps) => MetadataValue
+ 	getValue?: (
+		config: DefaultMetadataConfig,
+		props: CreateJsonEntryPartProps,
+		layers: Layer[]
+	) => MetadataValue
 }
 
 /**
@@ -75,13 +76,7 @@ export const defaultFacetConfig: FacetConfig = {
 
 export const defaultMetadata: Required<DefaultMetadataConfig> = {
 	facet: null,
-	getValue: (config, props) => {
-		const tree = isEntryPart(props) ?
-			props.sourceProps.tree :
-			props.tree
-
-		return tree.annotations[0]?.metadata[config.id]
-	},
+	getValue: (config, props) => props.root.metadata[config.id],
 	id: null,
 	showInAside: true,
 	title: null,

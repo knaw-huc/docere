@@ -5,7 +5,7 @@ import { exportXml } from './export-xml'
 import { exportReactTree } from './export-react-tree'
 import { OverlapController } from './overlap-controller'
 
-import type { LintReport, PartialExportOptions, Standoff, PartialStandoffAnnotation, StandoffAnnotation, ExportOptions, PartialStandoff, FilterFunction } from '.'
+import type { LintReport, PartialExportOptions, Standoff, StandoffAnnotation, ExportOptions, PartialStandoff, FilterFunction } from '.'
 
 // @ts-ignore
 import { simpleAnno } from './utils'
@@ -26,11 +26,14 @@ function extendStandoff(standoff: PartialStandoff): Standoff {
  * created upon {@link StandoffTree.exportXml} or {@link StandoffTree.exportReactTree}.
  * 
  * @extends StandoffWrapper
+ * 
+ * @todo 
  */
 export class StandoffTree extends StandoffWrapper<StandoffAnnotation> {
 	private overlapController: OverlapController
 	private lookup: Map<string, StandoffAnnotation>
 	options: ExportOptions
+	root: StandoffAnnotation
 
 	get annotations() {
 		return this.standoff.annotations
@@ -38,14 +41,31 @@ export class StandoffTree extends StandoffWrapper<StandoffAnnotation> {
 
 	constructor(
 		standoff: PartialStandoff,
-		options: PartialExportOptions = {}
+		options: PartialExportOptions = {},
+		update = true
 	) {
 		super(extendStandoff(standoff))
 		this.options = extendExportOptions(options)
 		this.overlapController = new OverlapController(this)
+		this.root = this.getRoot()
+
+		// A StandoffTree has to have a root annotation
+		if (this.root == null) {
+			this.root = createRoot(this.standoff, this.options)
+
+			// Add the new root to the annotations. Update the annotations only
+			// if it will not be updated in the next step (when update === true)
+			this.add(this.root, !update)
+
+			// Add the root node name to the annotation hierarchy
+			this.options.annotationHierarchy = [this.options.rootNodeName]
+				.concat(this.options.annotationHierarchy)
+		}
+
+		if (update) this.update()
 	}
 
-	add(annotation: PartialStandoffAnnotation, update = true) {
+	add(annotation: StandoffAnnotation, update = true) {
 		const next = extendStandoffAnnotation(annotation)
 		super.add(next)
 		if (update) this.update()
@@ -89,10 +109,11 @@ export class StandoffTree extends StandoffWrapper<StandoffAnnotation> {
 	}
 
 	/**
-	 * Create a whole new {@link StandoffTree} from a {@link StandoffAnnotation}. 
+	 * Create a new {@link StandoffTree} from a {@link StandoffAnnotation}. 
 	 * 
-	 * The new StandoffTree will only contain the plain text of the new root
-	 * and the root and the children will be shifted 
+	 * The new StandoffTree will only contain the plain text of the new root.
+	 * The root and the children will be shifted -x, where x is the root's old
+	 * start offset.
 	 * 
 	 * @param findRoot 
 	 * @returns 
@@ -100,10 +121,13 @@ export class StandoffTree extends StandoffWrapper<StandoffAnnotation> {
 	createStandoffTreeFromAnnotation(findRoot: StandoffAnnotation): StandoffTree 
 	createStandoffTreeFromAnnotation(findRoot: TextLayerConfig['findRoot']): StandoffTree 
 	createStandoffTreeFromAnnotation(findRoot: StandoffAnnotation | TextLayerConfig['findRoot']): StandoffTree {
+		if (findRoot == null) throw new Error('[createStandoffTreeFromAnnotation] findRoot cannot be undefined')
+
 		const root = (isAnnotation(findRoot)) ? 
 			findRoot :
 			this.standoff.annotations.find(findRoot)
-		if (root == null) return
+
+		if (root == null) throw new Error('[createStandoffTreeFromAnnotation] root cannot be undefined')
 
 		// Get the text first, because the root's offsets are to be shifted
 		const text = this.getTextContent(root)
@@ -121,19 +145,12 @@ export class StandoffTree extends StandoffWrapper<StandoffAnnotation> {
 			})
 
 		// Create a new StandoffTree with the shifted annotations and text
-		return new StandoffTree({
-			annotations,
-			metadata: root.metadata,
-			text, 
-		})
-	}
-
-	private createTree() {
-		this.resolve()
-
-		return standoff2tree(
-			this,
-			this.standoff.text,
+		return new StandoffTree(
+			{
+				annotations,
+				metadata: root.metadata,
+				text, 
+			},
 			this.options
 		)
 	}
@@ -209,36 +226,29 @@ export class StandoffTree extends StandoffWrapper<StandoffAnnotation> {
 		return this.lookup.get(id)
 	}
 
-	getRoot() {
+	private getRoot() {
 		return this.standoff.annotations.find(a =>
 			a.start === 0 && a.end === this.standoff.text.length
 		)
 	}
 
-	private hasRoot() {
-		const root = this.standoff.annotations.find(a =>
-			a.start === 0 && a.end === this.standoff.text.length
-		)
-		return root != null
-	}
-
 	private lint(): LintReport {
 		return {
 			overlap: this.overlapController.report(),
-			hasRoot: this.hasRoot(),
 		}
 	}
 
 	private resolve(report: LintReport = this.lint()) {
-		if (!report.hasRoot) {
-			const root = createRoot(this.standoff, this.options)
-
-			this.add(root)
-
-			this.options.annotationHierarchy = [this.options.rootNodeName]
-				.concat(this.options.annotationHierarchy)
-		}
-
 		if (report.overlap.length) this.overlapController.resolve()
+	}
+
+	private createTree() {
+		this.resolve()
+
+		return standoff2tree(
+			this,
+			this.standoff.text,
+			this.options
+		)
 	}
 }
