@@ -23,9 +23,9 @@ export default extendConfig({
 		}
 	},
 
-	slug: 'republic',
+	slug: 'republic14',
 
-	title: 'Republic',
+	// title: 'Republic',
 
 	collection: {
 		metadataId: 'inventory_num',

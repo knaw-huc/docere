@@ -1,37 +1,43 @@
-import { JsonEntry } from "@docere/common"
+import { DocereConfig, JsonEntry } from "@docere/common"
 
-interface EntryDocument {
-	id: string
-	source_id: string
-	name: string
-	entry: JsonEntry
-	updated: string
-}
+// interface EntryDocument {
+// 	id: string
+// 	source_id: string
+// 	name: string
+// 	entry: JsonEntry
+// 	updated: string
+// }
 
 interface SetFile {
-	type: 'SET_FILE',
+	type: 'SET_FILE'
 	file: File
 }
 
 interface SetEntries {
-	type: 'SET_ENTRIES',
-	entries: EntryDocument[]
+	type: 'SET_ENTRIES'
+	entries: JsonEntry[]
 	refresh?: boolean
 }
 
 interface SetEntry {
-	type: 'SET_ENTRY',
-	entry: EntryDocument
+	type: 'SET_ENTRY'
+	entry: JsonEntry
 }
 
 interface SetJsonQuery {
-	type: 'SET_JSON_QUERY',
+	type: 'SET_JSON_QUERY'
 	jsonQuery: string
 }
 
 interface SetJson {
-	type: 'SET_JSON',
+	type: 'SET_JSON'
 	json: object
+}
+
+// TODO remove any
+interface SetProjectConfig {
+	type: 'SET_PROJECT_CONFIG'
+	projectConfig: DocereConfig
 }
 
 export type SourceAction = 
@@ -39,14 +45,16 @@ export type SourceAction =
 	SetEntries | 
 	SetEntry |
 	SetJsonQuery |
-	SetJson	
+	SetJson	|
+	SetProjectConfig
 
 export interface SourceState {
 	file: File
-	entries: EntryDocument[]
-	entry: EntryDocument
+	entries: JsonEntry[]
+	entry: JsonEntry
 	jsonQuery: string
 	json: string
+	projectConfig: DocereConfig
 }
 export function sourceReducer(state: SourceState, action: SourceAction): SourceState {
 	switch (action.type) {
@@ -55,6 +63,7 @@ export function sourceReducer(state: SourceState, action: SourceAction): SourceS
 		case 'SET_ENTRY': return setEntry(state, action)
 		case 'SET_JSON_QUERY': return setJsonQuery(state, action)
 		case 'SET_JSON': return setJson(state, action)
+		case 'SET_PROJECT_CONFIG': return setProject(state, action)
 		default: break
 	}
 
@@ -78,7 +87,7 @@ function setEntries(state: SourceState, action: SetEntries): SourceState {
 		nextState.entry = null
 		nextState.json = null
 	} else if (nextState.entry != null) {
-		nextState.entry = action.entries.find(e => e.entry.id === nextState.entry.entry.id)
+		nextState.entry = action.entries.find(e => e.id === nextState.entry.id)
 	}
 
 	return nextState
@@ -102,5 +111,12 @@ function setJson(state: SourceState, action: SetJson) {
 	return {
 		...state,
 		json: JSON.stringify(action.json)
+	}
+}
+
+function setProject(state: SourceState, action: SetProjectConfig) {
+	return {
+		...state,
+		projectConfig: action.projectConfig
 	}
 }

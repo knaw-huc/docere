@@ -1,11 +1,9 @@
-import { ID, JsonEntry } from "@docere/common"
+import { JsonEntry } from "@docere/common"
 import { PoolClient } from "pg"
 import { transactionQuery } from "."
 
 interface InsertEntryProps {
 	client: PoolClient
-	id: ID
-	sourceId: ID
 	entry: JsonEntry
 }
 
@@ -14,7 +12,7 @@ interface InsertEntryProps {
  * 
  * @param props
  */
-export async function insertEntry({ client, entry, id, sourceId }: InsertEntryProps) {
+export async function insertEntry({ client, entry }: InsertEntryProps) {
 	await transactionQuery(
 		client,
 		`INSERT INTO document
@@ -28,8 +26,8 @@ export async function insertEntry({ client, entry, id, sourceId }: InsertEntryPr
 			updated=NOW()
 		RETURNING id;`,
 		[
-			id,
-			sourceId,
+			entry.id,
+			entry.sourceId,
 			JSON.stringify(entry)
 		]
 	)

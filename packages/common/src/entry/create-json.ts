@@ -86,5 +86,7 @@ export function createJsonEntry(props: CreateJsonEntryPartProps): JsonEntry {
 		id: props.id,
 		layers,
 		metadata,
+		partId: props.partConfig?.id,
+		sourceId: props.sourceId,
 	}
 }

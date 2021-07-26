@@ -16,12 +16,10 @@ module.exports = () => {
 		},
 		host: 'localhost',
 		hot: true,
-		// inline: true,
 		port: 5000,
 		proxy: {
 			'/api': {
 				target: `http://localhost:${env.DOCERE_API_PORT}`,
-				// pathRewrite: {'^/api': ''}
 			},
 			'/search': {
 				target: `http://localhost:${env.DOCERE_SEARCH_PORT}`,
@@ -40,21 +38,24 @@ module.exports = () => {
 		},
 		watchOptions: {
 			ignored: /node_modules/,
-			// poll: true
 		}
 	}
 
 	baseConfig.entry = {
-		app: './src/index.tsx',
-		// 'editor.worker': 'monaco-editor/esm/vs/editor/editor.worker.js',
-		// 'json.worker': 'monaco-editor/esm/vs/language/json/json.worker',
-		// 'css.worker': 'monaco-editor/esm/vs/language/css/css.worker',
-		// 'html.worker': 'monaco-editor/esm/vs/language/html/html.worker',
-		// 'ts.worker': 'monaco-editor/esm/vs/language/typescript/ts.worker'
+		app: {
+			import: './src/index.tsx',
+		},
+		republic: {
+			import: '../projects/src/republic/config',
+			library: {
+				name: 'Project',
+				type: 'umd',
+				umdNamedDefine: true
+			}
+		}
 	}
 
 	baseConfig.output = {
-		// globalObject: 'self',
 		filename: '[name].bundle.js',
 		chunkFilename: 'js/[id].chunk.js',
 		path: __dirname + '/build-dev-server',

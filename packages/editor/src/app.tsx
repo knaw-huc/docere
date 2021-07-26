@@ -5,11 +5,11 @@ import { Upload } from './upload'
 function App() {
 	return (
 		<Router>
-				<Switch>
-					<Route path="/">
-						<Upload />
-					</Route>
-				</Switch>
+			<Switch>
+				<Route path="/">
+					<Upload />
+				</Route>
+			</Switch>
 		</Router>
 	)
 }

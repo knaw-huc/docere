@@ -1,7 +1,7 @@
 import React from 'react'
 import { Editor } from './editor'
 import styled from 'styled-components'
-import { postSource, useSourceState } from './use-source-state'
+import { setProjectConfig, useSourceState } from './state'
 
 export function Upload() {
 	const [state, dispatch] = useSourceState()
@@ -25,9 +25,9 @@ export function Upload() {
 					}}
 				/>
 				<button onClick={() => {
-					postSource(state.file, dispatch, true)
+					setProjectConfig(dispatch)
 				}}>
-					Refresh
+					Reload config
 				</button>
 			</header>
 			<Main>
@@ -37,9 +37,9 @@ export function Upload() {
 							<EntryLi
 								key={entry.id}
 								onClick={() => dispatch({ type: 'SET_ENTRY', entry })}
-								title={entry.entry.id}
+								title={entry.id}
 							>
-								{entry.entry.id}
+								{entry.id}
 							</EntryLi>
 						)
 					}

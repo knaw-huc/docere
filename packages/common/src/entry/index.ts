@@ -14,6 +14,7 @@ import { DocereAnnotation } from '../standoff-annotations'
 
 export * from './create-json'
 export * from './facsimile'
+export * from './from-source'
 export * from './layer'
 export * from './metadata'
 export * from './entity'
@@ -68,6 +69,8 @@ export interface JsonEntry {
 	id: ID
 	layers: Layer[]
 	metadata: MetadataItem[]
+	partId?: ID
+	sourceId: ID
 }
 
 export interface Entry extends JsonEntry {

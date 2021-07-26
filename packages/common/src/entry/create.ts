@@ -7,8 +7,9 @@ import { EntityConfig } from './entity'
 
 /**
  * Converts the serialized entry, which is stored in the database to 
- * the entry used in the client. The main difference is that Arrays
- * are converted to iterators (Set, Map)
+ * the entry used in the client.
+ * 
+ * The main difference is that textData (entities, facsimiles) is added
  * 
  * @param entry - the serialized entry 
  * @return Entry - the deserialized entry, used in the client

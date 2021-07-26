@@ -158,7 +158,7 @@ export async function getProjectPageConfig(projectId: string, pageId: string): P
 		.find(p => p.id === pageId)
 }
 
-export function sendJson(payload: any | DocereApiError, expressResponse: ExpressResponse) {
+export function sendJson(payload: object | DocereApiError, expressResponse: ExpressResponse) {
 	if (isError(payload)) {
 		const code = payload.hasOwnProperty('code') ? payload.code : 400
 		expressResponse.status(code).send(payload.__error)

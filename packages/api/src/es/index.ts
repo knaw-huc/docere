@@ -71,7 +71,8 @@ export async function getProjectIndexMapping(projectId: string): Promise<Mapping
 
 export async function indexDocument(
 	extractedEntry: JsonEntry,
-	createJsonEntryProps: CreateJsonEntryPartProps,
+	// createJsonEntryProps: CreateJsonEntryPartProps,
+	projectConfig: DocereConfig,
 	esClient: es.Client
 ) {
 	const esDocument = createElasticSearchDocument(extractedEntry, createJsonEntryProps)
@@ -80,7 +81,7 @@ export async function indexDocument(
 	try {
 		await esClient.update({
 			id: esDocument.id,
-			index: createJsonEntryProps.projectConfig.slug,
+			index: projectConfig.slug,
 			body: {
 				doc: esDocument,
 				doc_as_upsert: true,

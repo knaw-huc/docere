@@ -42,6 +42,7 @@ export async function transactionQuery(client: pg.PoolClient, query: string, val
 }
 
 export const DB = {
+	deleteEntriesFromSource,
 	insertEntry,
 	insertSource,
 	sourceExists,
@@ -50,6 +51,29 @@ export const DB = {
 
 async function sourceExists(fileName: string, content: string, client: PoolClient) {
 	const hash = getHash(content)
-	const existsResult = await client.query(`SELECT EXISTS(SELECT 1 FROM source WHERE name='${fileName}' AND hash='${hash}')`)
+	const existsResult = await client.query(`
+		SELECT EXISTS(
+			SELECT 1
+			FROM
+				source
+			WHERE
+				name='${fileName}'
+					AND
+				hash='${hash}'
+		)`
+	)
 	return existsResult.rows[0].exists
+}
+
+async function deleteEntriesFromSource(sourceId: string, client: PoolClient) {
+	await client.query(`
+		DELETE FROM
+			document
+		USING
+			source
+		WHERE
+			source.name='${sourceId}'
+				AND
+			source.id=document.source_id`
+	)
 }
