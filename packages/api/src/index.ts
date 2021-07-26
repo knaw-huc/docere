@@ -3,7 +3,6 @@ import path from 'path'
 import express from 'express'
 import chalk from 'chalk'
 
-// import Puppenv from './puppenv'
 import { listProjects, sendJson } from './utils'
 import projectApi from './api/project'
 import documentApi from './api/document'
@@ -32,10 +31,10 @@ app.disable('x-powered-by')
 
 app.use(express.json())
 app.use((req, _res, next) => {
-	if (req.get('Content-Type') === 'application/xml' || req.get('Content-Type') === 'text/xml') {
+	if (BODY_CONTENT_TYPES.has(req.get('Content-Type'))) {
 		req.body = ''
 		req.setEncoding('utf8')
-		req.on('data', (chunk) => { req.body += chunk })
+		req.on('data', chunk => { req.body += chunk })
 		req.on('end', next)
 	} else {
 		next()
@@ -71,3 +70,9 @@ async function main() {
 }
 
 main()
+
+const BODY_CONTENT_TYPES = new Set([
+	'application/xml',
+	'text/xml',
+	'text/plain'
+])

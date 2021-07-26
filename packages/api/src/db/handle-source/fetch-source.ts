@@ -1,7 +1,6 @@
 import fetch from 'node-fetch'
-import { DocereConfig, PartialStandoff } from '@docere/common'
+import { DocereConfig } from '@docere/common'
 import { XML_SERVER_ENDPOINT } from '../../constants'
-import { xml2standoff } from '../../utils/xml2standoff'
 
 /**
  * Fetch and prepare source file
@@ -16,29 +15,14 @@ import { xml2standoff } from '../../utils/xml2standoff'
 export async function fetchSource(
 	filePath: string,
 	projectConfig: DocereConfig
-): Promise<PartialStandoff> {
+): Promise<any> {
 	const result = await fetch(`${XML_SERVER_ENDPOINT}${filePath}`)
 
-	let source: any
+	let source: string | object
 	if (projectConfig.documents.type === 'xml') {
 		source = await result.text()	
 	} else {
 		source = await result.json()
-	}
-
-	if (projectConfig.standoff.prepareSource != null) {
-		source = projectConfig.standoff.prepareSource(source)
-	} else if (projectConfig.documents.type === 'json') {
-		throw new Error("[xml2standoff] prepareSource can't be empty when the source is of type JSON")
-	}
-
-	if (typeof source === 'string') {
-		try {
-			return await xml2standoff(source)
-		} catch (error) {
-			console.log('[xml2standoff]', error)	
-			return null
-		}
 	}
 
 	return source

@@ -150,8 +150,8 @@ export default extendConfig({
 	facsimiles: {
 		filter: a => a.name === 'pb',
 		getId: a => a.metadata['xml:id'],
-		getPath: a => {
-			const { _facsimileId: id } = a.metadata
+		getPath: props => {
+			const { _facsimileId: id } = props.annotation.metadata
 
 			const pageNumber = parseInt(id.slice(1, 3))
 			const rv = id.slice(3)

@@ -38,7 +38,7 @@ export function useProjectState(): [ProjectState, React.Dispatch<ProjectAction>]
 		if (
 			state.config == null ||		/** Project hasn't loaded yet */
 			entryId == null || 			/** Navigating away from entry */
-			state.entry?.id === entryId	/** Entry is already loaded */
+			state.entry?.id === entryId	/** Entry is already currently loaded entry */
 		) return
 
 		fetchEntry(entryId, state.config)
@@ -137,6 +137,7 @@ export function useProjectState(): [ProjectState, React.Dispatch<ProjectAction>]
 
 	if (DOCERE_DTAP === DTAP.Development) {
 		React.useEffect(() => {
+			// TODO add declare window.projectState
 			// @ts-ignore
 			window.projectState = state
 		}, [state])

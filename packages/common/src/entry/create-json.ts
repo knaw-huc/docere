@@ -3,18 +3,16 @@ import { isTextLayerConfig } from '../utils'
 import { FacsimileLayer, ID, isEntityMetadataConfig, JsonEntry, TextLayer } from '.'
 
 export interface GetValueProps {
-	config: DocereConfig
-	id: ID
-	tree: StandoffTree
+	annotation: StandoffAnnotation
+	projectConfig: DocereConfig
+	sourceId: ID
+	sourceTree: StandoffTree
 }
 
-export interface CreateJsonEntryPartProps {//extends Omit<CreateJsonEntryProps, 'tree'> {
-	config: DocereConfig
+export interface CreateJsonEntryPartProps extends Omit<GetValueProps, 'annotation'> {
 	id: ID
 	partConfig?: PartConfig
-	root: StandoffAnnotation
-	sourceTree: StandoffTree
-	// sourceProps: CreateJsonEntryProps
+	root?: StandoffAnnotation
 }
 
 // export function isEntryPart(props: CreateJsonEntryPartProps): props is CreateJsonEntryPartProps {
@@ -28,11 +26,7 @@ export interface CreateJsonEntryPartProps {//extends Omit<CreateJsonEntryProps, 
  * @returns 
  */
 export function createJsonEntry(props: CreateJsonEntryPartProps): JsonEntry {
-	// const sourceTree = isEntryPart(props) ?
-	// 	props.sourceProps.tree : //.createStandoffTreeFromAnnotation(props.root) :
-	// 	props.tree
-
-	const layers = props.config.layers2
+	const layers = props.projectConfig.layers2
 		.map(layerConfig => {
 			if (isTextLayerConfig(layerConfig)) {
 				let tree = props.sourceTree
@@ -42,12 +36,10 @@ export function createJsonEntry(props: CreateJsonEntryPartProps): JsonEntry {
 					if (tree == null) return null
 				} else if (props.root != null) {
 					tree = props.sourceTree.createStandoffTreeFromAnnotation(props.root)
-				} else {
-					console.error('No root foudn')
 				}
 
 				// TODO check if tree is an EntryPart?
-				props.config.standoff.prepareExport(tree)
+				props.projectConfig.standoff.prepareExport(tree)
 
 				return {
 					...layerConfig,
@@ -59,17 +51,20 @@ export function createJsonEntry(props: CreateJsonEntryPartProps): JsonEntry {
 		})
 		.filter(x => x != null)
 
-	const metadata = props.config.metadata2.map(metadataConfig => {
+	const metadata = props.projectConfig.metadata2.map(metadataConfig => {
 		let value
 
 		if (isEntityMetadataConfig(metadataConfig)) {
-			const entityConfig = props.config.entities2
+			const entityConfig = props.projectConfig.entities2
 				.find(ec => ec.id === metadataConfig.entityConfigId)
 
 			value = props.sourceTree.annotations
 				.filter(entityConfig.filter)
 				.filter(metadataConfig.filterEntities)
-				.map(a => entityConfig.getValue(a, props))
+				.map(a => entityConfig.getValue({
+					...props,
+					annotation: a
+				}))
 		} else {
 			value = metadataConfig.getValue(metadataConfig, props, layers)
 		}

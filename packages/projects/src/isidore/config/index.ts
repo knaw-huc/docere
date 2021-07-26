@@ -14,8 +14,8 @@ export default extendConfig({
 			return a.name === 'graphic' && a.metadata.hasOwnProperty('url')
 		},
 		getId: a => a.metadata['xml:id'],
-		getPath: a => {
-			const fileName = a.metadata.url.replace(/^..\/images\//, '')
+		getPath: props => {
+			const fileName = props.annotation.metadata.url.replace(/^..\/images\//, '')
 			if (!fileName.length) return null
 			const imgPath = fileName.slice(0, fileName.indexOf('_')) + '/' + fileName
 			return `/iiif/isidore/${imgPath}/info.json`

@@ -1,8 +1,11 @@
+import * as es from '@elastic/elasticsearch'
 import { Express } from 'express'
+import { StandoffTree } from '@docere/common'
+
 import { getPool } from '../db'
 import { DOCUMENT_BASE_PATH } from '../constants'
 import { getProjectConfig, isError, sendJson } from '../utils'
-import { StandoffTree } from '@docere/common'
+import { handleSource } from '../db/handle-source'
 
 export default function handleDocumentApi(app: Express) {
 	app.get(DOCUMENT_BASE_PATH, async (req, res) => {
@@ -12,6 +15,43 @@ export default function handleDocumentApi(app: Express) {
 		else res.json(rows[0].entry)
 	})
 
+	app.post(DOCUMENT_BASE_PATH, async (req, res) => {
+		const projectConfig = await getProjectConfig(req.params.projectId)
+		const pool = await getPool(projectConfig.slug)
+		const client = await pool.connect()
+		const esClient = new es.Client({ node: process.env.DOCERE_SEARCH_URL })
+
+		if (projectConfig.documents.type !== 'xml') {
+			req.body = JSON.parse(req.body)
+		}
+
+		const sourceRowId = await handleSource(
+			req.body,
+			projectConfig,
+			req.params.documentId,
+			client,
+			esClient,
+			true
+		)
+
+		client.release()
+
+		const { rows } = await pool.query(`SELECT * FROM document WHERE source_id=$1;`, [sourceRowId])
+
+		res.json(rows)
+	})
+
+	app.get(`${DOCUMENT_BASE_PATH}/source`, async (req, res) => {
+		const config = await getProjectConfig(req.params.projectId)
+		if (isError(config)) return sendJson(config, res)
+
+		const pool = await getPool(req.params.projectId)
+		const { rows } = await pool.query(`SELECT content FROM source WHERE name=$1;`, [req.params.documentId])
+		if (!rows.length) res.sendStatus(404)
+		else {
+			res.send(rows[0].content)
+		}
+	})
 
 	app.get(`${DOCUMENT_BASE_PATH}/xml`, async (req, res) => {
 		const config = await getProjectConfig(req.params.projectId)

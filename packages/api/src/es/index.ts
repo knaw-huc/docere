@@ -80,7 +80,7 @@ export async function indexDocument(
 	try {
 		await esClient.update({
 			id: esDocument.id,
-			index: createJsonEntryProps.config.slug,
+			index: createJsonEntryProps.projectConfig.slug,
 			body: {
 				doc: esDocument,
 				doc_as_upsert: true,

@@ -193,10 +193,10 @@ export default extendConfig({
 	facsimiles: {
 		filter: a => a.name === 'pb' && a.metadata.facs != null && a.metadata.facs.length > 0,
 		getId: a => a.metadata.facs.slice(1),
-		getPath: (a, props) => {
-			const { _facsimileId: id } = a.metadata
+		getPath: (props) => {
+			const { _facsimileId: id } = props.annotation.metadata
 
-			const graphic = props.tree.findChild(
+			const graphic = props.sourceTree.findChild(
 				a => a.name === 'surface' && a.metadata['xml:id'] === id,
 				a => a.name === 'graphic' && a.metadata.url?.length > 0
 			)

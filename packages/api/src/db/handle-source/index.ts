@@ -7,10 +7,11 @@ import { getDocumentIdFromRemoteFilePath } from '../../utils'
 import { fetchSource } from './fetch-source'
 import { fetchRemotePaths } from './fetch-remote-paths'
 
-import { getPool, transactionQuery } from '../index'
+import { DB, getPool, transactionQuery } from '../index'
 import { createStandoff } from '../../utils/source2entry'
 
-import { addDocument } from './add-document'
+import { handleEntry } from './handle-entry'
+import { xml2standoff } from '../../utils/xml2standoff'
 
 export type AddRemoteFilesOptions = {
 	force?: boolean
@@ -24,17 +25,10 @@ const defaultAddRemoteFilesOptions: Required<AddRemoteFilesOptions> = {
 	maxPerDirOffset: 0,
 }
 
-function getHash(content: string) {
+export function getHash(content: string) {
 	const hash = crypto.createHash('md5').update(content)
 	const hex = hash.digest('hex')
 	return hex
-}
-
-async function documentExists(fileName: string, content: string, client: PoolClient) {
-	const hash = getHash(content)
-	console.log('Document exists? ', hash)
-	const existsResult = await client.query(`SELECT EXISTS(SELECT 1 FROM source WHERE name='${fileName}' AND hash='${hash}')`)
-	return existsResult.rows[0].exists
 }
 
 /**
@@ -62,7 +56,7 @@ async function addFilesFromRemoteDir(
 		const source = await fetchSource(filePath, projectConfig)
 		if (source == null) continue
 		const entryId = getDocumentIdFromRemoteFilePath(filePath, remotePath, projectConfig)
-		await addSourceToDb(source, projectConfig, entryId, client, esClient, options.force)
+		await handleSource(source, projectConfig, entryId, client, esClient, options.force)
 	}
 
 	// Recursively add sub dirs
@@ -89,65 +83,60 @@ export async function addRemoteStandoffToDb(
 	client.release()
 }
 
-async function addSourceToDb(
-	source: PartialStandoff,
+export async function handleSource(
+	source: string | object,
 	projectConfig: DocereConfig,
-	documentId: string,
+	sourceId: string,
 	client: PoolClient,
 	esClient: es.Client,
 	force = false
 ) {
-	const stringifiedSource = JSON.stringify(source)
-	const isUpdate = await documentExists(documentId, stringifiedSource, client)
+	const stringifiedSource = typeof source === 'string' ?
+		source :
+		JSON.stringify(source)
+
+	const partialStandoff = await prepareSource(source, projectConfig)
+
+	const isUpdate = await DB.sourceExists(sourceId, stringifiedSource, client)
 	if (isUpdate && !force) {
-		console.log(`[${projectConfig.slug}] document '${documentId}' exists`)
+		console.log(`[${projectConfig.slug}] document '${sourceId}' exists`)
 		return
+	} else if (isUpdate) {
+		await client.query(`DELETE FROM document USING source WHERE source.name='${sourceId}' AND source.id=document.source_id`)
 	}
 
-	const standoff = createStandoff(source, projectConfig)
+	const standoff = createStandoff(partialStandoff, projectConfig)
 	const sourceTree = new StandoffTree(standoff, projectConfig.standoff.exportOptions)
 
-	// TODO remove createJsonEntryProps here, add entity value somewhere else
-	const getValueProps: GetValueProps = {
-		config: projectConfig,
-		id: documentId,
-		tree: sourceTree,
-	}
-
-	sourceTree.annotations.forEach(a => {
-		const entityConfig = projectConfig.entities2.find(ec => ec.filter(a))
-		if (entityConfig != null) {
-			a.metadata._entityConfigId = entityConfig.id
-			a.metadata._entityId = entityConfig.getId(a)
-			a.metadata._entityValue = entityConfig.getValue(a, getValueProps)
+	sourceTree.annotations.forEach(annotation => {
+		const props: GetValueProps = {
+			annotation,
+			projectConfig,
+			sourceId,
+			sourceTree,
 		}
 
-		if (projectConfig.facsimiles?.filter(a)) {
-			a.metadata._facsimileId = projectConfig.facsimiles.getId(a)
-			a.metadata._facsimilePath = projectConfig.facsimiles.getPath(a, getValueProps)
+		const entityConfig = projectConfig.entities2.find(ec => ec.filter(annotation))
+		if (entityConfig != null) {
+			annotation.metadata._entityConfigId = entityConfig.id
+			annotation.metadata._entityId = entityConfig.getId(annotation)
+			annotation.metadata._entityValue = entityConfig.getValue(props)
+		}
+
+		if (projectConfig.facsimiles?.filter(annotation)) {
+			annotation.metadata._facsimileId = projectConfig.facsimiles.getId(annotation)
+			annotation.metadata._facsimilePath = projectConfig.facsimiles.getPath(props)
 		}
 	})
 
-	// const entry = createJsonEntry(createJsonEntryProps)
-
 	await transactionQuery(client, 'BEGIN')
 
-	const { rows } = await transactionQuery(
+	const sourceRowId = await DB.insertSource({
 		client,
-		`INSERT INTO source
-			(name, hash, content, standoff, updated)
-		VALUES
-			($1, md5($2), $2, $3, NOW())
-		ON CONFLICT (name) DO UPDATE
-		SET
-			hash=$2,
-			content=$3,
-			standoff=$4,
-			updated=NOW()
-		RETURNING id;`,
-		[documentId, getHash(stringifiedSource), stringifiedSource, JSON.stringify(standoff)]
-	)
-	const sourceId = rows[0].id
+		id: sourceId, 
+		stringifiedSource,
+		standoff
+	})
 
 	if (Array.isArray(projectConfig.parts)) {
 		for (const partConfig of projectConfig.parts) {
@@ -160,34 +149,77 @@ async function addSourceToDb(
 			for (const root of roots) {
 				const id = partConfig.getId != null ?
 					partConfig.getId(root) :
-					documentId
+					sourceId
 
-				await addDocument({
+				await handleEntry({
 					client,
 					esClient,
-					id,
 					isUpdate,
-					partConfig,
-					projectConfig,
-					root,
-					sourceId,
-					sourceTree,
+					props: {
+						id,
+						partConfig,
+						projectConfig,
+						root,
+						sourceId: sourceRowId,
+						sourceTree,
+					}
 				})
 			}
 		}
 	} else {
-		await addDocument({
+		await handleEntry({
 			client,
 			esClient,
-			id: documentId,
 			isUpdate,
-			projectConfig,
-			root: sourceTree.root,
-			sourceId,
-			sourceTree,
+			props: {
+				id: sourceId,
+				projectConfig,
+				sourceId: sourceRowId,
+				sourceTree,
+			}
 		})
 	}
 
 	await transactionQuery(client, 'COMMIT')
+
+	return sourceRowId
 }
 
+/**
+ * Prepare source for further processing.
+ * 
+ * The source can be XML (string) or JSON (either some arbitrary JSON or
+ * (partial) Standoff). The string or JSON can be preprocessed by the 
+ * {@link DocereConfig.standoff.prepareSource} function. If the source is
+ * a (XML) string, it is converted PartialStandoff
+ * 
+ * @param source 
+ * @param projectConfig 
+ * @returns 
+ */
+async function prepareSource(
+	source: string | object,
+	projectConfig: DocereConfig
+): Promise<PartialStandoff> {
+	let preparedSource: PartialStandoff | string
+
+	if (projectConfig.standoff.prepareSource != null) {
+		preparedSource = projectConfig.standoff.prepareSource(source)
+	} else if (projectConfig.documents.type === 'json') {
+		throw new Error("[xml2standoff] prepareSource can't be empty when the source is of type JSON")
+	}
+
+	let partialStandoff: PartialStandoff
+	if (typeof preparedSource === 'string') {
+		try {
+			partialStandoff = await xml2standoff(preparedSource)
+		} catch (error) {
+			console.log('[xml2standoff]', error)	
+			return
+		}
+	} else {
+		partialStandoff = preparedSource
+	}
+
+	return partialStandoff
+}

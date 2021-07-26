@@ -88,7 +88,7 @@ export interface DocereConfig {
 		 * must be converted to standoff or xml in the prepareSource
 		 * function.
 		 */
-		prepareSource?: (source: any) => PartialStandoff | string
+		prepareSource?: (source: string | object) => PartialStandoff | string
 
 		/**
 		 * Function to prepare the annotations using the thin wrapper of

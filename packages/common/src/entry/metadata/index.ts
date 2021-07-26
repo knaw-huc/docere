@@ -53,7 +53,7 @@ export interface DefaultMetadataConfig extends BaseMetadataConfig {
  * 
  * For example when a person has a special function which should be mentioned in the
  * metadata, like chairman, sender, receiver, etc. Another example is the date of the
- * document which is mentioned in the document. In the metadata aside 
+ * document which is mentioned in the document. 
  */
 export interface EntityMetadataConfig extends BaseMetadataConfig {
 	entityConfigId: ID

@@ -12,7 +12,7 @@ export function createElasticSearchDocument(
 
 	// TODO FIXME this is wrong, not the whole tree should be indexed when 
 	// the document is part of a source
-	const { sourceTree: tree, config } = createJsonEntryProps
+	const { sourceTree: tree, projectConfig: config } = createJsonEntryProps
 
 	const entities = tree.annotations
 		.reduce((map, curr) => {

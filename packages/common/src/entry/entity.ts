@@ -3,7 +3,7 @@ import { BaseMetadataConfig, ID } from '.'
 import { EntryContext } from '..'
 import { Colors, ContainerType, EntityType } from '../enum'
 import { DocereAnnotation, PartialStandoffAnnotation } from '../standoff-annotations'
-import { CreateJsonEntryPartProps, GetValueProps } from './create-json'
+import { GetValueProps } from './create-json'
 
 export interface EntityConfig extends BaseMetadataConfig {
 	color?: string
@@ -18,8 +18,9 @@ export interface EntityConfig extends BaseMetadataConfig {
 	 * of the entity visualisation
 	 */ 
 	getBody?: (
-		a: PartialStandoffAnnotation,
-		props: CreateJsonEntryPartProps
+		props: GetValueProps,
+		// a: PartialStandoffAnnotation,
+		// props: CreateJsonEntryPartProps
 	) => PartialStandoffAnnotation
 
 	/**
@@ -33,7 +34,6 @@ export interface EntityConfig extends BaseMetadataConfig {
 	 * the faceted search and in the metadata tab
 	 */ 
 	getValue?: (
-		a: PartialStandoffAnnotation,
 		props: GetValueProps,
 		// body?: PartialStandoffAnnotation
 	) => string
@@ -49,7 +49,7 @@ export const defaultEntityConfig: Required<EntityConfig> = {
 	filter: null,
 	getId: a => a.id,
 	getValue: () => null,
-	getBody: (a) => a,
+	getBody: () => null,
 	id: null,
 	revealOnHover: false,
 	showInAside: true,

@@ -1,4 +1,7 @@
-import pg from 'pg'
+import pg, { PoolClient } from 'pg'
+import { getHash } from './handle-source'
+import { insertEntry } from './insert-entry'
+import { insertSource } from './insert-source'
 
 const pgConnection = {
 	password: process.env.POSTGRES_PASSWORD,
@@ -36,4 +39,17 @@ export async function transactionQuery(client: pg.PoolClient, query: string, val
 		await client.query('ROLLBACK')
 	}
 	return result
+}
+
+export const DB = {
+	insertEntry,
+	insertSource,
+	sourceExists,
+}
+
+
+async function sourceExists(fileName: string, content: string, client: PoolClient) {
+	const hash = getHash(content)
+	const existsResult = await client.query(`SELECT EXISTS(SELECT 1 FROM source WHERE name='${fileName}' AND hash='${hash}')`)
+	return existsResult.rows[0].exists
 }
