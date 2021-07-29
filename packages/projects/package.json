@@ -15,7 +15,8 @@
     "@docere/common": "^1.4.1",
     "@docere/text": "^1.4.2",
     "@docere/text-components": "^1.4.2",
-    "@docere/ui-components": "^1.4.2"
+    "@docere/ui-components": "^1.4.2",
+    "react-tabs": "^3.2.2"
   },
   "devDependencies": {
     "typescript": "^4.1.3"

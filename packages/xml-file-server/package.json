@@ -13,7 +13,8 @@
   },
   "dependencies": {
     "@docere/common": "^1.4.1",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "react-tabs": "^3.2.2"
   },
   "devDependencies": {
     "@types/express": "^4.17.6",

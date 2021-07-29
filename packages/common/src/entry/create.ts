@@ -33,6 +33,7 @@ function addEntity(
 	if (typeof root === 'string') return
 	if (isEntityAnnotation(root)) {
 		root.props._config = entityConfigs.get(root.props._entityConfigId)
+		// TODO generate area ID in preprocessing step?
 		root.props._areas?.forEach(a => {
 			if (a.id == null) a.id = generateId()
 		})

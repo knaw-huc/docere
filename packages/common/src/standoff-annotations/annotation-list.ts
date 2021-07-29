@@ -89,7 +89,7 @@ export class StandoffWrapper<T extends PartialStandoffAnnotation> {
 		})
 	}
 
-	getSibling(a: T) {
+	getNextSibling(a: T) {
 		const parent = this.getParent(a)
 		const children = this.getDirectChildren(parent)
 		return children.find(child => child !== a && a.end <= child.start)

@@ -23,7 +23,7 @@ export default extendConfig({
 		}
 	},
 
-	slug: 'republic14',
+	slug: 'republic24',
 
 	// title: 'Republic',
 

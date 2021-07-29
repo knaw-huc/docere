@@ -101,7 +101,7 @@ export async function handleSource(
 		await DB.deleteEntriesFromSource(sourceId, client)
 	}
 
-	const entries = getEntriesFromSource(sourceId, source, projectConfig)
+	const entries = await getEntriesFromSource(sourceId, source, projectConfig)
 
 	await transactionQuery(client, 'BEGIN')
 
@@ -111,49 +111,9 @@ export async function handleSource(
 		stringifiedSource,
 	})
 
-	// if (Array.isArray(projectConfig.parts)) {
-	// 	for (const partConfig of projectConfig.parts) {
-	// 		// If partConfig.filter is defined, use it it get the roots,
-	// 		// if no filter is defined, use the root of the tree
-	// 		const roots = partConfig.filter != null ?
-	// 			sourceTree.annotations.filter(partConfig.filter).slice(0, 10) :
-	// 			[sourceTree.root]
-
-	// 		for (const root of roots) {
-	// 			const id = partConfig.getId != null ?
-	// 				partConfig.getId(root) :
-	// 				sourceId
-
-	// 			await handleEntry({
-	// 				client,
-	// 				esClient,
-	// 				isUpdate,
-	// 				entry,
-	// 				// props: {
-	// 				// 	id,
-	// 				// 	partConfig,
-	// 				// 	projectConfig,
-	// 				// 	root,
-	// 				// 	sourceId: sourceRowId,
-	// 				// 	sourceTree,
-	// 				// }
-	// 			})
-	// 		}
-	// 	}
-	// } else {
-	// 	await handleEntry({
-	// 		client,
-	// 		esClient,
-	// 		isUpdate,
-	// 		entry,
-	// 		// props: {
-	// 		// 	id: sourceId,
-	// 		// 	projectConfig,
-	// 		// 	sourceId: sourceRowId,
-	// 		// 	sourceTree,
-	// 		// }
-	// 	})
-	// }
+	for (const entry of entries) {
+		handleEntry({ entry, client, esClient, isUpdate, projectConfig })
+	}
 
 	await transactionQuery(client, 'COMMIT')
 

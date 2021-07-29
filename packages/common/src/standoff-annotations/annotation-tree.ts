@@ -1,3 +1,4 @@
+import { TextLayerConfig } from '../entry/layer'
 import { createRoot, extendExportOptions, extendStandoffAnnotation, isAnnotation, isChild, sortByOffset } from './utils'
 import { StandoffWrapper } from './annotation-list'
 import { standoff2tree } from './standoff2tree'
@@ -5,11 +6,9 @@ import { exportXml } from './export-xml'
 import { exportReactTree } from './export-react-tree'
 import { OverlapController } from './overlap-controller'
 
-import type { LintReport, PartialExportOptions, Standoff, StandoffAnnotation, ExportOptions, PartialStandoff, FilterFunction } from '.'
+import type { LintReport, PartialExportOptions, Standoff, StandoffAnnotation, ExportOptions, PartialStandoff, FilterFunction, PartialStandoffAnnotation } from '.'
 
-// @ts-ignore
-import { simpleAnno } from './utils'
-import { TextLayerConfig } from '../entry/layer'
+type Lookup = Map<string, StandoffAnnotation>
 
 function extendStandoff(standoff: PartialStandoff): Standoff {
 	return {
@@ -31,7 +30,7 @@ function extendStandoff(standoff: PartialStandoff): Standoff {
  */
 export class StandoffTree extends StandoffWrapper<StandoffAnnotation> {
 	private overlapController: OverlapController
-	private lookup: Map<string, StandoffAnnotation>
+	private lookup: Lookup
 	options: ExportOptions
 	root: StandoffAnnotation
 
@@ -65,7 +64,7 @@ export class StandoffTree extends StandoffWrapper<StandoffAnnotation> {
 		if (update) this.update()
 	}
 
-	add(annotation: StandoffAnnotation, update = true) {
+	add(annotation: PartialStandoffAnnotation, update = true) {
 		const next = extendStandoffAnnotation(annotation)
 		super.add(next)
 		if (update) this.update()
@@ -155,9 +154,27 @@ export class StandoffTree extends StandoffWrapper<StandoffAnnotation> {
 		)
 	}
 
+	find(predicate: FilterFunction<StandoffAnnotation>) {
+		return this.annotations.find(predicate)
+	}
+
+	getParents(
+		startAnnotation: StandoffAnnotation,
+		predicate: FilterFunction<StandoffAnnotation> = () => true
+	) {
+		return this.annotations.filter(a =>
+			predicate(a) && isChild(startAnnotation, a)
+		)
+	}
+
+	getDirectParent(startAnnotation: StandoffAnnotation) {
+		const parents = this.getParents(startAnnotation)
+		return (parents.length) ? parents[parents.length - 1] : null
+	}
+
 	findParent(
-		predicate: FilterFunction<StandoffAnnotation>,
-		startAnnotation: StandoffAnnotation
+		startAnnotation: StandoffAnnotation,
+		predicate: FilterFunction<StandoffAnnotation>
 	) {
 		return this.annotations.find(a =>
 			predicate(a) && isChild(startAnnotation, a)
@@ -165,9 +182,9 @@ export class StandoffTree extends StandoffWrapper<StandoffAnnotation> {
 	}
 
 	findBefore(
-		predicate: FilterFunction<StandoffAnnotation>,
-		startAnnotation: StandoffAnnotation
-	): StandoffAnnotation {
+		startAnnotation: StandoffAnnotation,
+		predicate: FilterFunction<StandoffAnnotation>
+	) {
 		let found: StandoffAnnotation = null
 		let i = startAnnotation.index - 1
 		let curr: StandoffAnnotation
@@ -180,8 +197,8 @@ export class StandoffTree extends StandoffWrapper<StandoffAnnotation> {
 	}
 
 	findAfter(
-		predicate: FilterFunction<StandoffAnnotation>,
-		startAnnotation: StandoffAnnotation
+		startAnnotation: StandoffAnnotation,
+		predicate: FilterFunction<StandoffAnnotation>
 	): StandoffAnnotation {
 		const { length } = this.standoff.annotations
 
@@ -206,16 +223,20 @@ export class StandoffTree extends StandoffWrapper<StandoffAnnotation> {
 		return exportReactTree(this.createTree(), this.options)
 	}
 
+	/**
+	 * When the StandoffTree is altered, the annotations have to be updated:
+	 * add an index, create a lookup and sort the annotations 
+	 */
 	update() {
+		this.standoff.annotations.sort(sortByOffset(this.options))
+
 		this.standoff.annotations.forEach((a, i) => { a.index = i })
 
 		this.lookup = this.standoff.annotations
-			.reduce<Map<string, StandoffAnnotation>>((prev, curr) => {
+			.reduce<Lookup>((prev, curr) => {
 				prev.set(curr.id, curr)
 				return prev
 			}, new Map())
-
-		this.standoff.annotations.sort(sortByOffset(this.options))
 	}
 
 	atIndex(index: number) {

@@ -1,4 +1,4 @@
-import { DocereConfig, JsonEntry } from '@docere/common'
+import { DocereConfig, JsonEntry, StandoffTree } from '@docere/common'
 import * as es from '@elastic/elasticsearch'
 import { PoolClient } from "pg"
 import { DB, transactionQuery } from ".."
@@ -11,11 +11,11 @@ interface HandleEntryProps {
 	isUpdate: boolean
 	entry: JsonEntry
 	projectConfig: DocereConfig
+	sourceTree: StandoffTree
 }
 
 /**
- * Handle an entry means: create JSON entry, insert it into the DB and
- * add the entry to the index 
+ * Insert entry into the DB and add the entry to the index 
  * 
  * @param param0 
  * @returns 
@@ -26,6 +26,7 @@ export async function handleEntry({
 	isUpdate,
 	entry,
 	projectConfig,
+	sourceTree,
 }: HandleEntryProps) {
 	await DB.insertEntry({
 		client,
@@ -34,7 +35,7 @@ export async function handleEntry({
 
 	const partId = entry.partId == null ? '' : ` part '${entry.partId}'`
 
-	const indexResult = await indexDocument(entry, projectConfig, esClient)
+	const indexResult = await indexDocument(entry, sourceTree, projectConfig, esClient)
 	if (isError(indexResult)) {
 		await transactionQuery(client, 'ABORT')
 		console.log(`Index${partId}: ${entry.id} aborted`, indexResult)

@@ -3,14 +3,18 @@ import { DocereConfig, StandoffTree } from "../.."
 import { createStandoff } from './create-standoff'
 import { prepareSource } from './prepare-source'
 
+export async function getSourceTree(source: string | object, projectConfig: DocereConfig) {
+	const partialStandoff = await prepareSource(source, projectConfig)
+	const standoff = createStandoff(partialStandoff, projectConfig)
+	return new StandoffTree(standoff, projectConfig.standoff.exportOptions)
+}
+
 export async function getEntriesFromSource(
 	sourceId: string,
 	source: string | object,
 	projectConfig: DocereConfig
 ) {
-	const partialStandoff = await prepareSource(source, projectConfig)
-	const standoff = createStandoff(partialStandoff, projectConfig)
-	const sourceTree = new StandoffTree(standoff, projectConfig.standoff.exportOptions)
+	const sourceTree = await getSourceTree(source, projectConfig)
 
 	sourceTree.annotations.forEach(annotation => {
 		const props: GetValueProps = {

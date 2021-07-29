@@ -1,4 +1,4 @@
-import { PartialStandoffAnnotation, AnnotationNode, TEXT_NODE_NAME, StandoffAnnotation, StandoffTree } from "."
+import { AnnotationNode, TEXT_NODE_NAME, StandoffAnnotation, StandoffTree } from "."
 import { ExportOptions } from "."
 import { extendStandoffAnnotation, createAnnotationNode, isChild } from "./utils"
 
@@ -72,57 +72,56 @@ function addTextNodes(root: AnnotationNode, text: string): AnnotationNode {
 	return root
 }
 
-// @ts-ignore
-function setOrder(annotations: PartialStandoffAnnotation[], annotationHierarchy: string[] = []) {
-	if (!annotationHierarchy.length) return
+// function setOrder(annotations: PartialStandoffAnnotation[], annotationHierarchy: string[] = []) {
+// 	if (!annotationHierarchy.length) return
 
-	const orderPerOffset = annotations.reduce((prev, curr) => {
-		if (prev.has(curr.start)) {
-			prev.set(curr.start, prev.get(curr.start).concat(curr))
-		} else {
-			prev.set(curr.start, [curr])
-		}
+// 	const orderPerOffset = annotations.reduce((prev, curr) => {
+// 		if (prev.has(curr.start)) {
+// 			prev.set(curr.start, prev.get(curr.start).concat(curr))
+// 		} else {
+// 			prev.set(curr.start, [curr])
+// 		}
 
-		if (prev.has(curr.end)) {
-			prev.set(curr.end, prev.get(curr.end).concat(curr))
-		} else {
-			prev.set(curr.end, [curr])
-		}
-		return prev
-	}, new Map<number, PartialStandoffAnnotation[]>())
+// 		if (prev.has(curr.end)) {
+// 			prev.set(curr.end, prev.get(curr.end).concat(curr))
+// 		} else {
+// 			prev.set(curr.end, [curr])
+// 		}
+// 		return prev
+// 	}, new Map<number, PartialStandoffAnnotation[]>())
 
-	for (const [offset, annotations] of Array.from(orderPerOffset.entries())) {
-		if (annotations.length < 2) continue
-		annotations.sort((a, b) => {
-			// Sort on opening/closing tag. Closing tags
-			// first, opening tags second
-			const aOpening = a.start === offset
-			const bOpening = b.start === offset
-			if (aOpening && !bOpening) return 1
-			if (!aOpening && bOpening) return -1
+// 	for (const [offset, annotations] of Array.from(orderPerOffset.entries())) {
+// 		if (annotations.length < 2) continue
+// 		annotations.sort((a, b) => {
+// 			// Sort on opening/closing tag. Closing tags
+// 			// first, opening tags second
+// 			const aOpening = a.start === offset
+// 			const bOpening = b.start === offset
+// 			if (aOpening && !bOpening) return 1
+// 			if (!aOpening && bOpening) return -1
 
-			const tagOrderA = annotationHierarchy.indexOf(a.name)
-			const tagOrderB = annotationHierarchy.indexOf(b.name)
-			if (tagOrderA === -1 || tagOrderB === -1) return 0
+// 			const tagOrderA = annotationHierarchy.indexOf(a.name)
+// 			const tagOrderB = annotationHierarchy.indexOf(b.name)
+// 			if (tagOrderA === -1 || tagOrderB === -1) return 0
 
-			// If a and b are opening, follow the tag order
-			if (aOpening) {
-				if (tagOrderA > tagOrderB) return 1
-				if (tagOrderA < tagOrderB) return -1
+// 			// If a and b are opening, follow the tag order
+// 			if (aOpening) {
+// 				if (tagOrderA > tagOrderB) return 1
+// 				if (tagOrderA < tagOrderB) return -1
 			
-			// If a and b are closing, follow the reversed tag order
-			} else {
-				if (tagOrderA > tagOrderB) return -1
-				if (tagOrderA < tagOrderB) return 1
-			}
+// 			// If a and b are closing, follow the reversed tag order
+// 			} else {
+// 				if (tagOrderA > tagOrderB) return -1
+// 				if (tagOrderA < tagOrderB) return 1
+// 			}
 
-			return 0
-		})
+// 			return 0
+// 		})
 
-		annotations.forEach((a, index) => {
-			(a.start === offset) ?
-				a.startOrder = index :
-				a.endOrder = index
-		})
-	}
-}
+// 		annotations.forEach((a, index) => {
+// 			(a.start === offset) ?
+// 				a.startOrder = index :
+// 				a.endOrder = index
+// 		})
+// 	}
+// }

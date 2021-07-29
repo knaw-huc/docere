@@ -12,7 +12,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@docere/common": "^1.4.1"
+    "@docere/common": "^1.4.1",
+    "react-tabs": "^3.2.2"
   },
   "devDependencies": {
     "typescript": "^4.1.3",

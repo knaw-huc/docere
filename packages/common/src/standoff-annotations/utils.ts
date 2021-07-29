@@ -67,22 +67,37 @@ function sortByHierarchy(options: ExportOptions) {
 		const indexA = options.annotationHierarchy.indexOf(a.name)
 		const indexB = options.annotationHierarchy.indexOf(b.name)
 
+		if (indexA === -1 || indexB === -1) return
+
 		if (indexA > indexB) return 1
 		if (indexA < indexB) return -1
 
-		return 0
+		return
 	}
 }
 
+/**
+ * Sort annotations so they can be used as a tree   
+ * 
+ * @param options
+ * @returns 
+ */
 export function sortByOffset(options: ExportOptions) {
 	const sbh = sortByHierarchy(options)
 
 	return function (a: StandoffAnnotation, b: StandoffAnnotation) {
+		/**
+		 * If start and end offset are equal, sort on annotation hierarchy.
+		 * If a or b is not mentioned in the annotation hierachy, keep the
+		 * original order.
+		 */
 		if (
 			(a.start === b.start && a.end === b.end) ||
-			((a.isSelfClosing || b.isSelfClosing) && a.start === b.start)
+			(a.isSelfClosing && a.start === b.start) ||
+			(b.isSelfClosing && a.start === b.start)
 		) {
-			return sbh(a, b)
+			const result = sbh(a, b)
+			if (result != null) return result
 		}
 
 		if (isAfter(a, b)) return 1
@@ -91,7 +106,7 @@ export function sortByOffset(options: ExportOptions) {
 		if (isChild(a, b)) return 1
 		if (isChild(b, a)) return -1
 
-		return sbh(a, b)
+		return 0
 	}
 }
 
@@ -104,6 +119,13 @@ export function sortByOffset(options: ExportOptions) {
  * @todo add clone (and add tests to check if cloning works properly)
  */
 export function extendStandoffAnnotation(annotation: PartialStandoffAnnotation): StandoffAnnotation {
+	if (annotation.end == null) annotation.isSelfClosing = true
+
+	if (
+		annotation.isSelfClosing &&
+		annotation.end !== annotation.start
+	) annotation.end = annotation.start
+
 	return {
 		end: annotation.start,
 		endOrder: null,

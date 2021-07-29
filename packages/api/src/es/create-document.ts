@@ -1,4 +1,4 @@
-import { JsonEntry, ElasticSearchDocument, MetadataItem, CreateJsonEntryPartProps } from "@docere/common"
+import { JsonEntry, ElasticSearchDocument, MetadataItem, StandoffTree, DocereConfig } from "@docere/common"
 import { isHierarchyMetadataItem } from "@docere/common"
 import { DocereApiError } from "../types"
 import { isError } from "../utils"
@@ -6,15 +6,12 @@ import { isError } from "../utils"
 
 export function createElasticSearchDocument(
 	jsonEntry: JsonEntry | DocereApiError,
-	createJsonEntryProps: CreateJsonEntryPartProps
+	sourceTree: StandoffTree,
+	projectConfig: DocereConfig
 ): ElasticSearchDocument | DocereApiError {
 	if (isError(jsonEntry)) return jsonEntry
 
-	// TODO FIXME this is wrong, not the whole tree should be indexed when 
-	// the document is part of a source
-	const { sourceTree: tree, projectConfig: config } = createJsonEntryProps
-
-	const entities = tree.annotations
+	const entities = sourceTree.annotations
 		.reduce((map, curr) => {
 			if (curr.metadata._entityValue != null) {
 				const { _entityConfigId: configId } = curr.metadata;
@@ -33,9 +30,9 @@ export function createElasticSearchDocument(
 		return prev
 	}, {} as Record<string, string[]>)
 
-	const facsimiles = config.facsimiles != null ? 
-		tree.annotations
-			.filter(config.facsimiles.filter)
+	const facsimiles = projectConfig.facsimiles != null ? 
+		sourceTree.annotations
+			.filter(projectConfig.facsimiles.filter)
 			.filter(a =>
 				a.metadata._facsimileId != null &&
 				a.metadata._facsimilePath != null
@@ -59,7 +56,7 @@ export function createElasticSearchDocument(
 		return prev
 	}, {} as Record<string, MetadataItem['value']>)
 
-	const textSuggestLines = tree.standoff.text
+	const textSuggestLines = sourceTree.standoff.text
 		.replace(/\s+/g, ' ')
 		.replace(/\.|\,|\;/g, '')
 		.split(' ')
@@ -70,7 +67,7 @@ export function createElasticSearchDocument(
 	return {
 		id: jsonEntry.id,
 		facsimiles,
-		text: tree.standoff.text,
+		text: sourceTree.standoff.text,
 		text_suggest: {
 			input: textSuggestInput
 		},

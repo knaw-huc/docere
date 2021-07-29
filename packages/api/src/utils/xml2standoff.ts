@@ -35,6 +35,7 @@ export function xml2standoff(content: string): Promise<Standoff> {
 		updateOrderByOffset()
 
 		const annotation: StandoffAnnotation = extendStandoffAnnotation({
+			end: node.isSelfClosing ? offset : offset + 1, // Set a temporary end when the node is not self closing, otherwise extendStandoffAnnotation will change it to a self closing annotation
 			metadata: node.attributes as Record<string, string>,
 			isSelfClosing: node.isSelfClosing,
 			name: node.name,

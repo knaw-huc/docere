@@ -8,7 +8,10 @@ if (envError) throw envError
 
 module.exports = () => {
 	baseConfig.devServer = {
-		contentBase: path.resolve(process.cwd(), '../../public'),
+		contentBase: [
+			path.resolve(process.cwd(), '../../public'),
+			path.resolve(process.cwd(), '../projects/build2'),
+		],
 		disableHostCheck: true,
 		headers: { "Access-Control-Allow-Origin": "*" },
 		historyApiFallback: {
@@ -42,17 +45,7 @@ module.exports = () => {
 	}
 
 	baseConfig.entry = {
-		app: {
-			import: './src/index.tsx',
-		},
-		republic: {
-			import: '../projects/src/republic/config',
-			library: {
-				name: 'Project',
-				type: 'umd',
-				umdNamedDefine: true
-			}
-		}
+		app: './src/index.tsx'
 	}
 
 	baseConfig.output = {

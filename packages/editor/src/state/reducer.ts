@@ -1,12 +1,6 @@
-import { DocereConfig, JsonEntry } from "@docere/common"
+import { DocereConfig, JsonEntry, StandoffTree } from "@docere/common"
 
-// interface EntryDocument {
-// 	id: string
-// 	source_id: string
-// 	name: string
-// 	entry: JsonEntry
-// 	updated: string
-// }
+type EntriesByPartId = Record<string, JsonEntry[]>
 
 interface SetFile {
 	type: 'SET_FILE'
@@ -34,10 +28,19 @@ interface SetJson {
 	json: object
 }
 
-// TODO remove any
+interface SetSource {
+	type: 'SET_SOURCE'
+	source: string
+}
+
 interface SetProjectConfig {
 	type: 'SET_PROJECT_CONFIG'
 	projectConfig: DocereConfig
+}
+
+interface SetStandoffTree {
+	type: 'SET_STANDOFF_TREE'
+	standoffTree: StandoffTree
 }
 
 export type SourceAction = 
@@ -46,15 +49,20 @@ export type SourceAction =
 	SetEntry |
 	SetJsonQuery |
 	SetJson	|
-	SetProjectConfig
+	SetProjectConfig |
+	SetSource | 
+	SetStandoffTree
 
 export interface SourceState {
 	file: File
 	entries: JsonEntry[]
+	entriesByPartId: EntriesByPartId
 	entry: JsonEntry
 	jsonQuery: string
 	json: string
 	projectConfig: DocereConfig
+	source: string
+	standoffTree: StandoffTree
 }
 export function sourceReducer(state: SourceState, action: SourceAction): SourceState {
 	switch (action.type) {
@@ -64,6 +72,8 @@ export function sourceReducer(state: SourceState, action: SourceAction): SourceS
 		case 'SET_JSON_QUERY': return setJsonQuery(state, action)
 		case 'SET_JSON': return setJson(state, action)
 		case 'SET_PROJECT_CONFIG': return setProject(state, action)
+		case 'SET_SOURCE': return setSource(state, action)
+		case 'SET_STANDOFF_TREE': return setStandoffTree(state, action)
 		default: break
 	}
 
@@ -80,7 +90,12 @@ function setFile(state: SourceState, action: SetFile) {
 function setEntries(state: SourceState, action: SetEntries): SourceState {
 	const nextState = {
 		...state,
-		entries: action.entries
+		entries: action.entries,
+		entriesByPartId: action.entries.reduce<EntriesByPartId>((prev, curr) => {
+			if (!prev.hasOwnProperty(curr.partId)) prev[curr.partId] = []
+			prev[curr.partId].push(curr)
+			return prev
+		}, {} as EntriesByPartId)
 	}
 
 	if (!action.refresh) {
@@ -118,5 +133,19 @@ function setProject(state: SourceState, action: SetProjectConfig) {
 	return {
 		...state,
 		projectConfig: action.projectConfig
+	}
+}
+
+function setSource(state: SourceState, action: SetSource): SourceState {
+	return {
+		...state,
+		source: action.source
+	}
+}
+
+function setStandoffTree(state: SourceState, action: SetStandoffTree): SourceState {
+	return {
+		...state,
+		standoffTree: action.standoffTree
 	}
 }

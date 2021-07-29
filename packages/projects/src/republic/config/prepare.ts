@@ -67,6 +67,7 @@ export function prepareAnnotations(standoff: StandoffWrapper<PartialStandoffAnno
 	standoff.convertToMilestone(a => a.name === 'line', true)
 	standoff.convertToMilestone(a => a.name === 'scan')
 
+	// TODO move setting _areas to config (with props: sourceTree, filter, etc)
 	standoff.annotations
 		.filter(a => a.name === 'attendance_list' || a.name === 'resolution')
 		.forEach(parent => {
