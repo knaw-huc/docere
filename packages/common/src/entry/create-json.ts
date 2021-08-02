@@ -1,4 +1,4 @@
-import { DocereConfig, PartConfig, StandoffAnnotation, StandoffTree } from '..'
+import { AnnotationNode, DocereConfig, PartConfig, StandoffAnnotation, StandoffTree } from '..'
 import { isTextLayerConfig } from '../utils'
 import { FacsimileLayer, ID, isEntityMetadataConfig, JsonEntry, TextLayer } from '.'
 
@@ -12,7 +12,7 @@ export interface GetValueProps {
 export interface CreateJsonEntryPartProps extends Omit<GetValueProps, 'annotation'> {
 	id: ID
 	partConfig?: PartConfig
-	root?: StandoffAnnotation
+	root?: AnnotationNode
 }
 
 // export function isEntryPart(props: CreateJsonEntryPartProps): props is CreateJsonEntryPartProps {
@@ -43,7 +43,8 @@ export function createJsonEntry(props: CreateJsonEntryPartProps): JsonEntry {
 
 				return {
 					...layerConfig,
-					tree: tree.exportReactTree()
+					tree: tree.exportReactTree(),
+					// standoff: tree.standoff
 				} as TextLayer
 			} 
 
@@ -58,7 +59,7 @@ export function createJsonEntry(props: CreateJsonEntryPartProps): JsonEntry {
 			const entityConfig = props.projectConfig.entities2
 				.find(ec => ec.id === metadataConfig.entityConfigId)
 
-			value = props.sourceTree.annotations
+			value = props.sourceTree.list
 				.filter(entityConfig.filter)
 				.filter(metadataConfig.filterEntities)
 				.map(a => entityConfig.getValue({

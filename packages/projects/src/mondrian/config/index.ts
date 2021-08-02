@@ -100,7 +100,7 @@ export default extendConfig({
 				datatype: EsDataType.Boolean,
 			},
 			getValue: (_config, props) => {
-				const annotation = props.sourceTree.annotations.find(a => a.name === 'div' && a.metadata.type === 'translation')
+				const annotation = props.sourceTree.find(a => a.name === 'div' && a.metadata.type === 'translation')
 				return props.sourceTree.getTextContent(annotation).trim().length > 0
 			},
 			id: 'hasTranslation',

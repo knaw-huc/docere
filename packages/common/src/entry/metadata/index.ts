@@ -1,5 +1,5 @@
 import { EsDataType } from '../../enum'
-import { FilterFunction, PartialStandoffAnnotation } from '../../standoff-annotations'
+import { FilterFunction } from '../../standoff-annotations'
 import { BooleanFacetConfig, DateFacetConfig, FacetConfig, HierarchyFacetConfig, ListFacetConfig, RangeFacetConfig } from '../../types/search/facets'
 import { CreateJsonEntryPartProps } from '../create-json'
 import { ID, Layer } from '../layer'
@@ -57,7 +57,7 @@ export interface DefaultMetadataConfig extends BaseMetadataConfig {
  */
 export interface EntityMetadataConfig extends BaseMetadataConfig {
 	entityConfigId: ID
-	filterEntities: FilterFunction<PartialStandoffAnnotation>
+	filterEntities: FilterFunction
 }
 
 export function isEntityMetadataConfig(config: MetadataConfig): config is EntityMetadataConfig {

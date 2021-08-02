@@ -22,5 +22,8 @@
 		"build",
 		"node_modules"
 	],
-	"include": ["./src/index.ts"]
+	"include": [
+		"./src/index.ts",
+		"./src/global.d.ts"
+	]
 }

@@ -1,9 +1,9 @@
 import React from 'react'
 import { FacsimileArea } from '../entry/facsimile'
 
-export * from './annotation-list'
 export * from './annotation-tree'
 export * from './utils'
+export * from './export-options'
 
 export const ROOT_NODE_NAME = 'root'
 export const TEXT_NODE_NAME = '__TEXT_NODE__'
@@ -12,11 +12,11 @@ export const RANGE_TAG_NAME = '_range'
 /**
  * The source for {@link AnnotationList} and {@link AnnotationTree}
  */
-export interface PartialStandoff2<T extends PartialStandoffAnnotation> {
-	annotations: T[]
-	metadata: Record<string, any>
-	text: string
-}
+// export interface PartialStandoff2<T extends PartialStandoffAnnotation> {
+// 	annotations: T[]
+// 	metadata: Record<string, any>
+// 	text: string
+// }
 
 // TODO remove?
 export interface PartialStandoff {
@@ -33,7 +33,7 @@ export interface Standoff extends PartialStandoff {
 	annotations: StandoffAnnotation[]
 }
 
-export interface AnnotationNode extends PartialStandoffAnnotation {
+export interface AnnotationNode extends StandoffAnnotation {
 	children: AnnotationNode[]
 	parent: AnnotationNode
 }
@@ -43,6 +43,7 @@ export interface StandoffAnnotationMetadata {
 	_areas?: FacsimileArea[]
 	_entityConfigId?: string
 	_entityId?: string
+	_isRoot?: boolean
 	// _entityValue?: string
 	_facsimileId?: string
 	_facsimilePath?: string
@@ -82,20 +83,8 @@ export interface StandoffAnnotation extends Required<PartialStandoffAnnotation> 
 }
 
 // export type FilterFunction = (a: PartialStandoffAnnotation) => boolean
-export type FilterFunction<T extends PartialStandoffAnnotation> = (a: T) => boolean
-
-export type PartialExportOptions = Partial<Omit<ExportOptions, 'metadata'>> & { metadata?: Partial<ExportOptions['metadata']> }
-
-export interface ExportOptions {
-	annotationHierarchy: string[]
-	metadata: {
-		exclude: string[]
-		include: string[]
-		addId: boolean
-		addOffsets: boolean
-	}
-	rootNodeName: string
-}
+// export type FilterFunction<T extends PartialStandoffAnnotation> = (a: T) => boolean
+export type FilterFunction = (a: AnnotationNode) => boolean
 
 export type OverlapReport = [StandoffAnnotation, StandoffAnnotation][]
 

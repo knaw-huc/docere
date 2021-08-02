@@ -1,6 +1,7 @@
 import { PageConfig } from '../page'
-import { PartialExportOptions, PartialStandoff, PartialStandoffAnnotation, StandoffAnnotation, StandoffTree, StandoffWrapper } from '../standoff-annotations'
+import { PartialStandoff, StandoffAnnotation, StandoffTree } from '../standoff-annotations'
 import { EntityConfig, FacsimileLayerConfig, ID, MetadataConfig, TextLayerConfig } from '../entry'
+import { PartialExportOptions } from '../standoff-annotations/export-options'
 
 export * from './extend'
 
@@ -91,13 +92,9 @@ export interface DocereConfig {
 		prepareSource?: (source: string | object) => PartialStandoff | string
 
 		/**
-		 * Function to prepare the annotations using the thin wrapper of
-		 * {@link StandoffWrapper}. The class allows alteration of the annotations
-		 * before it is added to the {@link StandoffTree}. Using a StandoffWrapper
-		 * is faster than using a StandoffTree, with almost the same functionality.
-		 * If the StandoffTree is needed, use {@link DocereConfig.standoff.prepareExport}
+		 * Function to alter the partial standoff annotations before processing
 		 */
-		prepareAnnotations?: (standoffWrapper: StandoffWrapper<PartialStandoffAnnotation>) => void
+		prepareAnnotations?: (tree: StandoffTree) => void
 
 		/**
 		 * Function to prepare the export of the {@link StandoffTree}. Most changes

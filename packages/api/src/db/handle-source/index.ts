@@ -112,7 +112,7 @@ export async function handleSource(
 	})
 
 	for (const entry of entries) {
-		handleEntry({ entry, client, esClient, isUpdate, projectConfig })
+		await handleEntry({ entry, client, esClient, isUpdate, projectConfig })
 	}
 
 	await transactionQuery(client, 'COMMIT')

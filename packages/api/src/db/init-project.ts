@@ -21,7 +21,7 @@ export async function initProject(projectId: string) {
 		client,
 		`CREATE TABLE document (
 			id SERIAL PRIMARY KEY,
-			source_id SERIAL REFERENCES source,
+			source_name TEXT,
 			order_number INT,
 			name TEXT UNIQUE,
 			entry JSON,

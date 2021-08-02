@@ -17,7 +17,3 @@ export * from './types'
 export * from './url'
 export * from './use-components'
 export * from './utils'
-
-declare global {
-	const DOCERE_DTAP: string
-}

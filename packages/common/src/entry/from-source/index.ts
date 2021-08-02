@@ -1,12 +1,12 @@
 import { createJsonEntry, GetValueProps, JsonEntry } from ".."
 import { DocereConfig, StandoffTree } from "../.."
-import { createStandoff } from './create-standoff'
 import { prepareSource } from './prepare-source'
 
 export async function getSourceTree(source: string | object, projectConfig: DocereConfig) {
 	const partialStandoff = await prepareSource(source, projectConfig)
-	const standoff = createStandoff(partialStandoff, projectConfig)
-	return new StandoffTree(standoff, projectConfig.standoff.exportOptions)
+	const tree = new StandoffTree(partialStandoff, projectConfig.standoff.exportOptions)
+	projectConfig.standoff.prepareAnnotations(tree)
+	return tree
 }
 
 export async function getEntriesFromSource(
@@ -16,7 +16,7 @@ export async function getEntriesFromSource(
 ) {
 	const sourceTree = await getSourceTree(source, projectConfig)
 
-	sourceTree.annotations.forEach(annotation => {
+	sourceTree.list.forEach(annotation => {
 		const props: GetValueProps = {
 			annotation,
 			projectConfig,
@@ -44,7 +44,7 @@ export async function getEntriesFromSource(
 			// If partConfig.filter is defined, use it it get the roots,
 			// if no filter is defined, use the root of the tree
 			const roots = partConfig.filter != null ?
-				sourceTree.annotations.filter(partConfig.filter).slice(0, 10) :
+				sourceTree.filter(partConfig.filter).slice(0, 10) :
 				[sourceTree.root]
 
 			for (const root of roots) {

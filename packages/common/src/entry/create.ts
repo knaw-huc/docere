@@ -27,35 +27,33 @@ export function createEntry(entry: JsonEntry, config: DocereConfig): Entry {
 
 function addEntity(
 	root: DocereAnnotation | string,
-	map: Map<ID, Entity>,
-	entityConfigs: Map<ID, EntityConfig>
+	entitiesById: Map<ID, Entity>,
+	entityConfigsById: Map<ID, EntityConfig>
 ) {
 	if (typeof root === 'string') return
 	if (isEntityAnnotation(root)) {
-		root.props._config = entityConfigs.get(root.props._entityConfigId)
+		root.props._config = entityConfigsById.get(root.props._entityConfigId)
 		// TODO generate area ID in preprocessing step?
 		root.props._areas?.forEach(a => {
 			if (a.id == null) a.id = generateId()
 		})
-		map.set(root.props._entityId, root)
+		entitiesById.set(root.props._entityId, root)
 	}
-	root.children?.forEach(child => addEntity(child, map, entityConfigs))
+	root.children?.forEach(child => addEntity(child, entitiesById, entityConfigsById))
 }
 
 function createEntityLookup(layers: Entry['layers'], config: DocereConfig): Map<ID, Entity> {
-	const entities = new Map<ID, Entity>()
-	const entityConfigs = config.entities2.reduce<Map<ID, EntityConfig>>((prev, curr) => {
+	const entitiesById = new Map<ID, Entity>()
+	const entityConfigsById = config.entities2.reduce<Map<ID, EntityConfig>>((prev, curr) => {
 		prev.set(curr.id, curr)
 		return prev
 	}, new Map())
 
-	layers.forEach(layer => {
-		if (isTextLayer(layer)) {
-			addEntity(layer.tree, entities, entityConfigs)
-		}
-	})
+	layers
+		.filter(isTextLayer)
+		.forEach(layer => addEntity(layer.tree, entitiesById, entityConfigsById))
 
-	return entities
+	return entitiesById
 }
 
 function addFacsimile(

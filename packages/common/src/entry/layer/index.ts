@@ -1,5 +1,5 @@
 import { LayerType } from '../../enum'
-import { DocereAnnotation, FilterFunction, StandoffAnnotation } from '../../standoff-annotations'
+import { DocereAnnotation, FilterFunction, Standoff } from '../../standoff-annotations'
 import { BaseConfig } from '../metadata'
 
 // export * from './serialize'
@@ -23,7 +23,7 @@ export interface FacsimileLayerConfig extends LayerConfig {
 export interface TextLayerConfig extends LayerConfig {
 	// extractElement?: ExtractTextLayerElement
 	type: LayerType.Text
-	findRoot?: FilterFunction<StandoffAnnotation>
+	findRoot?: FilterFunction
 }
 
 // export interface ExtractedTextLayer extends TextLayerConfig {
@@ -67,6 +67,7 @@ export type SerializedBaseLayer =
 
 // Layer
 export interface TextLayer extends SerializedBaseLayer {//extends Omit<SerializedTextLayer, 'facsimileIds' | 'entityIds'>, LayerTextData {
+	standoff: Standoff
 	tree: DocereAnnotation
 	type: LayerType.Text
 }

@@ -37,8 +37,7 @@ export class StandoffWrapper<T extends PartialStandoffAnnotation> {
 	}
 
 	convertToMilestone(predicate: (a: T) => boolean, transferTextContent = false) {
-		this.standoff.annotations
-			.filter(predicate)
+		this.filter(predicate)
 			.forEach(a => {
 				if (transferTextContent) {
 					a.metadata._textContent = this.getTextContent(a)
@@ -140,9 +139,9 @@ export class StandoffWrapper<T extends PartialStandoffAnnotation> {
 
 		const parent = (isPartialAnnotation(parentFilter)) ?
 			parentFilter :
-			this.standoff.annotations.find(parentFilter)
+			this.find(parentFilter)
 
-		return this.standoff.annotations.filter(annotation =>
+		return this.filter(annotation =>
 			filter(annotation) &&
 			isChild(annotation, parent)
 		)
@@ -151,15 +150,16 @@ export class StandoffWrapper<T extends PartialStandoffAnnotation> {
 	findChild(parentFilter: FilterFunction<T>, childFilter: FilterFunction<T>) {
 		const parent = this.standoff.annotations.find(parentFilter)
 		if (parent == null) return null
-		return this.standoff.annotations.find(a =>
+		return this.find(a =>
 			childFilter(a) && isChild(a, parent)
 		) || null
 	}
+
+	find(predicate: FilterFunction<T>) {
+		return this.annotations.find(predicate)
+	}
+
+	filter(predicate: FilterFunction<T>) {
+		return this.annotations.filter(predicate)
+	}
 }
-
-// type BulkOperation = AddOperation | RemoveOperation | SplitOperation | UpdateOffsetsOperation | ConvertToMilestoneOperation
-
-// bulk(operations: BulkOperation[]) {
-
-// }
-

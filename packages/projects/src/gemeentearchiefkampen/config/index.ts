@@ -4,7 +4,7 @@ import { CreateJsonEntryPartProps, extendConfig, LayerType, MetadataConfig } fro
 import { prepareSource } from './prepare'
 
 function getValue(config: MetadataConfig, props: CreateJsonEntryPartProps) {
-	const annotation = props.sourceTree.annotations.find(
+	const annotation = props.sourceTree.find(
 		a => a.name === 'item' && a.metadata.key === config.id
 	)
 	return annotation.metadata.value

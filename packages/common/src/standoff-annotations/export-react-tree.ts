@@ -1,5 +1,6 @@
 import { exportMetadata } from "./export-xml"
-import { AnnotationNode, DocereAnnotation, ExportOptions, TEXT_NODE_NAME } from "."
+import { AnnotationNode, DocereAnnotation, TEXT_NODE_NAME } from "."
+import { ExportOptions } from "./export-options"
 
 const invalidKeys = new Set(['ref', 'key'])
 

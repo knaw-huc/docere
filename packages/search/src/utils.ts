@@ -38,23 +38,24 @@ export function isRangeMetadataItem(metadataItem: MetadataItem): metadataItem is
 
 // NEW
 export function isBooleanMetadataConfig(config: BaseMetadataConfig): config is BooleanMetadataConfig {
-	return config.facet.datatype === EsDataType.Boolean
+	return config.facet?.datatype === EsDataType.Boolean
 }
 
 export function isDateMetadataConfig(config: BaseMetadataConfig): config is DateMetadataConfig {
-	return config.facet.datatype === EsDataType.Date
+	return config.facet?.datatype === EsDataType.Date
 }
 
 export function isHierarchyMetadataConfig(config: BaseMetadataConfig): config is HierarchyMetadataConfig {
-	return config.facet.datatype === EsDataType.Hierarchy
+	return config.facet?.datatype === EsDataType.Hierarchy
 }
 
 export function isListMetadataConfig(config: BaseMetadataConfig): config is ListMetadataConfig {
+	if (config.facet == null) return false
 	return config.facet.datatype === EsDataType.Keyword || config.facet.datatype == null
 }
 
 export function isRangeMetadataConfig(config: BaseMetadataConfig): config is RangeMetadataConfig {
-	return config.facet.datatype === EsDataType.Integer
+	return config.facet?.datatype === EsDataType.Integer
 }
 // \NEW
 

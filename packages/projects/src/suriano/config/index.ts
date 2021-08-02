@@ -57,7 +57,7 @@ export default extendConfig({
 		{
 			facet: {},
 			getValue: (_config, props) => {
-				const annotation = props.sourceTree.annotations.find(
+				const annotation = props.sourceTree.find(
 					a => a.name === 'idno' && a.metadata.type === 'filza'
 				)
 				return props.sourceTree.getTextContent(annotation)
@@ -67,7 +67,7 @@ export default extendConfig({
 		{
 			facet: {},
 			getValue: (_config, props) => {
-				const annotation = props.sourceTree.annotations.find(
+				const annotation = props.sourceTree.find(
 					a => a.name === 'idno' && a.metadata.type === 'letterno'
 				)
 				return props.sourceTree.getTextContent(annotation)
@@ -110,7 +110,7 @@ export default extendConfig({
 		{
 			facet: {},
 			getValue: (_config, props) => {
-				const annotation = props.sourceTree.annotations.find(
+				const annotation = props.sourceTree.find(
 					a => a.name === 'biblScope'
 				)
 				return props.sourceTree.getTextContent(annotation)
@@ -119,7 +119,7 @@ export default extendConfig({
 		},
 		{
 			getValue: (_config, props) => {
-				const annotation = props.sourceTree.annotations.find(
+				const annotation = props.sourceTree.find(
 					a => a.name === 'div' && a.metadata.type === 'summary'
 				)
 				return props.sourceTree.getTextContent(annotation)

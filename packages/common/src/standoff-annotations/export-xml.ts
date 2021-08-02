@@ -1,23 +1,12 @@
 import { AnnotationNode, TEXT_NODE_NAME, ROOT_NODE_NAME, PartialStandoffAnnotation } from "."
-import { ExportOptions } from "."
+import { ExportOptions } from "./export-options"
 
 export function exportMetadata(annotation: PartialStandoffAnnotation, options: ExportOptions) {
 	let metadata: [string, any][] = Object.keys(annotation.metadata)
-		.map(key => {
-			const value = (key === '_textContent') ?
-				annotation.metadata._textContent.replace(/&/g, '&amp;') :
-				annotation.metadata[key]
+		.filter(key => key.charAt(0) !== '_')
+		.map(key => [key, annotation.metadata[key]])
 
-			return [key, value]
-		})
-
-	// if (annotation.range.size) {
-	// 	metadata.push(['_range_ids', Array.from(annotation.range)])
-	// }
-
-	if (Array.isArray(options.metadata.exclude)) {
-		metadata = metadata.filter(([key]) => options.metadata.exclude.indexOf(key) === -1)
-	}
+	metadata = metadata.filter(([key]) => options.metadata.exclude.indexOf(key) === -1)
 
 	if (Array.isArray(options.metadata.include)) {
 		metadata = metadata.filter(([key]) => options.metadata.include.indexOf(key) > -1)
@@ -53,26 +42,27 @@ function metadata2string(annotation: AnnotationNode, options: ExportOptions): st
 }
 
 export function exportXml(root: AnnotationNode, options: ExportOptions): string {
-	if (root.name === TEXT_NODE_NAME) {
-		const text = root.metadata._textContent.replace(/&/g, '&amp;')
-		// return (
-		// 	root.range.size &&
-		// 	root.parent.children.length !== 1
-		// ) ?
-		// `<${RANGE_TAG_NAME}${metadata2string(root, options)}>${text}</${RANGE_TAG_NAME}>` :
-		return text
-	}
+	if (root.name === TEXT_NODE_NAME) return getTextNode(root) 
 
 	let tagString = `<${root.name}${metadata2string(root, options)}`
 
 	if (root.isSelfClosing) return `${tagString}/>`
 
-	const meta = (root.name === ROOT_NODE_NAME) ?
+	const meta = (options.metadata.addRootMetadata && root.name === ROOT_NODE_NAME) ?
 		Object.keys(root.metadata).reduce((prev, curr) =>
 			`${prev}<meta key="${curr}" value="${root.metadata[curr]?.toString()}"/>`,
 			''
 		) :
 		''
 
-	return `${tagString}>${meta}${root.children.map(child => exportXml(child, options)).join('')}</${root.name}>`
+	const body = root.children.length === 0 ?
+		getTextNode(root) :
+		root.children.map(child => exportXml(child, options)).join('')
+
+	return `${tagString}>${meta}${body}</${root.name}>`
+}
+
+export function getTextNode(node: AnnotationNode) {
+	const { _textContent } = node.metadata
+	return _textContent != null ? _textContent.replace(/&/g, '&amp;') : ''
 }

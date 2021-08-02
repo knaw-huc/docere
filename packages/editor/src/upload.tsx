@@ -60,16 +60,16 @@ export function Upload() {
 								<>
 								<Editor
 									language="json"
-									value={JSON.stringify(state.standoffTree.standoff)}
+									value={JSON.stringify(state.standoffTree.getStandoff())}
 								/>
 								<ul>
-									<li>metadata items: {Object.keys(state.standoffTree.standoff.metadata).length}</li>
+									<li>metadata items: {Object.keys(state.standoffTree.metadata).length}</li>
 									<li>
-										annotations: {Object.keys(state.standoffTree.annotations).length}
+										annotations: {Object.keys(state.standoffTree.list).length}
 										<ul>
 											{
 												Array.from(
-													state.standoffTree.annotations
+													state.standoffTree.list
 														.reduce((prev, curr) => {
 															if (prev.has(curr.name)) {
 																prev.set(curr.name, prev.get(curr.name) + 1)
@@ -86,7 +86,7 @@ export function Upload() {
 											}
 										</ul>
 									</li>
-									<li>text: {Object.keys(state.standoffTree.standoff.text).length}</li>
+									<li>text: {Object.keys(state.standoffTree.text).length}</li>
 								</ul>
 								</>
 							}

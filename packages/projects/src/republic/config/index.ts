@@ -23,9 +23,7 @@ export default extendConfig({
 		}
 	},
 
-	slug: 'republic24',
-
-	// title: 'Republic',
+	slug: 'republic',
 
 	collection: {
 		metadataId: 'inventory_num',
@@ -74,7 +72,7 @@ export default extendConfig({
 			id: 'resolutions',
 			getValue: (_config, props) => {
 				if (props.partConfig.id === 'resolution') return
-				return props.sourceTree.annotations
+				return props.sourceTree
 					.filter(a => a.name === 'resolution')
 					.map(a => a.metadata.id)
 			}

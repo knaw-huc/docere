@@ -1,0 +1,132 @@
+// import { TEXT_NODE_NAME } from '../../../../api/node_modules/@docere/common/build'
+import { xml2standoff } from '../../../../api/src/utils/xml2standoff'
+import { StandoffAnnotation, StandoffTree } from '../../../../common/src'
+import { xml } from './standoff.tree.test'
+
+// function annotationsFromTree(tree1: StandoffTree) {
+// 	// const t0 = performance.now()
+// 	const tree = tree1.createTree()
+// 	// const t1 = performance.now(); console.log('creat tree Performance: ', `${t1 - t0}ms`)
+
+// 	const annotations: StandoffAnnotation[] = []
+
+// 	// const t2 = performance.now()
+// 	function addChildren(a: AnnotationNode) {
+// 		a.children.forEach(child => {
+// 			const { children, ...anno } = child
+// 			annotations.push(anno)
+// 			addChildren(child)
+// 		})
+// 	}
+// 	// const t3 = performance.now(); console.log('add children Performance: ', `${t3 - t2}ms`)
+
+// 	addChildren(tree)
+
+// 	return annotations
+// }
+
+describe('[AnnotationTree] Add range', () => {
+	let tree: StandoffTree
+	let rangeStartXXX: StandoffAnnotation
+	let rangeEndXXX: StandoffAnnotation
+	let rangeStartYYY: StandoffAnnotation
+	let node1: StandoffAnnotation
+	let node2: StandoffAnnotation
+	let node3: StandoffAnnotation
+
+	beforeAll(async () => {
+		const standoff = await xml2standoff(xml)
+		tree = new StandoffTree(standoff, { metadata: { addId: false } })
+
+		rangeStartXXX = tree.annotations.find(a => a.name === 'rangeStart' && a.metadata.target === 'xxx')
+		rangeEndXXX = tree.annotations.find(a => a.name === 'rangeEnd' && a.metadata.key === 'xxx')
+		rangeStartYYY = tree.annotations.find(a => a.name === 'rangeStart' && a.metadata.target === 'yyy')
+		node1 = tree.annotations.find(a => a.name === 'node' && a.metadata.n === '1')
+		node2 = tree.annotations.find(a => a.name === 'node' && a.metadata.n === '2')
+		node3 = tree.annotations.find(a => a.name === 'node' && a.metadata.n === '3')
+		node1
+		node2
+		node3
+		rangeStartXXX
+		rangeEndXXX
+		rangeStartYYY
+	})
+
+	it('should xyz', () => {
+		console.log(tree.annotations)
+		console.log(tree.tree)
+		console.log(tree.nodeList)
+		expect(true).toBeTruthy()
+	})
+
+	// it('should add ranges', () => {
+	// 	tree.addRanges(
+	// 		a => a.name === 'rangeStart',
+	// 		a => b => a.metadata.target === b.metadata.key,
+	// 		a => a.metadata.themes.split(' ')
+	// 	)
+
+	// 	expect(tree.filter(a => a.name === TEXT_NODE_NAME)).toHaveLength(4)
+	// 	expect(node1.metadata._range).toBeUndefined()
+	// 	expect(node2.metadata._range.size).toEqual(3)
+
+	// 	expect(tree.getChildren(node1)[3].metadata._range.has('t.1')).toBeTruthy()
+	// 	expect(tree.getChildren(node1)[3].metadata._range.has('t.3')).toBeTruthy()
+	// 	expect(tree.getChildren(node1)[3].metadata._range.has('t.4')).toBeFalsy()
+	// })
+
+
+	// const t0 = performance.now()
+	// const annos = annotationsFromTree(tree)
+	// const t1 = performance.now(); console.log('Performance: ', `${t1 - t0}ms`)
+	// console.log(annos)
+
+	// it('should find all the gaps', () => {
+	// 	const children = tree.getChildrenFromOffsets(rangeStartYYY.start, rangeEndXXX.start)
+	// 	const gaps = getGaps([rangeStartXXX, ...children, rangeEndXXX])
+	// 	const texts = gaps.map(([start, end]) => tree.standoff.text.slice(start, end).trim())
+	// 	expect(texts).toEqual(['text', 'between', 'third' ])
+	// })
+
+	// const cleanTree = annotationTree.export()
+
+	// const node1 = annotationTree.findAnnotationByMetadata('n', '1')
+	// const next = annotationTree.findAfter((a) => a.name === TEXT_NODE_NAME, node1)
+
+	// it( 'should find the first text node after <node n="1">', () => {
+	// })
+
+	// t.equal(next.metadata._textContent, ' second text between ',)
+
+	// const firstChild = cleanTree.children[0]
+	// t.ok(typeof firstChild === 'string', 'Should have text as a first child node')
+
+	// const lastChild = cleanTree.children[cleanTree.children.length - 1]
+	// t.ok(typeof lastChild === 'string', 'Should have text as a last child node')
+
+
+	// it('first child of node1 is not part of the range', () => {
+	// 	expect(node1.children[0].metadata._range).toBeNull()
+	// })
+
+	// t.ok(node1.children[2].range.has('t.1'), 'second child of node1 should have range t.1')
+	// t.ok(!node1.children[2].range.has('t.3'), 'second child of node1 should have range t.3')
+	// t.ok(node1.children[2].range.has('t.4'), 'second child of node1 should have range t.4')
+
+	// t.ok(node1.children[4].range.has('t.1'), 'fourth child of node1 should have range t.1')
+	// t.ok(node1.children[4].range.has('t.3'), 'fourth child of node1 should have range t.3')
+	// t.ok(node1.children[4].range.has('t.4'), 'fourth child of node1 should have range t.4')
+
+
+	// const node3 = annotationTree.findAnnotationByMetadata('n', '3')
+
+	// t.ok(node3.children[0].range.has('t.1'), 'first child of node3 should have range t.1')
+	// t.ok(node3.children[0].range.has('t.3'), 'first child of node3 should have range t.3')
+	// t.ok(node3.children[0].range.has('t.4'), 'first child of node3 should have range t.4')
+
+	// t.ok(node3.children[2].range.has('t.3'), 'third child of node3 should have range t.3')
+	// t.ok(!node3.children[2].range.has('t.1'), 'third child of node3 should not have range t.1')
+	// t.ok(!node3.children[2].range.has('t.4'), 'third child of node3 should not have range t.4')
+
+	// t.ok(node3.children[4].range.size === 0, 'fifth child of node3 is not part of the range')
+})

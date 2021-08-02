@@ -16,18 +16,18 @@ export async function insertEntry({ client, entry }: InsertEntryProps) {
 	await transactionQuery(
 		client,
 		`INSERT INTO document
-			(name, source_id, entry, updated)
+			(name, source_name, entry, updated)
 		VALUES
 			($1, $2, $3, NOW())
 		ON CONFLICT (name) DO UPDATE
 		SET
-			source_id=$2,
+			source_name=$2,
 			entry=$3,
 			updated=NOW()
 		RETURNING id;`,
 		[
 			entry.id,
-			entry.sourceId,
+			entry.sourceId + '',
 			JSON.stringify(entry)
 		]
 	)

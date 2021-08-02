@@ -1,4 +1,4 @@
-import { FacsimileArea, PartialStandoff, PartialStandoffAnnotation, Standoff, StandoffWrapper } from '@docere/common'
+import { FacsimileArea, PartialStandoff, PartialStandoffAnnotation, Standoff, StandoffTree } from '@docere/common'
 
 interface RepublicAnnotation {
 	end_offset: number
@@ -63,12 +63,9 @@ function createFacsimileArea(textRegion: PartialStandoffAnnotation): FacsimileAr
 	}
 }
 
-export function prepareAnnotations(standoff: StandoffWrapper<PartialStandoffAnnotation>) {
-	standoff.convertToMilestone(a => a.name === 'line', true)
-	standoff.convertToMilestone(a => a.name === 'scan')
-
+export function prepareAnnotations(standoff: StandoffTree) {
 	// TODO move setting _areas to config (with props: sourceTree, filter, etc)
-	standoff.annotations
+	standoff.list
 		.filter(a => a.name === 'attendance_list' || a.name === 'resolution')
 		.forEach(parent => {
 			const textRegions = standoff
@@ -77,9 +74,12 @@ export function prepareAnnotations(standoff: StandoffWrapper<PartialStandoffAnno
 			parent.metadata._areas = textRegions.map(createFacsimileArea)
 		})
 
-	standoff.annotations
+	standoff.list
 		.filter(a => a.name === 'line')
 		.forEach(a => {
 			a.metadata._areas = [createFacsimileArea(a)]
 		})
+
+	standoff.convertToMilestone(a => a.name === 'line', false)
+	standoff.convertToMilestone(a => a.name === 'scan', true)
 }

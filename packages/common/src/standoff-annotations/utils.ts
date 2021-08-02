@@ -1,21 +1,7 @@
-import { AnnotationNode, ROOT_NODE_NAME } from "."
+import { AnnotationNode } from "."
+import { ExportOptions } from './export-options'
 
-import type { Standoff, PartialStandoffAnnotation, ExportOptions, PartialExportOptions, StandoffAnnotation } from "."
-
-export function extendExportOptions(options: PartialExportOptions): ExportOptions {
-	return {
-		annotationHierarchy: [],
-		rootNodeName: ROOT_NODE_NAME,
-		...options,
-		metadata: {
-			exclude: null,
-			include: null,
-			addId: true,
-			addOffsets: false,
-			...options.metadata,
-		},
-	}
-}
+import type { PartialStandoffAnnotation, StandoffAnnotation } from "."
 
 export function simpleAnno({ name, start, end }: StandoffAnnotation) {return { name, start, end }}
 
@@ -26,8 +12,10 @@ export function isPartialAnnotation(annotation: any): annotation is PartialStand
 	)
 }
 
+// TODO make a check for AnnotationNode
 export function isAnnotation(annotation: any): annotation is StandoffAnnotation {
 	if (annotation == null) return false
+
 	return (
 		annotation.hasOwnProperty('index') && // check index first, because it is not present in a PartialStandoffAnnotation
 		isPartialAnnotation(annotation)
@@ -86,6 +74,9 @@ export function sortByOffset(options: ExportOptions) {
 	const sbh = sortByHierarchy(options)
 
 	return function (a: StandoffAnnotation, b: StandoffAnnotation) {
+		if (a.metadata._isRoot) return 0
+		if (b.metadata._isRoot) return 1
+
 		/**
 		 * If start and end offset are equal, sort on annotation hierarchy.
 		 * If a or b is not mentioned in the annotation hierachy, keep the
@@ -138,19 +129,52 @@ export function extendStandoffAnnotation(annotation: PartialStandoffAnnotation):
 	}
 }
 
-export function createRoot(standoff: Standoff, options: ExportOptions): StandoffAnnotation {
-	return extendStandoffAnnotation({
-		end: standoff.text.length,
-		metadata: standoff.metadata,
-		name: options.rootNodeName,
-		start: 0,
-	})
-}
+/**
+ * Convert a {@link PartialStandoffAnnotation} to a {@link AnnotationNode}
+ * 
+ * @param annotation 
+ * @returns 
+ * 
+ * @todo add clone (and add tests to check if cloning works properly)
+ */
+export function toAnnotationNode(annotation: PartialStandoffAnnotation): AnnotationNode {
+	if (annotation.end == null) annotation.isSelfClosing = true
 
-export function createAnnotationNode(annotation: StandoffAnnotation): AnnotationNode {
+	if (
+		annotation.isSelfClosing &&
+		annotation.end !== annotation.start
+	) annotation.end = annotation.start
+
 	return {
-		...annotation,
-		children: [],
+		end: annotation.start,
+		endOrder: null,
+		id: annotation.id == null ? Math.random().toString().slice(2) : null,
+		index: null,
+		isSelfClosing: false,
+		metadata: {},
+		startOrder: null,
 		parent: null,
+		children: [],
+		...annotation,
 	}
 }
+
+
+
+/**
+ * Get the gaps between annotations. A gap occurs when two annotations
+ * have text content between them.
+ * 
+ * @example `<a>this is a</a> gap <b>, for sure!</b>`: " gap " = [10, 14]
+ */
+// export function getGaps(annotations: StandoffAnnotation[]) {
+// 	let end = annotations[0].end;
+
+// 	const gaps = annotations.reduce<[number, number][]>((prev, curr, _index, _array) => {
+// 		if (curr.start > end) prev.push([end, curr.start])
+// 		if (curr.end > end) end = curr.end
+// 		return prev
+// 	}, [])	
+
+// 	return gaps
+// }

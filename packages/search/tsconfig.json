@@ -19,6 +19,6 @@
 		"target": "esnext",
 		"types": []
 	},
-	"include": ["./src/index.tsx"],
+	"include": ["./src/index.tsx", "../common/src/global.d.ts"],
 	"exclude": ["./node_modules", "./build", "./dist"]
 }

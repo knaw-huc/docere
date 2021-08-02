@@ -44,23 +44,26 @@ export default extendConfig({
 
 				if (props.partConfig.id === 'lemma') {
 					const parent = props.sourceTree.findParent(
-						a => a.name === 'div' && a.metadata.type === 'chapter',
-						props.root
+						props.root,
+						a => a.name === 'div' && a.metadata.type === 'chapter'
 					)
 					
 					if (parent != null) return parent.metadata.n
 				}
 
 				if (props.partConfig.id === 'gloss') {
-					const glossGroup = props.sourceTree.findParent(a => a.name === 'hi:glossGrp', props.root)
+					const glossGroup = props.sourceTree.findParent(
+						props.root,
+						a => a.name === 'hi:glossGrp'
+					)
 
-					const seg = props.sourceTree.annotations.find(a =>
+					const seg = props.sourceTree.find(a =>
 						a.name === 'seg' && a.metadata['xml:id'] === glossGroup.metadata.target.slice(1)
 					)
 
 					const parent = props.sourceTree.findParent(
-						a => a.name === 'div' && a.metadata.type === 'chapter',
-						seg
+						seg,
+						a => a.name === 'div' && a.metadata.type === 'chapter'
 					)
 					
 					if (parent != null) return parent.metadata.n
