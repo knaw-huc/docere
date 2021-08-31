@@ -1,5 +1,5 @@
 import { xml2standoff } from '../../../../api/src/utils/xml2standoff'
-import { Standoff, StandoffTree } from '../../../../common/src'
+import { PartialStandoff, StandoffTree } from '../../../../common/src'
 
 const standoff = {
 	metadata: {},
@@ -29,7 +29,7 @@ const xml2result = `<root>It's <node>spits<test/></node><node>bergen</node> all 
 describe('[Common][StandoffTree] add milestone', () => {
 	let treeFromXml: StandoffTree
 	let treeFromStandoff: StandoffTree
-	let standoffFromXml: Standoff
+	let standoffFromXml: PartialStandoff
 
 	beforeAll(async () => {
 		standoffFromXml = await xml2standoff(xml2)

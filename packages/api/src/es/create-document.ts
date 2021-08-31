@@ -3,7 +3,6 @@ import { isHierarchyMetadataItem } from "@docere/common"
 import { DocereApiError } from "../types"
 import { isError } from "../utils"
 
-
 export function createElasticSearchDocument(
 	jsonEntry: JsonEntry | DocereApiError,
 	projectConfig: DocereConfig

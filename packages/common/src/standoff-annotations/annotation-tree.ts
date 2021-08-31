@@ -26,7 +26,7 @@ export class StandoffTree {
 	private lookup: Lookup
 	private ranges = new Ranges()
 	metadata: Standoff['metadata']
-	text: string
+	text: Standoff['text']
 	options: ExportOptions
 	root: AnnotationNode
 	list: AnnotationNode[]
@@ -108,19 +108,22 @@ export class StandoffTree {
 	): AnnotationNode | AnnotationNode[] {
 		if (annotations == null) return null
 
-		if (!Array.isArray(annotations)) annotations = [annotations]
+		// If input is not an array, convert to array
+		const annotationArray = Array.isArray(annotations) ? annotations : [annotations]
 
-		const extendedAnnotations = annotations.map(toAnnotationNode)
+		// Extend annotations and add to this.list
+		const extendedAnnotations = annotationArray.map(toAnnotationNode)
 		extendedAnnotations.forEach(a => this.list.push(a))
 
 		if (update) this.update()
 
-		return extendedAnnotations.length === 1 ? extendedAnnotations[0] : extendedAnnotations
+		// If input is an array, return an array, otherwise the annotation
+		return Array.isArray(annotations) ? extendedAnnotations : extendedAnnotations[0]
 	}
 
-	remove(predicate: FilterFunction, update?: boolean): void
-	remove(id: string, update?: boolean): void
-	remove(annotation: StandoffAnnotation, update?: boolean): void
+	// remove(predicate: FilterFunction, update?: boolean): void
+	// remove(id: string, update?: boolean): void
+	// remove(annotation: StandoffAnnotation, update?: boolean): void
 	remove(
 		annotation: StandoffAnnotation | FilterFunction | string,
 		update = true
@@ -137,8 +140,8 @@ export class StandoffTree {
 		if (update) this.update()
 	}
 
-	split(id: string, offset: number, update?: boolean): void
-	split(annotation: StandoffAnnotation, offset: number, update?: boolean): void
+	// split(id: string, offset: number, update?: boolean): void
+	// split(annotation: StandoffAnnotation, offset: number, update?: boolean): void
 	split(
 		annotation: StandoffAnnotation | string,
 		offset: number,
@@ -172,16 +175,13 @@ export class StandoffTree {
 		if (update) this.update()
 	}
 
-	convertToMilestone(node: AnnotationNode, update?: boolean): void
-	convertToMilestone(node: string, update?: boolean): void
-	convertToMilestone(node: FilterFunction, update?: boolean): void
 	convertToMilestone(
 		node: FilterFunction | AnnotationNode | string,
 		update = true
 	) {
-		if (node == null) return
-
 		if (typeof node === 'string') node = this.byId(node)
+
+		if (node == null) return
 
 		if (isAnnotation(node)) {
 			this._convertToMilestone(node)

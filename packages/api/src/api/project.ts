@@ -1,4 +1,4 @@
-import { Express } from 'express'
+import { Express, Request } from 'express'
 
 import { sendJson, isError, getProjectConfig, getProjectPageConfig } from '../utils'
 import { getProjectIndexMapping } from '../es'
@@ -24,30 +24,30 @@ export default function handleProjectApi(app: Express) {
 		else next()
 	})
 
-	app.get(`${PROJECT_BASE_PATH}/config`, async (req, res) => {
+	app.get(`${PROJECT_BASE_PATH}/config`, async (req: Request, res) => {
 		const config = await getProjectConfig(req.params.projectId)
 		sendJson(config, res)
 	})
 
-	app.get(`${PROJECT_BASE_PATH}/mapping`, async (req, res) => {
+	app.get(`${PROJECT_BASE_PATH}/mapping`, async (req: Request, res) => {
 		const mapping = await getProjectIndexMapping(req.params.projectId)
 		sendJson(mapping, res)
 	})
 
-	app.get(`${PROJECT_BASE_PATH}/pages`, async (req, res) => {
+	app.get(`${PROJECT_BASE_PATH}/pages`, async (req: Request, res) => {
 		const pool = await getPool(req.params.projectId)
 		const { rows } = await pool.query(`SELECT name FROM page;`)
 		sendJson(rows, res)
 	})
 
-	app.get(`${PROJECT_BASE_PATH}/pages/:pageId`, async (req, res) => {
+	app.get(`${PROJECT_BASE_PATH}/pages/:pageId`, async (req: Request, res) => {
 		const pool = await getPool(req.params.projectId)
 		const { rows } = await pool.query(`SELECT content FROM page WHERE name=$1;`, [req.params.pageId])
 		if (!rows.length) res.sendStatus(404)
 		else res.send(rows[0].content)
 	})
 
-	app.get(`${PROJECT_BASE_PATH}/pages/:pageId/config`, async (req, res) => {
+	app.get(`${PROJECT_BASE_PATH}/pages/:pageId/config`, async (req: Request, res) => {
 		const pageConfig = await getProjectPageConfig(req.params.projectId, req.params.pageId)
 		sendJson(pageConfig, res)
 	})
@@ -84,7 +84,7 @@ export default function handleProjectApi(app: Express) {
 	// 	await addPagesToDb(config)
 	// })
 
-	app.post(`${PROJECT_BASE_PATH}/upsert`, async (req, res) => {
+	app.post(`${PROJECT_BASE_PATH}/upsert`, async (req: Request, res) => {
 		const { projectId } = req.params
 		const config = await getProjectConfig(projectId)
 		if (isError(config)) return sendJson(config, res)
@@ -103,7 +103,7 @@ export default function handleProjectApi(app: Express) {
 		const t1 = performance.now(); console.log('Performance: ', `${t1 - t0}ms`)
 	})
 
-	app.post(`${PROJECT_BASE_PATH}/init`, async (req, res) => {
+	app.post(`${PROJECT_BASE_PATH}/init`, async (req: Request, res) => {
 		await initProject(req.params.projectId)
 		await initProjectIndex(req.params.projectId)
 

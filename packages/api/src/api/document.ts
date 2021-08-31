@@ -1,5 +1,5 @@
 import * as es from '@elastic/elasticsearch'
-import { Express } from 'express'
+import { Express, Request } from 'express'
 import { StandoffTree } from '@docere/common'
 
 import { getPool } from '../db'
@@ -41,7 +41,7 @@ export default function handleDocumentApi(app: Express) {
 		res.json(rows)
 	})
 
-	app.get(`${DOCUMENT_BASE_PATH}/source`, async (req, res) => {
+	app.get(`${DOCUMENT_BASE_PATH}/source`, async (req: Request, res) => {
 		const config = await getProjectConfig(req.params.projectId)
 		if (isError(config)) return sendJson(config, res)
 
@@ -53,7 +53,7 @@ export default function handleDocumentApi(app: Express) {
 		}
 	})
 
-	app.get(`${DOCUMENT_BASE_PATH}/xml`, async (req, res) => {
+	app.get(`${DOCUMENT_BASE_PATH}/xml`, async (req: Request, res) => {
 		const config = await getProjectConfig(req.params.projectId)
 		if (isError(config)) return sendJson(config, res)
 

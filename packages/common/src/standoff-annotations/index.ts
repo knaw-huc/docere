@@ -30,7 +30,7 @@ export interface PartialStandoff {
  * resulting in {@link StandoffAnnotation}s.
  */
 export interface Standoff extends PartialStandoff {
-	annotations: StandoffAnnotation[]
+	annotations: AnnotationNode[]
 }
 
 export interface AnnotationNode extends StandoffAnnotation {

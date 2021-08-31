@@ -1,11 +1,13 @@
 import sax from 'sax'
 
-import { extendStandoffAnnotation, Standoff, StandoffAnnotation } from '@docere/common'
+import { extendStandoffAnnotation, PartialStandoff, StandoffAnnotation } from '@docere/common'
 
 const strict = true
 const parser = sax.parser(strict)
 
-export function xml2standoff(content: string): Promise<Standoff> {
+// TODO xml2standoff generates Standoff, but Standoff has AnnotationNode,
+// should this function return generic standoff or Docere specific AnnotationNode's?
+export function xml2standoff(content: string): Promise<PartialStandoff> {
 	let offset = 0
 	let text = ''
 	const annotations: StandoffAnnotation[] = []

@@ -16,7 +16,7 @@ export default function handleOtherApi(app: Express) {
 		sendXml(data, res)
 	})
 
-	// OTHER todo test this endpoint
+	// TODO test this endpoint
 	app.post('/api/xml2standoff', async (req, res) => {
 		const data = await xml2standoff(req.body)
 		sendJson(data, res)
