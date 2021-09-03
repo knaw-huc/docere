@@ -25,6 +25,8 @@ export default extendConfig({
 
 	slug: 'republic',
 
+	title: 'Webeditie Resoluties Staten Generaal - prototype achttiende eeuw',
+
 	collection: {
 		metadataId: 'inventory_num',
 		sortBy: 'inventory_num',
