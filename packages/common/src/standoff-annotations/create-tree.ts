@@ -6,9 +6,6 @@ import { extendStandoffAnnotation, isChild } from "./utils"
  * 
  * The whole text of StandoffTree.standoff.text will be covered by annotations.
  * If there is a gap between annotations, an text annotation will be added.
- * 
- * @param standoffTree 
- * @returns 
  */
 export function createTree(
 	annotations: AnnotationNode[],
@@ -27,20 +24,22 @@ export function createTree(
 		return parent
 	}
 
-	annotations.forEach((annotation, index) => {
-		const parent = findParent(annotation, index)
+	annotations
+		.filter(x => x.name !== TEXT_NODE_NAME)
+		.forEach((annotation, index) => {
+			const parent = findParent(annotation, index)
 
-		delete annotation.metadata._textContent
-		annotation.parent = null
-		annotation.children = []
+			delete annotation.metadata._textContent
+			annotation.parent = null
+			annotation.children = []
 
-		if (parent == null) {
-			tree = annotation
-		} else {
-			annotation.parent = parent
-			parent.children.push(annotation)
-		}
-	})
+			if (parent == null) {
+				tree = annotation
+			} else {
+				annotation.parent = parent
+				parent.children.push(annotation)
+			}
+		})
 
 	if (tree == null) return
 
@@ -100,12 +99,3 @@ function createTextAnnotationNode(
 		parent,
 	}
 }
-
-// function createAnnotationNode(annotation: StandoffAnnotation): AnnotationNode {
-// 	return {
-// 		...annotation,
-// 		metadata: { ...annotation.metadata },
-// 		children: [],
-// 		parent: null,
-// 	}
-// }
