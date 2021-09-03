@@ -46,11 +46,18 @@ export class StandoffTree {
 		this.update()
 	}
 
-	getStandoff() {
+	getStandoff(removeCircular = false) {
+		const annotations = removeCircular ?
+			this.list.map(x => {
+				const { parent, children, ...rest } = x
+				return rest
+			}) : 
+			this.list
+
 		return {
 			metadata: this.metadata,
 			text: this.text,
-			annotations: this.list
+			annotations,
 		}
 	}
 

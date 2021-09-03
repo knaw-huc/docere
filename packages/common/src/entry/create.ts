@@ -39,6 +39,7 @@ function addEntity(
 		})
 		entitiesById.set(root.props._entityId, root)
 	}
+
 	root.children?.forEach(child => addEntity(child, entitiesById, entityConfigsById))
 }
 

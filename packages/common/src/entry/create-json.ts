@@ -44,7 +44,7 @@ export function createJsonEntry(props: CreateJsonEntryPartProps): JsonEntry {
 				return {
 					...layerConfig,
 					tree: tree.exportReactTree(),
-					// standoff: props.standoff
+					standoff: tree.getStandoff(true)
 				} as TextLayer
 			} 
 

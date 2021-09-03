@@ -12,7 +12,10 @@ export function createElasticSearchDocument(
 	const textLayers = jsonEntry.layers.filter(isTextLayer)
 
 	const annotations = textLayers
-		.reduce<StandoffAnnotation[]>((prev, curr) => prev.concat(curr.standoff.annotations), [])
+		.reduce<StandoffAnnotation[]>(
+			(prev, curr) => prev.concat(curr.standoff.annotations),
+			[]
+		)
 
 	const entities = annotations
 		.reduce((map, curr) => {
