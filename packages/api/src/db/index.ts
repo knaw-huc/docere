@@ -74,6 +74,6 @@ async function deleteEntriesFromSource(sourceId: string, client: PoolClient) {
 		WHERE
 			source.name='${sourceId}'
 				AND
-			source.id=document.source_id`
+			source.name=document.source_name`
 	)
 }
