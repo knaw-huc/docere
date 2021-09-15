@@ -16,7 +16,7 @@ export class StandoffTree3 {
 				this.addAnnotation({
 					name: HIGHLIGHT_NODE_NAME,
 					start: match.index,
-					end: match.index + 6,
+					end: match.index + subString.length,
 					tagShape: TagShape.Range
 				}, false)
 			}
@@ -27,22 +27,50 @@ export class StandoffTree3 {
 
 	addAnnotation(partialAnnotation: PartialStandoffAnnotation, update = true) {
 		const annotation = toAnnotation3(partialAnnotation)
-		this.annotations.push(annotation)
-		this.lookup.set(annotation.id, annotation)
+
+		/**
+		 * Range annotations have to be splitted into a start and end annotation,
+		 * if it is a default or self closing annotation it is wrapped in an array
+		 * to prevent code repetition
+		 */ 
+		const annotations = annotation.tagShape === TagShape.Range ?
+			splitRangeAnnotation(annotation) :
+			[annotation]
+
+		/**
+		 * Add the new annotations to the list and the lookup
+		 */
+		annotations.forEach(a => {
+			this.annotations.push(a)
+			this.lookup.set(a.id, a)
+		})
 
 		if (update) this.update()
 	}
 
 	constructor(public standoff: PartialStandoff, private options: ExportOptions) {
-
 		/** 
 		 * Convert {@link PartialStandoffAnnotation } to {@link Annotation3}
 		 */
 		this.annotations = standoff.annotations
 			// TODO remove
 			.filter(a => a.id !== 'NL-HaNA_1.01.02_3760_0008-line-3059-919-752-176')
-			.map(toAnnotation3)
+			.reduce<Annotation3[]>((prev, curr) => {
+				const annotation = toAnnotation3(curr)
 
+				if (annotation.tagShape === TagShape.Range) {
+					splitRangeAnnotation(annotation).forEach(a => prev.push(a))
+				} else {
+					prev.push(annotation)
+				}
+				return prev
+			}, [])
+
+		/**
+		 * Create a lookup of all the annotations by ID. The tree only contains
+		 * the ID of the annotation. The lookup is used as a quick way to retrieve
+		 * the full annotation
+		 */
 		this.lookup = this.annotations.reduce<AnnotationLookup>(
 			(prev, curr) => prev.set(curr.id, curr),
 			new Map()
@@ -52,34 +80,18 @@ export class StandoffTree3 {
 	}
 
 	update() {
-		const annotations = this.annotations.reduce<Annotation3[]>((prev, curr) => {
-			if (curr.tagShape === TagShape.Range) {
-				const startAnnotation = cloneAnnotation(curr)
-				startAnnotation.end = startAnnotation.start
-				startAnnotation.metadata.isRangeStart = true
-				prev.push(startAnnotation)
-
-				const endAnnotation = cloneAnnotation(curr)
-				endAnnotation.start = endAnnotation.end
-				endAnnotation.metadata.isRangeEnd = true
-				prev.push(endAnnotation)
-			} else {
-				prev.push(curr)
-			}
-			return prev
-		}, [])
 
 		/**
 		 * Sort {@link Annotation3 | annotations} by {@link sortByOffset | offset}
 		 */
-		annotations.sort(sortByOffset(this.options))
+		this.annotations.sort(sortByOffset(this.options))
 
 		/**
 		 * Create a {@link AnnotationNode | tree} out of standoff {@link Annotation3 | annotations}.
 		 * 
 		 * Returns a {@link AnnotationNode | tree} and a {@link AnnotationLookup | lookup}
 		 */
-		this.tree = createTree3(annotations, this.standoff.text, this.lookup)
+		this.tree = createTree3(this.annotations, this.standoff.text, this.lookup)
 	}
 }
 
@@ -108,6 +120,18 @@ export interface Annotation3 extends Required<PartialStandoffAnnotation> {
 		textContent?: string
 	}
 	sourceMetadata: Record<string, any>
+}
+
+function splitRangeAnnotation(annotation: Annotation3) {
+	const startAnnotation = cloneAnnotation(annotation)
+	startAnnotation.end = startAnnotation.start
+	startAnnotation.metadata.isRangeStart = true
+
+	const endAnnotation = cloneAnnotation(annotation)
+	endAnnotation.start = endAnnotation.end
+	endAnnotation.metadata.isRangeEnd = true
+
+	return [startAnnotation, endAnnotation]
 }
 
 function toAnnotation3(currAnnotation: PartialStandoffAnnotation): Annotation3 {
@@ -181,6 +205,9 @@ function createTree3(
 
 		nodeLookup.set(node.id, node)
 
+		/**
+		 * If tree is null, node must be the root!
+		 */
 		if (tree == null) {
 			tree = node
 		} else {
@@ -190,13 +217,12 @@ function createTree3(
 		}
 
 		/**
-		 * Only if the {@link TagShape | tag shape} is a normal tag, we
-		 * assign it to prevNode. If the tag shape is self closing or a
-		 * range, it cannot have children and we can skip checking against
-		 * them.
+		 * Only if the {@link TagShape | tag shape} is a default tag (<x>..</x>),
+		 * it is assigned to prevNode. If the tag shape is self closing (<x/>)
+		 * or a range (<x/>...<x/>), it cannot have children and we can skip
+		 * checking against them.
 		 */
 		if (annotation.tagShape === TagShape.Default) {
-			console.log(node)
 			prevNode = node
 		}
 	}
