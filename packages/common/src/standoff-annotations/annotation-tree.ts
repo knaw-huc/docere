@@ -2,14 +2,17 @@ import { TextLayerConfig } from '../entry/layer'
 import { isAnnotation, isChild, sortByOffset, toAnnotationNode } from './utils'
 import { createTree } from './create-tree'
 import { exportXml } from './export-xml'
-import { exportReactTree } from './export-react-tree'
+// import { exportReactTree } from './export-react-tree'
 import { Ranges } from './ranges'
 // import { OverlapController } from './overlap-controller'
 
-import { StandoffAnnotation, FilterFunction, PartialStandoffAnnotation, AnnotationNode, PartialStandoff, TEXT_NODE_NAME, Standoff } from '.'
+import { StandoffAnnotation, FilterFunction, PartialStandoffAnnotation, AnnotationNode, PartialStandoff, Standoff } from '.'
 import { ExportOptions, extendExportOptions, PartialExportOptions } from './export-options'
+import { TagShape } from '../enum'
 
 type Lookup = Map<string, AnnotationNode>
+
+const TEXT_NODE_NAME = "__TMP__"
 
 /**
  * Turns {@link Standoff} into a tree in order to use the standoff as an
@@ -202,7 +205,7 @@ export class StandoffTree {
 
 	private _convertToMilestone(node: AnnotationNode) {
 		node.end = node.start
-		node.isSelfClosing = true
+		node.tagShape = TagShape.SelfClosing
 	}
 
 	addRange(
@@ -358,9 +361,9 @@ export class StandoffTree {
 		return exportXml(this.root, this.options)
 	}
 
-	exportReactTree() {
-		return exportReactTree(this.root, this.options)
-	}
+	// exportReactTree() {
+	// 	return exportReactTree(this.root, this.options)
+	// }
 
 	/**
 	 * Get the text content of an annotation
@@ -380,7 +383,7 @@ export class StandoffTree {
 	getTextContent(annotation?: AnnotationNode) {
 		if (annotation === undefined) return this.text
 		if (annotation == null) return null
-		if (annotation.isSelfClosing) return ''
+		if (annotation.tagShape === TagShape.SelfClosing) return ''
 		return this.text.slice(annotation.start, annotation.end)
 	}
 

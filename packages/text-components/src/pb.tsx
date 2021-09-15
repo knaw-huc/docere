@@ -1,5 +1,5 @@
 import React from 'react'
-import { DEFAULT_SPACING, Facsimile, EntrySettingsContext, EntryContext, ContainerContext, DocereAnnotationProps } from '@docere/common'
+import { DEFAULT_SPACING, Facsimile, EntrySettingsContext, EntryContext, ContainerContext, ComponentProps } from '@docere/common'
 import { FacsimileThumb } from '@docere/ui-components'
 import styled from 'styled-components'
 
@@ -40,10 +40,10 @@ function useFacsimiles(ids: string) {
 	return facsimiles
 }
 
-export function Pb(props: DocereAnnotationProps) {
+export function Pb(props: ComponentProps) {
 	const settings = React.useContext(EntrySettingsContext)
 	const container = React.useContext(ContainerContext)
-	const facsimiles = useFacsimiles(props._facsimileId)
+	const facsimiles = useFacsimiles(props.annotation.metadata.facsimileId)
 
 	if (
 		!settings['panels.text.showPageBeginnings'] ||
@@ -58,10 +58,10 @@ export function Pb(props: DocereAnnotationProps) {
 						facsimiles.map(facsimile =>
 							<FacsimileThumb
 								facsimile={{
-									id: facsimile.props._facsimileId,
-									path: facsimile.props._facsimilePath
+									id: facsimile.metadata.facsimileId,
+									path: facsimile.metadata.facsimilePath
 								}}
-								key={facsimile.props.key}
+								key={facsimile.id}
 								container={container}
 							/>	
 						)

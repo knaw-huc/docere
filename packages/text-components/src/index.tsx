@@ -4,7 +4,7 @@ import type { ComponentProps } from '@docere/common'
 
 const Space = styled.div`
 	${(props: ComponentProps) => {
-		const { unit, dim, quantity } = props
+		const { unit, dim, quantity } = props.annotation.sourceMetadata
 		if (unit !== 'lines' || dim !== 'vertical' || quantity == null) return ''
 		return `
 			display: block;
@@ -16,7 +16,7 @@ const Space = styled.div`
 const has = (rendAttribute: string, rendStyle: string) => rendAttribute.split(' ').indexOf(rendStyle) > -1
 const Hi = styled.span`
 	${(props: ComponentProps) => {
-		const { rend } = props
+		const { rend } = props.annotation.sourceMetadata
 		if (rend == null) return ''
 		const rules = []
 		if (has(rend, 'underline')) rules.push('text-decoration: underline;')

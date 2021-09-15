@@ -40,12 +40,12 @@ export const NoteTag = React.memo(function NotePopup(props: ComponentProps) {
 
 	const entity = useEntity(props.attributes['docere:id'])
 
-	const active = activeEntities.has(entity?.props._entityId)
+	const active = activeEntities.has(entity?.metadata.entityId)
 	const openToAside = active && !settings['panels.text.openPopupAsTooltip']
 
 	const handleClick = React.useCallback(() => {
 		dispatch({
-			entityId: entity.props._entityId,
+			entityId: entity.metadata.entityId,
 			type: 'ADD_ENTITY',
 			triggerContainer: container.type,
 			triggerContainerId: container.id,
@@ -59,7 +59,7 @@ export const NoteTag = React.memo(function NotePopup(props: ComponentProps) {
 			active={active}
 			className="note"
 			color={entityConfig.color}
-			id={entity.props._entityId}
+			id={entity.metadata.entityId}
 			onClick={handleClick}
 			openToAside={openToAside}
 		>

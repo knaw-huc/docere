@@ -1,5 +1,7 @@
-import { AnnotationNode, TEXT_NODE_NAME } from "."
+import { AnnotationNode } from "."
 import { extendStandoffAnnotation, isChild } from "./utils"
+
+const TEXT_NODE_NAME = "__TMP__"
 
 /**
  * Create a tree (AnnotationNode) from StandoffTree

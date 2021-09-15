@@ -48,21 +48,21 @@ export interface EntityComponentProps {
 export const EntityWrapper = React.memo(function EntityWrapper(props: EntityComponentProps) {
 	const activeEntities = React.useContext(EntitiesContext)
 	const ref = React.useRef<HTMLDivElement>()
-	const active = activeEntities.has(props.entity.props._entityId)
+	const active = activeEntities.has(props.entity.metadata.entityId)
 
 	return (
 		<Wrapper
 			active={active}
-			entityConfig={props.entity.props._config}
+			entityConfig={props.entity.metadata.entityConfig}
 			ref={ref}
 		>
 			{
-				props.entity.props._config.title != null &&
+				props.entity.metadata.entityConfig.title != null &&
 				<Header
-					color={props.entity.props._config.color}
+					color={props.entity.metadata.entityConfig.color}
 				>
 					<span></span>
-					<span>{props.entity.props._config.title}</span>
+					<span>{props.entity.metadata.entityConfig.title}</span>
 					<span></span>
 				</Header>
 			}

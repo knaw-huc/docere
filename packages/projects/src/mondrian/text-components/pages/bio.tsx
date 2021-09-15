@@ -5,15 +5,15 @@ import { PageComponentProps } from '@docere/common'
 function BirthDeath(props: PageComponentProps) {
 	return (
 		<div>
-			{props.attributes.when}
+			{props.annotation.sourceMetadata.when}
 			{props.children}
 		</div>
 	)
 }
 
 type PWProps = PageComponentProps & { ref?: any }
-const PersonWrapper = styled.div.attrs((props: PWProps) => ({ id: props.attributes['xml:id'] }))`
-	background: ${(props: PWProps) => props.activeId === props.attributes['xml:id'] ? 'green' : 'none'};
+const PersonWrapper = styled.div.attrs((props: PWProps) => ({ id: props.annotation.sourceMetadata['xml:id'] }))`
+	background: ${(props: PWProps) => props.activeId === props.annotation.sourceMetadata['xml:id'] ? 'green' : 'none'};
 	margin-bottom: 1rem;
 	min-height: 40px;
 `
@@ -29,7 +29,7 @@ function useScrollIntoView(elementId: string, activeId: string) {
 }
 
 export function Person(props: PageComponentProps) {
-	const ref = useScrollIntoView(props.attributes['xml:id'], props.activeId)
+	const ref = useScrollIntoView(props.annotation.sourceMetadata['xml:id'], props.activeId)
 	return (
 		<PersonWrapper {...props} ref={ref}>
 			{props.children}

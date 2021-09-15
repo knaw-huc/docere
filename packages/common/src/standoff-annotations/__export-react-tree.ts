@@ -1,5 +1,5 @@
 import { exportMetadata } from "./export-xml"
-import { AnnotationNode, DocereAnnotation, TEXT_NODE_NAME } from "."
+import { AnnotationNode, StandoffAnnotation, TEXT_NODE_NAME } from "."
 import { ExportOptions } from "./export-options"
 
 const invalidKeys = new Set(['ref', 'key'])
@@ -50,6 +50,53 @@ export function exportReactTree(root: AnnotationNode, options: ExportOptions): D
 			prev[key] = value
 			return prev
 		}, annotationClone.props)
+
+	return annotationClone
+}
+
+// Convert StandoffAnnotation to DocereAnnotation
+export function toDocereAnnotation(annotation: StandoffAnnotation, options: ExportOptions): DocereAnnotation {
+	console.log('on standoff anno', annotation.metadata._entityId)
+	const { id, name, metadata } = annotation
+
+	const annotationClone: DocereAnnotation = {
+		type: name,
+		props: {
+			key: id
+		}
+	} 
+
+	if (metadata.key != null) annotationClone.props._key = metadata.key
+
+	// If the annotation is an entity, only add the entity ID, because
+	// the metadata can already be found in the lookup (entry.textData.entities)
+	// if (metadata.hasOwnProperty('_entityId')) {
+	// 	annotationClone.props._entityId = metadata._entityId
+	// } else {
+	// Use exportMetadata to exclude/include metadata according to the export options
+	annotationClone.props = exportMetadata(annotation, options)
+		// Don't use the annotation ID, because it is already 
+		// used as the `key` metadata. React uses the `key` to
+		// distingish elements in a list 
+		.filter(([key]) => key !== 'id')
+		
+		// Rename keys that have a different purpose in React
+		.map(([key, value]) =>
+			invalidKeys.has(key) ?
+				[`_${key}`, value] :
+				[key, value]
+		)
+
+		// Add metadata to props
+		.reduce<DocereAnnotation['props']>((prev, curr) => {
+			const [key, value] = curr
+			prev[key] = value
+			return prev
+		}, annotationClone.props)
+
+	// annotationClone.props._id = id
+
+	console.log('on clone', annotationClone.props._entityId)
 
 	return annotationClone
 }

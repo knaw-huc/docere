@@ -1,5 +1,5 @@
 import { LayerType } from '../../enum'
-import { DocereAnnotation, FilterFunction, Standoff } from '../../standoff-annotations'
+import { FilterFunction, Standoff, StandoffTree3 } from '../../standoff-annotations'
 import { BaseConfig } from '../metadata'
 
 // export * from './serialize'
@@ -68,8 +68,9 @@ export type SerializedBaseLayer =
 // Layer
 export interface TextLayer extends SerializedBaseLayer {//extends Omit<SerializedTextLayer, 'facsimileIds' | 'entityIds'>, LayerTextData {
 	standoff: Standoff
-	tree: DocereAnnotation
+	// tree: DocereAnnotation
 	type: LayerType.Text
+	standoffTree3: StandoffTree3
 }
 
 export interface FacsimileLayer extends SerializedBaseLayer {//extends Omit<SerializedBaseLayer, 'facsimileIds' | 'entityIds'>, LayerTextData {
@@ -89,6 +90,8 @@ export type Layer = TextLayer | FacsimileLayer
  * This is the layer that is used in the front-end. It is called stateful
  * because this type of layer has data on how it is presented. Some of the 
  * stateful props are already present in the {@link LayerConfig}.
+ * 
+ * TODO make a difference between a layer and a panel, the props of StatefulBaseLayer are all resposibilities of a panel, not a (text)layer
  */
 interface StatefulBaseLayer {
 	/*

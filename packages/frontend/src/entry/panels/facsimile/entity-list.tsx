@@ -17,11 +17,11 @@ export function EntityList() {
 		<Wrapper>
 			{
 				Array.from(activeEntities.values())
-					.filter(entity => Array.isArray(entity.props._areas))
+					.filter(entity => Array.isArray(entity.metadata.areas))
 					.map(entity =>
 						<EntityItem
 							entity={entity}
-							key={entity.props.key}
+							key={entity.id}
 						/>
 					)
 			}
@@ -34,7 +34,7 @@ const Item = styled.div`
 `
 
 function EntityItem(props: EntityComponentProps) {
-	const Component = useUIComponent(UIComponentType.Entity, props.entity.props._entityConfigId)
+	const Component = useUIComponent(UIComponentType.Entity, props.entity.metadata.entityConfigId)
 	if (Component == null) {
 		console.error('[EntityItem] Component not found!')
 		return null
@@ -42,7 +42,7 @@ function EntityItem(props: EntityComponentProps) {
 
 	return (
 		<Item
-			data-id={`entity_${props.entity.props._entityId}`}
+			data-id={`entity_${props.entity.metadata.entityId}`}
 		>
 			<Component entity={props.entity} />
 		</Item>

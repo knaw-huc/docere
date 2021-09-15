@@ -2,7 +2,7 @@ import React from 'react'
 import { BaseMetadataConfig, ID } from '.'
 import { EntryContext } from '..'
 import { Colors, ContainerType, EntityType } from '../enum'
-import { DocereAnnotation, PartialStandoffAnnotation } from '../standoff-annotations'
+import { Annotation3, PartialStandoffAnnotation } from '../standoff-annotations'
 import { GetValueProps } from './create-json'
 
 export interface EntityConfig extends BaseMetadataConfig {
@@ -65,13 +65,14 @@ export const defaultEntityConfig: Required<EntityConfig> = {
  * often because it contains information on the render: the color,
  * if should be rendered on the aside, etc.
  */
-export interface Entity extends DocereAnnotation {
-	props: DocereAnnotation['props'] & {
-		_entityId: DocereAnnotation['props']['_entityId']
-		_entityConfigId: DocereAnnotation['props']['_entityConfigId']
-		_config: EntityConfig
-	}
-}
+// export interface Entity extends DocereAnnotation {
+// 	props: DocereAnnotation['props'] & {
+// 		_entityId: DocereAnnotation['props']['_entityId']
+// 		_entityConfigId: DocereAnnotation['props']['_entityConfigId']
+// 		_config: EntityConfig
+// 	}
+// }
+export type Entity = Annotation3
 
 // Active entity
 export type ActiveEntity = Entity & TriggerContainer

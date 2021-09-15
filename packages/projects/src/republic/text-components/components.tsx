@@ -25,13 +25,13 @@ export function RepublicLb(props: EntityAnnotationComponentProps) {
 	const container = React.useContext(ContainerContext)
 	const activeEntities = React.useContext(EntitiesContext)
 
-	const entity = useEntity(props._entityId)
+	const entity = useEntity(props.annotation.metadata.entityId)
 
 	const handleClick = React.useCallback(ev => {
 		ev.stopPropagation()
 		dispatch({
 			type: 'ADD_ENTITY',
-			entityId: entity.props._entityId,
+			entityId: entity.metadata.entityId,
 			triggerContainer: container.type,
 			triggerContainerId: container.id,
 		})
@@ -41,9 +41,9 @@ export function RepublicLb(props: EntityAnnotationComponentProps) {
 
 	return (
 		<LbWrapper
-			active={activeEntities.has(entity.props._entityId)}
-			color={entity.props._config.color}
-			data-entity-id={entity.props._entityId}
+			active={activeEntities.has(entity.metadata.entityId)}
+			color={entity.metadata.entityConfig.color}
+			data-entity-id={entity.metadata.entityId}
 			onClick={handleClick}
 		/>
 	)
@@ -54,14 +54,14 @@ export function SessionPart(props: EntityAnnotationComponentProps) {
 	const dispatch = React.useContext(DispatchContext)
 	const container = React.useContext(ContainerContext)
 
-	const entity = useEntity(props._entityId)
+	const entity = useEntity(props.annotation.metadata.entityId)
 
 	const handleClick = React.useCallback(ev => {
 		ev.stopPropagation()
 
 		dispatch({
 			type: 'ADD_ENTITY',
-			entityId: entity.props._entityId,
+			entityId: entity.metadata.entityId,
 			triggerContainer: container.type,
 			triggerContainerId: container.id,
 		})
@@ -71,10 +71,10 @@ export function SessionPart(props: EntityAnnotationComponentProps) {
 
 	return (
 		<SessionPartWrapper
-			active={activeEntities.has(entity.props._entityId)}
-			color={entity.props._config.color}
+			active={activeEntities.has(entity.metadata.entityId)}
+			color={entity.metadata.entityConfig.color}
 		>
-			<h4 onClick={handleClick}>{entity.props._config.title}</h4>
+			<h4 onClick={handleClick}>{entity.metadata.entityConfig.title}</h4>
 			{props.children}
 		</SessionPartWrapper>
 	)

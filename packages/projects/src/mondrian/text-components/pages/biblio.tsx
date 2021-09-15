@@ -1,7 +1,7 @@
 import styled from 'styled-components'
-import { Paragraph, Hi } from '@docere/text-components'
-import React from 'react'
-import { PageComponentProps } from '@docere/common'
+import { Paragraph } from '@docere/text-components'
+// import React from 'react'
+// import { PageComponentProps } from '@docere/common'
 import { Person } from './bio'
 
 export default async function pageComponents() {
@@ -16,6 +16,6 @@ export default async function pageComponents() {
 		text: styled.div`
 			font-size: 1rem;
 		`,
-		title: (props: PageComponentProps) => <Hi attributes={{ rend: "italic" }} {...props}>{props.children}</Hi>
+		// title: (props: PageComponentProps) => <Hi attributes={{ rend: "italic" }} {...props}>{props.children}</Hi>
 	}
 }

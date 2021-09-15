@@ -108,7 +108,7 @@ export class AreaRenderer {
 
 			const lastEntity = activeEntities.size === index + 1
 
-			entity.props._areas?.forEach(fa => {
+			entity.metadata.areas?.forEach(fa => {
 				rect = this.overlay.node().querySelector(`#${fa.id}`)
 				if (rect == null) return
 				rect.classList.add('active')
@@ -118,7 +118,7 @@ export class AreaRenderer {
 				// (could be multiple areas) is set to fully opague
 				rect.setAttribute(
 					'fill',
-					lastEntity ? `${entity.props._config.color}66` : `${entity.props._config.color}66`
+					lastEntity ? `${entity.metadata.entityConfig.color}66` : `${entity.metadata.entityConfig.color}66`
 				)
 
 				// Update combined bounds
@@ -131,7 +131,8 @@ export class AreaRenderer {
 			// Add the popup to the last entity
 			if (lastEntity) {
 				if (currentBounds == null) return
-				const element = document.querySelector(`[data-id="entity_${entity.props._entityId}"]`).cloneNode(true)
+				const selector = `[data-id="entity_${entity.metadata.entityId}"]`
+				const element = document.querySelector(selector).cloneNode(true)
 
 				if (element != null) {
 					this.osd.addOverlay({
@@ -206,15 +207,15 @@ export class AreaRenderer {
 		this.rectTpl.setAttribute('stroke-width', this.strokeWidth.toString())
 
 		// Create the <rect>s, but skip if the <rect>s are already in the cache
-		if (!this.cache.has(facsimile.props._facsimileId)) {
+		if (!this.cache.has(facsimile.metadata.facsimileId)) {
 			const fragment = document.createDocumentFragment()
 			const areas: AreaCache = []
 
 			for (const entity of entry.textData.entities.values()) {
-				if (entity.props._areas == null) continue
+				if (entity.metadata.areas == null) continue
 
-				entity.props._areas.forEach(area => {
-					if (area.facsimileId !== facsimile.props._facsimileId) return
+				entity.metadata.areas.forEach(area => {
+					if (area.facsimileId !== facsimile.metadata.facsimileId) return
 
 					if (isFacsimileAreaRectangle(area)) {
 						const vpRect = this.osd.viewport.imageToViewportRectangle(area.x, area.y, area.w, area.h)
@@ -239,7 +240,7 @@ export class AreaRenderer {
 
 						areas.push({
 							entryId: entry.id,
-							entityId: entity.props._entityId,
+							entityId: entity.metadata.entityId,
 							points,
 						})
 					}
@@ -247,11 +248,11 @@ export class AreaRenderer {
 			}
 
 			// Add the created fragment to the cache
-			this.cache.set(facsimile.props._facsimileId, { fragment, areas })
+			this.cache.set(facsimile.metadata.facsimileId, { fragment, areas })
 		}
 
 		// Add the <rect>s to the overlay element
-		const { fragment, areas } = this.cache.get(facsimile.props._facsimileId)
+		const { fragment, areas } = this.cache.get(facsimile.metadata.facsimileId)
 		this.areas = areas
 		this.overlay.node().appendChild(fragment.cloneNode(true) as DocumentFragment)
 	}

@@ -4,7 +4,7 @@ export function formatTileSource(facsimile: Facsimile) {
 	if (facsimile == null) return
 
 	return {
-		tileSource: facsimile.props._facsimilePath,
+		tileSource: facsimile.metadata.facsimilePath,
 		width: 2,
 		x: .5,
 		y: .5,

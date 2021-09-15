@@ -1,13 +1,17 @@
 import React from 'react'
 import { FacsimileArea } from '../entry/facsimile'
+import { TagShape } from '../enum'
+import { Annotation3 } from './annotation-tree3'
 
 export * from './annotation-tree'
+export * from './annotation-tree3'
 export * from './utils'
 export * from './export-options'
 
 export const ROOT_NODE_NAME = 'root'
-export const TEXT_NODE_NAME = '__TEXT_NODE__'
-export const RANGE_TAG_NAME = '_range'
+// export const TEXT_NODE_NAME = '__TEXT__'
+export const HIGHLIGHT_NODE_NAME = '__HI__'
+// export const RANGE_TAG_NAME = '_range'
 
 /**
  * The source for {@link AnnotationList} and {@link AnnotationTree}
@@ -63,9 +67,9 @@ export interface PartialStandoffAnnotation {
 	end?: number
 	endOrder?: number
 	id?: string
-	isSelfClosing?: boolean
 	metadata?: StandoffAnnotationMetadata
 	name: string
+	tagShape?: TagShape
 	start: number
 	startOrder?: number
 }
@@ -92,20 +96,22 @@ export interface LintReport {
 	overlap: OverlapReport
 }
 
-export type DocereAnnotationProps = AnnotationNode['metadata'] & {
-	_key?: string
-	_ref?: string
-	key: string | number // Docere only uses strings, but StyledComponents can have numbers
+// export type DocereAnnotationProps = AnnotationNode['metadata'] & {
+// 	_key?: string
+// 	_ref?: string
+// 	key: string | number // Docere only uses strings, but StyledComponents can have numbers
+// }
+
+export interface ComponentProps {
+	annotation: Annotation3
+	children?: React.ReactNode
+ 	key: string | number // Docere only uses strings, but StyledComponents can have numbers
 }
 
-export type ComponentProps = DocereAnnotationProps & {
-	children: React.ReactNode
-}
+export type EntityAnnotationComponentProps = ComponentProps
 
-export type EntityAnnotationComponentProps = Pick<ComponentProps, 'key' | '_entityId' | 'children'>
-
-export interface DocereAnnotation {
-	children?: (DocereAnnotation | string)[]
-	props?: DocereAnnotationProps
-	type: string
-}
+// export interface DocereAnnotation {
+// 	children?: (DocereAnnotation | string)[]
+// 	props?: DocereAnnotationProps
+// 	type: string
+// }

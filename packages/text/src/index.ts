@@ -1,31 +1,37 @@
 import React from 'react'
 
-import { DocereComponents, DocereAnnotation, DocereAnnotationProps } from '@docere/common'
+import { ComponentProps, DocereComponents, Node, ReactComponent, StandoffTree3 } from '@docere/common'
 
 export type { DocereComponents } from '@docere/common'
 
-function Empty(props: DocereAnnotationProps) {
+function Empty(props: ComponentProps) {
 	if (props.children == null) return null
 	return props.children
 }
 
-function renderComponentTree(root: DocereAnnotation, props: DocereTextViewProps): JSX.Element
-function renderComponentTree(textNode: string, props: DocereTextViewProps): string
-function renderComponentTree(root: DocereAnnotation | string, props: DocereTextViewProps): JSX.Element | string
-function renderComponentTree(root: DocereAnnotation | string, props: DocereTextViewProps): JSX.Element | string {
-	if (typeof root === 'string') return root
+function getComponentRenderer(props: DocereTextViewProps) {
+	// const annotations = new Map(props.standoffTree.annotations)
 
-	let component = props.components[root.type]
-	if (component == null && props.components._find != null) {
-		component = props.components._find(root)
+	return function renderComponent(node: Node): JSX.Element | string {
+		if (typeof node === 'string') return node
+
+		const annotation = props.standoffTree.lookup.get(node.id)
+
+		let component = props.components[annotation.name]
+		if (component == null && props.components._find != null) {
+			component = props.components._find(annotation)
+		}
+		if (component == null) component = Empty as ReactComponent
+
+		return React.createElement(
+			component,
+			{
+				annotation,
+				key: annotation.id,
+			},
+			node.children?.map(child => renderComponent(child))
+		)
 	}
-	if (component == null) component = Empty
-
-	return React.createElement(
-		component,
-		root.props,
-		root.children?.map(child => renderComponentTree(child, props))
-	)
 }
 
 export interface DocereTextViewProps {
@@ -35,13 +41,14 @@ export interface DocereTextViewProps {
 	onLoad?: (isReady: boolean, el: Element) => void
 	prepare?: (node: Element) => Element
 	setHighlightAreas?: (areas: number[]) => void
-	tree: DocereAnnotation
+	standoffTree: StandoffTree3
 }
 
-function DocereTextView_(props: DocereTextViewProps) {
-	if (props.tree == null || props.components == null) return null
 
-	return renderComponentTree(props.tree, props)
-}
-
-export const DocereTextView = React.memo(DocereTextView_)
+export const DocereTextView = React.memo(
+	function (props: DocereTextViewProps) {
+		if (props.standoffTree == null || props.components == null) return null
+		const renderComponent = getComponentRenderer(props)
+		return renderComponent(props.standoffTree.tree) as JSX.Element
+	}
+)

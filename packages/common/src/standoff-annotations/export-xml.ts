@@ -1,9 +1,12 @@
-import { AnnotationNode, TEXT_NODE_NAME, ROOT_NODE_NAME, PartialStandoffAnnotation } from "."
+import { AnnotationNode, ROOT_NODE_NAME, PartialStandoffAnnotation } from "."
+import { TagShape } from "../enum"
 import { ExportOptions } from "./export-options"
+
+const TEXT_NODE_NAME = '__TMP__'
 
 export function exportMetadata(annotation: PartialStandoffAnnotation, options: ExportOptions) {
 	let metadata: [string, any][] = Object.keys(annotation.metadata)
-		.filter(key => key.charAt(0) !== '_')
+		// .filter(key => key.charAt(0) !== '_')
 		.map(key => [key, annotation.metadata[key]])
 
 	metadata = metadata.filter(([key]) => options.metadata.exclude.indexOf(key) === -1)
@@ -46,7 +49,7 @@ export function exportXml(root: AnnotationNode, options: ExportOptions): string 
 
 	let tagString = `<${root.name}${metadata2string(root, options)}`
 
-	if (root.isSelfClosing) return `${tagString}/>`
+	if (root.tagShape === TagShape.SelfClosing) return `${tagString}/>`
 
 	const meta = (options.metadata.addRootMetadata && root.name === ROOT_NODE_NAME) ?
 		Object.keys(root.metadata).reduce((prev, curr) =>

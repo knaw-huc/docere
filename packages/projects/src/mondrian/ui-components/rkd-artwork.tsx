@@ -87,7 +87,7 @@ const Wrapper = styled.div`
 `
 
 function RkdArtworkPopupBody(props: EntityComponentProps) {
-	const rkdImage = useRkdImage(props.entity.props._entityId)
+	const rkdImage = useRkdImage(props.entity.metadata.entityId)
 	if (rkdImage == null) return null
 
 	return (
@@ -107,7 +107,7 @@ function RkdArtworkPopupBody(props: EntityComponentProps) {
 					entity={props.entity}
 				>
 					<a
-						href={`https://rkd.nl/en/explore/images/${props.entity.props._entityId}`}
+						href={`https://rkd.nl/en/explore/images/${props.entity.metadata.entityId}`}
 						onClick={ev => ev.stopPropagation()}
 						target="_blank"
 					>

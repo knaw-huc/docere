@@ -33,7 +33,7 @@ export function useChildren(children: React.ReactNode, entity: Entity): SplitChi
 		if (!childrenArray.length) return
 
 		if (
-			IconsByType.hasOwnProperty(entity.props._config.type) &&
+			IconsByType.hasOwnProperty(entity.metadata.entityConfig.type) &&
 			typeof childrenArray[0] === 'string'
 		) {
 			const firstString = childrenArray.shift() as 'string'

@@ -14,10 +14,10 @@ export function EntityTooltip(props: Props) {
 
 	return (
 		<Tooltip
-			color={props.entity.props._config.color}
+			color={props.entity.metadata.entityConfig.color}
 			offset={offset}
 			ref={wrapperRef}
-			zIndexOffset={indexOfIterator(activeEntities, props.entity.props._entityId)}
+			zIndexOffset={indexOfIterator(activeEntities, props.entity.metadata.entityId)}
 		>
 			{props.children}
 		</Tooltip>

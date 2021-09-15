@@ -28,10 +28,10 @@ export function useScrollFacsimileIntoView(ref: React.RefObject<HTMLElement>, co
 
 		// Find the first element which represents the entity
 		if (ref.current == null) return
-		const el = ref.current.querySelector(`[data-facsimile-id="${activeFacsimile.props._facsimileId}"]`)
+		const el = ref.current.querySelector(`[data-facsimile-id="${activeFacsimile.metadata.facsimileId}"]`)
 		if (el == null) {
 			setTimeout(() => {
-				const el = ref.current.querySelector(`[data-facsimile-id="${activeFacsimile.props._facsimileId}"]`)
+				const el = ref.current.querySelector(`[data-facsimile-id="${activeFacsimile.metadata.facsimileId}"]`)
 				handleScroll(el)
 			}, 300)
 			return

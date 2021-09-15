@@ -56,7 +56,7 @@ export default function PageView() {
 			<ContainerProvider id={page.id} type={ContainerType.Page}>
 				<DocereTextView
 					components={components}
-					tree={null}
+					standoffTree={null}
 				/>
 			</ContainerProvider>
 			<Close onClick={closePage}>✕</Close>

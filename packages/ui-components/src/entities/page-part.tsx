@@ -16,8 +16,8 @@ function PageLink(props: EntityComponentProps) {
 		dispatch({
 			type: 'SET_PAGE_ID',
 			setPage: {
-				entityIds: new Set([props.entity.props._entityId]),
-				pageId: props.entity.props._config.id,
+				entityIds: new Set([props.entity.metadata.entityId]),
+				pageId: props.entity.metadata.entityConfig.id,
 			}
 		})
 	}, [props.entity])
@@ -40,7 +40,7 @@ function PageLink(props: EntityComponentProps) {
  * visualise (relatively simple and small sized) structured data.
  */
 export const PagePartEntity = React.memo(function(props: EntityComponentProps) {
-	const page = usePage(props.entity.props._config.id)
+	const page = usePage(props.entity.metadata.entityConfig.id)
 	const components = useComponents(ContainerType.Page, page?.id)
 
 	if (page == null) return null
@@ -53,7 +53,7 @@ export const PagePartEntity = React.memo(function(props: EntityComponentProps) {
 			<EntityWithLinkWrapper>
 				<DocereTextView
 					components={components}
-					tree={null}
+					standoffTree={null}
 				/>
 				<PageLink
 					entity={props.entity}

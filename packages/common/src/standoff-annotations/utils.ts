@@ -2,6 +2,7 @@ import { AnnotationNode } from "."
 import { ExportOptions } from './export-options'
 
 import type { PartialStandoffAnnotation, StandoffAnnotation } from "."
+import { TagShape } from "../enum"
 
 export function simpleAnno({ name, start, end }: StandoffAnnotation) {return { name, start, end }}
 
@@ -28,10 +29,11 @@ export function isAnnotation(annotation: any): annotation is StandoffAnnotation 
 // }
 
 /** Check if annotation is child of parent */
+// TODO remove or replace by isChild from annotation-tree3
 export function isChild(child: PartialStandoffAnnotation, parent: PartialStandoffAnnotation): boolean {
 	if (parent == null || child == null || parent === child) return false
-	if (parent.isSelfClosing) return false
-	if (child.isSelfClosing) {
+	if (parent.tagShape === TagShape.SelfClosing) return false
+	if (child.tagShape === TagShape.SelfClosing) {
 		return parent.start <= child.start && parent.end >= child.start
 	}
 	return parent.start <= child.start && parent.end >= child.end
@@ -84,8 +86,8 @@ export function sortByOffset(options: ExportOptions) {
 		 */
 		if (
 			(a.start === b.start && a.end === b.end) ||
-			(a.isSelfClosing && a.start === b.start) ||
-			(b.isSelfClosing && a.start === b.start)
+			(a.tagShape === TagShape.SelfClosing && a.start === b.start) ||
+			(b.tagShape === TagShape.SelfClosing && a.start === b.start)
 		) {
 			const result = sbh(a, b)
 			if (result != null) return result
@@ -110,10 +112,10 @@ export function sortByOffset(options: ExportOptions) {
  * @todo add clone (and add tests to check if cloning works properly)
  */
 export function extendStandoffAnnotation(annotation: PartialStandoffAnnotation): StandoffAnnotation {
-	if (annotation.end == null) annotation.isSelfClosing = true
+	if (annotation.end == null) annotation.tagShape = TagShape.SelfClosing
 
 	if (
-		annotation.isSelfClosing &&
+		annotation.tagShape === TagShape.SelfClosing &&
 		annotation.end !== annotation.start
 	) annotation.end = annotation.start
 
@@ -122,7 +124,7 @@ export function extendStandoffAnnotation(annotation: PartialStandoffAnnotation):
 		endOrder: null,
 		id: annotation.id == null ? Math.random().toString().slice(2) : null,
 		index: null,
-		isSelfClosing: false,
+		tagShape: TagShape.Default,
 		metadata: {},
 		startOrder: null,
 		...annotation,
@@ -138,10 +140,10 @@ export function extendStandoffAnnotation(annotation: PartialStandoffAnnotation):
  * @todo add clone (and add tests to check if cloning works properly)
  */
 export function toAnnotationNode(annotation: PartialStandoffAnnotation): AnnotationNode {
-	if (annotation.end == null) annotation.isSelfClosing = true
+	if (annotation.end == null) annotation.tagShape = TagShape.SelfClosing
 
 	if (
-		annotation.isSelfClosing &&
+		annotation.tagShape === TagShape.SelfClosing &&
 		annotation.end !== annotation.start
 	) annotation.end = annotation.start
 
@@ -150,7 +152,7 @@ export function toAnnotationNode(annotation: PartialStandoffAnnotation): Annotat
 		endOrder: null,
 		id: annotation.id == null ? Math.random().toString().slice(2) : null,
 		index: null,
-		isSelfClosing: false,
+		tagShape: TagShape.Default,
 		metadata: {},
 		startOrder: null,
 		parent: null,

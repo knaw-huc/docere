@@ -113,7 +113,7 @@ export default class TiledImages {
 	setFacsimile(facsimile?: ActiveFacsimile) {
 		if (
 			facsimile == null &&
-			this.activeFacsimileID !== this.activeFacsimile?.props._facsimileId
+			this.activeFacsimileID !== this.activeFacsimile?.metadata.facsimileId
 		) {
 			facsimile = this.activeFacsimile
 		}
@@ -121,7 +121,7 @@ export default class TiledImages {
 		if (this.activeFacsimile == null) return
 
 		const activeTileOption = this.activeTileOptions
-			.find(to => to.tileSource === facsimile.props._facsimilePath)
+			.find(to => to.tileSource === facsimile.metadata.facsimilePath)
 		if (activeTileOption == null || activeTileOption.bounds == null) return
 
 		this.viewer.removeOverlay(ACTIVE_FACSIMILE_OVERLAY_ID)
@@ -139,7 +139,7 @@ export default class TiledImages {
 
 		this.viewer.viewport.fitBounds(activeTileOption.bounds)
 
-		this.activeFacsimileID = this.activeFacsimile.props._facsimileId
+		this.activeFacsimileID = this.activeFacsimile.metadata.facsimileId
 	}
 
 	/**

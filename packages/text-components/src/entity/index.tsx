@@ -61,10 +61,10 @@ export const EntityTag = React.memo(function EntityComp(props: EntityAnnotationC
 
 	if (!settings['panels.entities.show']) return <span>{props.children}</span>
 
-	const entity = useEntity(props._entityId)
+	const entity = useEntity(props.annotation.metadata.entityId)
 	const [firstChild, middleChildren, lastChild] = useChildren(props.children, entity)
 
-	const Component = useUIComponent(UIComponentType.Entity, entity?.props._config.id)
+	const Component = useUIComponent(UIComponentType.Entity, entity?.metadata.entityConfig.id)
 
 	// The entity can be active, but without the need to show the tooltip.
 	// In case there are several entities with the same ID, we only want to 
@@ -75,7 +75,7 @@ export const EntityTag = React.memo(function EntityComp(props: EntityAnnotationC
 
 	React.useEffect(() => {
 		if (entity == null) return
-		const nextActive = activeEntities?.has(entity.props._entityId)
+		const nextActive = activeEntities?.has(entity.metadata.entityId)
 		setActive(nextActive === true)
 		if (!nextActive && showTooltip) setShowTooltip(false)
 	}, [entity, activeEntities])
@@ -84,7 +84,7 @@ export const EntityTag = React.memo(function EntityComp(props: EntityAnnotationC
 		ev.stopPropagation()
 		dispatch({
 			type: 'ADD_ENTITY',
-			entityId: entity.props._entityId,
+			entityId: entity.metadata.entityId,
 			triggerContainer: container.type,
 			triggerContainerId: container.id,
 		})
@@ -93,7 +93,7 @@ export const EntityTag = React.memo(function EntityComp(props: EntityAnnotationC
 
 	if (entity == null) return null
 
-	const Icon = IconsByType[entity.props._config.type]
+	const Icon = IconsByType[entity.metadata.entityConfig.type]
 
 	const tooltip = active && showTooltip ?
 		<EntityTooltip
@@ -108,8 +108,8 @@ export const EntityTag = React.memo(function EntityComp(props: EntityAnnotationC
 	return (
 		<Wrapper
 			active={active}
-			data-entity-id={entity.props._entityId}
-			entityConfig={entity.props._config}
+			data-entity-id={entity.metadata.entityId}
+			entityConfig={entity.metadata.entityConfig}
 			onClick={handleClick}
 		>
 			<NoWrap hasTooltip={lastChild == null}>
@@ -118,7 +118,7 @@ export const EntityTag = React.memo(function EntityComp(props: EntityAnnotationC
 					<Icon
 						active={active}
 						entity={entity}
-						entityConfig={entity.props._config}
+						entityConfig={entity.metadata.entityConfig}
 					/>
 				}
 				{firstChild}

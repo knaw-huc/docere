@@ -1,9 +1,11 @@
 import type { ID } from './layer'
 import { JsonEntry, Entry, Entity, Facsimile, isEntityAnnotation, isFacsimileAnnotation } from './index'
-import { DocereAnnotation } from '../standoff-annotations'
 import { generateId, isTextLayer } from '../utils'
 import { DocereConfig } from '../config'
 import { EntityConfig } from './entity'
+
+import { StandoffTree3 } from '../standoff-annotations/annotation-tree3'
+import { extendExportOptions } from '../standoff-annotations'
 
 /**
  * Converts the serialized entry, which is stored in the database to 
@@ -16,6 +18,17 @@ import { EntityConfig } from './entity'
  * @todo fix the type errors on the layer conversion
  */
 export function createEntry(entry: JsonEntry, config: DocereConfig): Entry {
+	const t0 = performance.now()
+	entry.layers
+		.filter(isTextLayer)
+		.forEach(tl => {
+			const expopts = extendExportOptions(config.standoff.exportOptions)
+			const sot = new StandoffTree3(tl.standoff, expopts)
+			sot.highlightSubString(['zyn', 'ock', 'schrev'])
+			tl.standoffTree3 = sot
+		})
+	const t1 = performance.now(); console.log('Performance: ', `${t1 - t0}ms`)
+
 	return ({
 		...entry,
 		textData: {
@@ -23,24 +36,6 @@ export function createEntry(entry: JsonEntry, config: DocereConfig): Entry {
 			facsimiles: createFacsimileLookup(entry.layers)
 		}
 	})
-}
-
-function addEntity(
-	root: DocereAnnotation | string,
-	entitiesById: Map<ID, Entity>,
-	entityConfigsById: Map<ID, EntityConfig>
-) {
-	if (typeof root === 'string') return
-	if (isEntityAnnotation(root)) {
-		root.props._config = entityConfigsById.get(root.props._entityConfigId)
-		// TODO generate area ID in preprocessing step?
-		root.props._areas?.forEach(a => {
-			if (a.id == null) a.id = generateId()
-		})
-		entitiesById.set(root.props._entityId, root)
-	}
-
-	root.children?.forEach(child => addEntity(child, entitiesById, entityConfigsById))
 }
 
 function createEntityLookup(layers: Entry['layers'], config: DocereConfig): Map<ID, Entity> {
@@ -52,30 +47,38 @@ function createEntityLookup(layers: Entry['layers'], config: DocereConfig): Map<
 
 	layers
 		.filter(isTextLayer)
-		.forEach(layer => addEntity(layer.tree, entitiesById, entityConfigsById))
+		.forEach(textLayer => {
+			for (const annotation of textLayer.standoffTree3.lookup.values()) {//.annotations
+				if (isEntityAnnotation(annotation)) {
+					annotation.metadata.entityConfig = entityConfigsById.get(annotation.metadata.entityConfigId)
+
+					// TODO generate area ID in preprocessing step?
+					annotation.metadata.areas?.forEach(a => {
+						if (a.id == null) a.id = generateId()
+					})
+
+					// TODO should be a Map<string, Annotation3[]>? There could be
+					// more instances with the samen entityId
+					entitiesById.set(annotation.metadata.entityId, annotation)
+				}
+			}
+		})
 
 	return entitiesById
-}
-
-function addFacsimile(
-	root: DocereAnnotation | string,
-	map: Map<ID, DocereAnnotation>
-) {
-	if (typeof root === 'string') return
-	if (isFacsimileAnnotation(root)) {
-		map.set(root.props._facsimileId, root)
-	}
-	root.children?.forEach(child => addFacsimile(child, map))
 }
 
 function createFacsimileLookup(layers: Entry['layers']): Map<ID, Facsimile> {
 	const facsimiles = new Map<ID, Facsimile>()
 
-	layers.forEach(layer => {
-		if (isTextLayer(layer)) {
-			addFacsimile(layer.tree, facsimiles)
-		}
-	})
+	layers
+		.filter(isTextLayer)
+		.forEach(textLayer => {
+			for (const annotation of textLayer.standoffTree3.lookup.values()) {
+				if (isFacsimileAnnotation(annotation)) {
+					facsimiles.set(annotation.metadata.facsimileId, annotation)
+				}
+			}
+		})
 
 	return facsimiles
 }

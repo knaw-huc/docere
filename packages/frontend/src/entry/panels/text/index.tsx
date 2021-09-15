@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import debounce from 'lodash.debounce'
-import { isTextLayer, useComponents, DEFAULT_SPACING, TEXT_PANEL_TEXT_WIDTH, ContainerType, getTextPanelLeftSpacing, PANEL_HEADER_HEIGHT, StatefulTextLayer, EntrySettingsContext, EntryContext, SearchContext } from '@docere/common'
+import { useComponents, DEFAULT_SPACING, TEXT_PANEL_TEXT_WIDTH, ContainerType, getTextPanelLeftSpacing, PANEL_HEADER_HEIGHT, StatefulTextLayer, EntrySettingsContext, SearchContext } from '@docere/common'
 import { DocereTextView } from '../../../../../text/src/index'
 
 import { useScrollEntityIntoView, useScrollFacsimileIntoView } from '../../use-scroll-into-view'
@@ -70,7 +70,7 @@ interface Props {
 }
 
 function TextPanel(props: Props) {
-	const entry = React.useContext(EntryContext)
+	// const entry = React.useContext(EntryContext)
 	const settings = React.useContext(EntrySettingsContext)
 	const searchContext = React.useContext(SearchContext)
 
@@ -80,8 +80,8 @@ function TextPanel(props: Props) {
 	const [docereTextViewReady, setDocereTextViewReady] = React.useState(false)
 	const [highlightAreas, setHighlightAreas] = React.useState<number[]>([])
 
-	const layer = entry.layers.filter(isTextLayer).find(tl => tl.id === props.layer.id)
-	const components = useComponents(ContainerType.Layer, layer.id)
+	// const layer = entry.layers.filter(isTextLayer).find(tl => tl.id === props.layer.id)
+	const components = useComponents(ContainerType.Layer, props.layer.id)
 
 	const handleScroll = React.useCallback(() => {
 		if (!settings['panels.text.showMinimap']) return
@@ -131,7 +131,8 @@ function TextPanel(props: Props) {
 						<DocereTextView
 							components={components}
 							highlight={searchContext.state.query}
-							tree={layer.tree}
+							// @ts-ignore
+							standoffTree={props.layer.standoffTree3}
 							onLoad={setDocereTextViewReady}
 							setHighlightAreas={setHighlightAreas}
 						/>

@@ -1,3 +1,9 @@
+export enum TagShape {
+	Default = 'default',
+	Range = 'range',
+	SelfClosing = 'self-closing'
+}
+
 export enum Colors {
 	Blue = '#8080ff',
 	BlueLight = '#add8e6',
