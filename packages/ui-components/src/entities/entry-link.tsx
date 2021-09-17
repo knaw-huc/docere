@@ -23,7 +23,7 @@ function EntryLink(props: EntityComponentProps) {
 		dispatch({
 			type: 'SET_ENTRY_ID',
 			setEntry: {
-				entryId: props.entity.metadata.entityId
+				entryId: props.entity.props.entityId
 			}
 		})
 	}, [props.entity])
@@ -39,10 +39,10 @@ function EntryLink(props: EntityComponentProps) {
 }
 
 /**
- * Represents a link to an entry in a text layer.
+ * Represents a link in a text layer to an entry
  */
 export const EntryLinkEntity = React.memo(function(props: EntityComponentProps) {
-	const result = useSearchResult(props.entity.metadata.entityId)
+	const result = useSearchResult(props.entity.props.entityId)
 	const ResultBodyComponent = useUIComponent(UIComponentType.SearchResult)
 
 	if (ResultBodyComponent == null || result == null) return null

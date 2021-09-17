@@ -1,5 +1,5 @@
 import { LayerType } from '../../enum'
-import { FilterFunction, Standoff, StandoffTree3 } from '../../standoff-annotations'
+import { FilterFunction, PartialStandoff, StandoffTree3 } from '../../standoff-annotations'
 import { BaseConfig } from '../metadata'
 
 // export * from './serialize'
@@ -67,7 +67,7 @@ export type SerializedBaseLayer =
 
 // Layer
 export interface TextLayer extends SerializedBaseLayer {//extends Omit<SerializedTextLayer, 'facsimileIds' | 'entityIds'>, LayerTextData {
-	standoff: Standoff
+	partialStandoff: PartialStandoff
 	// tree: DocereAnnotation
 	type: LayerType.Text
 	standoffTree3: StandoffTree3

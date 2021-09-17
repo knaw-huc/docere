@@ -12,7 +12,7 @@ function MondrianLb(props: ComponentProps) {
 			<Lb />
 			{
 				settings['panels.text.showLineBeginnings'] &&
-				props.annotation.sourceMetadata.rend?.indexOf('indent') > -1 &&
+				props.annotation.sourceProps.rend?.indexOf('indent') > -1 &&
 				<span>&nbsp;&nbsp;</span>
 			}
 		</>

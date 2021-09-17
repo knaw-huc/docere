@@ -62,11 +62,10 @@ export class CollectionNavigatorController extends CollectionNavigatorBaseContro
 			}
 		}
 
-
 		if (collection.metadataId == null) {
 			payload.query = { match_all: {} }
 		} else {
-			const metadata = this.entry.metadata.find(md => md.config.id === collection.metadataId)
+			const metadata = this.entry.metadata.get(collection.metadataId)
 
 			if (metadata == null) return
 

@@ -1,54 +1,64 @@
 import { createJsonEntry, GetValueProps, JsonEntry } from ".."
-import { DocereConfig, StandoffTree } from "../.."
+import { DocereConfig, PartialStandoff } from "../.."
+
 import { prepareSource } from './prepare-source'
+export { prepareSource }
+// 	// const sourceTree = await getSourceTree(source, projectConfig)
+// 	const partialStandoff = await prepareSource(source, projectConfig)
 
-export async function getSourceTree(source: string | object, projectConfig: DocereConfig) {
-	const partialStandoff = await prepareSource(source, projectConfig)
-	const tree = new StandoffTree(partialStandoff, projectConfig.standoff.exportOptions)
-	projectConfig.standoff.prepareAnnotations(tree)
-	return tree
-}
+// TODO remove prepareAnnotations from DocereConfig
 
+// export async function getSourceTree(source: string | object, projectConfig: DocereConfig) {
+// 	const partialStandoff = await prepareSource(source, projectConfig)
+// 	// const tree = new StandoffTree(partialStandoff, projectConfig.standoff.exportOptions)
+// 	// projectConfig.standoff.prepareAnnotations(tree)
+// 	return partialStandoff
+// 	// return tree
+// }
+
+/**
+ * Create the entries from the {@link PartialStandoff | partial standoff} source
+ */
 export async function getEntriesFromSource(
 	sourceId: string,
-	source: string | object,
+	source: PartialStandoff,
 	projectConfig: DocereConfig
 ) {
-	const sourceTree = await getSourceTree(source, projectConfig)
 
-	sourceTree.list.forEach(annotation => {
+	for (const annotation of source.annotations) {
 		const props: GetValueProps = {
 			annotation,
 			projectConfig,
 			sourceId,
-			sourceTree,
+			partialStandoff: source
+			// sourceTree,
 		}
 
 		const entityConfig = projectConfig.entities2.find(ec => ec.filter(annotation))
 		if (entityConfig != null) {
-			annotation.metadata._entityConfigId = entityConfig.id
-			annotation.metadata._entityId = entityConfig.getId(annotation)
-			annotation.metadata._entityValue = entityConfig.getValue(props)
+			annotation.props.entityConfigId = entityConfig.id
+			annotation.props.entityId = entityConfig.getId(annotation)
+			// annotation.props.entityValue = entityConfig.getValue(props)
 		}
 
 		if (projectConfig.facsimiles?.filter(annotation)) {
-			annotation.metadata._facsimileId = projectConfig.facsimiles.getId(annotation)
-			annotation.metadata._facsimilePath = projectConfig.facsimiles.getPath(props)
+			annotation.props.facsimileId = projectConfig.facsimiles.getId(annotation)
+			annotation.props.facsimilePath = projectConfig.facsimiles.getPath(props)
 		}
-	})
+	}
 
 	const entries: JsonEntry[] = []
 
 	if (Array.isArray(projectConfig.parts)) {
 		for (const partConfig of projectConfig.parts) {
 			// If partConfig.filter is defined, use it it get the roots,
-			// if no filter is defined, use the root of the tree
+			// if no filter is defined, use null
 			const roots = partConfig.filter != null ?
-				sourceTree.filter(partConfig.filter).slice(0, 10) :
-				[sourceTree.root]
+				source.annotations.filter(partConfig.filter) : //.slice(0, 10) :
+				[null]
 
 			for (const root of roots) {
-				const id = partConfig.getId != null ?
+				const id = root != null && partConfig.getId != null ?
 					partConfig.getId(root) :
 					sourceId
 
@@ -58,7 +68,7 @@ export async function getEntriesFromSource(
 					projectConfig,
 					root,
 					sourceId,
-					sourceTree,
+					partialStandoff: source,
 				})
 
 				entries.push(entry)
@@ -69,7 +79,7 @@ export async function getEntriesFromSource(
 			id: sourceId,
 			projectConfig,
 			sourceId,
-			sourceTree,
+			partialStandoff: source,
 		})
 
 		entries.push(entry)

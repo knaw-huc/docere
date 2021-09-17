@@ -23,14 +23,17 @@ export function createEntry(entry: JsonEntry, config: DocereConfig): Entry {
 		.filter(isTextLayer)
 		.forEach(tl => {
 			const expopts = extendExportOptions(config.standoff.exportOptions)
-			const sot = new StandoffTree3(tl.standoff, expopts)
-			sot.highlightSubString(['zyn', 'ock', 'schrev'])
+			const sot = new StandoffTree3(tl.partialStandoff, expopts)
 			tl.standoffTree3 = sot
 		})
 	const t1 = performance.now(); console.log('Performance: ', `${t1 - t0}ms`)
 
 	return ({
 		...entry,
+		metadata: entry.metadata.reduce((prev, curr) => {
+			prev.set(curr.config.id, curr)
+			return prev
+		}, new Map()),
 		textData: {
 			entities: createEntityLookup(entry.layers, config),
 			facsimiles: createFacsimileLookup(entry.layers)
@@ -50,16 +53,16 @@ function createEntityLookup(layers: Entry['layers'], config: DocereConfig): Map<
 		.forEach(textLayer => {
 			for (const annotation of textLayer.standoffTree3.lookup.values()) {//.annotations
 				if (isEntityAnnotation(annotation)) {
-					annotation.metadata.entityConfig = entityConfigsById.get(annotation.metadata.entityConfigId)
+					annotation.props.entityConfig = entityConfigsById.get(annotation.props.entityConfigId)
 
 					// TODO generate area ID in preprocessing step?
-					annotation.metadata.areas?.forEach(a => {
+					annotation.props.areas?.forEach(a => {
 						if (a.id == null) a.id = generateId()
 					})
 
 					// TODO should be a Map<string, Annotation3[]>? There could be
 					// more instances with the samen entityId
-					entitiesById.set(annotation.metadata.entityId, annotation)
+					entitiesById.set(annotation.props.entityId, annotation)
 				}
 			}
 		})
@@ -73,9 +76,9 @@ function createFacsimileLookup(layers: Entry['layers']): Map<ID, Facsimile> {
 	layers
 		.filter(isTextLayer)
 		.forEach(textLayer => {
-			for (const annotation of textLayer.standoffTree3.lookup.values()) {
+			for (const annotation of textLayer.standoffTree3.annotations) {
 				if (isFacsimileAnnotation(annotation)) {
-					facsimiles.set(annotation.metadata.facsimileId, annotation)
+					facsimiles.set(annotation.props.facsimileId, annotation)
 				}
 			}
 		})

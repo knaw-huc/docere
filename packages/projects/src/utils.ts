@@ -52,8 +52,8 @@ import { PartialStandoffAnnotation } from "@docere/common"
 
 export function hasMetadataValue(annotation: PartialStandoffAnnotation, metadataKey: string) {
 	return (
-		annotation.metadata.hasOwnProperty(metadataKey) &&
-		annotation.metadata[metadataKey] != null
+		annotation.sourceProps.hasOwnProperty(metadataKey) &&
+		annotation.sourceProps[metadataKey] != null
 	)
 }
 

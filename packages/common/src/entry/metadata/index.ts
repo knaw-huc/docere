@@ -76,7 +76,7 @@ export const defaultFacetConfig: FacetConfig = {
 
 export const defaultMetadata: Required<DefaultMetadataConfig> = {
 	facet: null,
-	getValue: (config, props) => props.root.metadata[config.id],
+	getValue: (config, props) => props.partialStandoff.metadata[config.id],
 	id: null,
 	showInAside: true,
 	title: null,

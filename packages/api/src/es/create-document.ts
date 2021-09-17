@@ -1,4 +1,4 @@
-import { JsonEntry, ElasticSearchDocument, MetadataItem, DocereConfig, isTextLayer, StandoffAnnotation } from "@docere/common"
+import { JsonEntry, ElasticSearchDocument, MetadataItem, DocereConfig, isTextLayer, PartialStandoffAnnotation } from "@docere/common"
 import { isHierarchyMetadataItem } from "@docere/common"
 import { DocereApiError } from "../types"
 import { isError } from "../utils"
@@ -12,19 +12,19 @@ export function createElasticSearchDocument(
 	const textLayers = jsonEntry.layers.filter(isTextLayer)
 
 	const annotations = textLayers
-		.reduce<StandoffAnnotation[]>(
-			(prev, curr) => prev.concat(curr.standoff.annotations),
+		.reduce<PartialStandoffAnnotation[]>(
+			(prev, curr) => prev.concat(curr.partialStandoff.annotations),
 			[]
 		)
 
 	const entities = annotations
 		.reduce((map, curr) => {
-			if (curr.metadata._entityValue != null) {
-				const { _entityConfigId: configId } = curr.metadata;
+			if (curr.props.entityValue != null) {
+				const { entityConfigId: configId } = curr.props;
 
 				(map.has(configId)) ?
-					map.get(configId).add(curr.metadata._entityValue) :
-					map.set(configId, new Set([curr.metadata._entityValue]))
+					map.get(configId).add(curr.props.entityValue) :
+					map.set(configId, new Set([curr.props.entityValue]))
 			}
 
 			return map
@@ -38,14 +38,21 @@ export function createElasticSearchDocument(
 
 	const facsimiles = projectConfig.facsimiles != null ? 
 		annotations
-			.filter(projectConfig.facsimiles.filter)
+			/**
+			 * Don't use the {@link DocereConfig.facsimiles.filter | facsimile filter},
+			 * but just check if the annotation has a facsimile ID and path.
+			 * 
+			 * For example when a source document is splitted in parts,
+			 * a part could be without a facsimile, but added later in
+			 * the {@link DocereConfig.partsConfig.prepareStandoff}
+			 */
 			.filter(a =>
-				a.metadata._facsimileId != null &&
-				a.metadata._facsimilePath != null
+				a.props.facsimileId != null &&
+				a.props.facsimilePath != null
 			)
 			.map(a => ({
-				id: a.metadata._facsimileId,
-				path: a.metadata._facsimilePath
+				id: a.props.facsimileId,
+				path: a.props.facsimilePath
 			})) :
 		[]
 
@@ -62,7 +69,7 @@ export function createElasticSearchDocument(
 		return prev
 	}, {} as Record<string, MetadataItem['value']>)
 
-	const text = textLayers.reduce((prev, curr) => `${prev}${curr.standoff.text}`, '')
+	const text = textLayers.reduce((prev, curr) => `${prev}${curr.partialStandoff.text}`, '')
 
 	const textSuggestLines = text
 		.replace(/\s+/g, ' ')

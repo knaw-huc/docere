@@ -1,6 +1,6 @@
 import React from 'react'
 import { AsideTab, AsideTabContext, EntryContext, DispatchContext } from '@docere/common'
-import { Button, isEmpty } from '..'
+import { Button } from '..'
 
 export function AsideTabs() {
 	const dispatch = React.useContext(DispatchContext)
@@ -18,7 +18,7 @@ export function AsideTabs() {
 	return (
 		<div className="aside-tabs">
 			{
-				!isEmpty(entry.metadata) &&
+				entry.metadata.size &&
 				<Button
 					active={asideTab === AsideTab.Metadata}
 					data-tab={AsideTab.Metadata}
@@ -37,16 +37,6 @@ export function AsideTabs() {
 					Entities
 				</Button>
 			}
-			{/* {
-				!isEmpty(props.entry.notes) &&
-				<Button
-					active={props.asideTab === AsideTab.Notes}
-					data-tab={AsideTab.Notes}
-					data-type="aside"
-				>
-					Notes
-				</Button>
-			} */}
 		</div>
 	)
 }

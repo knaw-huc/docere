@@ -247,3 +247,23 @@ export function getRectoVersoSequence(x: string) {
 
 	return seq
 }
+
+export class CombinedKeysCache<T> {
+	private cache: Map<string, T> = new Map()
+
+	has(key1: string, key2: string) {
+		return this.cache.has(this.createKey(key1, key2))
+	}
+
+	get(key1: string, key2: string) {
+		return this.cache.get(this.createKey(key1, key2))
+	}
+
+	set(key1: string, key2: string, value: T) {
+		this.cache.set(this.createKey(key1, key2), value)
+	}
+
+	private createKey(key1: string, key2: string) {
+		return `${key1}__${key2}`
+	}
+}

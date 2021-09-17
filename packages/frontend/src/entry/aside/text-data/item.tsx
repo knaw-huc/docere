@@ -26,13 +26,13 @@ interface Props {
 }
 export const ItemInText = React.memo(function ItemInText(props: Props) {
 	const dispatch = React.useContext(DispatchContext)
-	const Component = useUIComponent(UIComponentType.Entity, props.entity.metadata.entityConfigId)
+	const Component = useUIComponent(UIComponentType.Entity, props.entity.props.entityConfigId)
 	const container = React.useContext(ContainerContext)
 
 	const handleClick = React.useCallback(() => {
 		dispatch({
 			type: 'ADD_ENTITY',
-			entityId: props.entity.metadata.entityId,
+			entityId: props.entity.props.entityId,
 			triggerContainer: container.type,
 			triggerContainerId: container.id
 		})
@@ -43,7 +43,7 @@ export const ItemInText = React.memo(function ItemInText(props: Props) {
 	return (
 		<Li
 			count={0} // TODO count was on props.entity.count
-			data-entity-id={props.entity.metadata.entityId}
+			data-entity-id={props.entity.props.entityId}
 			onClick={handleClick}
 		>
 			<Component

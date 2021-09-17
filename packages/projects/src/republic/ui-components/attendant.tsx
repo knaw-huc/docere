@@ -26,15 +26,15 @@ function AttendantEntityBody(props: EntityComponentProps) {
 			<EntityWithLinkWrapper>
 				<Wrapper>
 					{
-						props.entity.sourceMetadata.delegate_name.length > 0 &&
+						props.entity.sourceProps.delegate_name.length > 0 &&
 						<h2>
-							{props.entity.sourceMetadata.delegate_name}
+							{props.entity.sourceProps.delegate_name}
 							<small>
-								({props.entity.sourceMetadata.delegate_id})
+								({props.entity.sourceProps.delegate_id})
 							</small>
 						</h2>
 					}
-					<div>{props.entity.sourceMetadata.class}</div>
+					<div>{props.entity.sourceProps.class}</div>
 				</Wrapper>
 				<LinkFooter
 					entity={props.entity}

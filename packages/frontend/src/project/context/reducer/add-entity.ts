@@ -18,10 +18,10 @@ export function addEntity(state: ProjectState, action: AddEntity): ProjectState 
 		})
 
 		if (
-			Array.isArray(activeEntity.metadata.areas) &&
-			!activeEntity.metadata.areas.some(fa => fa.facsimileId === state.activeFacsimile.metadata.facsimileId)
+			Array.isArray(activeEntity.props.areas) &&
+			!activeEntity.props.areas.some(fa => fa.facsimileId === state.activeFacsimile.props.facsimileId)
 		) {
-			const facsimileArea = activeEntity.metadata.areas.find(fa => fa.facsimileId != null)
+			const facsimileArea = activeEntity.props.areas.find(fa => fa.facsimileId != null)
 			if (facsimileArea != null) {
 				activeFacsimile = createActiveFacsimile(state.entry, facsimileArea.facsimileId, action.triggerContainer, action.triggerContainerId)
 			}

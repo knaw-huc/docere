@@ -25,7 +25,7 @@ function MetadataAside(props: Props) {
 	return (
 		<Wrapper active={props.active}>
 			{
-				entry.metadata
+				Array.from(entry.metadata.values())
 					.map((data: MetadataItem, index) =>
 						<MetadataItemComp
 							key={index}

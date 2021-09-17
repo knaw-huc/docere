@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { ComponentProps, DocereComponents, Node, ReactComponent, StandoffTree3 } from '@docere/common'
+import { ComponentProps, DocereComponents, isTextNode, Node, ReactComponent, StandoffTree3 } from '@docere/common'
 
 export type { DocereComponents } from '@docere/common'
 
@@ -9,11 +9,28 @@ function Empty(props: ComponentProps) {
 	return props.children
 }
 
+function Hilight(text: string) {
+	return React.createElement(
+		'span',
+		{
+			key: Math.random().toString(),
+			style: { backgroundColor: 'yellow' }
+		},
+		text
+	)
+}
+
 function getComponentRenderer(props: DocereTextViewProps) {
 	// const annotations = new Map(props.standoffTree.annotations)
 
 	return function renderComponent(node: Node): JSX.Element | string {
-		if (typeof node === 'string') return node
+		if (isTextNode(node)) {
+			if (node.hasOwnProperty('rangeAnnotation')) {
+				return Hilight(node.text)
+			} else {
+				return node.text
+			}
+		}
 
 		const annotation = props.standoffTree.lookup.get(node.id)
 
@@ -36,7 +53,7 @@ function getComponentRenderer(props: DocereTextViewProps) {
 
 export interface DocereTextViewProps {
 	components?: DocereComponents
-	highlight?: string | string[]
+	highlight?: string[]
 	ignore?: string[]
 	onLoad?: (isReady: boolean, el: Element) => void
 	prepare?: (node: Element) => Element
@@ -48,6 +65,7 @@ export interface DocereTextViewProps {
 export const DocereTextView = React.memo(
 	function (props: DocereTextViewProps) {
 		if (props.standoffTree == null || props.components == null) return null
+		props.standoffTree.highlightSubString(props.highlight)
 		const renderComponent = getComponentRenderer(props)
 		return renderComponent(props.standoffTree.tree) as JSX.Element
 	}

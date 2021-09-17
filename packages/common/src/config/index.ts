@@ -1,5 +1,5 @@
 import { PageConfig } from '../page'
-import { PartialStandoff, StandoffAnnotation, StandoffTree } from '../standoff-annotations'
+import { PartialStandoff, PartialStandoffAnnotation } from '../standoff-annotations'
 import { EntityConfig, FacsimileLayerConfig, ID, MetadataConfig, TextLayerConfig } from '../entry'
 import { PartialExportOptions } from '../standoff-annotations/export-options'
 
@@ -88,13 +88,28 @@ export interface DocereConfig {
 		 * The source can be either standoff, xml or json. The json
 		 * must be converted to standoff or xml in the prepareSource
 		 * function.
+		 * 
+		 * TODO remove XML from the options, if XML is passed, it should be
+		 * parsed first. prepareSource should be isomorphic (same code on client
+		 * and server), but to convert from XML to standoff, can only be done on
+		 * the server (for now)
 		 */
-		prepareSource?: (source: string | object) => PartialStandoff | string
+		prepareSource?: (source: string | object) => PartialStandoff
 
 		/**
 		 * Function to alter the partial standoff annotations before processing
+		 * 
+		 * The {@link PartialStandoff | partial standoff} of the entry, the source
+		 * and the {@link PartConfig | part config} are passed as arguments. The
+		 * source can differ from the entry when the source is splitted into
+		 * {@link PartConfig | parts}. It can be very usefull when extending a
+		 * part, there is access to the whole source.
 		 */
-		prepareAnnotations?: (tree: StandoffTree) => void
+		prepareStandoff?: (
+			entryPartialStandoff: PartialStandoff,
+			sourcePartialStandoff: PartialStandoff,
+			partConfig: PartConfig
+		) => PartialStandoff
 
 		/**
 		 * Function to prepare the export of the {@link StandoffTree}. Most changes
@@ -102,7 +117,7 @@ export interface DocereConfig {
 		 * function, but some need the tree, for example when finding annotations
 		 * {@link StandoffTree.findBefore | before} and {@link StandoffTree.findAfter | after}.
 		 */
-		prepareExport?: (standoffTree: StandoffTree) => void
+		// prepareExport?: (standoffTree: StandoffTree) => void
 	}
 	private?: boolean
 	searchResultCount?: number
@@ -131,7 +146,7 @@ export interface EntrySettings {
 
 export interface PartConfig {
 	id: ID
-	filter?: (a: StandoffAnnotation) => boolean
-	getId?: (a: StandoffAnnotation) => string
+	filter?: (a: PartialStandoffAnnotation) => boolean
+	getId?: (a: PartialStandoffAnnotation) => string
 	keepSource?: boolean
 }

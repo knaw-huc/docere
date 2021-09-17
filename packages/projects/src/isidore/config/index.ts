@@ -11,11 +11,11 @@ export default extendConfig({
 
 	facsimiles: {
 		filter: a => {
-			return a.name === 'graphic' && a.metadata.hasOwnProperty('url')
+			return a.name === 'graphic' && a.sourceProps.hasOwnProperty('url')
 		},
-		getId: a => a.metadata['xml:id'],
+		getId: a => a.sourceProps['xml:id'],
 		getPath: props => {
-			const fileName = props.annotation.metadata.url.replace(/^..\/images\//, '')
+			const fileName = props.annotation.sourceProps.url.replace(/^..\/images\//, '')
 			if (!fileName.length) return null
 			const imgPath = fileName.slice(0, fileName.indexOf('_')) + '/' + fileName
 			return `/iiif/isidore/${imgPath}/info.json`
@@ -34,42 +34,42 @@ export default extendConfig({
 	],
 
 	metadata2: [
-		{
-			facet: {},
-			id: 'chapter',
-			getValue: (_config, props) => {
-				if (props.partConfig.id === 'chapter') {
-					return props.root.metadata.n
-				}
+		// {
+		// 	facet: {},
+		// 	id: 'chapter',
+		// 	getValue: (_config, props) => {
+		// 		if (props.partConfig.id === 'chapter') {
+		// 			return props.root.metadata.n
+		// 		}
 
-				if (props.partConfig.id === 'lemma') {
-					const parent = props.sourceTree.findParent(
-						props.root,
-						a => a.name === 'div' && a.metadata.type === 'chapter'
-					)
+		// 		if (props.partConfig.id === 'lemma') {
+		// 			const parent = props.sourceTree.findParent(
+		// 				props.root,
+		// 				a => a.name === 'div' && a.metadata.type === 'chapter'
+		// 			)
 					
-					if (parent != null) return parent.metadata.n
-				}
+		// 			if (parent != null) return parent.metadata.n
+		// 		}
 
-				if (props.partConfig.id === 'gloss') {
-					const glossGroup = props.sourceTree.findParent(
-						props.root,
-						a => a.name === 'hi:glossGrp'
-					)
+		// 		if (props.partConfig.id === 'gloss') {
+		// 			const glossGroup = props.sourceTree.findParent(
+		// 				props.root,
+		// 				a => a.name === 'hi:glossGrp'
+		// 			)
 
-					const seg = props.sourceTree.find(a =>
-						a.name === 'seg' && a.metadata['xml:id'] === glossGroup.metadata.target.slice(1)
-					)
+		// 			const seg = props.sourceTree.find(a =>
+		// 				a.name === 'seg' && a.metadata['xml:id'] === glossGroup.metadata.target.slice(1)
+		// 			)
 
-					const parent = props.sourceTree.findParent(
-						seg,
-						a => a.name === 'div' && a.metadata.type === 'chapter'
-					)
+		// 			const parent = props.sourceTree.findParent(
+		// 				seg,
+		// 				a => a.name === 'div' && a.metadata.type === 'chapter'
+		// 			)
 					
-					if (parent != null) return parent.metadata.n
-				}
-			}
-		},
+		// 			if (parent != null) return parent.metadata.n
+		// 		}
+		// 	}
+		// },
 		{
 			facet: {},
 			id: 'unit',
@@ -80,7 +80,7 @@ export default extendConfig({
 			id: 'gloss_sim',
 			getValue: (_config, props) => {
 				if (props.partConfig.id === 'gloss') {
-					return props.root.metadata.sim
+					return props.root.sourceProps.sim
 				}
 			},
 		},
@@ -89,7 +89,7 @@ export default extendConfig({
 			id: 'gloss_weight',
 			getValue: (_config, props) => {
 				if (props.partConfig.id === 'gloss') {
-					return props.root.metadata.weight
+					return props.root.sourceProps.weight
 				}
 			},
 		},
@@ -98,7 +98,7 @@ export default extendConfig({
 			id: 'gloss_manuscript',
 			getValue: (_config, props) => {
 				if (props.partConfig.id === 'gloss') {
-					return props.root.metadata.corresp
+					return props.root.sourceProps.corresp
 				}
 			},
 		},
@@ -107,7 +107,7 @@ export default extendConfig({
 			id: 'gloss_hand',
 			getValue: (_config, props) => {
 				if (props.partConfig.id === 'gloss') {
-					return props.root.metadata.hand
+					return props.root.sourceProps.hand
 				}
 			},
 		}
@@ -116,7 +116,7 @@ export default extendConfig({
 	parts: [
 		{
 			id: 'chapter',
-			filter: a => a.name === 'div' && a.metadata.type === 'chapter',
+			filter: a => a.name === 'div' && a.sourceProps.type === 'chapter',
 			getId: a => a.id
 		},
 		{
@@ -126,8 +126,8 @@ export default extendConfig({
 		},
 		{
 			id: 'lemma',
-			filter: a => a.name === 'seg' && a.metadata.hasOwnProperty('xml:id'),
-			getId: a => a.metadata['xml:id']
+			filter: a => a.name === 'seg' && a.sourceProps.hasOwnProperty('xml:id'),
+			getId: a => a.sourceProps['xml:id']
 		}
 	],
 

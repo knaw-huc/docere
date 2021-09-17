@@ -1,6 +1,6 @@
 import sax from 'sax'
 
-import { extendStandoffAnnotation, PartialStandoff, StandoffAnnotation, TagShape } from '@docere/common'
+import { PartialStandoff, PartialStandoffAnnotation, TagShape } from '@docere/common'
 
 const strict = true
 const parser = sax.parser(strict)
@@ -10,8 +10,8 @@ const parser = sax.parser(strict)
 export function xml2standoff(content: string): Promise<PartialStandoff> {
 	let offset = 0
 	let text = ''
-	const annotations: StandoffAnnotation[] = []
-	const stack: StandoffAnnotation[] = []
+	const annotations: PartialStandoffAnnotation[] = []
+	const stack: PartialStandoffAnnotation[] = []
 
 	// Keep the order per offset, to be able to reconstruct the XML. The original order
 	// is lost when sorting on offset only, because of the Array.sort algorithm
@@ -36,14 +36,14 @@ export function xml2standoff(content: string): Promise<PartialStandoff> {
 	parser.onopentag = node => {
 		updateOrderByOffset()
 
-		const annotation: StandoffAnnotation = extendStandoffAnnotation({
+		const annotation: PartialStandoffAnnotation = {
 			end: node.isSelfClosing ? offset : offset + 1, // Set a temporary end when the node is not self closing, otherwise extendStandoffAnnotation will change it to a self closing annotation
-			metadata: node.attributes as Record<string, string>,
+			sourceProps: node.attributes as Record<string, string>,
 			tagShape: node.isSelfClosing ? TagShape.SelfClosing : TagShape.Default,
 			name: node.name,
 			start: offset,
 			startOrder: orderByOffset.get(offset),
-		})
+		}
 
 		stack.push(annotation)
 	}

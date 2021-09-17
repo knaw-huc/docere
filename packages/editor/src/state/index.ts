@@ -1,4 +1,4 @@
-import { getEntriesFromSource, getSourceTree } from "@docere/common"
+import { getEntriesFromSource, prepareSource } from "@docere/common"
 import React from "react"
 import { SourceAction, sourceReducer, SourceState } from "./reducer"
 
@@ -7,7 +7,7 @@ export const projectId = 'republic'
 export function useSourceState(): [SourceState, React.Dispatch<SourceAction>] {
 	const [state, dispatch] = React.useReducer(
 		sourceReducer,
-		{ file: null, entries: [], entriesByPartId: {}, entry: null, jsonQuery: null, json: null, projectConfig: null, source: null, standoffTree: null }
+		{ file: null, entries: [], entriesByPartId: {}, entry: null, jsonQuery: null, json: null, projectConfig: null, source: null, partialStandoff: null }
 	)
 
 	React.useEffect(() => {
@@ -48,47 +48,42 @@ export function useSourceState(): [SourceState, React.Dispatch<SourceAction>] {
 	return [state, dispatch]
 }
 
-function setEntries(state: SourceState, dispatch: React.Dispatch<SourceAction>, refresh = false) {
-	state.file.text()
-		.then((source: string) => {
-			dispatch({
-				type: "SET_SOURCE",
-				source,
-			})
+async function setEntries(state: SourceState, dispatch: React.Dispatch<SourceAction>, refresh = false) {
+	const source = await state.file.text()
 
-			let parsedSource: string | object = (
-				state.projectConfig.documents.type === 'json' ||
-				state.projectConfig.documents.type === 'standoff'
-			) ?
-				JSON.parse(source) :
-				source
+	dispatch({
+		type: "SET_SOURCE",
+		source,
+	})
 
-			getSourceTree(JSON.parse(source), state.projectConfig)
-				.then(standoffTree => {
-					dispatch({
-						standoffTree,
-						type: "SET_STANDOFF_TREE",
-					})
-				})
+	let parsedSource: string | object = (
+		state.projectConfig.documents.type === 'json' ||
+		state.projectConfig.documents.type === 'standoff'
+	) ?
+		JSON.parse(source) :
+		source
 
-			parsedSource = (
-				state.projectConfig.documents.type === 'json' ||
-				state.projectConfig.documents.type === 'standoff'
-			) ?
-				JSON.parse(source) :
-				source
+	const partialStandoff = await prepareSource(parsedSource, state.projectConfig)
+	dispatch({
+		partialStandoff,
+		type: "SET_STANDOFF_TREE",
+	})
 
-			const t0 = performance.now()
-			getEntriesFromSource(state.file.name, parsedSource, state.projectConfig)
-				.then(entries => {
-					dispatch({
-						entries,
-						type: "SET_ENTRIES",
-						refresh,
-					})
-					const t1 = performance.now(); console.log('Performance: ', `${t1 - t0}ms`)
-				})
-		})
+	const t0 = performance.now()
+	const entries = await getEntriesFromSource(state.file.name, partialStandoff, state.projectConfig)
+	dispatch({
+		entries,
+		type: "SET_ENTRIES",
+		refresh,
+	})
+	const t1 = performance.now(); console.log('Performance: ', `${t1 - t0}ms`)
+
+	// parsedSource = (
+	// 	state.projectConfig.documents.type === 'json' ||
+	// 	state.projectConfig.documents.type === 'standoff'
+	// ) ?
+	// 	JSON.parse(source) :
+	// 	source
 }
 
 export function setProjectConfig(dispatch: React.Dispatch<SourceAction>) {

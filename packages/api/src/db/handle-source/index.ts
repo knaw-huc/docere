@@ -1,7 +1,7 @@
 import crypto from 'crypto'
 import * as es from '@elastic/elasticsearch'
 import { PoolClient } from 'pg'
-import { DocereConfig, getEntriesFromSource } from '@docere/common'
+import { DocereConfig, getEntriesFromSource, prepareSource } from '@docere/common'
 
 import { getDocumentIdFromRemoteFilePath } from '../../utils'
 import { fetchSource } from './fetch-source'
@@ -101,7 +101,8 @@ export async function handleSource(
 		await DB.deleteEntriesFromSource(sourceId, client)
 	}
 
-	const entries = await getEntriesFromSource(sourceId, source, projectConfig)
+ 	const partialStandoff = await prepareSource(source, projectConfig)
+	const entries = await getEntriesFromSource(sourceId, partialStandoff, projectConfig)
 
 	await transactionQuery(client, 'BEGIN')
 

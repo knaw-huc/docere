@@ -43,7 +43,7 @@ function useFacsimiles(ids: string) {
 export function Pb(props: ComponentProps) {
 	const settings = React.useContext(EntrySettingsContext)
 	const container = React.useContext(ContainerContext)
-	const facsimiles = useFacsimiles(props.annotation.metadata.facsimileId)
+	const facsimiles = useFacsimiles(props.annotation.props.facsimileId)
 
 	if (
 		!settings['panels.text.showPageBeginnings'] ||
@@ -58,8 +58,8 @@ export function Pb(props: ComponentProps) {
 						facsimiles.map(facsimile =>
 							<FacsimileThumb
 								facsimile={{
-									id: facsimile.metadata.facsimileId,
-									path: facsimile.metadata.facsimilePath
+									id: facsimile.props.facsimileId,
+									path: facsimile.props.facsimilePath
 								}}
 								key={facsimile.id}
 								container={container}

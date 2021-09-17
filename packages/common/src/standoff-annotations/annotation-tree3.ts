@@ -1,14 +1,86 @@
 import { ExportOptions, HIGHLIGHT_NODE_NAME, PartialStandoff, PartialStandoffAnnotation } from '.'
-import { EntityConfig } from '../entry'
-import { FacsimileArea } from '../entry/facsimile'
+// import { EntityConfig } from '../entry'
+// import { FacsimileArea } from '../entry/facsimile'
 import { TagShape } from '../enum'
+import { isChild, isAfter } from './utils'
 
 export class StandoffTree3 {
-	private annotations: Annotation3[]
 	public tree: AnnotationNode
 	public lookup: AnnotationLookup
+	public annotations: Annotation3[]
+	private nodeLookup: Map<string, AnnotationNode> = new Map()
+	private rangePairs: Map<string, string> = new Map()
+	private ranges: Map<Annotation3, [number, number]> = new Map()
+
+	constructor(public standoff: PartialStandoff, private options: ExportOptions) {
+		/** 
+		 * Convert {@link PartialStandoffAnnotation } to {@link Annotation3}
+		 */
+		this.annotations = standoff.annotations
+			.reduce<Annotation3[]>((prev, curr) => {
+				const annotation = toAnnotation3(curr)
+
+				if (annotation.tagShape === TagShape.Range) {
+					this.splitRangeAnnotation(annotation).forEach(a => prev.push(a))
+				} else {
+					prev.push(annotation)
+				}
+				return prev
+			}, [])
+
+		this.ensureRoot()
+
+		/**
+		 * Create a lookup of all the annotations by ID. The tree only contains
+		 * the ID of the annotation. The lookup is used as a quick way to retrieve
+		 * the full annotation
+		 */
+		this.lookup = this.annotations.reduce<AnnotationLookup>(
+			(prev, curr) => prev.set(curr.id, curr),
+			new Map()
+		)
+
+		this.update()
+	}
+
+	/**
+	 * Ensure the AnnotationTree has a root annotation. Without a
+	 * root a tree can't be build.
+	 * 
+	 * TODO why is ensureRoot necessary for Republic data? Is there no root?
+	 */
+	private ensureRoot() {
+		// Find the root
+		const root = this.annotations.find(a =>
+			a.start === 0 && a.end === this.standoff.text.length
+		)
+
+		// If there is no root, create one and add it to the annotation list
+		if (root == null) {
+			this.annotations.push(toAnnotation3({
+				end: this.standoff.text.length,
+				props: { isRoot: true },
+				name: this.options.rootNodeName,
+				start: 0,
+			}))
+		} else {
+			root.props.isRoot = true
+		}
+	}
 
 	highlightSubString(subStrings: string[]) {
+		/**
+		 * Remove current highlight
+		 */
+		this.annotations = this.annotations.filter(a => {
+			if (a.name === HIGHLIGHT_NODE_NAME) this.ranges.delete(a)
+			return a.name !== HIGHLIGHT_NODE_NAME
+		})
+
+		/**
+		 * Match all substrings in the standoff text and create an annotation
+		 * per match
+		 */
 		for (const subString of subStrings) {
 			const matches = this.standoff.text.matchAll(new RegExp(subString, 'g'))
 
@@ -34,7 +106,7 @@ export class StandoffTree3 {
 		 * to prevent code repetition
 		 */ 
 		const annotations = annotation.tagShape === TagShape.Range ?
-			splitRangeAnnotation(annotation) :
+			this.splitRangeAnnotation(annotation) :
 			[annotation]
 
 		/**
@@ -48,51 +120,118 @@ export class StandoffTree3 {
 		if (update) this.update()
 	}
 
-	constructor(public standoff: PartialStandoff, private options: ExportOptions) {
-		/** 
-		 * Convert {@link PartialStandoffAnnotation } to {@link Annotation3}
-		 */
-		this.annotations = standoff.annotations
-			// TODO remove
-			.filter(a => a.id !== 'NL-HaNA_1.01.02_3760_0008-line-3059-919-752-176')
-			.reduce<Annotation3[]>((prev, curr) => {
-				const annotation = toAnnotation3(curr)
-
-				if (annotation.tagShape === TagShape.Range) {
-					splitRangeAnnotation(annotation).forEach(a => prev.push(a))
-				} else {
-					prev.push(annotation)
-				}
-				return prev
-			}, [])
-
-		/**
-		 * Create a lookup of all the annotations by ID. The tree only contains
-		 * the ID of the annotation. The lookup is used as a quick way to retrieve
-		 * the full annotation
-		 */
-		this.lookup = this.annotations.reduce<AnnotationLookup>(
-			(prev, curr) => prev.set(curr.id, curr),
-			new Map()
-		)
-
-		this.update()
-	}
-
-	update() {
+	private update() {
 
 		/**
 		 * Sort {@link Annotation3 | annotations} by {@link sortByOffset | offset}
 		 */
 		this.annotations.sort(sortByOffset(this.options))
 
-		/**
-		 * Create a {@link AnnotationNode | tree} out of standoff {@link Annotation3 | annotations}.
-		 * 
-		 * Returns a {@link AnnotationNode | tree} and a {@link AnnotationLookup | lookup}
-		 */
-		this.tree = createTree3(this.annotations, this.standoff.text, this.lookup)
+		this.createTree()
 	}
+
+	private splitRangeAnnotation(annotation: Annotation3) {
+		const startAnnotation = cloneAnnotation(annotation)
+		startAnnotation.end = startAnnotation.start
+		startAnnotation.props.isRangeStart = true
+
+		const endAnnotation = cloneAnnotation(annotation)
+		endAnnotation.start = endAnnotation.end
+		endAnnotation.props.isRangeEnd = true
+
+		this.rangePairs.set(startAnnotation.id, endAnnotation.id)
+		this.ranges.set(startAnnotation, [startAnnotation.start, endAnnotation.start])
+
+		return [startAnnotation, endAnnotation]
+	}
+
+	/**
+	 * Create a {@link AnnotationNode | tree} out of standoff {@link Annotation3 | annotations}.
+	 * 
+	 * Returns a {@link AnnotationNode | tree} and a {@link AnnotationLookup | lookup}
+	 */
+	private createTree() {
+		let prevNode: AnnotationNode
+		this.nodeLookup = new Map()
+		this.tree = null
+
+		const findParent = (nodeId: string, parentId: string): AnnotationNode =>
+			isChild(this.lookup.get(nodeId), this.lookup.get(parentId)) ?
+				this.nodeLookup.get(parentId) :
+				findParent(nodeId, this.nodeLookup.get(parentId).parent)
+
+		for (const annotation of this.annotations) {
+			const node: AnnotationNode = {
+				id: annotation.id,
+				parent: null,
+				children: [],
+			}
+
+			this.nodeLookup.set(node.id, node)
+
+			/**
+			 * If tree is null, node must be the root!
+			 */
+			if (this.tree == null) {
+				this.tree = node
+			} else {
+				const parent = findParent(node.id, prevNode.id)
+				node.parent = parent.id
+				parent.children.push(node)	
+			}
+
+			/**
+			 * Only if the {@link TagShape | tag shape} is a default tag (<x>..</x>),
+			 * it is assigned to prevNode. If the tag shape is self closing (<x/>)
+			 * or a range (<x/>...<x/>), it cannot have children and we can skip
+			 * checking against them.
+			 */
+			if (annotation.tagShape === TagShape.Default) {
+				prevNode = node
+			}
+		}
+
+		addTextNodes(this.tree, this.standoff.text, this.lookup, this.ranges)
+	}
+
+	// private *walker(
+	// 	startAnnotation: AnnotationNode,
+	// 	endAnnotation: AnnotationNode,
+	// ) {
+	// 	let currentAnnotation: Node = startAnnotation
+
+	// 	while(true) {
+	// 		if (currentAnnotation == null) {
+	// 			currentAnnotation = this.tree
+	// 		} else if (
+	// 			typeof currentAnnotation === 'string' ||
+	// 			isTextNode(currentAnnotation)
+	// 		) {
+	// 			return currentAnnotation
+	// 		} else if (currentAnnotation.children.length) {
+	// 			currentAnnotation = currentAnnotation.children[0]
+	// 		} else {
+	// 			let parent = this.nodeLookup.get(currentAnnotation.parent)
+	// 			let index = parent.children.indexOf(currentAnnotation)
+	// 			let nextSibling = parent.children[index + 1]
+
+	// 			while (nextSibling == null && parent.parent != null) {
+	// 				const parentsParent = this.nodeLookup.get(parent.parent)
+	// 				index = parentsParent.children.indexOf(parent)
+	// 				nextSibling = parentsParent.children[index + 1]
+	// 				parent = parentsParent
+	// 			}
+
+	// 			currentAnnotation = nextSibling
+
+	// 			if (currentAnnotation == null) return
+	// 		} 
+
+	// 		if (currentAnnotation === endAnnotation) return
+
+	// 		yield currentAnnotation
+	// 	}
+	// }
 }
 
 interface AnnotationNode {
@@ -101,213 +240,116 @@ interface AnnotationNode {
 	children: Node[]
 }
 
-type Node = string | AnnotationNode
+interface TextNode {
+	text: string
+	rangeAnnotation?: Annotation3
+}
+
+export type Node = AnnotationNode | TextNode
 
 type AnnotationLookup = Map<string, Annotation3>
 
-export interface Annotation3 extends Required<PartialStandoffAnnotation> {
-	metadata: {
-		areas?: FacsimileArea[]
-		entityConfig?: EntityConfig
-		entityConfigId?: string
-		entityId?: string
-		isRoot?: boolean
-		isRangeStart?: boolean
-		isRangeEnd?: boolean
-		facsimileId?: string
-		facsimilePath?: string
-		range?: Set<string>
-		textContent?: string
-	}
-	sourceMetadata: Record<string, any>
-}
+export type Annotation3 = Required<PartialStandoffAnnotation>
 
-function splitRangeAnnotation(annotation: Annotation3) {
-	const startAnnotation = cloneAnnotation(annotation)
-	startAnnotation.end = startAnnotation.start
-	startAnnotation.metadata.isRangeStart = true
-
-	const endAnnotation = cloneAnnotation(annotation)
-	endAnnotation.start = endAnnotation.end
-	endAnnotation.metadata.isRangeEnd = true
-
-	return [startAnnotation, endAnnotation]
+export function isTextNode(node: Node): node is TextNode {
+	return node.hasOwnProperty('text')
 }
 
 function toAnnotation3(currAnnotation: PartialStandoffAnnotation): Annotation3 {
-	if (currAnnotation.end == null) currAnnotation.tagShape = TagShape.SelfClosing
+	if (currAnnotation.end == null) {
+		currAnnotation.tagShape = TagShape.SelfClosing
+	}
 
 	if (
 		currAnnotation.tagShape === TagShape.SelfClosing &&
 		currAnnotation.end !== currAnnotation.start
 	) currAnnotation.end = currAnnotation.start
 
-	const { metadata, ...rest } = currAnnotation
-
-	const tmp: Annotation3 = {
+	return {
 		end: currAnnotation.start,
 		endOrder: null,
-		id: currAnnotation.id == null ? Math.random().toString().slice(2) : null,
-		metadata: {},
-		sourceMetadata: metadata || {},
+		id: currAnnotation.id == null ?
+			Math.random().toString().slice(2) :
+			null,
+		props: {},
+		sourceProps: {},
 		startOrder: null,
 		tagShape: TagShape.Default,
-		...rest,
+		...currAnnotation,
 	}
-
-	// TODO move to preprocessing
-	Object.keys(tmp.sourceMetadata)
-		.filter(key => key.charAt(0) === '_')
-		.forEach(key => {
-			// @ts-ignore
-			tmp.metadata[key.slice(1)] = tmp.sourceMetadata[key]
-			delete tmp.sourceMetadata[key]
-		})
-	
-	return tmp
 }
 
-function cloneAnnotation(annotation: Annotation3): Annotation3 {
+export function cloneAnnotation<T extends PartialStandoffAnnotation>(
+	annotation: T,
+	generateNewID = true
+): T {
 	return {
 		...annotation,
-		id: Math.random().toString().slice(2),
-		metadata: { ...annotation.metadata },
-		sourceMetadata: { ...annotation.sourceMetadata },
+		id: generateNewID ? Math.random().toString().slice(2) : annotation.id,
+		props: { ...annotation.props },
+		sourceProps: { ...annotation.sourceProps },
 	}
 }
 
-function createTree3(
-	annotations: Annotation3[],
+function addTextNodes(
+	node: AnnotationNode,
 	text: string,
-	lookup: AnnotationLookup
+	lookup: Map<string, Annotation3>,
+	ranges: Map<Annotation3, [number, number]>
 ): AnnotationNode {
-	let tree: AnnotationNode
-	let prevNode: AnnotationNode
-	let nodeLookup: Map<string, AnnotationNode> = new Map()
-
-	function findParent(nodeId: string, parentId: string): AnnotationNode {
-		// console.log(
-		// 	isChild(lookup.get(nodeId), lookup.get(parentId)),
-		// 	`${lookup.get(nodeId).name}__${lookup.get(nodeId).start}__${lookup.get(nodeId).end}`,
-		// 	`${lookup.get(parentId).name}__${lookup.get(parentId).start}__${lookup.get(parentId).end}`,
-		// )
-		return isChild(lookup.get(nodeId), lookup.get(parentId)) ?
-			nodeLookup.get(parentId) :
-			findParent(nodeId, nodeLookup.get(parentId).parent)
-	}
-
-	for (const annotation of annotations) {
-		const node: AnnotationNode = {
-			id: annotation.id,
-			parent: null,
-			children: [],
-		}
-
-		nodeLookup.set(node.id, node)
-
-		/**
-		 * If tree is null, node must be the root!
-		 */
-		if (tree == null) {
-			tree = node
-		} else {
-			const parent = findParent(node.id, prevNode.id)
-			node.parent = parent.id
-			parent.children.push(node)	
-		}
-
-		/**
-		 * Only if the {@link TagShape | tag shape} is a default tag (<x>..</x>),
-		 * it is assigned to prevNode. If the tag shape is self closing (<x/>)
-		 * or a range (<x/>...<x/>), it cannot have children and we can skip
-		 * checking against them.
-		 */
-		if (annotation.tagShape === TagShape.Default) {
-			prevNode = node
-		}
-	}
-
-	return addTextNodes(tree, text, lookup)
-
-	// function findParent(annotation: Annotation3, startIndex: number): Annotation3 {
-	// 	let index = startIndex - 1
-	// 	let parent = annotations[index]
-
-	// 	while (parent != null && !isChild(annotation, parent)) {
-	// 		parent = annotations[index--]
-	// 	}
-
-	// 	return parent
-	// }
-
-	// annotations
-	// 	// .filter(x => x.name !== TEXT_NODE_NAME)
-	// 	.forEach((annotation, index) => {
-	// 		const parent = findParent(annotation, index)
-
-	// 		// delete annotation.metadata._textContent
-	// 		// annotation.parent = null
-	// 		// annotation.children = []
-
-	// 		if (parent == null) {
-	// 			tree = {
-	// 				children: [],
-	// 				id: annotation.id,
-	// 				parent: null,
-	// 			}
-	// 		} else {
-	// 			// parent.children.push({
-	// 			// 	children: [],
-	// 			// 	id: annotation.id,
-	// 			// 	parent: parent.id
-	// 			// })
-	// 			console.log('implement')
-	// 		}
-	// 	})
-
-	// if (tree == null) return
-
-	// return addTextNodeAnnotations(tree, text)
-}
-
-function addTextNodes(node: AnnotationNode, text: string, lookup: Map<string, Annotation3>): AnnotationNode {
 	const rootAnnotation = lookup.get(node.id)
 
+	function addTextNode(startOffset: number, endOffset: number) {
+		const node: TextNode = { text: text.slice(startOffset, endOffset) }
+
+		for (const [annotation, [start, end]] of ranges.entries()) {
+			if (startOffset >= start && endOffset <= end && node.text.trim().length > 0) {
+				node.rangeAnnotation = annotation
+			}
+		}
+
+		return node
+	}
+
 	node.children = node.children.reduce((prev, curr, index, array) => {
-		if (typeof curr === 'string') return
+		// console.log('HERE ARE CHILRNJK', curr)
+		if (typeof curr === 'string') return prev
+		if (isTextNode(curr)) return prev
 
 		const currAnnotation = lookup.get(curr.id)
 		// compare first node with root start, to add text content to start
 		if (index === 0 && rootAnnotation.start < currAnnotation.start) {
 			// const annotation = createTextAnnotationNode(text, node.start, curr.start, node)
-			prev.push(text.slice(rootAnnotation.start, currAnnotation.start))
+			prev.push(addTextNode(rootAnnotation.start, currAnnotation.start))
 		}
 
 		// compare curr anno with prev node, to add text content between
 		const prevChild = array[index - 1]
-		if (prevChild != null && typeof prevChild !== 'string') {
+		if (prevChild != null && typeof prevChild !== 'string' && !isTextNode(prevChild)) {
 			const prevAnno = lookup.get(prevChild.id)
 			if (prevAnno.end < currAnnotation.start) {
 				// const annotation = createTextAnnotationNode(text, prevAnno.end, curr.start, node)
-				prev.push(text.slice(prevAnno.end, currAnnotation.start))
+				prev.push(addTextNode(prevAnno.end, currAnnotation.start))
 			}
 
 		}
 
 		// recursively add the curr annotation node
-		prev.push(addTextNodes(curr, text, lookup))
+		prev.push(addTextNodes(curr, text, lookup, ranges))
+		// console.log(text.slice(currAnnotation.start, currAnnotation.end))
+		// prev.push(text.slice(currAnnotation.start, currAnnotation.end))
 
 		// compare last node with root end, to add text content to the end
 		if (index === array.length - 1 && rootAnnotation.end > currAnnotation.end) {
 			// const annotation = createTextAnnotationNode(text, curr.end, node.end, node)
-			prev.push(text.slice(currAnnotation.end, rootAnnotation.end))
+			prev.push(addTextNode(currAnnotation.end, rootAnnotation.end))
 		}
 
 		return prev
 	}, [] as Node[])
 
 	if (!node.children.length && rootAnnotation.start < rootAnnotation.end) {
-		node.children = [text.slice(rootAnnotation.start, rootAnnotation.end)]
+		node.children = [addTextNode(rootAnnotation.start, rootAnnotation.end)]
 	}
 
 	return node
@@ -357,8 +399,8 @@ function sortByOffset(options: ExportOptions) {
 	const sbh = sortByHierarchy(options)
 
 	return function (a: Annotation3, b: Annotation3) {
-		if (a.metadata.isRoot) return 0
-		if (b.metadata.isRoot) return 1
+		if (a.props.isRoot) return 0
+		if (b.props.isRoot) return 1
 
 		/**
 		 * If start and end offset are equal, sort on annotation hierarchy.
@@ -382,18 +424,4 @@ function sortByOffset(options: ExportOptions) {
 
 		return 0
 	}
-}
-
-/** Check if annotation1 comes after annotation2 */
-function isAfter(tag1: Annotation3, tag2: Annotation3): boolean {
-	return tag1.start >= tag2.end
-}
-
-function isChild(child: Annotation3, parent: Annotation3): boolean {
-	if (parent == null || child == null || parent === child) return false
-	if (parent.tagShape === TagShape.SelfClosing) return false
-	if (child.tagShape === TagShape.SelfClosing) {
-		return parent.start <= child.start && parent.end >= child.start
-	}
-	return parent.start <= child.start && parent.end >= child.end
 }

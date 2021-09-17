@@ -31,8 +31,8 @@ export class FacsimileNavigatorController extends CollectionNavigatorBaseControl
 		const hits: CollectionDocument[] = Array.from(entry.textData.facsimiles.values())
 			.map(f => ({
 				entryIds: new Set([entry.id]),
-				facsimileId: f.metadata.facsimileId,
-				facsimilePath: f.metadata.facsimilePath
+				facsimileId: f.props.facsimileId,
+				facsimilePath: f.props.facsimilePath
 			}))
 		this.tiledImages = new TiledImages(this.viewer, hits, entry, facsimile, false)
 	}

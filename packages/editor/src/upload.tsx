@@ -39,7 +39,7 @@ export function Upload() {
 				<Tabs defaultIndex={2}>
 					<TabList>
 						<Tab disabled={state.source == null}>Source</Tab>
-						<Tab disabled={state.standoffTree == null}>Standoff tree</Tab>
+						<Tab disabled={state.partialStandoff == null}>Partial standoff</Tab>
 						<Tab disabled={state.entries.length === 0}>Entries</Tab>
 					</TabList>
 					<TabPanel>
@@ -56,20 +56,20 @@ export function Upload() {
 					<TabPanel>
 						<section id="standoff-tree">
 							{
-								state.standoffTree != null &&
+								state.partialStandoff != null &&
 								<>
 								<Editor
 									language="json"
-									value={JSON.stringify(state.standoffTree.getStandoff())}
+									value={JSON.stringify(state.partialStandoff)}
 								/>
 								<ul>
-									<li>metadata items: {Object.keys(state.standoffTree.metadata).length}</li>
+									<li>metadata items: {Object.keys(state.partialStandoff.metadata).length}</li>
 									<li>
-										annotations: {Object.keys(state.standoffTree.list).length}
+										annotations: {Object.keys(state.partialStandoff.annotations).length}
 										<ul>
 											{
 												Array.from(
-													state.standoffTree.list
+													state.partialStandoff.annotations
 														.reduce((prev, curr) => {
 															if (prev.has(curr.name)) {
 																prev.set(curr.name, prev.get(curr.name) + 1)
@@ -86,7 +86,7 @@ export function Upload() {
 											}
 										</ul>
 									</li>
-									<li>text: {Object.keys(state.standoffTree.text).length}</li>
+									<li>text: {Object.keys(state.partialStandoff.text).length}</li>
 								</ul>
 								</>
 							}
@@ -109,7 +109,6 @@ export function Upload() {
 																onClick={() => dispatch({ type: 'SET_ENTRY', entry })}
 																title={entry.id}
 															>
-																{console.log(entry.id)}
 																{entry.id}
 															</li>
 														)

@@ -31,7 +31,7 @@ function NoteLink(props: NoteLinkProps) {
 
 // TODO add tree from entry.layers[0].tree lookup?
 export const NoteLinkEntity = React.memo(function(props: EntityComponentProps) {
-	const [fileName] = props.entity.metadata.entityId.split('#')
+	const [fileName] = props.entity.props.entityId.split('#')
 	// TODO this does not work anymore with standoff
 	const entryId = fileName.replace(/\.xml$/, '')
 	const components = useComponents(ContainerType.Layer)

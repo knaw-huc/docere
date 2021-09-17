@@ -22,11 +22,11 @@ export * from './entity'
 export * from './fetch'
 
 export function isEntityAnnotation(annotation: Annotation3): annotation is Entity {
-	return annotation.metadata.entityId != null
+	return annotation.props.entityId != null
 }
 
 export function isFacsimileAnnotation(annotation: Annotation3): annotation is Facsimile {
-	return annotation.metadata.facsimileId != null && annotation.metadata.facsimilePath != null
+	return annotation.props.facsimileId != null && annotation.props.facsimilePath != null
 }
 
 
@@ -80,15 +80,16 @@ export interface JsonEntry {
 // 	tree: AnnotationNode2
 // } 
 
-export interface AnnotationNode2 {
-	id: string
-	parent: string
-	children: Node[]
-}
+// export interface AnnotationNode2 {
+// 	id: string
+// 	parent: string
+// 	children: Node[]
+// }
 
-export type Node = string | AnnotationNode2
+// export type Node = string | AnnotationNode2
 
-export interface Entry extends JsonEntry {
+export interface Entry extends Omit<JsonEntry, 'metadata'> {
+	metadata: Map<string, MetadataItem>
 	textData: {
 		facsimiles: Map<ID, Facsimile>
 		entities: Map<ID, Entity>

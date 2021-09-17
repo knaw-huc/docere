@@ -42,7 +42,7 @@ export function FacsimileThumb(props: FacsimileThumbProps) {
 	}, [props.container, props.entryId])
 
 	const src = props.facsimile.path.replace('/info.json', '/full/,32/0/default.jpg')
-	const active = activeFacsimile?.metadata.facsimileId === props.facsimile.id
+	const active = activeFacsimile?.props.facsimileId === props.facsimile.id
 
 	return (
 		<Img

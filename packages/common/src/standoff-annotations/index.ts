@@ -1,9 +1,10 @@
 import React from 'react'
+import { EntityConfig } from '../entry/entity'
 import { FacsimileArea } from '../entry/facsimile'
 import { TagShape } from '../enum'
 import { Annotation3 } from './annotation-tree3'
 
-export * from './annotation-tree'
+// export * from './annotation-tree'
 export * from './annotation-tree3'
 export * from './utils'
 export * from './export-options'
@@ -33,28 +34,28 @@ export interface PartialStandoff {
  * Annotations in {@link AnnotationTree} are extends with {@link extendStandoffAnnotation}
  * resulting in {@link StandoffAnnotation}s.
  */
-export interface Standoff extends PartialStandoff {
-	annotations: AnnotationNode[]
-}
+// export interface Standoff extends PartialStandoff {
+// 	annotations: AnnotationNode[]
+// }
 
-export interface AnnotationNode extends StandoffAnnotation {
-	children: AnnotationNode[]
-	parent: AnnotationNode
-}
+// export interface AnnotationNode extends StandoffAnnotation {
+// 	children: AnnotationNode[]
+// 	parent: AnnotationNode
+// }
 
 
-export interface StandoffAnnotationMetadata {
-	_areas?: FacsimileArea[]
-	_entityConfigId?: string
-	_entityId?: string
-	_isRoot?: boolean
-	// _entityValue?: string
-	_facsimileId?: string
-	_facsimilePath?: string
-	_range?: Set<string>
-	_textContent?: string
-	[prop: string]: any
-}
+// export interface StandoffAnnotationMetadata {
+// 	_areas?: FacsimileArea[]
+// 	_entityConfigId?: string
+// 	_entityId?: string
+// 	_isRoot?: boolean
+// 	// _entityValue?: string
+// 	_facsimileId?: string
+// 	_facsimilePath?: string
+// 	_range?: Set<string>
+// 	_textContent?: string
+// 	[prop: string]: any
+// }
 
 /**
  * Partial standoff annotations are used in {@link StandoffWrapper}.
@@ -67,11 +68,26 @@ export interface PartialStandoffAnnotation {
 	end?: number
 	endOrder?: number
 	id?: string
-	metadata?: StandoffAnnotationMetadata
 	name: string
-	tagShape?: TagShape
+	props?: {
+		areas?: FacsimileArea[]
+		entityConfig?: EntityConfig
+		entityConfigId?: string
+		entityId?: string
+		entityValue?: string
+		isRoot?: boolean
+		isRangeStart?: boolean
+		isRangeBody?: boolean
+		isRangeEnd?: boolean
+		facsimileId?: string
+		facsimilePath?: string
+		rangeId?: string
+		textContent?: string
+	}
+	sourceProps?: Record<string, any>
 	start: number
 	startOrder?: number
+	tagShape?: TagShape
 }
 
 /**
@@ -82,19 +98,19 @@ export interface PartialStandoffAnnotation {
  * in the constructor of the {@link StandoffTree} with {@link extendStandoffAnnotation}
  */
 // export type StandoffAnnotation = Required<PartialStandoffAnnotation>
-export interface StandoffAnnotation extends Required<PartialStandoffAnnotation> {
-	index: number
-}
+// export interface StandoffAnnotation extends Required<PartialStandoffAnnotation> {
+// 	index: number
+// }
 
-// export type FilterFunction = (a: PartialStandoffAnnotation) => boolean
+export type FilterFunction = (a: PartialStandoffAnnotation) => boolean
 // export type FilterFunction<T extends PartialStandoffAnnotation> = (a: T) => boolean
-export type FilterFunction = (a: AnnotationNode) => boolean
+// export type FilterFunction = (a: AnnotationNode) => boolean
 
-export type OverlapReport = [StandoffAnnotation, StandoffAnnotation][]
+// export type OverlapReport = [StandoffAnnotation, StandoffAnnotation][]
 
-export interface LintReport {
-	overlap: OverlapReport
-}
+// export interface LintReport {
+// 	overlap: OverlapReport
+// }
 
 // export type DocereAnnotationProps = AnnotationNode['metadata'] & {
 // 	_key?: string

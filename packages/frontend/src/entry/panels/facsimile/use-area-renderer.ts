@@ -1,7 +1,12 @@
 import React from 'react'
-import { Entry, ActiveFacsimile, ID, ActiveEntities, ProjectAction, isFacsimileAreaRectangle, isFacsimileAreaPolygon } from '@docere/common'
+import { Entry, ActiveFacsimile, ActiveEntities, ProjectAction, isFacsimileAreaRectangle, isFacsimileAreaPolygon, CombinedKeysCache } from '@docere/common'
 import { FacsimileArea } from '@docere/common'
 import OpenSeadragon from 'openseadragon'
+
+// Extend OpenSeadragon.Viewer with svgOverlay plugin initializer
+interface OSDViewer extends OpenSeadragon.Viewer {
+	svgOverlay: () => any
+}
 
 type AreaCache = {
 	entryId: string,
@@ -10,24 +15,21 @@ type AreaCache = {
 }[]
 
 export class AreaRenderer {
-	// private activeFacsimile: ActiveFacsimile
 	private overlay: any
 	private rectTpl: SVGElement
-	private cache: Map<ID, {
+	private cache: CombinedKeysCache<{
 		fragment: DocumentFragment,
 		areas: AreaCache
-	}> = new Map()
+	}> = new CombinedKeysCache()
 	private strokeWidth: number
 
 	private areas: AreaCache = []
 
 	constructor(
-		private osd: OpenSeadragon.Viewer,
+		private osd: OSDViewer,
 		private OpenSeadragon: any,
-		// @ts-ignore
 		private dispatch: React.Dispatch<ProjectAction>
 	) {
-		// @ts-ignore
 		this.overlay = this.osd.svgOverlay()
 		this.rectTpl = document.createElementNS('http://www.w3.org/2000/svg','rect')
 		this.rectTpl.setAttribute('fill', 'none')
@@ -108,7 +110,7 @@ export class AreaRenderer {
 
 			const lastEntity = activeEntities.size === index + 1
 
-			entity.metadata.areas?.forEach(fa => {
+			entity.props.areas?.forEach(fa => {
 				rect = this.overlay.node().querySelector(`#${fa.id}`)
 				if (rect == null) return
 				rect.classList.add('active')
@@ -118,7 +120,7 @@ export class AreaRenderer {
 				// (could be multiple areas) is set to fully opague
 				rect.setAttribute(
 					'fill',
-					lastEntity ? `${entity.metadata.entityConfig.color}66` : `${entity.metadata.entityConfig.color}66`
+					lastEntity ? `${entity.props.entityConfig.color}66` : `${entity.props.entityConfig.color}66`
 				)
 
 				// Update combined bounds
@@ -131,7 +133,7 @@ export class AreaRenderer {
 			// Add the popup to the last entity
 			if (lastEntity) {
 				if (currentBounds == null) return
-				const selector = `[data-id="entity_${entity.metadata.entityId}"]`
+				const selector = `[data-id="entity_${entity.props.entityId}"]`
 				const element = document.querySelector(selector).cloneNode(true)
 
 				if (element != null) {
@@ -207,15 +209,15 @@ export class AreaRenderer {
 		this.rectTpl.setAttribute('stroke-width', this.strokeWidth.toString())
 
 		// Create the <rect>s, but skip if the <rect>s are already in the cache
-		if (!this.cache.has(facsimile.metadata.facsimileId)) {
+		if (!this.cache.has(entry.id, facsimile.props.facsimileId)) {
 			const fragment = document.createDocumentFragment()
 			const areas: AreaCache = []
 
 			for (const entity of entry.textData.entities.values()) {
-				if (entity.metadata.areas == null) continue
+				if (entity.props.areas == null) continue
 
-				entity.metadata.areas.forEach(area => {
-					if (area.facsimileId !== facsimile.metadata.facsimileId) return
+				entity.props.areas.forEach(area => {
+					if (area.facsimileId !== facsimile.props.facsimileId) return
 
 					if (isFacsimileAreaRectangle(area)) {
 						const vpRect = this.osd.viewport.imageToViewportRectangle(area.x, area.y, area.w, area.h)
@@ -240,7 +242,7 @@ export class AreaRenderer {
 
 						areas.push({
 							entryId: entry.id,
-							entityId: entity.metadata.entityId,
+							entityId: entity.props.entityId,
 							points,
 						})
 					}
@@ -248,11 +250,11 @@ export class AreaRenderer {
 			}
 
 			// Add the created fragment to the cache
-			this.cache.set(facsimile.metadata.facsimileId, { fragment, areas })
+			this.cache.set(entry.id, facsimile.props.facsimileId, { fragment, areas })
 		}
 
 		// Add the <rect>s to the overlay element
-		const { fragment, areas } = this.cache.get(facsimile.metadata.facsimileId)
+		const { fragment, areas } = this.cache.get(entry.id, facsimile.props.facsimileId)
 		this.areas = areas
 		this.overlay.node().appendChild(fragment.cloneNode(true) as DocumentFragment)
 	}

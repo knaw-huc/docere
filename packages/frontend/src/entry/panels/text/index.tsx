@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 import debounce from 'lodash.debounce'
-import { useComponents, DEFAULT_SPACING, TEXT_PANEL_TEXT_WIDTH, ContainerType, getTextPanelLeftSpacing, PANEL_HEADER_HEIGHT, StatefulTextLayer, EntrySettingsContext, SearchContext } from '@docere/common'
+import { useComponents, DEFAULT_SPACING, TEXT_PANEL_TEXT_WIDTH, ContainerType, getTextPanelLeftSpacing, PANEL_HEADER_HEIGHT, StatefulTextLayer, EntrySettingsContext, SearchContext, EntryContext, ProjectContext, CombinedKeysCache } from '@docere/common'
 import { DocereTextView } from '../../../../../text/src/index'
 
 import { useScrollEntityIntoView, useScrollFacsimileIntoView } from '../../use-scroll-into-view'
@@ -70,9 +70,12 @@ interface Props {
 }
 
 function TextPanel(props: Props) {
-	// const entry = React.useContext(EntryContext)
+	const { config } = React.useContext(ProjectContext)
+	const entry = React.useContext(EntryContext)
 	const settings = React.useContext(EntrySettingsContext)
 	const searchContext = React.useContext(SearchContext)
+
+	const searchQueries = useSearchQueries(searchContext.state.query, entry.id, config.slug)
 
 	const textWrapperRef = React.useRef<HTMLDivElement>()
 	const activeAreaRef = React.useRef<HTMLDivElement>()
@@ -130,8 +133,7 @@ function TextPanel(props: Props) {
 					>
 						<DocereTextView
 							components={components}
-							highlight={searchContext.state.query}
-							// @ts-ignore
+							highlight={searchQueries}
 							standoffTree={props.layer.standoffTree3}
 							onLoad={setDocereTextViewReady}
 							setHighlightAreas={setHighlightAreas}
@@ -154,3 +156,68 @@ function TextPanel(props: Props) {
 }
 
 export default React.memo(TextPanel)
+
+const queryCache = new CombinedKeysCache<string[]>()
+
+function useSearchQueries(query: string, entryId: string, projectId: string) {
+	const [searchQueries, setSearchQueries] = React.useState<string[]>([])
+
+	React.useEffect(() => {
+		if (!query.trim().length) return
+
+		if (queryCache.has(entryId, query)) {
+			setSearchQueries(queryCache.get(entryId, query))
+			return
+		}
+
+		fetch(`/search/${projectId}/_search`, {
+			method: 'POST',
+			headers: {
+				'Content-type': 'application/json'
+			},
+			body: JSON.stringify(
+				{
+					"_source": false,
+					"highlight": {
+						"fields": { "text": {} },
+						"fragment_size": 1,
+						"require_field_match": false
+					},
+					"query": {
+						"bool": {
+							"must": [
+								{
+									"query_string": {
+										"query": query
+									}
+								},
+								{
+									"ids": {
+										"values": [ entryId ]
+									}
+								}
+							]
+						}
+
+					}
+
+				}
+			)
+		})
+			.then(response => response.json())
+			.then(result => {
+				if (result.hits.total.value > 0) {
+					const searchQueries = result.hits.hits[0].highlight.text
+						.map((t: string) =>
+							t.replace(/<\/?em>/g, '')
+						)
+
+					queryCache.set(entryId, query, searchQueries)
+					setSearchQueries(searchQueries)
+				}
+			})
+
+	}, [query, entryId])
+
+	return searchQueries
+}

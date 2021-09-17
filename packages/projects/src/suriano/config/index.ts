@@ -1,4 +1,4 @@
-import { extendConfig, LayerType, Colors, EntityType, EsDataType } from '@docere/common'
+import { extendConfig, LayerType, Colors, EntityType } from '@docere/common'
 import { hasMetadataValue } from '../../utils'
 
 export default extendConfig({
@@ -16,123 +16,123 @@ export default extendConfig({
 	title: "Suriano",
 	private: true,
 	metadata2: [
-		{
-			facet: {
-				description: 'Dit is een test om wat te zien',
-			},
-			id: 'sender',
-			getValue: (_config, props) => {
-				const annotation = props.sourceTree.findChild(
-					a => a.name === 'correspAction' && a.metadata.type === 'sent',
-					a => a.name === 'name'
-				)
-				return props.sourceTree.getTextContent(annotation)
-			}
-		},
-		{
-			facet: {},
-			id: 'sender_place',
-			getValue: (_config, props) => {
-				const annotation = props.sourceTree.findChild(
-					a => a.name === 'correspAction' && a.metadata.type === 'sent',
-					a => a.name === 'settlement'
-				)
-				return props.sourceTree.getTextContent(annotation)
-			}
-		},
-		{
-			facet: {
-				datatype: EsDataType.Date,
-				interval: 'y',
-			},
-			getValue: (_config, props) => {
-				const annotation = props.sourceTree.findChild(
-					a => a.name === 'correspAction' && a.metadata.type === 'sent',
-					a => a.name === 'date'
-				)
-				return annotation.metadata.when.trim()
-			},
-			id: 'sender_date',
-		},
-		{
-			facet: {},
-			getValue: (_config, props) => {
-				const annotation = props.sourceTree.find(
-					a => a.name === 'idno' && a.metadata.type === 'filza'
-				)
-				return props.sourceTree.getTextContent(annotation)
-			},
-			id: 'filza',
-		},
-		{
-			facet: {},
-			getValue: (_config, props) => {
-				const annotation = props.sourceTree.find(
-					a => a.name === 'idno' && a.metadata.type === 'letterno'
-				)
-				return props.sourceTree.getTextContent(annotation)
-			},
-			id: 'letterno',
-		},
-		{
-			facet: {},
-			id: 'settlement',
-			getValue: (_config, props) => {
-				const annotation = props.sourceTree.findChild(
-					a => a.name === 'msIdentifier',
-					a => a.name === 'settlement'
-				)
-				return props.sourceTree.getTextContent(annotation)
-			},
-		},
-		{
-			facet: {},
-			id: 'insitution',
-			getValue: (_config, props) => {
-				const annotation = props.sourceTree.findChild(
-					a => a.name === 'msIdentifier',
-					a => a.name === 'institution'
-				)
-				return props.sourceTree.getTextContent(annotation)
-			},
-		},
-		{
-			facet: {},
-			id: 'collection',
-			getValue: (_config, props) => {
-				const annotation = props.sourceTree.findChild(
-					a => a.name === 'msIdentifier',
-					a => a.name === 'collection'
-				)
-				return props.sourceTree.getTextContent(annotation)
-			},
-		},
-		{
-			facet: {},
-			getValue: (_config, props) => {
-				const annotation = props.sourceTree.find(
-					a => a.name === 'biblScope'
-				)
-				return props.sourceTree.getTextContent(annotation)
-			},
-			id: 'biblScope',
-		},
-		{
-			getValue: (_config, props) => {
-				const annotation = props.sourceTree.find(
-					a => a.name === 'div' && a.metadata.type === 'summary'
-				)
-				return props.sourceTree.getTextContent(annotation)
-			},
-			id: 'summary',
-		}
+		// {
+		// 	facet: {
+		// 		description: 'Dit is een test om wat te zien',
+		// 	},
+		// 	id: 'sender',
+		// 	getValue: (_config, props) => {
+		// 		const annotation = props.sourceTree.findChild(
+		// 			a => a.name === 'correspAction' && a.metadata.type === 'sent',
+		// 			a => a.name === 'name'
+		// 		)
+		// 		return props.sourceTree.getTextContent(annotation)
+		// 	}
+		// },
+		// {
+		// 	facet: {},
+		// 	id: 'sender_place',
+		// 	getValue: (_config, props) => {
+		// 		const annotation = props.sourceTree.findChild(
+		// 			a => a.name === 'correspAction' && a.metadata.type === 'sent',
+		// 			a => a.name === 'settlement'
+		// 		)
+		// 		return props.sourceTree.getTextContent(annotation)
+		// 	}
+		// },
+		// {
+		// 	facet: {
+		// 		datatype: EsDataType.Date,
+		// 		interval: 'y',
+		// 	},
+		// 	getValue: (_config, props) => {
+		// 		const annotation = props.sourceTree.findChild(
+		// 			a => a.name === 'correspAction' && a.metadata.type === 'sent',
+		// 			a => a.name === 'date'
+		// 		)
+		// 		return annotation.metadata.when.trim()
+		// 	},
+		// 	id: 'sender_date',
+		// },
+		// {
+		// 	facet: {},
+		// 	getValue: (_config, props) => {
+		// 		const annotation = props.sourceTree.find(
+		// 			a => a.name === 'idno' && a.metadata.type === 'filza'
+		// 		)
+		// 		return props.sourceTree.getTextContent(annotation)
+		// 	},
+		// 	id: 'filza',
+		// },
+		// {
+		// 	facet: {},
+		// 	getValue: (_config, props) => {
+		// 		const annotation = props.sourceTree.find(
+		// 			a => a.name === 'idno' && a.metadata.type === 'letterno'
+		// 		)
+		// 		return props.sourceTree.getTextContent(annotation)
+		// 	},
+		// 	id: 'letterno',
+		// },
+		// {
+		// 	facet: {},
+		// 	id: 'settlement',
+		// 	getValue: (_config, props) => {
+		// 		const annotation = props.sourceTree.findChild(
+		// 			a => a.name === 'msIdentifier',
+		// 			a => a.name === 'settlement'
+		// 		)
+		// 		return props.sourceTree.getTextContent(annotation)
+		// 	},
+		// },
+		// {
+		// 	facet: {},
+		// 	id: 'insitution',
+		// 	getValue: (_config, props) => {
+		// 		const annotation = props.sourceTree.findChild(
+		// 			a => a.name === 'msIdentifier',
+		// 			a => a.name === 'institution'
+		// 		)
+		// 		return props.sourceTree.getTextContent(annotation)
+		// 	},
+		// },
+		// {
+		// 	facet: {},
+		// 	id: 'collection',
+		// 	getValue: (_config, props) => {
+		// 		const annotation = props.sourceTree.findChild(
+		// 			a => a.name === 'msIdentifier',
+		// 			a => a.name === 'collection'
+		// 		)
+		// 		return props.sourceTree.getTextContent(annotation)
+		// 	},
+		// },
+		// {
+		// 	facet: {},
+		// 	getValue: (_config, props) => {
+		// 		const annotation = props.sourceTree.find(
+		// 			a => a.name === 'biblScope'
+		// 		)
+		// 		return props.sourceTree.getTextContent(annotation)
+		// 	},
+		// 	id: 'biblScope',
+		// },
+		// {
+		// 	getValue: (_config, props) => {
+		// 		const annotation = props.sourceTree.find(
+		// 			a => a.name === 'div' && a.metadata.type === 'summary'
+		// 		)
+		// 		return props.sourceTree.getTextContent(annotation)
+		// 	},
+		// 	id: 'summary',
+		// }
 	],
 	entities2: [
 		{
 			color: Colors.BlueBright,
 			id: 'note',
 			filter: a => a.name === 'ptr' && hasMetadataValue(a, 'target'),
-			getId: a => a.metadata.target.slice(1),
+			getId: a => a.sourceProps.target.slice(1),
 			title: "Notes",
 			type: EntityType.Note,
 			showInAside: false,
@@ -140,8 +140,8 @@ export default extendConfig({
 		{
 			color: Colors.Pink,
 			id: 'personography',
-			filter: a => a.name === 'rs' && a.metadata.type === 'pers',
-			getId: a => a.metadata.key,
+			filter: a => a.name === 'rs' && a.sourceProps.type === 'pers',
+			getId: a => a.sourceProps.key,
 			title: "Persons",
 			type: EntityType.Person,
 		},
@@ -149,9 +149,9 @@ export default extendConfig({
 
 	facsimiles: {
 		filter: a => a.name === 'pb',
-		getId: a => a.metadata['xml:id'],
+		getId: a => a.sourceProps['xml:id'],
 		getPath: props => {
-			const { _facsimileId: id } = props.annotation.metadata
+			const { _facsimileId: id } = props.annotation.sourceProps
 
 			const pageNumber = parseInt(id.slice(1, 3))
 			const rv = id.slice(3)
@@ -170,12 +170,12 @@ export default extendConfig({
 			type: LayerType.Facsimile,
 		},
 		{
-			findRoot: a => a.name === 'div' && a.metadata.type === 'original',
+			findRoot: a => a.name === 'div' && a.sourceProps.type === 'original',
 			id: 'text',
 			type: LayerType.Text,
 		},
 		{
-			findRoot: a => a.name === 'div' && a.metadata.type === 'summary',
+			findRoot: a => a.name === 'div' && a.sourceProps.type === 'summary',
 			id: 'summary',
 			type: LayerType.Text,
 		},

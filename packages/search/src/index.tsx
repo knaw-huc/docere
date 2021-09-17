@@ -28,7 +28,7 @@ const initialSearchPropsContextState: FacetedSearchProps = {
 	ResultBodyComponent: null,
 	excludeResultFields: [],
 	language: Language.EN,
-	onClickResult: () => {},
+	onClickResult: () => { },
 	resultFields: [],
 	resultsPerPage: 10,
 	small: false, /* Render for small screen (~< 1000px) */
@@ -39,7 +39,7 @@ const initialSearchPropsContextState: FacetedSearchProps = {
 }
 
 export default function FacetedSearch(props: FacetedSearchProps) {
-	const value = { ...initialSearchPropsContextState, ...props}
+	const value = { ...initialSearchPropsContextState, ...props }
 
 	return (
 		<SearchPropsContext.Provider value={{ ...value, i18n: languageMaps[value.language] }}>

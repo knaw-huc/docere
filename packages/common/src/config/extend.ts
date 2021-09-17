@@ -124,8 +124,9 @@ export function extendConfig(configDataRaw: DocereConfig): DocereConfig {
 		exportOptions: {
 			...config.standoff.exportOptions
 		},
-		prepareAnnotations: (partialAnnotations) => partialAnnotations,
-		prepareExport: () => undefined,
+		prepareStandoff: (partialStandoff) => partialStandoff,
+		// prepareAnnotations: (partialAnnotations) => partialAnnotations,
+		// prepareExport: () => undefined,
 		...config.standoff
 	}
 

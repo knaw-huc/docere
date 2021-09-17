@@ -1,4 +1,4 @@
-import { FacsimileArea, PartialStandoff, PartialStandoffAnnotation, Standoff, StandoffTree } from '@docere/common'
+import { FacsimileArea, PartialStandoff, PartialStandoffAnnotation, TagShape, isChild } from '@docere/common'
 
 interface RepublicAnnotation {
 	end_offset: number
@@ -22,64 +22,75 @@ function toDocereAnnotation(annotation: RepublicAnnotation): PartialStandoffAnno
 	delete annotation.metadata.session_id
 	delete annotation.metadata.inventory_num
 
-	if (annotation.coords != null) {
-		annotation.metadata.coords = annotation.coords
-	}
-
-	// if (annotation.type === 'scan') {
-	// 	annotation.metadata = {
-	// 		_facsimileId: annotation.id,
-	// 		_facsimilePath: annotation.metadata.iiif_info_url
-	// 	}
-	// }
-
 	return {
 		end: annotation.end_offset,
 		id: annotation.id,
-		metadata: annotation.metadata,
-		name: annotation.type,
+		name: annotation.metadata.type || annotation.type,
+		props: {},
+		sourceProps: {
+			...annotation.metadata,
+			coords: annotation.coords
+		},
 		start: annotation.start_offset,
 	}
 }
 
-interface RepublicStandoff extends Omit<Standoff, 'annotations'> {
+function prepareAnnotations(partialStandoff: PartialStandoff) {
+	return function (annotation: PartialStandoffAnnotation): PartialStandoffAnnotation {
+		if (annotation.name === 'line') {
+			annotation.props.areas = [createFacsimileArea(annotation)]
+		}
+
+		if (annotation.name === 'line' || annotation.name === 'scan') {
+			convertToMilestone(annotation)
+		}
+
+		if (annotation.name === 'attendance_list' || annotation.name === 'resolution') {
+			annotation.props.areas = partialStandoff.annotations
+				.filter(a => a.name === 'text_region' && isChild(a, annotation))
+				.map(createFacsimileArea)
+		}
+
+		return annotation
+	}
+}
+
+interface RepublicStandoff extends Omit<PartialStandoff, 'annotations'> {
 	annotations: RepublicAnnotation[]
 }
 
 export function prepareSource(republicStandoff: RepublicStandoff): PartialStandoff {
-	return {
+	republicStandoff.metadata.resolution_ids = republicStandoff.annotations
+		.filter(a => a.metadata.type === 'resolution')
+		.map(a => a.metadata.id)
+
+	const partialStandoff = {
 		metadata: republicStandoff.metadata,
 		text: republicStandoff.text,
 		annotations: republicStandoff.annotations
 			.map(toDocereAnnotation)
-			.filter(a => !(a.name === 'attendant' && a.metadata.delegate_id === 0))
+			.filter(a => !(a.name === 'attendant' && a.sourceProps.delegate_id === 0))
 	}
+
+	partialStandoff.annotations = partialStandoff.annotations
+		.map(prepareAnnotations(partialStandoff))
+		.map(a => {
+			delete a.sourceProps.coords
+			return a
+		})
+
+	return partialStandoff
 }
 
 function createFacsimileArea(textRegion: PartialStandoffAnnotation): FacsimileArea {
 	return {
-		facsimileId: textRegion.metadata.scan_id,
-		points: textRegion.metadata.coords
+		facsimileId: textRegion.sourceProps.scan_id,
+		points: textRegion.sourceProps.coords
 	}
 }
 
-export function prepareAnnotations(standoff: StandoffTree) {
-	// TODO move setting _areas to config (with props: sourceTree, filter, etc)
-	standoff.list
-		.filter(a => a.name === 'attendance_list' || a.name === 'resolution')
-		.forEach(parent => {
-			const textRegions = standoff
-				.getChildren(parent, a => a.name === 'text_region')
-
-			parent.metadata._areas = textRegions.map(createFacsimileArea)
-		})
-
-	standoff.list
-		.filter(a => a.name === 'line')
-		.forEach(a => {
-			a.metadata._areas = [createFacsimileArea(a)]
-		})
-
-	standoff.convertToMilestone(a => a.name === 'line', false)
-	standoff.convertToMilestone(a => a.name === 'scan', true)
+function convertToMilestone(annotation: PartialStandoffAnnotation) {
+	annotation.end = annotation.start
+	annotation.tagShape = TagShape.SelfClosing
+	return annotation
 }

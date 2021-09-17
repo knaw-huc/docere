@@ -1,6 +1,5 @@
 import * as es from '@elastic/elasticsearch'
 import { Express, Request } from 'express'
-import { StandoffTree } from '@docere/common'
 
 import { getPool } from '../db'
 import { DOCUMENT_BASE_PATH } from '../constants'
@@ -53,19 +52,19 @@ export default function handleDocumentApi(app: Express) {
 		}
 	})
 
-	app.get(`${DOCUMENT_BASE_PATH}/xml`, async (req: Request, res) => {
-		const config = await getProjectConfig(req.params.projectId)
-		if (isError(config)) return sendJson(config, res)
+	// app.get(`${DOCUMENT_BASE_PATH}/xml`, async (req: Request, res) => {
+	// 	const config = await getProjectConfig(req.params.projectId)
+	// 	if (isError(config)) return sendJson(config, res)
 
-		const pool = await getPool(req.params.projectId)
-		const { rows } = await pool.query(`SELECT standoff FROM source WHERE name=$1;`, [req.params.documentId])
-		if (!rows.length) res.sendStatus(404)
-		else {
-			const standoff = rows[0].standoff
-			const tree = new StandoffTree(standoff, config.standoff.exportOptions)
-			res.send(tree.exportXml())
-		}
-	})
+	// 	const pool = await getPool(req.params.projectId)
+	// 	const { rows } = await pool.query(`SELECT standoff FROM source WHERE name=$1;`, [req.params.documentId])
+	// 	if (!rows.length) res.sendStatus(404)
+	// 	else {
+	// 		const standoff = rows[0].standoff
+	// 		const tree = new StandoffTree(standoff, config.standoff.exportOptions)
+	// 		res.send(tree.exportXml())
+	// 	}
+	// })
 
 	// app.get(`${PROJECT_BASE_PATH}/xml_prepared/:documentId`, async (req, res) => {
 	// 	const pool = await getPool(req.params.projectId)

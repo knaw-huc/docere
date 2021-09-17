@@ -1,4 +1,4 @@
-import { DocereConfig, JsonEntry, StandoffTree } from "@docere/common"
+import { DocereConfig, JsonEntry, PartialStandoff } from "@docere/common"
 
 type EntriesByPartId = Record<string, JsonEntry[]>
 
@@ -38,9 +38,9 @@ interface SetProjectConfig {
 	projectConfig: DocereConfig
 }
 
-interface SetStandoffTree {
+interface SetPartialStandoff {
 	type: 'SET_STANDOFF_TREE'
-	standoffTree: StandoffTree
+	partialStandoff: PartialStandoff
 }
 
 export type SourceAction = 
@@ -51,7 +51,7 @@ export type SourceAction =
 	SetJson	|
 	SetProjectConfig |
 	SetSource | 
-	SetStandoffTree
+	SetPartialStandoff
 
 export interface SourceState {
 	file: File
@@ -62,7 +62,7 @@ export interface SourceState {
 	json: string
 	projectConfig: DocereConfig
 	source: string
-	standoffTree: StandoffTree
+	partialStandoff: PartialStandoff
 }
 export function sourceReducer(state: SourceState, action: SourceAction): SourceState {
 	switch (action.type) {
@@ -73,7 +73,7 @@ export function sourceReducer(state: SourceState, action: SourceAction): SourceS
 		case 'SET_JSON': return setJson(state, action)
 		case 'SET_PROJECT_CONFIG': return setProject(state, action)
 		case 'SET_SOURCE': return setSource(state, action)
-		case 'SET_STANDOFF_TREE': return setStandoffTree(state, action)
+		case 'SET_STANDOFF_TREE': return setPartialStandoff(state, action)
 		default: break
 	}
 
@@ -143,9 +143,9 @@ function setSource(state: SourceState, action: SetSource): SourceState {
 	}
 }
 
-function setStandoffTree(state: SourceState, action: SetStandoffTree): SourceState {
+function setPartialStandoff(state: SourceState, action: SetPartialStandoff): SourceState {
 	return {
 		...state,
-		standoffTree: action.standoffTree
+		partialStandoff: action.partialStandoff
 	}
 }

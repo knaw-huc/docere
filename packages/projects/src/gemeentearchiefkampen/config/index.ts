@@ -1,35 +1,35 @@
-import { CreateJsonEntryPartProps, extendConfig, LayerType, MetadataConfig } from '@docere/common'
+import { extendConfig, LayerType } from '@docere/common'
 // import { LayerType, EsDataType } from '@docere/common'
 // import config from '../../suriano/config'
 import { prepareSource } from './prepare'
 
-function getValue(config: MetadataConfig, props: CreateJsonEntryPartProps) {
-	const annotation = props.sourceTree.find(
-		a => a.name === 'item' && a.metadata.key === config.id
-	)
-	return annotation.metadata.value
-}
+// function getValue(config: MetadataConfig, props: CreateJsonEntryPartProps) {
+// 	const annotation = props.sourceTree.find(
+// 		a => a.name === 'item' && a.metadata.key === config.id
+// 	)
+// 	return annotation.metadata.value
+// }
 
-const metadataItems = [
-	'Name of object',
-	'Title of text',
-	'Name of author',
-	'Folio number',
-	'Folio side',
-	'Column on page',
-	'Scribe',
-	'Collectie',
-	'Inventory number',
-	'Scan(s)',
-	'Language',
-	'Location',
-	'Editor',
-	'Handwriting',
-	'Scribe margin',
-	'Material',
-	'Watermark',
-	'Written space'
-]
+// const metadataItems = [
+// 	'Name of object',
+// 	'Title of text',
+// 	'Name of author',
+// 	'Folio number',
+// 	'Folio side',
+// 	'Column on page',
+// 	'Scribe',
+// 	'Collectie',
+// 	'Inventory number',
+// 	'Scan(s)',
+// 	'Language',
+// 	'Location',
+// 	'Editor',
+// 	'Handwriting',
+// 	'Scribe margin',
+// 	'Material',
+// 	'Watermark',
+// 	'Written space'
+// ]
 
 export default extendConfig({
 	documents: {
@@ -37,6 +37,8 @@ export default extendConfig({
 	},
 
 	standoff: {
+		//TODO
+		//@ts-ignore
 		prepareSource,
 	},
 
@@ -44,11 +46,11 @@ export default extendConfig({
 
 	title: 'Gemeentearchief Kampen',
 
-	metadata2: metadataItems.map(id => ({
-		facet: {},
-		id,
-		getValue,
-	})),
+	// metadata2: metadataItems.map(id => ({
+	// 	facet: {},
+	// 	id,
+	// 	getValue,
+	// })),
 
 	// facsimiles: {
 	// 	filter: a => a.name === 'scan',
@@ -89,22 +91,22 @@ export default extendConfig({
 	
 	layers2: [
 		{
-			findRoot: a => a.name === 'div' && a.metadata.id === 'diplomatic',
+			findRoot: a => a.name === 'div' && a.sourceProps.id === 'diplomatic',
 			id: 'diplomatic',
 			type: LayerType.Text,
 		},
 		{
-			findRoot: a => a.name === 'div' && a.metadata.id === 'comments',
+			findRoot: a => a.name === 'div' && a.sourceProps.id === 'comments',
 			id: 'comments',
 			type: LayerType.Text,
 		},
 		{
-			findRoot: a => a.name === 'div' && a.metadata.id === 'critical',
+			findRoot: a => a.name === 'div' && a.sourceProps.id === 'critical',
 			id: 'critical',
 			type: LayerType.Text,
 		},
 		{
-			findRoot: a => a.name === 'div' && a.metadata.id === 'translation',
+			findRoot: a => a.name === 'div' && a.sourceProps.id === 'translation',
 			id: 'translation',
 			type: LayerType.Text,
 		},

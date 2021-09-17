@@ -1,54 +1,58 @@
-import { AnnotationNode, DocereConfig, PartConfig, StandoffAnnotation, StandoffTree } from '..'
+import { DocereConfig, PartConfig } from '..'
 import { isTextLayerConfig } from '../utils'
 import { FacsimileLayer, ID, isEntityMetadataConfig, JsonEntry, TextLayer } from '.'
-// import { toDocereAnnotation } from '../standoff-annotations/export-react-tree'
+import { cloneAnnotation, PartialStandoff, PartialStandoffAnnotation } from '../standoff-annotations'
+import { isChild } from '../standoff-annotations/utils'
 
 export interface GetValueProps {
-	annotation: StandoffAnnotation
+	annotation: PartialStandoffAnnotation
 	projectConfig: DocereConfig
 	sourceId: ID
-	sourceTree: StandoffTree
+	partialStandoff: PartialStandoff
 }
 
 export interface CreateJsonEntryPartProps extends Omit<GetValueProps, 'annotation'> {
 	id: ID
 	partConfig?: PartConfig
-	root?: AnnotationNode
+	root?: PartialStandoffAnnotation
 }
-
-// export function isEntryPart(props: CreateJsonEntryPartProps): props is CreateJsonEntryPartProps {
-// 	return props.hasOwnProperty('sourceProps') && props.hasOwnProperty('partConfig')
-// }
 
 /**
  * Create JSON entry to store in the database and send over the wire. 
- * 
- * @param props 
- * @returns 
  */
 export function createJsonEntry(props: CreateJsonEntryPartProps): JsonEntry {
 	const layers = props.projectConfig.layers2
 		.map(layerConfig => {
 			if (isTextLayerConfig(layerConfig)) {
-				let tree = props.sourceTree
+				let partialStandoff = props.partialStandoff
 
+				// TODO what happens when findRoot is defined in layerConfig and a root is
+				// present from partConfig, should they be mutuallly exclusive?
+				// Remove findRoot? If you want a part of the document, use partConfig?
 				if (layerConfig.findRoot != null) {
-					tree = props.sourceTree.createStandoffTreeFromAnnotation(layerConfig.findRoot)
-					if (tree == null) return null
+					const newRoot = partialStandoff.annotations.find(layerConfig.findRoot)
+					partialStandoff = createPartialStandoffFromAnnotation(partialStandoff, newRoot)
 				} else if (props.root != null) {
-					tree = props.sourceTree.createStandoffTreeFromAnnotation(props.root)
+					partialStandoff = createPartialStandoffFromAnnotation(partialStandoff, props.root)
+				} else {
+					partialStandoff = clonePartialStandoff(partialStandoff)
 				}
 
-				// TODO check if tree is an EntryPart?
-				props.projectConfig.standoff.prepareExport(tree)
+				if (partialStandoff == null) return null
+
+				if (props.partConfig != null) {
+					partialStandoff.metadata = {
+						sourceMetadata: { ...partialStandoff.metadata }
+					}
+				}
+				const preparedPartialStandoff = props.projectConfig.standoff
+					.prepareStandoff(partialStandoff, props.partialStandoff, props.partConfig)
 
 				return {
 					...layerConfig,
-					// tree: tree.exportReactTree(),
-					standoff: tree.getStandoff(true),
-					// standoffTree3: toStandoffTree2(tree),
+					partialStandoff: preparedPartialStandoff,
 				} as TextLayer
-			} 
+			}
 
 			return layerConfig as FacsimileLayer
 		})
@@ -61,7 +65,7 @@ export function createJsonEntry(props: CreateJsonEntryPartProps): JsonEntry {
 			const entityConfig = props.projectConfig.entities2
 				.find(ec => ec.id === metadataConfig.entityConfigId)
 
-			value = props.sourceTree.list
+			value = props.partialStandoff.annotations
 				.filter(entityConfig.filter)
 				.filter(metadataConfig.filterEntities)
 				.map(a => entityConfig.getValue({
@@ -78,47 +82,53 @@ export function createJsonEntry(props: CreateJsonEntryPartProps): JsonEntry {
 		}
 	})
 
-	// if (props.partConfig != null) {
-	// 	metadata.push({
-	// 		config: { id: '_partId', facet: {} },
-	// 		value: props.partConfig.id
-	// 	})
-	// }
-
 	return {
 		id: props.id,
 		layers,
 		metadata,
 		partId: props.partConfig?.id,
 		sourceId: props.sourceId,
-		// standoffTree2: toStandoffTree2(props.sourceTree),
 	}
 }
 
+/**
+ * Create a {@link PartialStandoff} from a {@link PartialStandoffAnnotation}
+ * 
+ * The new root can be an annotation from the original partial standoff, but
+ * it can also be a whole new annotation. That's why the new root is filtered
+ * out first, and concatenated later. The new root does not have to be sorted,
+ * because the annotations in {@link PartialStandoff} don't have an order
+ */
+function createPartialStandoffFromAnnotation(
+	partialStandoff: PartialStandoff,
+	newRoot: PartialStandoffAnnotation
+) {
+	// Get the text first, because the root's offsets are to be shifted
+	const text = partialStandoff.text.slice(newRoot.start, newRoot.end)
 
-// function convertNode(node: AnnotationNode): AnnotationNode2 | string {
-// 	if (node.name === TEXT_NODE_NAME) return node.metadata._textContent
-// 	return {
-// 		id: node.id,
-// 		parent: node.parent?.id,
-// 		children: node.children.map(convertNode)
-// 	}
-// }
+	const offset = newRoot.start
+	const annotations = partialStandoff.annotations
+		.filter(a => isChild(a, newRoot) && a !== newRoot) // filter out the new root
+		.concat(newRoot) // concatenate the new root
 
-// function convertTree(root: AnnotationNode): AnnotationNode2 {
-// 	const tree = convertNode(root)
-// 	if (typeof tree === 'string') throw new Error('Root of tree cannot be a string')
-// 	return tree
-// }
+	const clone = clonePartialStandoff({
+		annotations,
+		metadata: partialStandoff.metadata,
+		text
+	})
 
-// function toStandoffTree2(standoffTree: StandoffTree): StandoffTree2 {
-// 	const tree = convertTree(standoffTree.root)
+	clone.annotations.forEach(a => {
+		a.start = a.start - offset
+		a.end = a.end - offset
+	})
 
-// 	return {
-// 		annotations: standoffTree
-// 			.getStandoff(true).annotations
-// 			.map(x => toDocereAnnotation(x, standoffTree.options))
-// 			.map<[string, DocereAnnotation]>(x => [x.props.key as string, x]),
-// 		tree
-// 	}
-// }
+	return clone
+}
+
+function clonePartialStandoff(partialStandoff: PartialStandoff): PartialStandoff {
+	return {
+		annotations: partialStandoff.annotations.map(a => cloneAnnotation(a, false)),
+		metadata: JSON.parse(JSON.stringify(partialStandoff.metadata)),
+		text: partialStandoff.text
+	}
+}

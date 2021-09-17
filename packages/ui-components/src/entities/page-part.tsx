@@ -16,8 +16,8 @@ function PageLink(props: EntityComponentProps) {
 		dispatch({
 			type: 'SET_PAGE_ID',
 			setPage: {
-				entityIds: new Set([props.entity.metadata.entityId]),
-				pageId: props.entity.metadata.entityConfig.id,
+				entityIds: new Set([props.entity.props.entityId]),
+				pageId: props.entity.props.entityConfig.id,
 			}
 		})
 	}, [props.entity])
@@ -40,7 +40,7 @@ function PageLink(props: EntityComponentProps) {
  * visualise (relatively simple and small sized) structured data.
  */
 export const PagePartEntity = React.memo(function(props: EntityComponentProps) {
-	const page = usePage(props.entity.metadata.entityConfig.id)
+	const page = usePage(props.entity.props.entityConfig.id)
 	const components = useComponents(ContainerType.Page, page?.id)
 
 	if (page == null) return null
