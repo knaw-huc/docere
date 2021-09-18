@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { DEFAULT_SPACING, MAINHEADER_HEIGHT, Colors, ProjectContext, DispatchContext } from '@docere/common'
+import { DEFAULT_SPACING, MAINHEADER_HEIGHT, Colors, ProjectContext, DispatchContext, isUrlMenuItem, UrlMenuItem } from '@docere/common'
 
 import type { PageConfig } from '@docere/common'
 // import { Link } from 'react-router-dom'
@@ -78,13 +78,28 @@ const PageLink = styled.span`
 	&:hover {
 		color: #EEE;
 	}
+
+	a {
+		color: inherit;
+		text-decoration: none;
+	}
 `
 
 type PageMenuItemProps = {
-	pageConfig: PageConfig,
+	pageConfig: PageConfig | UrlMenuItem,
 	setPage: (ev: React.MouseEvent<HTMLLIElement>) => void
 }
 function PageMenuItem(props: PageMenuItemProps) {
+	if (isUrlMenuItem(props.pageConfig)) {
+		return (
+			<li>
+				<PageLink>
+					<a href={props.pageConfig.url}>{props.pageConfig.title}</a>
+				</PageLink>
+			</li>
+		)
+	}
+
 	return (
 		<li
 			data-page-id={props.pageConfig.id}
@@ -116,8 +131,8 @@ export default React.memo(function PagesMenu() {
 		<Wrapper>
 			{
 				config.pages.config.map(page =>
-					page.hasOwnProperty('children') ?
-						<li key={page.id}>
+					!isUrlMenuItem(page) && page.hasOwnProperty('children') ?
+						<li key={page.title}>
 							<div>{page.title}</div>
 							<ul>
 								{
@@ -132,7 +147,7 @@ export default React.memo(function PagesMenu() {
 							</ul>
 						</li> :
 						<PageMenuItem
-							key={page.id}
+							key={page.title}
 							pageConfig={page}
 							setPage={setPage}
 						/>

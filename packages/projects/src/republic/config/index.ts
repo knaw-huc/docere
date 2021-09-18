@@ -139,6 +139,19 @@ export default extendConfig({
 		},
 	],
 
+	pages: {
+		config: [
+			{
+				title: "Home",
+				url: "https://republic.huygens.knaw.nl"
+			},
+			{
+				title: "Documentatie",
+ 				url: "https://republic.huygens.knaw.nl/index.php/protoype"
+			}
+		]
+	},
+
 	parts: [
 		{
 			id: 'session',

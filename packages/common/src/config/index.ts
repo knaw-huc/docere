@@ -57,6 +57,8 @@ export interface DocereConfig {
 	/**
 	 * Configure the background pages of the project, for example:
 	 * about, colofon, manual, structured data (people, places, ...)
+	 * 
+	 * TODO rename to main menu? because the menu can have pages, but also links
 	 */
 	pages?: {
 		/**
@@ -64,7 +66,7 @@ export interface DocereConfig {
 		 * is used to display the pages in a menu reflecting given
 		 * hierarchy
 		 */
-		config: PageConfig[]
+		config: (PageConfig | UrlMenuItem)[]
 
 		/**
 		 * Get the remote path of the pages.
@@ -149,4 +151,13 @@ export interface PartConfig {
 	filter?: (a: PartialStandoffAnnotation) => boolean
 	getId?: (a: PartialStandoffAnnotation) => string
 	keepSource?: boolean
+}
+
+export interface UrlMenuItem {
+	title: string
+	url: string
+}
+
+export function isUrlMenuItem(obj: Object): obj is UrlMenuItem {
+	return obj.hasOwnProperty('title') && obj.hasOwnProperty('url')
 }

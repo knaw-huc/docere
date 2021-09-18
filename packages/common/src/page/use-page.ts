@@ -11,8 +11,10 @@ const pageCache = new Map<string, Page>()
 
 export function flattenPages(config: DocereConfig) {
 	const pages: PageConfig[] = []
-	const addPage = (page: PageConfig) => {
+	const addPage = (page: (PageConfig | string)) => {
+		if (typeof page === 'string') return
 		pages.push(page)
+
 		if (Array.isArray(page.children)) {
 			page.children.forEach(p => addPage(p))
 		}
