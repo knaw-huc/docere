@@ -2,32 +2,41 @@ import React from 'react'
 
 import { Section, ResultList, Result } from './components'
 
-import { FSResponse, SearchPropsContext } from '@docere/common'
+import { FacetedSearchProps, FSResponse, SearchContext, SearchPropsContext } from '@docere/common'
+import useFilters from '../header/active-filters/use-filters'
 
 interface Props {
+	SearchHomeComponent: FacetedSearchProps['SearchHomeComponent']
 	searchResult: FSResponse
 }
 function HucSearchResults(props: Props) {
 	const context = React.useContext(SearchPropsContext)
+	const { state } = React.useContext(SearchContext) 
+	const filters = useFilters(state.facets)
+
 	return (
 		<Section id="huc-fs-search-results">
-			<ResultList>
-				{
-					props.searchResult.results.map((hit, i) =>
-						<Result
-							key={i}
-							onClick={(ev) => {
-								if (context.onClickResult != null) context.onClickResult(hit, ev)
-							}}
-						>
-							<context.ResultBodyComponent
-								{...context.resultBodyProps}
-								result={hit}
-							/>
-						</Result>
-					)
-				}
-			</ResultList>
+			{
+				props.SearchHomeComponent != null && filters.length === 0 ?
+					<props.SearchHomeComponent /> :
+					<ResultList>
+						{
+							props.searchResult.results.map((hit, i) =>
+								<Result
+									key={i}
+									onClick={(ev) => {
+										if (context.onClickResult != null) context.onClickResult(hit, ev)
+									}}
+								>
+									<context.ResultBodyComponent
+										{...context.resultBodyProps}
+										result={hit}
+									/>
+								</Result>
+							)
+						}
+					</ResultList>
+			}
 		</Section>
 	)
 }

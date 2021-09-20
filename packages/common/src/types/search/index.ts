@@ -1,3 +1,4 @@
+import React from 'react'
 import { ActiveFacsimile } from '../../entry/facsimile'
 import { BaseMetadataConfig } from '../../entry/metadata'
 import { SortDirection, SearchTab, Language } from '../../enum'
@@ -18,6 +19,7 @@ export interface FacetedSearchProps {
 	ResultBodyComponent: React.FC<ResultBodyProps>
 	resultBodyProps?: Record<string, any>
 	resultsPerPage?: number
+	SearchHomeComponent: React.FC<any>
 	small?: boolean
 	track_total_hits?: number
 	sortOrder?: SortOrder

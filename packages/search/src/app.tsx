@@ -174,6 +174,7 @@ export default function FacetedSearch() {
 				}
 			</div>
 			<SearchResult
+				SearchHomeComponent={context.SearchHomeComponent}
 				searchResult={searchResult}
 			/>
 		</Wrapper>

@@ -26,6 +26,7 @@ export type {
 
 const initialSearchPropsContextState: FacetedSearchProps = {
 	ResultBodyComponent: null,
+	SearchHomeComponent: null,
 	excludeResultFields: [],
 	language: Language.EN,
 	onClickResult: () => { },

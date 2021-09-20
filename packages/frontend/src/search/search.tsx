@@ -29,6 +29,8 @@ function Search() {
 	let ResultBodyComponent = useUIComponent(UIComponentType.SearchResult)
 	if (ResultBodyComponent == null) ResultBodyComponent = GenericResultBody
 
+	const SearchHomeComponent = useUIComponent(UIComponentType.SearchHome)
+
 	const onClickResult = React.useCallback((result: Hit) => {
 		dispatch({
 			type: 'SET_ENTRY_ID',
@@ -53,6 +55,7 @@ function Search() {
 			}}
 			resultsPerPage={config.search.resultsPerPage}
 			small={uiState.viewport !== Viewport.EntrySelector}
+			SearchHomeComponent={SearchHomeComponent}
 			sortOrder={config.search.sortOrder}
 			url={config.search.url}
 		/>

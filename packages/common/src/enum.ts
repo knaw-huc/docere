@@ -81,6 +81,7 @@ export enum ContainerType {
 
 export enum UIComponentType {
 	Entity = 'entity',
+	SearchHome = 'search-home',
 	SearchResult = 'search-result',
 }
 
