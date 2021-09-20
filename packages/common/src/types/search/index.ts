@@ -20,6 +20,7 @@ export interface FacetedSearchProps {
 	resultsPerPage?: number
 	small?: boolean
 	track_total_hits?: number
+	sortOrder?: SortOrder
 	style?: {
 		spotColor: string
 	}

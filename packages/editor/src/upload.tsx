@@ -1,9 +1,11 @@
 import React from 'react'
-import { Editor } from './editor'
 import styled from 'styled-components'
-import { setProjectConfig, useSourceState } from './state'
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs'
 import 'react-tabs/style/react-tabs.css'
+import { createElasticSearchDocument } from '@docere/common'
+import ReactJson from 'react-json-view'
+import { setProjectConfig, useSourceState } from './state'
+import { SourceAction, SourceState } from './state/reducer'
 
 export function Upload() {
 	const [state, dispatch] = useSourceState()
@@ -41,15 +43,19 @@ export function Upload() {
 						<Tab disabled={state.source == null}>Source</Tab>
 						<Tab disabled={state.partialStandoff == null}>Partial standoff</Tab>
 						<Tab disabled={state.entries.length === 0}>Entries</Tab>
+						<Tab disabled={state.entries.length === 0}>ES documents</Tab>
 					</TabList>
 					<TabPanel>
 						<section id="source">
 							{
 								state.source != null &&
-								<Editor
-									language={state.projectConfig.documents.type === 'xml' ? 'xml' : 'json'}
-									value={state.source}
-								/>
+								state.projectConfig.documents.type === 'xml' ?
+									<div>{state.source}</div> :
+									<ReactJson
+										collapsed={1}
+										collapseStringsAfterLength={200}
+										src={JSON.parse(state.source)}
+									/>
 							}
 						</section>
 					</TabPanel>
@@ -58,9 +64,10 @@ export function Upload() {
 							{
 								state.partialStandoff != null &&
 								<>
-								<Editor
-									language="json"
-									value={JSON.stringify(state.partialStandoff)}
+								<ReactJson
+									collapsed={1}
+									collapseStringsAfterLength={200}
+									src={state.partialStandoff}
 								/>
 								<ul>
 									<li>metadata items: {Object.keys(state.partialStandoff.metadata).length}</li>
@@ -93,39 +100,18 @@ export function Upload() {
 						</section>
 					</TabPanel>
 					<TabPanel>
-						<div id="entries">
-							<section>
-								{
-									Object.keys(state.entriesByPartId)
-										.map(key =>
-											<div key={key}>
-												<h3>{key}</h3>
-												<ol>
-													{
-														state.entriesByPartId[key].map(entry =>
-															<li
-																className={entry.id === state.entry?.id ? 'active' : null}
-																key={entry.id}
-																onClick={() => dispatch({ type: 'SET_ENTRY', entry })}
-																title={entry.id}
-															>
-																{entry.id}
-															</li>
-														)
-													}
-												</ol>
-											</div>
-										)
-								}
-							</section>
-							{
-								state.json != null &&
-								<Editor
-									language="json"
-									value={state.json}
-								/>
-							}
-						</div>
+						<EntriesPanel
+							dispatch={dispatch}
+							state={state}
+							getValue={() => state.entry}
+						/>
+					</TabPanel>
+					<TabPanel>
+						<EntriesPanel
+							dispatch={dispatch}
+							state={state}
+							getValue={() => createElasticSearchDocument(state.entry, state.projectConfig)}
+						/>
 					</TabPanel>
 				</Tabs>
 			</Main>
@@ -147,6 +133,13 @@ const Wrapper = styled.div`
 		.react-tabs__tab-panel {
 			height: calc(100% - 45px);
 		}
+	}
+
+	.react-json-view {
+		font-size: 13px;
+		height: 100%;
+		overflow: auto;
+		padding: 0 32px;
 	}
 
 	#source, #standoff-tree {
@@ -208,3 +201,44 @@ const Wrapper = styled.div`
 
 const Main = styled.section`
 `
+
+function EntriesPanel(
+	{ state, getValue, dispatch }: { state: SourceState, getValue: () => Object, dispatch: React.Dispatch<SourceAction> }
+) {
+	return (
+			<div id="entries">
+				<section>
+					{
+						Object.keys(state.entriesByPartId)
+							.map(key =>
+								<div key={key}>
+									<h3>{key}</h3>
+									<ol>
+										{
+											state.entriesByPartId[key].map(entry =>
+												<li
+													className={entry.id === state.entry?.id ? 'active' : null}
+													key={entry.id}
+													onClick={() => dispatch({ type: 'SET_ENTRY', entry })}
+													title={entry.id}
+												>
+													{entry.id}
+												</li>
+											)
+										}
+									</ol>
+								</div>
+							)
+					}
+				</section>
+				{
+					state.entry != null &&
+					<ReactJson
+						collapsed={1}
+						collapseStringsAfterLength={200}
+						src={getValue()}
+					/>
+				}
+			</div>
+	)
+}

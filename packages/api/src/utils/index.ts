@@ -2,7 +2,7 @@ import path from 'path'
 import fs from 'fs'
 import { Response as ExpressResponse } from 'express'
 import chalk from 'chalk'
-import { DTAP } from '@docere/common'
+import { DTAP, isUrlMenuItem } from '@docere/common'
 
 import { dtapMap } from '../../../projects/src/dtap'
 
@@ -151,6 +151,7 @@ export async function getProjectPageConfig(projectId: string, pageId: string): P
 
 	return config.pages.config
 		.reduce((prev, curr) => {
+			if (isUrlMenuItem(curr)) return prev
 			if (Array.isArray(curr.children)) prev.push(...curr.children)
 			prev.push(curr)
 			return prev

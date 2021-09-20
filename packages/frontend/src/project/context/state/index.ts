@@ -126,7 +126,7 @@ export function useProjectState(): [ProjectState, React.Dispatch<ProjectAction>]
 				getComponents: textCompResult.status === 'fulfilled' ?
 					textCompResult.value.default(config) :
 					async () => ({}),
-				searchUrl: `/search/${config.slug}/_search`,
+				searchUrl: config.search.url,
 				uiComponents: UICompResult.status === 'fulfilled' ?
 					UICompResult.value.default :
 					new Map()

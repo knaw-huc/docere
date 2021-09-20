@@ -1,6 +1,7 @@
 import { DocereConfig } from '.'
 import { defaultEntityConfig, EntityConfig } from '../entry/entity'
 import { BaseConfig, defaultFacetConfig, defaultMetadata } from '../entry/metadata'
+import { Language } from '../enum'
 import { PageConfig } from '../page'
 
 export const defaultEntrySettings: DocereConfig['entrySettings'] = {
@@ -139,6 +140,15 @@ export function extendConfig(configDataRaw: DocereConfig): DocereConfig {
 			keepSource: false,
 			...part
 		}))
+	}
+
+	if (config.search == null) config.search = {}
+	config.search = {
+		url: `/search/${config.slug}/_search`,
+		language: Language.EN,
+		resultsPerPage: 20,
+		sortOrder: new Map(),
+		...config.search
 	}
 
 	// return {

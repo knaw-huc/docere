@@ -14,6 +14,7 @@ import { Annotation3 } from '../standoff-annotations/annotation-tree3'
 // import { DocereAnnotation } from '../standoff-annotations'
 
 export * from './create-json'
+export * from './create-es-document'
 export * from './facsimile'
 export * from './from-source'
 export * from './layer'

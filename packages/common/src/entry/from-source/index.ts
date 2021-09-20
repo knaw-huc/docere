@@ -31,14 +31,13 @@ export async function getEntriesFromSource(
 			projectConfig,
 			sourceId,
 			partialStandoff: source
-			// sourceTree,
 		}
 
 		const entityConfig = projectConfig.entities2.find(ec => ec.filter(annotation))
 		if (entityConfig != null) {
 			annotation.props.entityConfigId = entityConfig.id
 			annotation.props.entityId = entityConfig.getId(annotation)
-			// annotation.props.entityValue = entityConfig.getValue(props)
+			annotation.props.entityValue = entityConfig.getValue(props)
 		}
 
 		if (projectConfig.facsimiles?.filter(annotation)) {

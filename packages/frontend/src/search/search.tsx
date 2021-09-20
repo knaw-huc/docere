@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { ProjectContext, useUIComponent, UIComponentType, Viewport, Language, UIContext, EntryContext, DispatchContext, ContainerType, FacsimileContext } from '@docere/common'
+import { ProjectContext, useUIComponent, UIComponentType, Viewport, UIContext, EntryContext, DispatchContext, ContainerType, FacsimileContext } from '@docere/common'
 import { GenericResultBody } from '@docere/ui-components'
 
 import HucFacetedSearch  from '../../../search/src'
@@ -43,7 +43,7 @@ function Search() {
 		<FS
 			autoSuggest={autoSuggest}
 			excludeResultFields={excludeResultFields}
-			language={Language.EN}
+			language={config.search.language}
 			onClickResult={onClickResult}
 			ResultBodyComponent={ResultBodyComponent}
 			resultBodyProps={{
@@ -51,9 +51,10 @@ function Search() {
 				facsimile: activeFacsimile,
 				searchTab: uiState.searchTab,
 			}}
-			resultsPerPage={config.searchResultCount}
+			resultsPerPage={config.search.resultsPerPage}
 			small={uiState.viewport !== Viewport.EntrySelector}
-			url={searchUrl}
+			sortOrder={config.search.sortOrder}
+			url={config.search.url}
 		/>
 	)
 }

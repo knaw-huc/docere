@@ -3,6 +3,9 @@ import { isHierarchyMetadataItem } from "@docere/common"
 import { DocereApiError } from "../types"
 import { isError } from "../utils"
 
+/**
+ * Convert a {@link JsonEntry | JSON Entry} to an {@link ElasticSearchDocument}
+ */
 export function createElasticSearchDocument(
 	jsonEntry: JsonEntry | DocereApiError,
 	projectConfig: DocereConfig
@@ -35,6 +38,8 @@ export function createElasticSearchDocument(
 		prev[configId] = Array.from(valueSet)
 		return prev
 	}, {} as Record<string, string[]>)
+
+	console.log(entities2)
 
 	const facsimiles = projectConfig.facsimiles != null ? 
 		annotations

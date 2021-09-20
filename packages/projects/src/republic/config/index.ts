@@ -1,4 +1,4 @@
-import { extendConfig, Colors, EntityType, MetadataConfig, CreateJsonEntryPartProps, PartialStandoff, PartConfig } from '@docere/common'
+import { extendConfig, Colors, EntityType, MetadataConfig, CreateJsonEntryPartProps, PartialStandoff, PartConfig, Language, SortDirection } from '@docere/common'
 import { LayerType, EsDataType } from '@docere/common'
 import { prepareSource } from './prepare'
 
@@ -9,11 +9,26 @@ const getValue = (config: MetadataConfig, props: CreateJsonEntryPartProps) => {
 	return props.partialStandoff.metadata[config.id]
 }
 
+const typeTranslation: Record<string, string> = {
+	resolution: 'resolutie',
+	attendance_list: 'presentielijst',
+	session: 'zittingsdag'
+}
+
+const dayTranslation: Record<string, string> = {
+	Jovis: 'donderdag',
+	Martis: 'dinsdag',
+	Lunae: 'maandag',
+	Sabbathi: 'zaterdag',
+	Veneris: 'vrijdag',
+	Mercurii: 'woensdag',
+
+}
+
 export default extendConfig({
 	standoff: {
 		prepareSource,
 		prepareStandoff,
-		// prepareAnnotations,
 		exportOptions: {
 			annotationHierarchy,
 			rootNodeName: 'session',
@@ -41,10 +56,15 @@ export default extendConfig({
 			},
 			id: 'session_date',
 			getValue,
+			title: 'Datum',
 		},
 		{
+			// TODO add to session only?
 			id: 'resolution_ids',
-			getValue,
+			getValue: (config, props) =>
+				//props.partConfig.id === 'session' ?
+				props.partialStandoff.metadata[config.id] //:
+				//	null
 		},
 		{
 			id: 'session_id',
@@ -56,13 +76,16 @@ export default extendConfig({
 			},
 			id: 'inventory_num',
 			getValue,
+			title: 'Inventaris'
 		},
 		{
 			facet: {
 				datatype: EsDataType.Keyword,
 			},
 			id: 'session_weekday',
-			getValue,
+			getValue: (config, props) =>
+				dayTranslation[props.partialStandoff.metadata[config.id]],
+			title: 'Dag',
 		},	
 		{
 			facet: {
@@ -70,7 +93,18 @@ export default extendConfig({
 			},
 			entityConfigId: 'attendant',
 			id: 'president',
-			filterEntities: a => a.sourceProps.class === 'president',
+			filterEntities: a => {
+				if (a.sourceProps.class === 'president') console.log(a)
+				return a.sourceProps.class === 'president'
+			}
+		},
+		{
+			facet: {
+				datatype: EsDataType.Keyword,
+				order: 0,
+			},
+			id: 'type',
+			getValue: (_config, props) => typeTranslation[props.partConfig.id],
 		},
 		// {
 		// 	id: 'session',
@@ -83,9 +117,9 @@ export default extendConfig({
 		// 	id: 'resolutions',
 		// 	getValue: (_config, props) => {
 		// 		if (props.partConfig.id === 'resolution') return
-		// 		return props.sourceTree
-		// 			.filter(a => a.name === 'resolution')
-		// 			.map(a => a.metadata.id)
+		// 		return props.partialStandoff.metadata.sourceMetadata.resolutions
+		// 			// .filter(a => a.name === 'resolution')
+		// 			// .map(a => a.metadata.id)
 		// 	}
 		// }	
 	],
@@ -123,7 +157,11 @@ export default extendConfig({
 			id: 'attendant',
 			filter: a => a.name === 'attendant',
 			getId: a => a.sourceProps.delegate_id,
-			getValue: props => props.annotation.sourceProps.delegate_name,
+			getValue: props => {
+				console.log(props.annotation.sourceProps.delegate_name)
+				return props.annotation.sourceProps.delegate_name
+			},
+			title: 'Aanwezigen',
 			type: EntityType.Person,
 		}
 	],
@@ -167,7 +205,12 @@ export default extendConfig({
 			filter: a => a.sourceProps.type === 'resolution',
 			getId: a => a.props.entityId,
 		}
-	]
+	],
+
+	search: {
+		language: Language.NL,
+		sortOrder: new Map([['session_date', SortDirection.Asc]])
+	}
 })
 
 function prepareStandoff(

@@ -2,6 +2,7 @@ import { PageConfig } from '../page'
 import { PartialStandoff, PartialStandoffAnnotation } from '../standoff-annotations'
 import { EntityConfig, FacsimileLayerConfig, ID, MetadataConfig, TextLayerConfig } from '../entry'
 import { PartialExportOptions } from '../standoff-annotations/export-options'
+import { FacetedSearchProps, SortOrder } from '../types'
 
 export * from './extend'
 
@@ -123,6 +124,12 @@ export interface DocereConfig {
 	}
 	private?: boolean
 	searchResultCount?: number
+	search?: {
+		language?: FacetedSearchProps['language'],
+		resultsPerPage?: FacetedSearchProps['resultsPerPage'],
+		sortOrder?: SortOrder
+		url?: FacetedSearchProps['url'],
+	}
 	slug: ID
 	title?: string
 }

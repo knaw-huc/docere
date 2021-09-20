@@ -80,7 +80,7 @@ export default function FacetedSearch() {
 	const searchContext = React.useContext(SearchContext)
 	const [showResults, setShowResults] = React.useState(true)
 	const [currentPage, setCurrentPage] = React.useState(1)
-	const [sortOrder, setSortOrder] = React.useState<SortOrder>(new Map())
+	const [sortOrder, setSortOrder] = React.useState<SortOrder>(context.sortOrder)
 	const [searchResult, facetValues] = useSearch({
 		currentPage,
 		facetsData: searchContext.state.facets,

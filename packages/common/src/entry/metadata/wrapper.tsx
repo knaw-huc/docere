@@ -4,12 +4,14 @@ import { DEFAULT_SPACING } from '../../constants'
 
 const Wrapper = styled.div`
 	margin-bottom: ${DEFAULT_SPACING/4}px;
+	display: grid;
+	grid-template-columns: 120px auto;
 `
 
 const Title = styled.div`
 	color: #888;
-	display: block;
 	font-size: .75rem;
+	line-height: 1rem;
 	text-transform: uppercase;
 `
 
@@ -21,7 +23,9 @@ export function MetadataWrapper(props: Props) {
 	return (
 		<Wrapper>
 			<Title>{props.title}</Title>
-			{props.children}
+			<div>
+				{props.children}
+			</div>
 		</Wrapper>
 	)
 }

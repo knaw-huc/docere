@@ -32,6 +32,7 @@ const initialSearchPropsContextState: FacetedSearchProps = {
 	resultFields: [],
 	resultsPerPage: 10,
 	small: false, /* Render for small screen (~< 1000px) */
+	sortOrder: new Map(),
 	style: {
 		spotColor: Colors.BlueBright
 	},

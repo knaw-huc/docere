@@ -1,7 +1,6 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const baseConfig = require('./webpack.config.base')
-const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin')
 
 const { parsed: env, error: envError } = require('dotenv').config({ path: path.resolve(process.cwd(), `../../.env`) })
 if (envError) throw envError
@@ -59,8 +58,6 @@ module.exports = () => {
 		title: 'Docere',
 		template: 'index.template.html',
 	}))
-
-	baseConfig.plugins.push(new MonacoWebpackPlugin({ languages: ['json', 'typescript'] }))
 
 	return baseConfig
 }

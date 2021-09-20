@@ -22,8 +22,12 @@ const Wrapper = styled.div`
 		'76px auto' :
 		'auto'
 	};
-	padding: 1.5em 0;
+	padding: 1rem 0;
 	transition: all 350ms;
+
+	& > .metadata {
+		padding-top: 8px; ${/** add a padding to the metadata body, to align with thumbs */''}
+	}
 
 	${(props: WProps) => {
 		if (props.active) {
@@ -71,7 +75,7 @@ export const ResultBody = React.memo(function ResultBody(props: DocereResultBody
 				facsimiles={props.result.facsimiles}
 				small={small}
 			/>
-			<div>{props.children}</div>
+			<div className="metadata">{props.children}</div>
 			{
 				props.result.snippets?.length > 0 &&
 				<Snippets>

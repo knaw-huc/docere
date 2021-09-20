@@ -28,7 +28,6 @@
     "dotenv": "^8.2.0",
     "file-loader": "^6.2.0",
     "lerna": "^4.0.0",
-    "monaco-editor-webpack-plugin": "^4.1.1",
     "style-loader": "^3.2.1",
     "ts-loader": "^9.2.5",
     "tslib": "^2.3.1",
@@ -39,7 +38,6 @@
   },
   "dependencies": {
     "lodash.debounce": "^4.0.8",
-    "monaco-editor": "^0.26.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "styled-components": "^5.3.1"

@@ -4,15 +4,15 @@ import { fetchPageXml } from '../utils'
 import { ProjectContext } from '../project/context'
 
 import type { Page, PageConfig } from './index'
-import type { DocereConfig } from '../config'
+import { DocereConfig, isUrlMenuItem, UrlMenuItem } from '../config'
 import type { ID } from '../entry/layer'
 
 const pageCache = new Map<string, Page>()
 
 export function flattenPages(config: DocereConfig) {
 	const pages: PageConfig[] = []
-	const addPage = (page: (PageConfig | string)) => {
-		if (typeof page === 'string') return
+	const addPage = (page: (PageConfig | UrlMenuItem)) => {
+		if (isUrlMenuItem(page)) return
 		pages.push(page)
 
 		if (Array.isArray(page.children)) {
