@@ -40,7 +40,7 @@ export default extendConfig({
 
 	slug: 'republic',
 
-	title: 'Webeditie Resoluties Staten Generaal - prototype achttiende eeuw',
+	title: 'Webeditie Resoluties Staten-Generaal - prototype achttiende eeuw',
 
 	collection: {
 		metadataId: 'inventory_num',
@@ -97,7 +97,8 @@ export default extendConfig({
 			},
 			entityConfigId: 'attendant',
 			id: 'president',
-			filterEntities: a => a.sourceProps.class === 'president'
+			filterEntities: a => a.sourceProps.class === 'president',
+			title: 'Voorzitter'
 		},
 		{
 			facet: {

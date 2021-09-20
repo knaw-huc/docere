@@ -6,7 +6,7 @@
   "types": "build/index.d.ts",
   "private": true,
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && webpack",
     "watch": "tsc -w --pretty --preserveWatchOutput"
   },
   "author": "Gijsjan Brouwer",
