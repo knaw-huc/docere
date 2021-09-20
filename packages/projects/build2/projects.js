@@ -1210,7 +1210,7 @@ eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexpo
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
-eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexports.SearchContext = exports.initialSearchContextState = exports.SearchPropsContext = void 0;\nconst tslib_1 = __webpack_require__(/*! tslib */ \"../../node_modules/tslib/tslib.es6.js\");\nconst react_1 = (0, tslib_1.__importDefault)(__webpack_require__(/*! react */ \"../../node_modules/react/index.js\"));\nexports.SearchPropsContext = react_1.default.createContext(null);\nexports.initialSearchContextState = {\n    facets: new Map(),\n    facetsConfig: {},\n    query: ''\n};\nexports.SearchContext = react_1.default.createContext(null);\n\n\n//# sourceURL=webpack://DocereProjects/../common/build/search/context.js?");
+eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexports.SearchContext = exports.initialSearchContextState = exports.SearchPropsContext = void 0;\nconst tslib_1 = __webpack_require__(/*! tslib */ \"../../node_modules/tslib/tslib.es6.js\");\nconst react_1 = (0, tslib_1.__importDefault)(__webpack_require__(/*! react */ \"../../node_modules/react/index.js\"));\nexports.SearchPropsContext = react_1.default.createContext(null);\nexports.initialSearchContextState = {\n    facets: new Map(),\n    facetsConfig: {},\n    filters: [],\n    isActive: false,\n    query: ''\n};\nexports.SearchContext = react_1.default.createContext(null);\n\n\n//# sourceURL=webpack://DocereProjects/../common/build/search/context.js?");
 
 /***/ }),
 

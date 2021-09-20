@@ -1,5 +1,5 @@
 import React from "react"
-import { FacetsConfig, FacetsData, FacetsDataReducerAction } from ".."
+import { ActiveFilter, FacetsConfig, FacetsData, FacetsDataReducerAction } from ".."
 
 import type { LanguageMap } from "./language"
 import type { FacetedSearchProps } from ".."
@@ -24,12 +24,24 @@ export const SearchPropsContext =  React.createContext<SearchPropsContext>(null)
 export const initialSearchContextState: FacetsState = {
 	facets: new Map(),
 	facetsConfig: {},
+	filters: [],
+	isActive: false,
 	query: ''
 }
 
 export interface FacetsState {
 	facets: FacetsData
 	facetsConfig: FacetsConfig
+	filters: ActiveFilter[]
+
+	/**
+	 * The search becomes active when the user adds a facet filter or
+	 * full text query. When the user starts a new search or removes
+	 * all filters and the full text query, the search becomes inactive
+	 * again
+	 */ 
+	isActive: boolean
+
 	query: string
 }
 interface SearchContext {

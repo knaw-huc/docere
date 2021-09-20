@@ -1,7 +1,7 @@
 import React from 'react'
 import { EsDataType, SearchPropsContext, SortBy, SortDirection, languageMaps, Language, Colors, SearchContext } from '@docere/common'
 
-import useSearchReducer from './facets-context/reducer'
+import { useSearchReducer } from './facets-context/reducer'
 import App from './app'
 
 import type { FacetsConfig, FacetedSearchProps, ResultBodyProps } from '@docere/common'

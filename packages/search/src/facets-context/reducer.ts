@@ -1,5 +1,5 @@
 import React from 'react'
-import { DTAP, initialSearchContextState } from '@docere/common'
+import { ActiveFilter, DTAP, FacetData, initialSearchContextState } from '@docere/common'
 
 import { extendFacetConfig } from './extend-facet-config'
 import { isListFacetData, isBooleanFacetData, isRangeFacetData, isDateFacetData, isHierarchyFacetData } from '../utils'
@@ -8,16 +8,39 @@ import initFacetsData from './init-facets-data'
 
 import type { FacetsConfig, FacetsState, FacetsDataReducerAction, RangeFacetValue } from '@docere/common'
 
-
-export default function useFacetsDataReducer(facetsConfig: FacetsConfig) {
-	const x = React.useReducer(facetsDataReducer, initialSearchContextState)
+export function useSearchReducer(
+	facetsConfig: FacetsConfig
+): [FacetsState, React.Dispatch<FacetsDataReducerAction>] {
+	const [state, dispatch] = React.useReducer(facetsDataReducer, initialSearchContextState)
 
 	React.useEffect(() => {
 		if (!Object.keys(facetsConfig).length) return
-		x[1]({ type: 'SET_CONFIG', facetsConfig: extendFacetConfig(facetsConfig) })
+		dispatch({ type: 'SET_CONFIG', facetsConfig: extendFacetConfig(facetsConfig) })
 	}, [facetsConfig])
 
-	return x
+	React.useEffect(() => {
+		const filters: ActiveFilter[] = []
+
+		for (const facetData of state.facets.values()) {
+			const values = getFilterValue(facetData)
+
+			if (values.length) {
+				filters.push({
+					id: facetData.config.id,
+					title: facetData.config.title,
+					values,
+				})
+			}
+		}
+
+		dispatch({ type: 'SET_FILTERS', filters })
+	}, [state.facets])
+
+	React.useEffect(() => {
+		dispatch({ type: 'SET_ACTIVE_SEARCH', isActive: state.filters.length > 0 || state.query.length > 0 })
+	}, [state.filters, state.query])
+
+	return [state, dispatch] 
 }
 
 function facetsDataReducer(state: FacetsState, action: FacetsDataReducerAction): FacetsState {
@@ -44,6 +67,20 @@ function facetsDataReducer(state: FacetsState, action: FacetsDataReducerAction):
 		return {
 			...state,
 			query: action.value
+		}
+	}
+
+	if (action.type === 'SET_FILTERS') {
+		return {
+			...state,
+			filters: action.filters
+		}
+	}
+
+	if (action.type === 'SET_ACTIVE_SEARCH') {
+		return {
+			...state,
+			isActive: action.isActive
 		}
 	}
 
@@ -227,4 +264,32 @@ function facetsDataReducer(state: FacetsState, action: FacetsDataReducerAction):
 	}
 
 	return state
+}
+
+function getFilterValue(facetData: FacetData): string[] {
+	if (!hasFilter(facetData)) return []
+
+	if (isListFacetData(facetData) || isBooleanFacetData(facetData) || isHierarchyFacetData(facetData)) {
+		return Array.from(facetData.filters)
+	}
+	else if (isRangeFacetData(facetData) || isDateFacetData(facetData)) {
+		const lastFilter = facetData.filters[facetData.filters.length - 1]
+		return [`${lastFilter.fromLabel} - ${lastFilter.toLabel}`]
+	}
+
+	return []
+}
+
+function hasFilter(facetData: FacetData) {
+	if (facetData.filters == null) return false
+
+	if (isListFacetData(facetData) || isBooleanFacetData(facetData) || isHierarchyFacetData(facetData)) {
+		return facetData.filters.size > 0
+	}
+	else if (isRangeFacetData(facetData) || isDateFacetData(facetData)) {
+		return Array.isArray(facetData.filters) && facetData.filters.length > 0
+		// return facetData.filters.hasOwnProperty('from') && facetData.filters.from != null
+	}
+
+	return false
 }

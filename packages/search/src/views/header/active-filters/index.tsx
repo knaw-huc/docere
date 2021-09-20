@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import useFilters from './use-filters'
 import Details from './details'
 import { SearchPropsContext, SearchContext } from '@docere/common'
 import { Button } from '../../ui/button'
@@ -18,13 +17,12 @@ const Wrapper = styled.div`
 export function ActiveFilters() {
 	const { i18n, style } = React.useContext(SearchPropsContext)
 	const { state, dispatch } = React.useContext(SearchContext) 
-	const filters = useFilters(state.facets)
 
 	const reset = React.useCallback(() => {
 		dispatch({ type: 'RESET' })
 	}, [])
 
-	if (!state.query.length && !filters.length) return null
+	if (!state.query.length && !state.filters.length) return null
 
 	return (
 		<Wrapper
@@ -40,8 +38,7 @@ export function ActiveFilters() {
 			</div>
 			<Details
 				dispatch={dispatch}
-				filters={filters}
-				query={state.query}
+				filters={state.filters}
 			/>
 		</Wrapper>
 	)

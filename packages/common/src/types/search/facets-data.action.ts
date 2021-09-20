@@ -1,4 +1,4 @@
-import type { FacetsConfig } from '.'
+import type { ActiveFilter, FacetsConfig } from '.'
 import type { RangeFacetValue } from './facets'
 import { SortBy, SortDirection } from '../../enum'
 
@@ -33,6 +33,11 @@ interface FacetsDataReducerActionRemoveFilter {
 	value?: string
 }
 
+interface SetFilters {
+	type: 'SET_FILTERS',
+	filters: ActiveFilter[]
+}
+
 // type SetRange = {
 // 	facetId: string
 // 	type: 'SET_RANGE'
@@ -48,6 +53,11 @@ interface FacetsDataReducerActionRemoveFilter {
 interface SetQuery {
 	type: 'SET_QUERY',
 	value: string
+}
+
+interface SetActiveSearch {
+	type: 'SET_ACTIVE_SEARCH',
+	isActive: boolean
 }
 
 // TODO change to SET_LIST_FACET_SORT
@@ -85,7 +95,8 @@ export type FacetsDataReducerAction =
 	SetConfig |
 	SetSearchFilter |
 	SetQuery |
-	// FacetsDataReducerActionClear |
+	SetFilters |
+	SetActiveSearch |
 	FacetsDataReducerActionAddFilter |
 	FacetsDataReducerActionRemoveFilter |
 	FacetsDataReducerActionSetSort |

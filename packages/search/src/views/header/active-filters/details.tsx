@@ -54,7 +54,6 @@ const Ul = styled.ul`
 interface Props {
 	dispatch: React.Dispatch<FacetsDataReducerAction>
 	filters: ActiveFilter[]
-	query: string
 }
 function ActiveFiltersDetails(props: Props) {
 	const removeSearchFilter = React.useCallback(ev => {

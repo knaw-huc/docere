@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import Pagination from './pagination'
 import ResultCount from './result-count'
 
-import type { FSResponse, SetSortOrder, SortOrder } from '@docere/common'
+import { FSResponse, SearchContext, SetSortOrder, SortOrder } from '@docere/common'
 
 const Wrapper = styled.header`
 	align-items: center;
@@ -24,6 +24,7 @@ interface Props {
 	currentPage: number
 	searchResult: FSResponse
 	setCurrentPage: (pageNumber: number) => void
+	searchHomeActive: boolean
 	setSortOrder: SetSortOrder
 	sortOrder: SortOrder
 }
@@ -32,15 +33,20 @@ function Header(props: Props) {
 		<Wrapper id="huc-fs-header">
 			<ResultCount
 				currentPage={props.currentPage}
+				searchHomeActive={props.searchHomeActive}
 				searchResult={props.searchResult}
 				setSortOrder={props.setSortOrder}
 				sortOrder={props.sortOrder}
 			/>
-			<Pagination
-				currentPage={props.currentPage}
-				searchResults={props.searchResult}
-				setCurrentPage={props.setCurrentPage}
-			/>
+
+			{
+				!props.searchHomeActive &&
+				<Pagination
+					currentPage={props.currentPage}
+					searchResults={props.searchResult}
+					setCurrentPage={props.setCurrentPage}
+				/>
+			}
 		</Wrapper>
 	)
 }

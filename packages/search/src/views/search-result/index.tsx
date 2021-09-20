@@ -3,7 +3,7 @@ import React from 'react'
 import { Section, ResultList, Result } from './components'
 
 import { FacetedSearchProps, FSResponse, SearchContext, SearchPropsContext } from '@docere/common'
-import useFilters from '../header/active-filters/use-filters'
+// import useFilters from '../header/active-filters/use-filters'
 
 interface Props {
 	SearchHomeComponent: FacetedSearchProps['SearchHomeComponent']
@@ -12,12 +12,11 @@ interface Props {
 function HucSearchResults(props: Props) {
 	const context = React.useContext(SearchPropsContext)
 	const { state } = React.useContext(SearchContext) 
-	const filters = useFilters(state.facets)
 
 	return (
 		<Section id="huc-fs-search-results">
 			{
-				props.SearchHomeComponent != null && filters.length === 0 ?
+				props.SearchHomeComponent != null && !state.isActive ?
 					<props.SearchHomeComponent /> :
 					<ResultList>
 						{

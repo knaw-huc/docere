@@ -103,6 +103,7 @@ export default function FacetedSearch() {
 			<FullTextSearch />
 			<Header
 				currentPage={currentPage}
+				searchHomeActive={context.SearchHomeComponent != null && !searchContext.state.isActive}
 				searchResult={searchResult}
 				setCurrentPage={setCurrentPage}
 				setSortOrder={setSortOrder}
