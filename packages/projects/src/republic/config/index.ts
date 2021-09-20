@@ -31,7 +31,6 @@ export default extendConfig({
 		prepareStandoff,
 		exportOptions: {
 			annotationHierarchy,
-			rootNodeName: 'session',
 			metadata: {
 				exclude: ['coords', 'para_id', 'scan_id', 'text_region_id', 'iiif_url', 'filepath', 'iiif_info_url'],
 				addOffsets: true,
@@ -59,16 +58,21 @@ export default extendConfig({
 			title: 'Datum',
 		},
 		{
-			// TODO add to session only?
 			id: 'resolution_ids',
-			getValue: (config, props) =>
-				//props.partConfig.id === 'session' ?
-				props.partialStandoff.metadata[config.id] //:
-				//	null
+			getValue: (config, props) => props.partialStandoff.metadata[config.id]
 		},
 		{
 			id: 'session_id',
 			getValue: (_config, props) => props.partialStandoff.metadata.id
+		},
+		{
+			id: 'order_number',
+			getValue: (_config, props) =>
+				props.partConfig.id === 'resolution' ?
+					props.partialStandoff.metadata.resolution_ids.indexOf(props.id) + 1 :
+					null
+			,
+			title: 'Volgnummer'
 		},
 		{
 			facet: {
@@ -76,7 +80,7 @@ export default extendConfig({
 			},
 			id: 'inventory_num',
 			getValue,
-			title: 'Inventaris'
+			title: 'Inventaris nummer'
 		},
 		{
 			facet: {
@@ -93,10 +97,7 @@ export default extendConfig({
 			},
 			entityConfigId: 'attendant',
 			id: 'president',
-			filterEntities: a => {
-				if (a.sourceProps.class === 'president') console.log(a)
-				return a.sourceProps.class === 'president'
-			}
+			filterEntities: a => a.sourceProps.class === 'president'
 		},
 		{
 			facet: {
@@ -157,10 +158,7 @@ export default extendConfig({
 			id: 'attendant',
 			filter: a => a.name === 'attendant',
 			getId: a => a.sourceProps.delegate_id,
-			getValue: props => {
-				console.log(props.annotation.sourceProps.delegate_name)
-				return props.annotation.sourceProps.delegate_name
-			},
+			getValue: props => props.annotation.sourceProps.delegate_name,
 			title: 'Aanwezigen',
 			type: EntityType.Person,
 		}
@@ -230,22 +228,13 @@ function prepareStandoff(
 			const root = entryPartialStandoff.annotations.find(a => a.props.entityConfigId === partConfig.id)
 			root.props.facsimileId = scan.props.facsimileId
 			root.props.facsimilePath = scan.props.facsimilePath
-
-			// const first0 = entryPartialStandoff.annotations.find(a => a.start === 0)
-			// const sourceFirst0 = sourcePartialStandoff.annotations.find(a => a.id === first0.id)
-			// const scans = sourcePartialStandoff.annotations
-			// 	.filter(a => a.name === 'scan')
-			// 	.sort((a, b) => a.start - b.start)
-
-			// if (scans != null) {
-			// 	let i = 0
-			// 	while (i < scans.length && scans[i].start < sourceFirst0.start) i++
-			// 	const foundScan = scans[i - 1]
-			// 	const root = entryPartialStandoff.annotations.find(a => a.props.entityConfigId === partConfig.id)
-			// 	root.props.facsimileId = foundScan.props.facsimileId
-			// 	root.props.facsimilePath = foundScan.props.facsimilePath
-			// }
 		}
 	}
+
+	/**
+	 * Remove text regions, because they are not rendered in the client
+	 */
+	entryPartialStandoff.annotations = entryPartialStandoff.annotations.filter(a => a.name !== 'text_region')
+
 	return entryPartialStandoff
 }

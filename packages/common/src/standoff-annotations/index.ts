@@ -9,7 +9,7 @@ export * from './annotation-tree3'
 export * from './utils'
 export * from './export-options'
 
-export const ROOT_NODE_NAME = 'root'
+export const ROOT_NODE_NAME = 'docere_document'
 // export const TEXT_NODE_NAME = '__TEXT__'
 export const HIGHLIGHT_NODE_NAME = '__HI__'
 // export const RANGE_TAG_NAME = '_range'

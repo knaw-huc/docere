@@ -43,31 +43,6 @@ export class StandoffTree3 {
 		this.update()
 	}
 
-	/**
-	 * Ensure the AnnotationTree has a root annotation. Without a
-	 * root a tree can't be build.
-	 * 
-	 * TODO why is ensureRoot necessary for Republic data? Is there no root?
-	 */
-	private ensureRoot() {
-		// Find the root
-		const root = this.annotations.find(a =>
-			a.start === 0 && a.end === this.standoff.text.length
-		)
-
-		// If there is no root, create one and add it to the annotation list
-		if (root == null) {
-			this.annotations.push(toAnnotation3({
-				end: this.standoff.text.length,
-				props: { isRoot: true },
-				name: this.options.rootNodeName,
-				start: 0,
-			}))
-		} else {
-			root.props.isRoot = true
-		}
-	}
-
 	highlightSubString(subStrings: string[]) {
 		/**
 		 * Remove current highlight
@@ -120,12 +95,39 @@ export class StandoffTree3 {
 		if (update) this.update()
 	}
 
+	/**
+	 * Ensure the AnnotationTree has a root annotation. Without a
+	 * root a tree can't be build.
+	 * 
+	 * TODO why is ensureRoot necessary for Republic data? Is there no root?
+	 */
+	private ensureRoot() {
+		// Find the root
+		const root = this.annotations.find(a =>
+			a.start === 0 && a.end === this.standoff.text.length
+		)
+
+		// If there is no root, create one and add it to the annotation list
+		if (root == null) {
+			this.annotations.push(toAnnotation3({
+				end: this.standoff.text.length,
+				props: { isRoot: true },
+				name: this.options.rootNodeName,
+				start: 0,
+			}))
+		} else {
+			root.props.isRoot = true
+		}
+	}
+
 	private update() {
 
 		/**
 		 * Sort {@link Annotation3 | annotations} by {@link sortByOffset | offset}
 		 */
 		this.annotations.sort(sortByOffset(this.options))
+
+		console.log(this.annotations.length)
 
 		this.createTree()
 	}
@@ -399,7 +401,7 @@ function sortByOffset(options: ExportOptions) {
 	const sbh = sortByHierarchy(options)
 
 	return function (a: Annotation3, b: Annotation3) {
-		if (a.props.isRoot) return 0
+		if (a.props.isRoot) return -1 
 		if (b.props.isRoot) return 1
 
 		/**
