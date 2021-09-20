@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import Pagination from './pagination'
 import ResultCount from './result-count'
 
-import { FSResponse, SearchContext, SetSortOrder, SortOrder } from '@docere/common'
+import { FSResponse, SetSortOrder, SortOrder } from '@docere/common'
 
 const Wrapper = styled.header`
 	align-items: center;
