@@ -6,7 +6,7 @@
   "scripts": {
     "build": "rm -rf build && tsc --noEmit",
     "serve": "webpack serve --config webpack.config.local.js",
-    "dist": "rm -rf dist && webpack --config webpack.config.remote.js",
+    "dist": "rm -rf dist && webpack --config webpack.config.local.js",
     "watch": "tsc -w --pretty --preserveWatchOutput --noEmit"
   },
   "author": "",
