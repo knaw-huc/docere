@@ -3,7 +3,6 @@ export * from './components'
 export * from './constants'
 export * from './entry'
 export * from './enum'
-export * from './config/extend'
 export * from './page'
 
 export * from './project/action'

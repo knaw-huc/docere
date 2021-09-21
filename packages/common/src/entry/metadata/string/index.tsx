@@ -1,6 +1,8 @@
 import React from 'react'
+import { EntityConfig, MetadataConfig } from '../..'
 
-import { ListFacetData, SearchContext } from '../../..'
+import { SearchContext } from '../../..'
+import { ProjectContext } from '../../../project/context'
 import { MetadataWrapper } from '../wrapper'
 import Value from './value'
 
@@ -9,15 +11,19 @@ interface Props {
 	value: string | string[]
 }
 export function StringMetadata(props: Props) {
-	const searchContext = React.useContext(SearchContext)
-	const { facets } = searchContext.state
-	const facet = facets.get(props.metadataId)
-	if (facet == null) return null
+	const { config: projectConfig } = React.useContext(ProjectContext)
 
-	const filters = facet?.filters as ListFacetData['filters']
+	const configs = new Map<string, MetadataConfig | EntityConfig>()
+	for (const md of projectConfig.metadata2) configs.set(md.id, md)
+	for (const en of projectConfig.entities2) configs.set(en.id, en)
+	const config = configs.get(props.metadataId)
+	if (config == null) return null
+
+	const searchContext = React.useContext(SearchContext)
+	const facet = searchContext.state.facets.get(props.metadataId)
 
 	return (
-		<MetadataWrapper title={facet.config.title}>
+		<MetadataWrapper title={config.title}>
 			{
 				(
 					props.value == null ||
@@ -27,14 +33,14 @@ export function StringMetadata(props: Props) {
 					Array.isArray(props.value) ?
 						props.value.map(v =>
 							<Value
-								active={filters?.has(v)}
+								facet={facet}
 								id={props.metadataId}
 								key={`${props.metadataId}${v}`}
 								value={v}
 							/>
 						) :
 						<Value
-							active={filters?.has(props.value)}
+							facet={facet}
 							id={props.metadataId}
 							value={props.value}
 						/>

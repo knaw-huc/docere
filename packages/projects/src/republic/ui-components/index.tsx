@@ -31,8 +31,8 @@ function EmptyEntity(props: EntityComponentProps) {
 function SearchHome() {
 	return (
 		<Wrapper>
-			<h2 style={{margin: 0, fontSize: '2rem'}}>Webeditie Resoluties Staten-Generaal</h2>
-			<h3 style={{margin: 0}}>prototype achttiende eeuw</h3>
+			<h2>Webeditie Resoluties Staten-Generaal</h2>
+			<h3>prototype achttiende eeuw</h3>
 			<section>
 				<div>Lees meer over:</div>
 				<ul>
@@ -51,7 +51,8 @@ function SearchHome() {
 				</ul>
 			</section>
 			<section className="feedback">
-				Deze tool is in ontwikkeling. Feedback kunt u sturen naar <a href="mailto:Republic_Goetgevonden@huygens.knaw.nl">Republic_Goetgevonden@huygens.knaw.nl</a>
+				Deze webeditie is in ontwikkeling. Heeft u een vraag, opmerking of suggestie?<br />
+				Stuur deze dan naar: <a href="mailto:Republic_Goetgevonden@huygens.knaw.nl">Republic_Goetgevonden@huygens.knaw.nl</a>
 			</section>
 		</Wrapper>
 	)
@@ -59,6 +60,15 @@ function SearchHome() {
 
 const Wrapper = styled.div`
 	font-family: Roboto, sans-serif;
+
+	h2 {
+		font-size: 2rem;
+		margin: 0;
+	}
+
+	h3 {
+		margin: 0;
+	}
 
 	section {
 		margin: 2rem 0;
@@ -75,6 +85,7 @@ const Wrapper = styled.div`
 
 	.feedback {
 		background: #0088CC11;
+		font-size: .95rem;
 		padding: 1rem;
 		border-radius: 4px;
 	}

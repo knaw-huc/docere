@@ -1,20 +1,6 @@
-import { BaseMetadataConfig, BooleanMetadata, BooleanMetadataConfig, DateMetadata, DateMetadataConfig, EsDataType, HierarchyMetadata, HierarchyMetadataConfig, ListMetadata, ListMetadataConfig, MetadataItem, RangeMetadata } from '@docere/common'
-
-import type {
-	BooleanFacetConfig,
-	BooleanFacetData,
-	DateFacetConfig,
-	DateFacetData,
-	FacetConfig,
-	FacetData,
-	HierarchyFacetConfig,
-	HierarchyFacetData,
-	ListFacetConfig,
-	ListFacetData,
-	RangeFacetConfig,
-	RangeFacetData,
-	RangeMetadataConfig
-} from '@docere/common'
+import { EsDataType } from '..'
+import type { FacetData, BooleanFacetData, DateFacetData, HierarchyFacetData, ListFacetData, RangeFacetData, FacetConfig, BooleanFacetConfig, DateFacetConfig, HierarchyFacetConfig, ListFacetConfig, RangeFacetConfig } from '..'
+import type { BaseMetadataConfig, BooleanMetadata, BooleanMetadataConfig, DateMetadata, DateMetadataConfig, HierarchyMetadata, HierarchyMetadataConfig, ListMetadata, ListMetadataConfig, MetadataItem, RangeMetadata, RangeMetadataConfig } from '../entry'
 
 export function isBooleanMetadataItem(metadataItem: MetadataItem): metadataItem is BooleanMetadata {
 	return isBooleanMetadataConfig(metadataItem.config)

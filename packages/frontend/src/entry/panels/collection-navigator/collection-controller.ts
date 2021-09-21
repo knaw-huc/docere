@@ -1,5 +1,5 @@
 import { ProjectContextValue, fetchPost, ActiveFacsimile, ID, ElasticSearchFacsimile, ProjectAction } from '@docere/common'
-import { isHierarchyMetadataItem, isListMetadataItem, isRangeMetadataItem } from '../../../../../search/src'
+import { isHierarchyMetadataItem, isListMetadataItem, isRangeMetadataItem } from '@docere/common'
 import OpenSeadragon from 'openseadragon';
 import TiledImages from './tiled-images'
 import { CollectionNavigatorBaseController } from './base-controller'

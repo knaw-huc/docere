@@ -36,7 +36,7 @@ export default function ResultCount(props: Props) {
 	if (props.searchHomeActive) {
 		return (
 			<Wrapper>
-				{props.searchResult.total} {props.searchResult.total === 1 ? i18n.result : i18n.results}
+				{props.searchResult.total} {props.searchResult.total === 1 ? i18n.document : i18n.documents}
 			</Wrapper>
 		)
 	}

@@ -6,7 +6,6 @@ import App from './app'
 
 import type { FacetsConfig, FacetedSearchProps, ResultBodyProps } from '@docere/common'
 
-export * from './utils'
 export * from './date.utils'
 export {
 	EsDataType,

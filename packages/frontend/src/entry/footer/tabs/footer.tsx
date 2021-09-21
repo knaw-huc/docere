@@ -1,11 +1,12 @@
 import React from 'react'
-import { FooterTab, UIContext, DispatchContext } from '@docere/common'
+import { FooterTab, UIContext, DispatchContext, ProjectContext } from '@docere/common'
 
 import { Button } from '..'
 
 export function FooterTabs() {
 	const dispatch = React.useContext(DispatchContext)
 	const uiState = React.useContext(UIContext)
+	const project = React.useContext(ProjectContext)
 
 	const onClick = React.useCallback(ev => {
 		const { tab } = ev.target.dataset
@@ -24,7 +25,7 @@ export function FooterTabs() {
 						data-tab={name}
 						key={name}
 					>
-						{name}
+						{project.i18n[name]}
 					</Button>
 				)
 			}

@@ -1,4 +1,4 @@
-import { isBooleanMetadataConfig, isDateMetadataConfig, isHierarchyMetadataConfig, isListMetadataConfig, isRangeMetadataConfig } from '../utils'
+import { isBooleanMetadataConfig, isDateMetadataConfig, isHierarchyMetadataConfig, isListMetadataConfig, isRangeMetadataConfig } from '@docere/common'
 
 import type { FacetsConfig, BooleanFacetData, DateFacetData, HierarchyFacetData, ListFacetData, RangeFacetData, FacetData, FacetsData, BaseMetadataConfig, BooleanMetadataConfig, HierarchyMetadataConfig, ListMetadataConfig, DateMetadataConfig, RangeMetadataConfig } from '@docere/common'
 import { getRangeBucketSize } from '../use-search/get-buckets'

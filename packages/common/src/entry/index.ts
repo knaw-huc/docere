@@ -31,6 +31,7 @@ export function isFacsimileAnnotation(annotation: Annotation3): annotation is Fa
 }
 
 
+// TODO move to ../search
 export interface ListMetadata {
 	config: ListMetadataConfig,
 	value: string | string[]

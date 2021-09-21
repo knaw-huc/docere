@@ -4,8 +4,7 @@ import styled from 'styled-components'
 import ListFacetValue from './value'
 import MoreLessButton from './more-less-buttons'
 
-import type { ListFacetData, HierarchyFacetData, ListFacetValues } from '@docere/common'
-import { isHierarchyFacetData } from '../../../utils'
+import { ListFacetData, HierarchyFacetData, ListFacetValues, isHierarchyFacetData } from '@docere/common'
 
 // const DURATION = 500
 // const FRAME_DURATION = 16

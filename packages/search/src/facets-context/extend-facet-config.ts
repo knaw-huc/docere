@@ -1,6 +1,6 @@
 import { SortBy, SortDirection, EsDataType, BaseMetadataConfig, ListMetadataConfig, BooleanMetadataConfig, DateMetadataConfig, HierarchyMetadataConfig, RangeMetadataConfig } from '@docere/common'
 
-import { isListMetadataConfig, isDateMetadataConfig, isBooleanMetadataConfig, isHierarchyMetadataConfig, isRangeMetadataConfig } from '../utils'
+import { isListMetadataConfig, isDateMetadataConfig, isBooleanMetadataConfig, isHierarchyMetadataConfig, isRangeMetadataConfig } from '@docere/common'
 
 import type { FacetsConfig } from '@docere/common'
 

@@ -1,6 +1,4 @@
 import { ExportOptions, HIGHLIGHT_NODE_NAME, PartialStandoff, PartialStandoffAnnotation } from '.'
-// import { EntityConfig } from '../entry'
-// import { FacsimileArea } from '../entry/facsimile'
 import { TagShape } from '../enum'
 import { isChild, isAfter } from './utils'
 
@@ -126,8 +124,6 @@ export class StandoffTree3 {
 		 * Sort {@link Annotation3 | annotations} by {@link sortByOffset | offset}
 		 */
 		this.annotations.sort(sortByOffset(this.options))
-
-		console.log(this.annotations.length)
 
 		this.createTree()
 	}

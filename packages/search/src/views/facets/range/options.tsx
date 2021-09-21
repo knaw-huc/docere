@@ -1,9 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 import { OptionsWrapper } from '../list/options'
-import { DateFacetData, RangeFacetData, SearchContext, SearchPropsContext } from '@docere/common'
+import { DateFacetData, isDateFacetData, RangeFacetData, SearchContext, SearchPropsContext } from '@docere/common'
 import { dateRangeToFacetValue, rangeToFacetValue } from '../../../use-search/get-buckets'
-import { isDateFacetData } from '../../../utils'
 
 // Convert a timestamp to a <input type="date" /> value: yyyy-mm-dd
 function timestampToDateInputValue(timestamp: number) {

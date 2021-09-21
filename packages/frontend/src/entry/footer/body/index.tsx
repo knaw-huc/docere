@@ -4,7 +4,8 @@ import { FooterTab, UIContext } from '@docere/common'
 
 import Layers from './layers'
 import Settings from './settings'
-import Downloads from './downloads'
+// import Downloads from './downloads'
+// TODO restore downloads
 
 const Wrapper = styled.div`
 	background-color: black;
@@ -23,9 +24,9 @@ export function Body() {
 			<Settings
 				active={uiState.footerTab === FooterTab.Settings}
 			/>
-			<Downloads
+			{/* <Downloads
 				active={uiState.footerTab === FooterTab.Downloads}
-			/>
+			/> */}
 		</Wrapper>
 	)
 }

@@ -4,9 +4,8 @@ import { prepareSource } from './prepare'
 
 const annotationHierarchy = ['attendance_list', 'resolution', 'paragraph', 'text_region', 'line', 'attendant', 'scan']
 
-// TODO restore getValue
 const getValue = (config: MetadataConfig, props: CreateJsonEntryPartProps) => {
-	return props.partialStandoff.metadata[config.id]
+	return props.partialStandoff.metadata[config.id].toString()
 }
 
 const typeTranslation: Record<string, string> = {
@@ -80,7 +79,7 @@ export default extendConfig({
 			},
 			id: 'inventory_num',
 			getValue,
-			title: 'Inventaris nummer'
+			title: 'Inventarisnummer'
 		},
 		{
 			facet: {
@@ -164,6 +163,8 @@ export default extendConfig({
 			type: EntityType.Person,
 		}
 	],
+
+	language: Language.NL,
 	
 	layers2: [
 		{
@@ -207,7 +208,6 @@ export default extendConfig({
 	],
 
 	search: {
-		language: Language.NL,
 		sortOrder: new Map([['session_date', SortDirection.Asc]])
 	}
 })

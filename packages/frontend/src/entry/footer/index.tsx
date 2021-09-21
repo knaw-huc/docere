@@ -22,15 +22,25 @@ const Wrapper = styled.footer`
 
 interface BProps { active: boolean }
 export const Button = styled.div`
-	color: ${(props: BProps) => props.active ? Colors.Orange : '#BBB'};
+	color: ${(props: BProps) => props.active ? Colors.Orange : '#CCC'};
 	cursor: pointer;
 	display: inline-block;
 	font-size: .8rem;
 	padding: 0 .33rem;
+	text-transform: capitalize;
+	margin-right: .5rem;
+	line-height: 1.1rem;
+	border-radius: 2px;
+	background: linear-gradient(#212830, #373b47);
+
+	&:last-child {
+		margin-right: 0;
+	}
 
 	&:hover {
+		background: #373b47;
 		color: ${(props: BProps) => props.active ? Colors.Orange : '#EEE'};
-	}
+	
 `
 
 // TODO move to where this is used!

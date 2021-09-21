@@ -29,13 +29,13 @@ export function SearchTabs() {
 				active={uiState.searchTab === SearchTab.Search}
 				data-tab={SearchTab.Search}
 			>
-					Search
+				{project.i18n.search}
 			</Button>
 			<Button
 				active={uiState.searchTab === SearchTab.Results}
 				data-tab={SearchTab.Results}
 			>
-				Results
+				{project.i18n.results}
 			</Button>
 		</div>
 	)

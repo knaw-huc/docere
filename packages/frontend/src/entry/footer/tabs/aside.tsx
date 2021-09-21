@@ -1,9 +1,10 @@
 import React from 'react'
-import { AsideTab, AsideTabContext, EntryContext, DispatchContext } from '@docere/common'
+import { AsideTab, AsideTabContext, EntryContext, DispatchContext, ProjectContext } from '@docere/common'
 import { Button } from '..'
 
 export function AsideTabs() {
 	const dispatch = React.useContext(DispatchContext)
+	const project = React.useContext(ProjectContext)
 	const entry = React.useContext(EntryContext)
 	const asideTab = React.useContext(AsideTabContext)
 
@@ -24,7 +25,7 @@ export function AsideTabs() {
 					data-tab={AsideTab.Metadata}
 					onClick={handleTabClick}
 				>
-					Metadata
+					{project.i18n.metadata}
 				</Button>
 			}
 			{
@@ -34,7 +35,7 @@ export function AsideTabs() {
 					data-tab={AsideTab.TextData}
 					onClick={handleTabClick}
 				>
-					Entities
+					{project.i18n.entities}
 				</Button>
 			}
 		</div>

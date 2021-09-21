@@ -2,6 +2,7 @@ import { Viewport, ContainerType, AsideTab } from '../enum'
 import { ID } from '../entry/layer'
 import { DocereConfig } from '../config'
 import { ProjectState } from './state'
+import { ProjectContextValue } from './context'
 
 interface ToggleFooterTab {
 	type: 'TOGGLE_TAB',
@@ -45,7 +46,7 @@ export type SetFacsimile = {
 }
 
 export type SetProject =
-	Pick<ProjectState, 'config' | 'getComponents' | 'searchUrl' | 'uiComponents'> &
+	ProjectContextValue &
 	{
 		type: 'SET_PROJECT'
 	}

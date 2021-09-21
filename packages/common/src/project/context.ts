@@ -1,7 +1,7 @@
 import React from 'react'
-import { defaultEntrySettings } from '../config/extend'
+import { defaultEntrySettings } from '../config/entry-settings'
 import { AsideTab, Viewport, ContainerType } from '../enum'
-import { DocereConfig, Entry, ActiveFacsimile, ID, ActiveEntity, Layers, Page } from '..'
+import type { DocereConfig, Entry, ActiveFacsimile, ID, ActiveEntity, Layers, Page } from '..'
 import type { ProjectState } from './state'
 import type { ProjectAction } from './action'
 
@@ -9,13 +9,14 @@ import type { ProjectAction } from './action'
 export const DispatchContext = React.createContext<React.Dispatch<ProjectAction>>(null)
 
 // Project
-export type ProjectContextValue = Pick<ProjectState, 'config' | 'getComponents' | 'searchUrl' | 'uiComponents'>
+export type ProjectContextValue = Pick<ProjectState, 'config' | 'getComponents' | 'searchUrl' | 'uiComponents' | 'i18n'>
 
 export const initialProjectContext: ProjectContextValue = {
 	config: null,
 	getComponents: null,
 	searchUrl: null,
 	uiComponents: null,
+	i18n: null,
 }
 
 export const ProjectContext = React.createContext<ProjectContextValue>(initialProjectContext)

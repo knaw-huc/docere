@@ -92,9 +92,9 @@ export enum AsideTab {
 }
 
 export enum FooterTab {
-	Panels = 'Panels',
-	Settings = 'Settings',
-	Downloads = "Downloads",
+	Panels = 'panels',
+	Settings = 'settings',
+	// Downloads = "downloads",
 }
 
 export enum SearchTab {

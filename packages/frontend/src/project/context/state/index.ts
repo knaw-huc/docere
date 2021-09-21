@@ -1,6 +1,6 @@
 import React from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { Viewport, ProjectState, initialProjectState, ProjectAction, fetchEntry, fetchPage, getPagePath, getEntryPath, DTAP } from '@docere/common'
+import { Viewport, ProjectState, initialProjectState, ProjectAction, fetchEntry, fetchPage, getPagePath, getEntryPath, DTAP, languageMaps } from '@docere/common'
 import configs from '../../../../../projects/src'
 
 import { projectUIReducer } from '../reducer'
@@ -122,6 +122,7 @@ export function useProjectState(): [ProjectState, React.Dispatch<ProjectAction>]
 
 			dispatch({
 				type: 'SET_PROJECT',
+				i18n: languageMaps[config.language],
 				config,
 				getComponents: textCompResult.status === 'fulfilled' ?
 					textCompResult.value.default(config) :

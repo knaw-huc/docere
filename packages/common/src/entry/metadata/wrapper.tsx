@@ -5,7 +5,7 @@ import { DEFAULT_SPACING } from '../../constants'
 const Wrapper = styled.div`
 	margin-bottom: ${DEFAULT_SPACING/4}px;
 	display: grid;
-	grid-template-columns: 120px auto;
+	grid-template-columns: 150px auto;
 `
 
 const Title = styled.div`

@@ -2,15 +2,16 @@ import React from 'react'
 import styled from 'styled-components'
 import { LbCommon, Pb } from '@docere/text-components'
 
-import { DispatchContext, useEntity, EntitiesContext, ContainerContext, EntityAnnotationComponentProps, EntryContext, ContainerType, Entry } from '@docere/common'
+import { DispatchContext, useEntity, EntitiesContext, ContainerContext, EntityAnnotationComponentProps, EntryContext, ContainerType, Entry, EntrySettingsContext } from '@docere/common'
 
 export const LbWrapper = styled.div`
 	&:before {
 		content: counter(session);
 		counter-increment: session;
 		cursor: pointer;
+		display: ${props => props.visible ? 'block' : 'none' };
 		${LbCommon}
-		${(props: { active: boolean, color: string }) =>
+		${(props: { active: boolean, color: string, visible: boolean }) =>
 			props.active ?
 				`background-color: ${props.color};
 				color: white;` :
@@ -24,6 +25,7 @@ export function RepublicLb(props: EntityAnnotationComponentProps) {
 	const dispatch = React.useContext(DispatchContext)
 	const container = React.useContext(ContainerContext)
 	const activeEntities = React.useContext(EntitiesContext)
+	const settings = React.useContext(EntrySettingsContext)
 
 	const entity = useEntity(props.annotation.props.entityId)
 
@@ -45,6 +47,7 @@ export function RepublicLb(props: EntityAnnotationComponentProps) {
 			color={entity.props.entityConfig.color}
 			data-entity-id={entity.props.entityId}
 			onClick={handleClick}
+			visible={settings['panels.text.showLineBeginnings']}
 		/>
 	)
 }

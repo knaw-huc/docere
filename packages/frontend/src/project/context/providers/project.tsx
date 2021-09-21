@@ -9,6 +9,7 @@ export function ProjectProvider(props: { children: React.ReactNode, state: Proje
 		setValue({
 			config: props.state.config,
 			getComponents: props.state.getComponents,
+			i18n: props.state.i18n,
 			searchUrl: props.state.searchUrl,
 			uiComponents: props.state.uiComponents,
 		})

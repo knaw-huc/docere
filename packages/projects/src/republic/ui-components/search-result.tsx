@@ -15,7 +15,7 @@ function RepublicResultBody(props: DocereResultBodyProps) {
 				<span>{props.result.type}</span>
 				<small>{props.result.session_weekday} {date.getDate()} {months[date.getMonth()]} {date.getFullYear()}</small>
 			</H3>
-			{/* <KeyValue name="resoluties" value={props.result.resolution_ids?.length} /> */}
+			<StringMetadata metadataId="order_number" value={props.result.order_number} />
 			<StringMetadata metadataId="president" value={props.result.president} />
 			<StringMetadata metadataId="attendant" value={props.result.attendant} />
 			<StringMetadata metadataId="inventory_num" value={props.result.inventory_num} />

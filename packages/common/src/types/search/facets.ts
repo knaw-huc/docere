@@ -1,4 +1,3 @@
-import { HierarchyMetadata, MetadataItem } from "../../entry"
 import {
 	BooleanMetadataConfig,
 	DateMetadataConfig,
@@ -53,15 +52,15 @@ export type BooleanFacetValues = [
 
 // TODO. This is used in @docere/api, but should come from @docere/search
 // or move guards from search to common
-export function isHierarchyFacetConfig(config: FacetConfigBase): config is HierarchyFacetConfig {
-	return config.datatype === EsDataType.Hierarchy
-}
+// export function isHierarchyFacetConfig(config: FacetConfigBase): config is HierarchyFacetConfig {
+// 	return config.datatype === EsDataType.Hierarchy
+// }
 
 // TODO. This is used in @docere/api, but should come from @docere/search
 // or move guards from search to common
-export function isHierarchyMetadataItem(metadataItem: MetadataItem): metadataItem is HierarchyMetadata {
-	return metadataItem.config.facet?.datatype === EsDataType.Hierarchy
-}
+// export function isHierarchyMetadataItem(metadataItem: MetadataItem): metadataItem is HierarchyMetadata {
+// 	return metadataItem.config.facet?.datatype === EsDataType.Hierarchy
+// }
 
 export interface HierarchyFacetConfig extends FacetConfigBase {
 	readonly datatype: EsDataType.Hierarchy

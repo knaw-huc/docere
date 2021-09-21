@@ -22,18 +22,18 @@ const textOptions: Option[] = [
 		prop: 'panels.entities.show',
 		title: 'Show entities'
 	},
-	{
-		prop: 'panels.entities.toggle',
-		title: 'Toggle entities'
-	},
-	{
-		prop: 'panels.text.showNotes',
-		title: 'Show notes'
-	},
-	{
-		prop: 'panels.text.openPopupAsTooltip',
-		title: 'Open popup as tooltip'
-	},
+	// {
+	// 	prop: 'panels.entities.toggle',
+	// 	title: 'Toggle entities'
+	// },
+	// {
+	// 	prop: 'panels.text.showNotes',
+	// 	title: 'Show notes'
+	// },
+	// {
+	// 	prop: 'panels.text.openPopupAsTooltip',
+	// 	title: 'Open popup as tooltip'
+	// },
 ]
 
 const panelsOptions: Option[] = [

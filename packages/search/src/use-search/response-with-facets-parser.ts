@@ -1,4 +1,4 @@
-import { isListFacetData, isBooleanFacetData, isRangeFacetData, isDateFacetData, isHierarchyFacetData, getHierarchyField, getHierarchyChildField } from '../utils'
+import { isListFacetData, isBooleanFacetData, isRangeFacetData, isDateFacetData, isHierarchyFacetData, getHierarchyField, getHierarchyChildField } from '@docere/common'
 
 import ESResponseParser from './response-parser'
 import createBuckets, { createRangeBuckets } from './get-buckets'

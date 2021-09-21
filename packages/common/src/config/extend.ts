@@ -1,24 +1,15 @@
-import { DocereConfig } from '.'
+import type { DocereConfig } from '.'
 import { defaultEntityConfig, EntityConfig } from '../entry/entity'
 import { BaseConfig, defaultFacetConfig, defaultMetadata } from '../entry/metadata'
 import { Language } from '../enum'
-import { PageConfig } from '../page'
-
-export const defaultEntrySettings: DocereConfig['entrySettings'] = {
-	'panels.showHeaders': true,
-	'panels.text.openPopupAsTooltip': true,
-	'panels.text.showMinimap': true,
-	'panels.text.showLineBeginnings': true,
-	'panels.text.showPageBeginnings': true,
-	'panels.entities.show': true,
-	'panels.entities.toggle': true,
-	'panels.text.showNotes': true,
-}
+import type { PageConfig } from '../page'
+import { defaultEntrySettings } from './entry-settings'
 
 const defaultConfig: DocereConfig = {
 	collection: null,
 	entities2: [],
 	entrySettings: {},
+	language: Language.EN,
 	layers2: [],
 	metadata2: [],
 	parts: null,
@@ -145,7 +136,6 @@ export function extendConfig(configDataRaw: DocereConfig): DocereConfig {
 	if (config.search == null) config.search = {}
 	config.search = {
 		url: `/search/${config.slug}/_search`,
-		language: Language.EN,
 		resultsPerPage: 20,
 		sortOrder: new Map(),
 		...config.search

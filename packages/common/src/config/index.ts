@@ -3,8 +3,11 @@ import { PartialStandoff, PartialStandoffAnnotation } from '../standoff-annotati
 import { EntityConfig, FacsimileLayerConfig, ID, MetadataConfig, TextLayerConfig } from '../entry'
 import { PartialExportOptions } from '../standoff-annotations/export-options'
 import { FacetedSearchProps, SortOrder } from '../types'
+import type { EntrySettings } from './entry-settings'
+import { Language } from '../enum'
 
 export * from './extend'
+export * from './entry-settings'
 
 // TODO rename to ProjectConfig
 // TODO rename slug to id
@@ -50,6 +53,8 @@ export interface DocereConfig {
 	facsimiles?: Pick<EntityConfig, 'filter' | 'getId'> & {
 		getPath: EntityConfig['getValue']
 	}
+
+	language?: Language,
 
 	layers2?: (TextLayerConfig | FacsimileLayerConfig)[]
 	entities2?: EntityConfig[]
@@ -125,32 +130,12 @@ export interface DocereConfig {
 	private?: boolean
 	searchResultCount?: number
 	search?: {
-		language?: FacetedSearchProps['language'],
 		resultsPerPage?: FacetedSearchProps['resultsPerPage'],
 		sortOrder?: SortOrder
 		url?: FacetedSearchProps['url'],
 	}
 	slug: ID
 	title?: string
-}
-
-export interface EntrySettings {
-	'panels.showHeaders'?: boolean
-
-	'panels.text.openPopupAsTooltip'?: boolean
-	'panels.text.showMinimap'?: boolean
-	'panels.text.showLineBeginnings'?: boolean
-	'panels.text.showPageBeginnings'?: boolean
-	'panels.text.showNotes'?: boolean,
-
-	/**
-	 * Automatically remove current active entities when activating a new entity.
-	 * When set to false, the previous active entities stay active and highlighted.
-	 */ 
-	'panels.entities.toggle'?: boolean,
-
-	/** Show/hide entities */
-	'panels.entities.show'?: boolean,
 }
 
 export interface PartConfig {

@@ -2,7 +2,7 @@ import React from 'react'
 import { ActiveFilter, DTAP, FacetData, initialSearchContextState } from '@docere/common'
 
 import { extendFacetConfig } from './extend-facet-config'
-import { isListFacetData, isBooleanFacetData, isRangeFacetData, isDateFacetData, isHierarchyFacetData } from '../utils'
+import { isListFacetData, isBooleanFacetData, isRangeFacetData, isDateFacetData, isHierarchyFacetData } from '@docere/common'
 import { getRangeBucketSize } from '../use-search/get-buckets'
 import initFacetsData from './init-facets-data'
 

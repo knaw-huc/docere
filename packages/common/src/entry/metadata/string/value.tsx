@@ -1,5 +1,6 @@
 import * as React from 'react'
 import styled from 'styled-components'
+import { FacetData } from '../../../types/search/facets'
 import { SearchControls } from '../search-controls'
 
 const Wrapper = styled.div`
@@ -11,7 +12,7 @@ const Wrapper = styled.div`
 `
 
 export interface ValueProps {
-	active: boolean
+	facet: FacetData
 	id: string
 	value: string
 }
@@ -19,7 +20,10 @@ export default function Value(props: ValueProps) {
 	return (
 		<Wrapper>
 			<span>{props.value}</span>
-			<SearchControls {...props} />
+			{
+				props.facet &&
+				<SearchControls {...props} />
+			}
 		</Wrapper>
 	)
 }

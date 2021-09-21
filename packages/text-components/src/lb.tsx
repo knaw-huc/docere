@@ -15,13 +15,15 @@ export const LbCommon = css`
 `
 
 const Wrapper = styled.span`
-	display: ${(props: { settings: EntrySettings }) => props.settings['panels.text.showLineBeginnings'] ? 'block' : 'inline' };
+	display: ${(props: { settings: EntrySettings }) =>
+		props.settings['panels.text.showLineBeginnings'] ? 'block' : 'inline' };
 
 	&:before {
 		${LbCommon}
 		content: counter(linenumber);
 		counter-increment: linenumber;
-		display: ${props => props.settings['panels.text.showLineBeginnings'] ? 'block' : 'none' };
+		display: ${props =>
+			props.settings['panels.text.showLineBeginnings'] ? 'block' : 'none' };
 	}
 `
 

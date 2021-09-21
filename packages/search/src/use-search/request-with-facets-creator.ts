@@ -1,6 +1,6 @@
 import { SortBy, SortDirection, FacetedSearchProps } from '@docere/common'
 
-import { isBooleanFacetData, isListFacetData, isRangeFacetData, isDateFacetData, isHierarchyFacetData, getHierarchyField } from '../utils'
+import { isBooleanFacetData, isListFacetData, isRangeFacetData, isDateFacetData, isHierarchyFacetData, getHierarchyField } from '@docere/common'
 import ESRequest from './request-creator'
 
 import type { ElasticSearchRequestOptions, ListFacetData, BooleanFacetData, HierarchyFacetData, RangeFacetData, DateFacetData } from '@docere/common'
