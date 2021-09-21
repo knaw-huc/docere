@@ -1,11 +1,11 @@
-import { extendConfig, Colors, EntityType, MetadataConfig, CreateJsonEntryPartProps, PartialStandoff, PartConfig, Language, SortDirection } from '@docere/common'
+import { extendConfig, Colors, EntityType, MetadataConfig, CreateJsonEntryPartProps, PartialStandoff, Language, SortDirection } from '@docere/common'
 import { LayerType, EsDataType } from '@docere/common'
 import { prepareSource } from './prepare'
 
 const annotationHierarchy = ['attendance_list', 'resolution', 'paragraph', 'text_region', 'line', 'attendant', 'scan']
 
 const getValue = (config: MetadataConfig, props: CreateJsonEntryPartProps) => {
-	return props.partialStandoff.metadata[config.id].toString()
+	return props.source.metadata[config.id].toString()
 }
 
 const typeTranslation: Record<string, string> = {
@@ -58,17 +58,17 @@ export default extendConfig({
 		},
 		{
 			id: 'resolution_ids',
-			getValue: (config, props) => props.partialStandoff.metadata[config.id]
+			getValue: (config, props) => props.source.metadata[config.id]
 		},
 		{
 			id: 'session_id',
-			getValue: (_config, props) => props.partialStandoff.metadata.id
+			getValue: (_config, props) => props.source.metadata.id
 		},
 		{
 			id: 'order_number',
 			getValue: (_config, props) =>
 				props.partConfig.id === 'resolution' ?
-					props.partialStandoff.metadata.resolution_ids.indexOf(props.id) + 1 :
+					props.source.metadata.resolution_ids.indexOf(props.id) + 1 :
 					null
 			,
 			title: 'Volgnummer'
@@ -87,17 +87,26 @@ export default extendConfig({
 			},
 			id: 'session_weekday',
 			getValue: (config, props) =>
-				dayTranslation[props.partialStandoff.metadata[config.id]],
+				dayTranslation[props.source.metadata[config.id]],
 			title: 'Dag',
 		},	
 		{
 			facet: {
 				datatype: EsDataType.Keyword,
 			},
-			entityConfigId: 'attendant',
+			entityConfigId: '_attendant',
 			id: 'president',
 			filterEntities: a => a.sourceProps.class === 'president',
 			title: 'Voorzitter'
+		},
+		{
+			facet: {
+				datatype: EsDataType.Keyword,
+			},
+			entityConfigId: '_attendant',
+			id: 'attendant',
+			filterEntities: a => a.name === 'attendant',
+			title: 'Aanwezigen'
 		},
 		{
 			facet: {
@@ -107,22 +116,6 @@ export default extendConfig({
 			id: 'type',
 			getValue: (_config, props) => typeTranslation[props.partConfig.id],
 		},
-		// {
-		// 	id: 'session',
-		// 	getValue: (_config, props) => {
-		// 		if (props.partConfig.id === 'session') return
-		// 		return props.sourceTree.root.metadata.id
-		// 	}
-		// },
-		// {
-		// 	id: 'resolutions',
-		// 	getValue: (_config, props) => {
-		// 		if (props.partConfig.id === 'resolution') return
-		// 		return props.partialStandoff.metadata.sourceMetadata.resolutions
-		// 			// .filter(a => a.name === 'resolution')
-		// 			// .map(a => a.metadata.id)
-		// 	}
-		// }	
 	],
 
 	facsimiles: {
@@ -152,10 +145,7 @@ export default extendConfig({
 			title: 'Presentielijst'
 		},
 		{
-			facet: {
-				datatype: EsDataType.Keyword,
-			},
-			id: 'attendant',
+			id: '_attendant',
 			filter: a => a.name === 'attendant',
 			getId: a => a.sourceProps.delegate_id,
 			getValue: props => props.annotation.sourceProps.delegate_name,
@@ -214,18 +204,19 @@ export default extendConfig({
 
 function prepareStandoff(
 	entryPartialStandoff: PartialStandoff,
-	sourcePartialStandoff: PartialStandoff,
-	partConfig: PartConfig
+	props: CreateJsonEntryPartProps
 ) {
+	const { partConfig, source } = props
 	/**
 	 * Attendance lists and resolutions are part of a session. When the source (session)
-	 * is splitted into attendance lists and resolution, the data on which scan 
+	 * is splitted into attendance lists and resolution, the data on which scan the 
+	 * attendance list or resolution is visible 
 	 */
 	if (partConfig?.id === 'attendance_list' || partConfig?.id === 'resolution') {
 		const scan = entryPartialStandoff.annotations.find(a => a.name === 'scan' && a.start === 0)
 		if (scan == null ) {
 			const firstTextRegion = entryPartialStandoff.annotations.find(a => a.name === 'text_region')
-			const scan = sourcePartialStandoff.annotations.find(a => a.id === firstTextRegion.sourceProps.scan_id)
+			const scan = source.annotations.find(a => a.id === firstTextRegion.sourceProps.scan_id)
 			const root = entryPartialStandoff.annotations.find(a => a.props.entityConfigId === partConfig.id)
 			root.props.facsimileId = scan.props.facsimileId
 			root.props.facsimilePath = scan.props.facsimilePath

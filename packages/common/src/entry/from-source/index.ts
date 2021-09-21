@@ -30,7 +30,7 @@ export async function getEntriesFromSource(
 			annotation,
 			projectConfig,
 			sourceId,
-			partialStandoff: source
+			source
 		}
 
 		const entityConfig = projectConfig.entities2.find(ec => ec.filter(annotation))
@@ -67,7 +67,7 @@ export async function getEntriesFromSource(
 					projectConfig,
 					root,
 					sourceId,
-					partialStandoff: source,
+					source,
 				})
 
 				entries.push(entry)
@@ -78,7 +78,7 @@ export async function getEntriesFromSource(
 			id: sourceId,
 			projectConfig,
 			sourceId,
-			partialStandoff: source,
+			source,
 		})
 
 		entries.push(entry)

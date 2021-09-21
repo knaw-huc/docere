@@ -1,6 +1,6 @@
 import { PageConfig } from '../page'
 import { PartialStandoff, PartialStandoffAnnotation } from '../standoff-annotations'
-import { EntityConfig, FacsimileLayerConfig, ID, MetadataConfig, TextLayerConfig } from '../entry'
+import { CreateJsonEntryPartProps, EntityConfig, FacsimileLayerConfig, ID, MetadataConfig, TextLayerConfig } from '../entry'
 import { PartialExportOptions } from '../standoff-annotations/export-options'
 import { FacetedSearchProps, SortOrder } from '../types'
 import type { EntrySettings } from './entry-settings'
@@ -115,8 +115,7 @@ export interface DocereConfig {
 		 */
 		prepareStandoff?: (
 			entryPartialStandoff: PartialStandoff,
-			sourcePartialStandoff: PartialStandoff,
-			partConfig: PartConfig
+			props: CreateJsonEntryPartProps
 		) => PartialStandoff
 
 		/**

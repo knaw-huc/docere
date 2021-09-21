@@ -34,9 +34,10 @@ const H3 = styled.h3`
 	text-transform: capitalize;
 
 	small {
+		align-self: center;
 		font-size: .85rem;
 		justify-self: right;
-		align-self: center;
+		text-transform: none;
 	}
 `
 

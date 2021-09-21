@@ -8,7 +8,7 @@ export interface GetValueProps {
 	annotation: PartialStandoffAnnotation
 	projectConfig: DocereConfig
 	sourceId: ID
-	partialStandoff: PartialStandoff
+	source: PartialStandoff
 }
 
 export interface CreateJsonEntryPartProps extends Omit<GetValueProps, 'annotation'> {
@@ -24,7 +24,7 @@ export function createJsonEntry(props: CreateJsonEntryPartProps): JsonEntry {
 	const layers = props.projectConfig.layers2
 		.map(layerConfig => {
 			if (isTextLayerConfig(layerConfig)) {
-				let partialStandoff = props.partialStandoff
+				let partialStandoff = props.source
 
 				// TODO what happens when findRoot is defined in layerConfig and a root is
 				// present from partConfig, should they be mutuallly exclusive?
@@ -46,7 +46,7 @@ export function createJsonEntry(props: CreateJsonEntryPartProps): JsonEntry {
 					}
 				}
 				const preparedPartialStandoff = props.projectConfig.standoff
-					.prepareStandoff(partialStandoff, props.partialStandoff, props.partConfig)
+					.prepareStandoff(partialStandoff, props)
 
 				return {
 					...layerConfig,
@@ -65,7 +65,7 @@ export function createJsonEntry(props: CreateJsonEntryPartProps): JsonEntry {
 			const entityConfig = props.projectConfig.entities2
 				.find(ec => ec.id === metadataConfig.entityConfigId)
 
-			value = props.partialStandoff.annotations
+			value = props.source.annotations
 				.filter(entityConfig.filter)
 				.filter(metadataConfig.filterEntities)
 				.map(a => entityConfig.getValue({

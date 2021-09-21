@@ -18,7 +18,6 @@ export const LbWrapper = styled.div`
 				''
 		}
 	}
-
 `
 
 export function RepublicLb(props: EntityAnnotationComponentProps) {
@@ -75,8 +74,6 @@ export function SessionPart(props: EntityAnnotationComponentProps) {
 
 	return (
 		<SessionPartWrapper
-			active={activeEntities.has(entity.props.entityId)}
-			color={entity.props.entityConfig.color}
 		>
 			{
 				(
@@ -87,12 +84,35 @@ export function SessionPart(props: EntityAnnotationComponentProps) {
 					entity.props.entityConfigId === 'resolution' || 
 					entity.props.entityConfigId === 'attendance_list'
 				) &&
-
 				<SessionDate entry={entry} />
 			}
-			<h4 onClick={handleClick}>
-				<Pb {...props} />
-				{entity.props.entityConfig.title}
+			<H4
+				active={activeEntities.has(entity.props.entityId)}
+				color={entity.props.entityConfig.color}
+			>
+				{
+					entry.partId === 'session' ?
+						<EntryLink id={entity.props.entityId}>
+							{entity.props.entityConfig.title}
+						</EntryLink> :
+						<>{entity.props.entityConfig.title}</>
+				}
+				<span
+					className="toggle-area"
+					onClick={handleClick}
+				>
+					<svg viewBox="0 0 612 612">
+						<g>
+							<path d="M609.608,315.426c3.19-5.874,3.19-12.979,0-18.853c-58.464-107.643-172.5-180.72-303.607-180.72
+								S60.857,188.931,2.393,296.573c-3.19,5.874-3.19,12.979,0,18.853C60.858,423.069,174.892,496.147,306,496.147
+								S551.143,423.069,609.608,315.426z M306,451.855c-80.554,0-145.855-65.302-145.855-145.855S225.446,160.144,306,160.144
+								S451.856,225.446,451.856,306S386.554,451.855,306,451.855z"/>
+							<path d="M306,231.67c-6.136,0-12.095,0.749-17.798,2.15c5.841,6.76,9.383,15.563,9.383,25.198c0,21.3-17.267,38.568-38.568,38.568
+								c-9.635,0-18.438-3.541-25.198-9.383c-1.401,5.703-2.15,11.662-2.15,17.798c0,41.052,33.279,74.33,74.33,74.33
+								s74.33-33.279,74.33-74.33S347.052,231.67,306,231.67z"/>
+						</g>
+					</svg>
+				</span>
 				{
 					entity.props.entityConfigId === 'resolution' && 
 					<ResolutionCount
@@ -100,11 +120,8 @@ export function SessionPart(props: EntityAnnotationComponentProps) {
 						resolutionId={entity.props.entityId}
 					/>
 				}
-			</h4>
-			{
-				entry.partId === 'session' &&
-				<EntryLink id={entity.props.entityId}>go</EntryLink>
-			}
+				<Pb {...props} />
+			</H4>
 			{props.children}
 		</SessionPartWrapper>
 	)
@@ -148,28 +165,6 @@ function ResolutionCount(
 
 const SessionPartWrapper = styled.div`
 	counter-reset: session;
-
-	span.entry-link {
-		font-size: .85rem;
-
-		&:hover {
-			color: black;
-		}
-	}
-
-	h4 {
-		color: ${(props: { active: boolean, color: string }) => props.active ? props.color : 'initial'};
-		cursor: pointer;
-		margin: .5rem 0 1rem 0;
-
-		small {
-			color: gray;
-			cursor: default;
-			font-size: .85rem;
-			font-family: Roboto, sans-serif;
-			padding-left: 1rem;
-		}
-	}
 `
 
 function EntryLink({ id, children }: { id: string, children: React.ReactNode }) {
@@ -201,5 +196,38 @@ const Wrapper = styled.span`
 
 	&:hover {
 		text-decoration: underline;
+	}
+`
+
+const H4 = styled.h4`
+	margin: .5rem 0 1rem 0;
+	display: grid;
+	grid-template-columns: fit-content(0) fit-content(0) auto auto;
+
+	small {
+		color: gray;
+		cursor: default;
+		font-size: .85rem;
+		font-family: Roboto, sans-serif;
+		padding-left: 1rem;
+	}
+
+	.toggle-area {
+		align-self: center;
+		border-bottom: 1px solid #00000000;
+		cursor: pointer;
+		display: grid;
+		margin-left: .5rem;
+		height: 20px;
+		width: 20px;
+
+		&:hover {
+			border-bottom: 1px solid ${props => props.color};
+		}
+
+		svg {
+			fill: ${(props: { active: boolean, color: string }) => props.active ? props.color : 'initial'};
+			width: 20px;
+		}
 	}
 `

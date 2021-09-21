@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { EntityComponentProps, EntityWithLinkWrapper, LinkFooter, EntityWrapper } from '@docere/ui-components'
+import { EntityComponentProps, EntityWithLinkWrapper, EntityWrapper } from '@docere/ui-components'
 
 const Wrapper = styled.div`
 	padding: 1rem;
@@ -19,6 +19,7 @@ const Wrapper = styled.div`
 `
 
 function AttendantEntityBody(props: EntityComponentProps) {
+	console.log(props)
 	return (
 		<EntityWrapper
 			entity={props.entity}
@@ -36,7 +37,7 @@ function AttendantEntityBody(props: EntityComponentProps) {
 					}
 					<div>{props.entity.sourceProps.class}</div>
 				</Wrapper>
-				<LinkFooter
+				{/* <LinkFooter
 					entity={props.entity}
 				>
 					<a
@@ -46,7 +47,7 @@ function AttendantEntityBody(props: EntityComponentProps) {
 					>
 						see TSD
 					</a>
-				</LinkFooter>
+				</LinkFooter> */}
 			</EntityWithLinkWrapper>
 		</EntityWrapper>
 	)
