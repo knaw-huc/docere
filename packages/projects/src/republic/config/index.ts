@@ -43,7 +43,7 @@ export default extendConfig({
 
 	collection: {
 		metadataId: 'inventory_num',
-		sortBy: 'inventory_num',
+		sortBy: 'session_date',
 	},
 
 	metadata2: [
