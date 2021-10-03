@@ -1,19 +1,19 @@
-import pg, { PoolClient } from 'pg'
-import { getHash } from './handle-source'
-import { insertEntry } from './insert-entry'
-import { insertSource } from './insert-source'
+import pg from 'pg'
+import { DocereApiError } from '../types'
 
-const pgConnection = {
-	password: process.env.POSTGRES_PASSWORD,
-	user: process.env.POSTGRES_USER,
-	host: process.env.POSTGRES_HOST,
-}
+// const pgConnection = {
+// 	password: process.env.PGPASSWORD,
+// 	user: process.env.PGUSER,
+// 	host: process.env.PGHOST,
+// }
 
 const poolCache: Map<string, pg.Pool> = new Map()
 
+// TODO move CREATE DATABASE to DocereDB.createTables() (and rename to createDatabase)?
+// TODO should there be just 1 pool or 1 pool per project?
 export async function getPool(projectId: string) {
 	if (!poolCache.has(projectId)) {
-		const pool = new pg.Pool(pgConnection)
+		const pool = new pg.Pool()
 		const result = await pool.query(`SELECT 1 from pg_database WHERE datname='docere_${projectId}';`)
 		if (result.rowCount === 0) {
 			await pool.query(`CREATE DATABASE docere_${projectId};`)
@@ -21,7 +21,6 @@ export async function getPool(projectId: string) {
 		pool.end()
 
 		poolCache.set(projectId, new pg.Pool({
-			...pgConnection,
 			database: `docere_${projectId}`,
 		}))
 	}
@@ -29,51 +28,64 @@ export async function getPool(projectId: string) {
 	return poolCache.get(projectId)
 }
 
-export async function transactionQuery(client: pg.PoolClient, query: string, values?: (string | number)[]) {
-	let result
-	try {
-		result = await client.query(query, values)
-	} catch (error) {
+export class DB {
+	protected client: pg.PoolClient
+
+	constructor(protected projectId: string) {}
+
+	async init() {
+		const pool = await getPool(this.projectId)
+		this.client = await pool.connect()
+		return this
+	}
+
+	async query(
+		query: string,
+		values: (string | number)[] = []
+	) {
+		return await this.transaction(query, values, false)
+	}
+
+	async begin() {
+		await this.transaction('BEGIN')
+	}
+
+	async transaction(
+		query: string,
+		values?: (string | number)[],
+		withRollback?: false
+	): Promise<pg.QueryResult<any> | DocereApiError>
+	async transaction(
+		query: string,
+		values?: (string | number)[],
+		withRollback?: true
+	): Promise<pg.QueryResult<any>>
+	async transaction(
+		query: string,
+		values?: (string | number)[],
+		withRollback = true
+	): Promise<pg.QueryResult<any> | DocereApiError> {
+		try {
+			return await this.client.query(query, values)
+		} catch (error) {
+			return withRollback ?
+				await this.rollback(query, error) :
+				{ __error: error.message }
+		}
+	}
+
+	async rollback(query: string, error: any) {
 		console.log(`ROLLING BACK`, query)
 		console.log(error)
-		await client.query('ROLLBACK')
+		return await this.client.query('ROLLBACK')
 	}
-	return result
+
+	async commit() {
+		await this.transaction('COMMIT')
+	}
+
+	release() {
+		return this.client.release()
+	}
 }
 
-export const DB = {
-	deleteEntriesFromSource,
-	insertEntry,
-	insertSource,
-	sourceExists,
-}
-
-
-async function sourceExists(fileName: string, content: string, client: PoolClient) {
-	const hash = getHash(content)
-	const existsResult = await client.query(`
-		SELECT EXISTS(
-			SELECT 1
-			FROM
-				source
-			WHERE
-				name='${fileName}'
-					AND
-				hash='${hash}'
-		)`
-	)
-	return existsResult.rows[0].exists
-}
-
-async function deleteEntriesFromSource(sourceId: string, client: PoolClient) {
-	await client.query(`
-		DELETE FROM
-			document
-		USING
-			source
-		WHERE
-			source.name='${sourceId}'
-				AND
-			source.name=document.source_name`
-	)
-}

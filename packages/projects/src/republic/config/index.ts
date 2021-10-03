@@ -25,6 +25,11 @@ const dayTranslation: Record<string, string> = {
 }
 
 export default extendConfig({
+	collection: {
+		metadataId: 'inventory_num',
+		sortBy: ['session_date', 'order_number'],
+	},
+
 	standoff: {
 		prepareSource,
 		prepareStandoff,
@@ -40,11 +45,6 @@ export default extendConfig({
 	slug: 'republic',
 
 	title: 'Webeditie Resoluties Staten-Generaal - prototype achttiende eeuw',
-
-	collection: {
-		metadataId: 'inventory_num',
-		sortBy: 'session_date',
-	},
 
 	metadata2: [
 		{
@@ -66,11 +66,12 @@ export default extendConfig({
 		},
 		{
 			id: 'order_number',
-			getValue: (_config, props) =>
-				props.partConfig.id === 'resolution' ?
-					props.source.metadata.resolution_ids.indexOf(props.id) + 1 :
-					null
-			,
+			getValue: (_config, props) => {
+				if (props.partConfig.id === 'session') return -1
+				if (props.partConfig.id === 'attendance_list') return 0 
+
+				return props.source.metadata.resolution_ids.indexOf(props.id) + 1
+			},
 			title: 'Volgnummer'
 		},
 		{

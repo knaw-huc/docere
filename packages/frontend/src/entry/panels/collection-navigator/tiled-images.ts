@@ -1,7 +1,6 @@
 import OpenSeadragon from 'openseadragon'
 
-import { Entry, ActiveFacsimile, Colors, ID } from '@docere/common'
-import { CollectionDocument } from './collection-controller'
+import { CollectionDocument, Entry, ActiveFacsimile, Colors, ID } from '@docere/common'
 
 interface TiledImageOptions {
 	bounds: OpenSeadragon.Rect
@@ -88,7 +87,7 @@ export default class TiledImages {
 		// Set the active options from this.entry.facsimiles. Used to calculate
 		// this.startIndex and this.highlightActive
 		this.activeTileOptions = this.tileOptions.filter(
-			option => option.userData.entryIds.has(this.entry.id)
+			option => option.userData.entryIds.indexOf(this.entry.id) > -1
 		)
 
 		this.setFacsimile(facsimile)

@@ -1,15 +1,12 @@
-import crypto from 'crypto'
 import * as es from '@elastic/elasticsearch'
-import { PoolClient } from 'pg'
 import { DocereConfig, getEntriesFromSource, prepareSource } from '@docere/common'
 
-import { getDocumentIdFromRemoteFilePath } from '../../utils'
+import { getDocumentIdFromRemoteFilePath, isError } from '../../utils'
 import { fetchSource } from './fetch-source'
 import { fetchRemotePaths } from './fetch-remote-paths'
+import { DocereDB } from '../docere-db'
 
-import { DB, getPool, transactionQuery } from '../index'
-
-import { handleEntry } from './handle-entry'
+import { indexDocument } from '../../es'
 
 export type AddRemoteFilesOptions = {
 	force?: boolean
@@ -21,12 +18,6 @@ const defaultAddRemoteFilesOptions: Required<AddRemoteFilesOptions> = {
 	force: false,
 	maxPerDir: null,
 	maxPerDirOffset: 0,
-}
-
-export function getHash(content: string) {
-	const hash = crypto.createHash('md5').update(content)
-	const hex = hash.digest('hex')
-	return hex
 }
 
 /**
@@ -44,7 +35,7 @@ async function addFilesFromRemoteDir(
 	remotePath: string,
 	projectConfig: DocereConfig,
 	options: AddRemoteFilesOptions,
-	client: PoolClient,
+	db: DocereDB,
 	esClient: es.Client
 ) {
 	const [files, directories] = await fetchRemotePaths(remotePath, projectConfig, options)
@@ -54,12 +45,12 @@ async function addFilesFromRemoteDir(
 		const source = await fetchSource(filePath, projectConfig)
 		if (source == null) continue
 		const entryId = getDocumentIdFromRemoteFilePath(filePath, remotePath, projectConfig)
-		await handleSource(source, projectConfig, entryId, client, esClient, options.force)
+		await handleSource(source, projectConfig, entryId, db, esClient, options.force)
 	}
 
 	// Recursively add sub dirs
 	for (const dirPath of directories) {
-		await addFilesFromRemoteDir(dirPath, projectConfig, options, client, esClient)
+		await addFilesFromRemoteDir(dirPath, projectConfig, options, db, esClient)
 	}
 }
 
@@ -71,21 +62,20 @@ export async function addRemoteStandoffToDb(
 	options = { ...defaultAddRemoteFilesOptions, ...options }
 
 	// Init database and search index clients
-	const pool = await getPool(projectConfig.slug)
-	const client = await pool.connect()
+	const db = await new DocereDB(projectConfig.slug).init()
 	const esClient = new es.Client({ node: process.env.DOCERE_SEARCH_URL })
 
 	// Recursively add source files to db
-	await addFilesFromRemoteDir(remotePath, projectConfig, options, client, esClient)
+	await addFilesFromRemoteDir(remotePath, projectConfig, options, db, esClient)
 
-	client.release()
+	db.release()
 }
 
 export async function handleSource(
 	source: string | object,
 	projectConfig: DocereConfig,
 	sourceId: string,
-	client: PoolClient,
+	db: DocereDB,
 	esClient: es.Client,
 	force = false
 ) {
@@ -93,30 +83,49 @@ export async function handleSource(
 		source :
 		JSON.stringify(source)
 
-	const isUpdate = await DB.sourceExists(sourceId, stringifiedSource, client)
+	const isUpdate = await db.sourceExists(sourceId, stringifiedSource)
 	if (isUpdate && !force) {
 		console.log(`[${projectConfig.slug}] document '${sourceId}' exists`)
 		return
 	} else if (isUpdate) {
-		await DB.deleteEntriesFromSource(sourceId, client)
+		await db.deleteEntriesFromSource(sourceId)
 	}
 
  	const partialStandoff = await prepareSource(source, projectConfig)
 	const entries = await getEntriesFromSource(sourceId, partialStandoff, projectConfig)
 
-	await transactionQuery(client, 'BEGIN')
+	await db.begin()
 
-	const sourceRowId = await DB.insertSource({
-		client,
-		id: sourceId, 
+	const insertSourceResult = await db.insertSource(
+		sourceId, 
 		stringifiedSource,
-	})
+	)
+	if (isError(insertSourceResult)) return
+
+	const sourceRowId = insertSourceResult.rows[0].id
 
 	for (const entry of entries) {
-		await handleEntry({ entry, client, esClient, isUpdate, projectConfig })
+		const insertEntryResult = await db.insertEntry(entry, sourceRowId)
+
+		if (isError(insertEntryResult)) {
+			await db.rollback('__TODO__', insertEntryResult.__error)
+			return
+		}
+
+		const partId = entry.partId == null ? '' : ` part '${entry.partId}'`
+
+		const indexResult = await indexDocument(entry, projectConfig, esClient)
+		if (isError(indexResult)) {
+			await db.rollback('__TODO__', indexResult.__error)
+			console.log(`Index${partId}: ${entry.id} aborted`, indexResult)
+			console.log('RETURNING')
+			return
+		}
+
+		console.log(`[${projectConfig.slug}] ${isUpdate ? 'Updated' : 'Added'}${partId}: '${entry.id}'`)
 	}
 
-	await transactionQuery(client, 'COMMIT')
+	await db.commit()
 
 	return sourceRowId
 }

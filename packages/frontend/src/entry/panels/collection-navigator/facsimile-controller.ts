@@ -1,15 +1,9 @@
-import { ActiveFacsimile, ID, ProjectAction, ProjectContextValue } from '@docere/common'
+import { ActiveFacsimile, CollectionDocument, ProjectAction, ProjectContextValue } from '@docere/common'
 import OpenSeadragon from 'openseadragon'
 import TiledImages from '../collection-navigator/tiled-images'
 
 import type { Entry } from '@docere/common'
 import { CollectionNavigatorBaseController } from '../collection-navigator/base-controller'
-
-export type CollectionDocument = {
-	entryIds: Set<ID>,
-	facsimileId: string,
-	facsimilePath: string
-}
 
 /**
  * Controller for setting the active {@link Entry}. This controller is used as part
@@ -30,7 +24,7 @@ export class FacsimileNavigatorController extends CollectionNavigatorBaseControl
 	async setEntry(entry: Entry, facsimile: ActiveFacsimile) {
 		const hits: CollectionDocument[] = Array.from(entry.textData.facsimiles.values())
 			.map(f => ({
-				entryIds: new Set([entry.id]),
+				entryIds: [entry.id],
 				facsimileId: f.props.facsimileId,
 				facsimilePath: f.props.facsimilePath
 			}))

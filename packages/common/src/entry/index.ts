@@ -97,3 +97,9 @@ export interface Entry extends Omit<JsonEntry, 'metadata'> {
 		entities: Map<ID, Entity>
 	}
 }
+
+export type CollectionDocument = {
+	entryIds: ID[],
+	facsimileId: string,
+	facsimilePath: string
+}

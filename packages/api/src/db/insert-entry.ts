@@ -1,6 +1,6 @@
 import { JsonEntry } from "@docere/common"
 import { PoolClient } from "pg"
-import { transactionQuery } from "."
+import { DB } from "."
 
 interface InsertEntryProps {
 	client: PoolClient
@@ -13,16 +13,16 @@ interface InsertEntryProps {
  * @param props
  */
 export async function insertEntry({ client, entry }: InsertEntryProps) {
-	await transactionQuery(
+	await DB.transaction(
 		client,
-		`INSERT INTO document
-			(name, source_name, entry, updated)
+		`INSERT INTO entry
+			(name, source_id, standoff, updated)
 		VALUES
 			($1, $2, $3, NOW())
 		ON CONFLICT (name) DO UPDATE
 		SET
-			source_name=$2,
-			entry=$3,
+			source_id=$2,
+			standoff=$3,
 			updated=NOW()
 		RETURNING id;`,
 		[

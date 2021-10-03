@@ -17,7 +17,8 @@ export * from './entry-settings'
  * @interface
  */
 export interface DocereConfig {
-	collection?: { metadataId: string, sortBy: string } /* true if whole project is one collection, MetadataConfig.id if project consists of multiple collections */
+	collection?: { metadataId: string, sortBy: string | string[] } /* true if whole project is one collection, MetadataConfig.id if project consists of multiple collections */
+
 	data?: Record<string, any>
 
 	/** Options for the project documents */

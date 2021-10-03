@@ -1,12 +1,10 @@
+import pg from 'pg'
 import { Express, Request } from 'express'
 
 import { sendJson, isError, getProjectConfig, getProjectPageConfig } from '../utils'
 import { getProjectIndexMapping } from '../es'
 
-// import handleAnalyzeApi from './analyze'
-
 import { addRemoteStandoffToDb } from '../db/handle-source'
-import { initProject } from '../db/init-project'
 import { initProjectIndex } from '../es'
 import { castUrlQueryToNumber } from '../utils'
 import { getPool } from '../db'
@@ -104,13 +102,108 @@ export default function handleProjectApi(app: Express) {
 	})
 
 	app.post(`${PROJECT_BASE_PATH}/init`, async (req: Request, res) => {
-		await initProject(req.params.projectId)
+		const { projectId } = req.params
+		const dbName = `docere_${projectId}`
+
+		const pool = new pg.Pool()
+
+		try {
+			await pool.query(`DROP DATABASE IF EXISTS ${dbName};`)
+		} catch (error) {
+			console.log(error)
+			pool.end()
+			res.sendStatus(500)
+			return
+		}
+
+		try {
+			await pool.query(`CREATE DATABASE ${dbName};`)
+		} catch (error) {
+			console.log(error)
+			pool.end()
+			res.sendStatus(500)
+			return
+		}
+
+		pool.end()
+
+		const projectPool = await getPool(projectId)
+
+		await projectPool.query(
+			`CREATE TABLE source (
+				id SERIAL PRIMARY KEY,
+				name TEXT UNIQUE,
+				hash TEXT, 
+				standoff JSON,
+				updated TIMESTAMP WITH TIME ZONE
+			);
+		`)
+
+		await projectPool.query(
+			`CREATE TABLE entry (
+				id SERIAL PRIMARY KEY,
+				source_id SERIAL REFERENCES source,
+				order_number INT,
+				name TEXT UNIQUE,
+				standoff JSON,
+				updated TIMESTAMP WITH TIME ZONE
+			);
+		`)
+
 		await initProjectIndex(req.params.projectId)
 
-		console.log(`Project '${req.params.projectId}' has an empty db and is ready for documents!`)
-
 		res.end()
+
+		console.log(`Project '${req.params.projectId}' has an empty db and is ready for documents!`)
 	})
 
 	// handleAnalyzeApi(app)
 }
+
+// class DocereApiError {
+// 	constructor(private _message: string, private _code: number = 400) {}
+
+// 	get code() {
+// 		return this._code
+// 	}
+
+// 	get message() {
+// 		return this._message
+// 	}
+// }
+
+		// await transactionQuery(
+		// 	client,
+		// 	`CREATE TABLE page (
+		// 		id SERIAL PRIMARY KEY,
+		// 		name TEXT UNIQUE,
+		// 		hash TEXT, 
+		// 		xml TEXT,
+		// 		standoff TEXT,
+		// 		updated TIMESTAMP WITH TIME ZONE
+		// 	);
+		// `)
+		// await transactionQuery(
+		// 	client,
+		// 	`CREATE TABLE page_item (
+		// 		id SERIAL PRIMARY KEY,
+		// 		page_id SERIAL REFERENCES page,
+		// 		order_number INT,
+		// 		name TEXT UNIQUE,
+		// 		content TEXT,
+		// 		json JSONB,
+		// 		standoff_text TEXT,
+		// 		standoff_annotations TEXT,
+		// 		updated TIMESTAMP WITH TIME ZONE
+		// 	);
+		// `)
+	// }	
+		// const db = await new DocereDB(req.params.projectId).init()
+		// const createTablesResult = await db.createTables()
+		// db.release()
+
+		// if (isError(createTablesResult)) {
+		// 	console.log(`[ERROR] ${createTablesResult.__error}`)
+		// 	res.json(createTablesResult)
+		// 	return
+		// }

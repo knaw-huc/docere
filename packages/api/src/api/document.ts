@@ -5,20 +5,21 @@ import { getPool } from '../db'
 import { DOCUMENT_BASE_PATH } from '../constants'
 import { getProjectConfig, isError, sendJson } from '../utils'
 import { handleSource } from '../db/handle-source'
+import { DocereDB } from '../db/docere-db'
+import { DocereConfig, JsonEntry, isHierarchyMetadataItem, isListMetadataItem, isRangeMetadataItem, CollectionDocument } from '@docere/common'
 
 export default function handleDocumentApi(app: Express) {
 	app.get(DOCUMENT_BASE_PATH, async (req, res) => {
 		const pool = await getPool(req.params.projectId)
-		const { rows } = await pool.query(`SELECT entry FROM document WHERE name=$1;`, [req.params.documentId])
+		const { rows } = await pool.query(`SELECT standoff FROM entry WHERE name=$1;`, [req.params.documentId])
 		if (!rows.length) res.sendStatus(404)
-		else res.json(rows[0].entry)
+		else res.json(rows[0].standoff)
 	})
 
 	app.post(DOCUMENT_BASE_PATH, async (req, res) => {
 		const projectConfig = await getProjectConfig(req.params.projectId)
-		const pool = await getPool(projectConfig.slug)
-		const client = await pool.connect()
 		const esClient = new es.Client({ node: process.env.DOCERE_SEARCH_URL })
+		const db = await new DocereDB(projectConfig.slug).init()
 
 		if (projectConfig.documents.type !== 'xml') {
 			req.body = JSON.parse(req.body)
@@ -28,16 +29,16 @@ export default function handleDocumentApi(app: Express) {
 			req.body,
 			projectConfig,
 			req.params.documentId,
-			client,
+			db,
 			esClient,
 			true
 		)
 
-		client.release()
+		const entries = await db.selectEntries(sourceRowId)
 
-		const { rows } = await pool.query(`SELECT * FROM document WHERE source_id=$1;`, [sourceRowId])
+		res.json(entries)
 
-		res.json(rows)
+		db.release()
 	})
 
 	app.get(`${DOCUMENT_BASE_PATH}/source`, async (req: Request, res) => {
@@ -45,11 +46,46 @@ export default function handleDocumentApi(app: Express) {
 		if (isError(config)) return sendJson(config, res)
 
 		const pool = await getPool(req.params.projectId)
-		const { rows } = await pool.query(`SELECT content FROM source WHERE name=$1;`, [req.params.documentId])
+		const { rows } = await pool.query(`SELECT standoff FROM source WHERE name=$1;`, [req.params.documentId])
 		if (!rows.length) res.sendStatus(404)
 		else {
-			res.send(rows[0].content)
+			res.json(rows[0].standoff)
 		}
+	})
+
+	app.get(`${DOCUMENT_BASE_PATH}/collection`, async (req: Request, res) => {
+		const config = await getProjectConfig(req.params.projectId)
+		if (isError(config)) return sendJson(config, res)
+
+		const pool = await getPool(req.params.projectId)
+		const { rows } = await pool.query(`SELECT standoff FROM entry WHERE name=$1;`, [req.params.documentId])
+		if (!rows.length)	res.sendStatus(404)
+		const entry: JsonEntry = rows[0].standoff
+		const payload = getPayload(config, entry)
+		const esClient = new es.Client({ node: 'http://es01:9200' })
+		const result = await esClient.search({
+			body: JSON.parse(payload),
+			index: config.slug
+		})
+		const map = new Map<string, CollectionDocument>()
+		for (const hit of result.body.hits.hits) {
+			const entryId = hit._source.id 
+
+			for (const facsimile of hit._source.facsimiles) {
+				if (map.has(facsimile.id)) {
+					const collectionDocument: CollectionDocument = map.get(facsimile.id)
+					collectionDocument.entryIds.push(entryId)
+				} else {
+					map.set(facsimile.id, {
+						facsimileId: facsimile.id,
+						facsimilePath: facsimile.path,
+						entryIds: [entryId]
+					})
+				}
+			}
+		}
+
+		res.json(Array.from(map.values()))
 	})
 
 	// app.get(`${DOCUMENT_BASE_PATH}/xml`, async (req: Request, res) => {
@@ -92,4 +128,54 @@ export default function handleDocumentApi(app: Express) {
 	// 	// const [extractedEntry] = prepareAndExtractOutput
 	// 	sendJson(getElasticSearchDocument(extractedEntry), res)
 	// })
+}
+
+function getPayload(config: DocereConfig, entry: JsonEntry) {
+	const { collection } = config
+	const payload: { size: number, query: any, sort: string | string[], _source: { include: string[] }} = {
+		query: null,
+		size: 10000,
+		sort: collection.sortBy || 'id',
+		_source: {
+			include: ['id', 'facsimiles']
+		}
+	}
+
+	if (collection.metadataId == null) {
+		payload.query = { match_all: {} }
+	} else {
+		const metadata = entry.metadata.find(md => md.config.id === collection.metadataId)
+
+		if (metadata == null) return
+
+		if (isHierarchyMetadataItem(metadata)) {
+			const term = metadata.value.reduce((prev, curr, index) => {
+				prev.push({ term: { [`${collection.metadataId}_level${index}`]: curr }})
+				return prev
+			}, [])
+
+			payload.query = {
+				bool: {
+					must: term
+				}
+			}
+		} else if (isListMetadataItem(metadata)) {
+			payload.query = {
+				term: {
+					[metadata.config.id]: metadata.value
+				}
+			}
+		} else if (isRangeMetadataItem(metadata)) {
+			payload.query = {
+				match_all: {}
+			}
+		} else {
+			console.error('NOT IMPLEMENTED')
+			return
+		}
+	}
+
+	if (collection.sortBy != null) payload.sort = collection.sortBy
+
+	return JSON.stringify(payload)
 }
