@@ -17,10 +17,10 @@ export class DocereDB extends DB {
 	async insertSource(id: string, stringifiedSource: string) {
 		return await this.transaction(
 			`INSERT INTO source
-				(name, hash, standoff, updated)
+				(id, hash, standoff, updated)
 			VALUES
 				($1, $2, $3, NOW())
-			ON CONFLICT (name) DO UPDATE
+			ON CONFLICT (id) DO UPDATE
 			SET
 				hash=$2,
 				standoff=$3,
@@ -38,10 +38,10 @@ export class DocereDB extends DB {
 				FROM
 					source
 				WHERE
-					name='${fileName}'
+					id=$1
 						AND
-					hash='${hash}'
-			)`
+					hash=$2
+			)`, [fileName, hash]
 		)
 		return existsResult.rows[0].exists
 	}
@@ -49,10 +49,10 @@ export class DocereDB extends DB {
 	async insertEntry(jsonEntry: JsonEntry, source_id: string) {
 		await this.transaction(
 			`INSERT INTO entry
-				(name, source_id, standoff, updated)
+				(id, source_id, standoff, updated)
 			VALUES
 				($1, $2, $3, NOW())
-			ON CONFLICT (name) DO UPDATE
+			ON CONFLICT (id) DO UPDATE
 			SET
 				source_id=$2,
 				standoff=$3,
@@ -72,16 +72,18 @@ export class DocereDB extends DB {
 		return selectResult.rows
 	}
 
-	async deleteEntriesFromSource(sourceName: string) {
+	// TODO option 1) remove withouth using source: WHERE document.source_id = sourceId
+	async deleteEntriesFromSource(sourceId: string) {
 		await this.client.query(`
 			DELETE FROM
 				entry
 			USING
 				source
 			WHERE
-				source.name='${sourceName}'
+				source.id=$1
 					AND
-				source.id=document.source_id`
+				source.id=document.source_id`,
+			[sourceId]
 		)
 	}
 }

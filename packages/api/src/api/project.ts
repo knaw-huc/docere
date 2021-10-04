@@ -131,20 +131,19 @@ export default function handleProjectApi(app: Express) {
 
 		await projectPool.query(
 			`CREATE TABLE source (
-				id SERIAL PRIMARY KEY,
-				name TEXT UNIQUE,
-				hash TEXT, 
+				id TEXT PRIMARY KEY,
+				hash TEXT UNIQUE, 
 				standoff JSON,
 				updated TIMESTAMP WITH TIME ZONE
 			);
 		`)
 
+
 		await projectPool.query(
 			`CREATE TABLE entry (
-				id SERIAL PRIMARY KEY,
-				source_id SERIAL REFERENCES source,
+				id TEXT PRIMARY KEY,
+				source_id TEXT REFERENCES source,
 				order_number INT,
-				name TEXT UNIQUE,
 				standoff JSON,
 				updated TIMESTAMP WITH TIME ZONE
 			);
