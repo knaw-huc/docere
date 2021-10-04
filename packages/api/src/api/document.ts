@@ -6,7 +6,7 @@ import { DOCUMENT_BASE_PATH } from '../constants'
 import { getProjectConfig, isError, sendJson } from '../utils'
 import { handleSource } from '../db/handle-source'
 import { DocereDB } from '../db/docere-db'
-import { DocereConfig, JsonEntry, isHierarchyMetadataItem, isListMetadataItem, isRangeMetadataItem, CollectionDocument } from '@docere/common'
+import { DocereConfig, JsonEntry, CollectionDocument, isHierarchyMetadataConfig, isListMetadataConfig, isRangeMetadataConfig, HierarchyMetadata } from '@docere/common'
 
 export default function handleDocumentApi(app: Express) {
 	app.get(DOCUMENT_BASE_PATH, async (req, res) => {
@@ -144,12 +144,14 @@ function getPayload(config: DocereConfig, entry: JsonEntry) {
 	if (collection.metadataId == null) {
 		payload.query = { match_all: {} }
 	} else {
-		const metadata = entry.metadata.find(md => md.config.id === collection.metadataId)
+		// const metadata = entry.metadata.find(md => md.config.id === collection.metadataId)
+		const metadataConfig = config.metadata2.find(md => md.id === collection.metadataId)
+		const value = entry.metadata[collection.metadataId]
 
-		if (metadata == null) return
+		if (metadataConfig == null) return
 
-		if (isHierarchyMetadataItem(metadata)) {
-			const term = metadata.value.reduce((prev, curr, index) => {
+		if (isHierarchyMetadataConfig(metadataConfig)) {
+			const term = (value as HierarchyMetadata['value']).reduce((prev, curr, index) => {
 				prev.push({ term: { [`${collection.metadataId}_level${index}`]: curr }})
 				return prev
 			}, [])
@@ -159,13 +161,13 @@ function getPayload(config: DocereConfig, entry: JsonEntry) {
 					must: term
 				}
 			}
-		} else if (isListMetadataItem(metadata)) {
+		} else if (isListMetadataConfig(metadataConfig)) {
 			payload.query = {
 				term: {
-					[metadata.config.id]: metadata.value
+					[collection.metadataId]: value
 				}
 			}
-		} else if (isRangeMetadataItem(metadata)) {
+		} else if (isRangeMetadataConfig(metadataConfig)) {
 			payload.query = {
 				match_all: {}
 			}

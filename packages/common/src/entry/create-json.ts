@@ -58,7 +58,7 @@ export function createJsonEntry(props: CreateJsonEntryPartProps): JsonEntry {
 		})
 		.filter(x => x != null)
 
-	const metadata = props.projectConfig.metadata2.map(metadataConfig => {
+	const metadata = props.projectConfig.metadata2.reduce((prev, metadataConfig) => {
 		let value
 
 		if (isEntityMetadataConfig(metadataConfig)) {
@@ -76,11 +76,9 @@ export function createJsonEntry(props: CreateJsonEntryPartProps): JsonEntry {
 			value = metadataConfig.getValue(metadataConfig, props, layers)
 		}
 
-		return {
-			config: metadataConfig,
-			value,
-		}
-	})
+		prev[metadataConfig.id] = value
+		return prev
+	}, {} as JsonEntry['metadata'])
 
 	return {
 		id: props.id,

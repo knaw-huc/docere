@@ -71,7 +71,8 @@ export interface MetadataItem {
 export interface JsonEntry {
 	id: ID
 	layers: Layer[]
-	metadata: MetadataItem[]
+	// metadata: MetadataItem[]
+	metadata: Record<string, MetadataValue>
 	partId?: ID
 	sourceId: ID
 	// standoffTree2: StandoffTree2

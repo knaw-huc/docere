@@ -1,5 +1,5 @@
-import { DocereConfig, ElasticSearchDocument, isTextLayer, PartialStandoffAnnotation, isHierarchyMetadataItem } from '..';
-import { JsonEntry, MetadataItem } from '.'
+import { DocereConfig, ElasticSearchDocument, isTextLayer, PartialStandoffAnnotation, isHierarchyMetadataConfig } from '..';
+import { JsonEntry } from '.'
 
 /**
  * Convert a {@link JsonEntry | JSON Entry} to an {@link ElasticSearchDocument}
@@ -55,18 +55,21 @@ export function createElasticSearchDocument(
 			})) :
 		[]
 
-	const metadata = jsonEntry.metadata?.reduce((prev, curr) => {
-		if (isHierarchyMetadataItem(curr)) {
-			if (Array.isArray(curr.value)) {
-				curr.value.forEach((v, i) => {
-					prev[`${curr.config.id}_level${i}`] = v
+	const metadata = Object.keys(jsonEntry.metadata).reduce((prev, curr) => {
+		const value = jsonEntry.metadata[curr]
+		const metadataConfig = projectConfig.metadata2.find(md => md.id === curr)
+
+		if (isHierarchyMetadataConfig(metadataConfig)) {
+			if (Array.isArray(value)) {
+				value.forEach((v, i) => {
+					prev[`${curr}_level${i}`] = v
 				})
 			}
 		} else {
-			prev[curr.config.id] = curr.value
+			prev[curr] = value
 		}
 		return prev
-	}, {} as Record<string, MetadataItem['value']>)
+	}, {} as JsonEntry['metadata'])
 
 	const text = textLayers.reduce((prev, curr) => `${prev}${curr.partialStandoff.text}`, '')
 

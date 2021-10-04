@@ -30,10 +30,13 @@ export function createEntry(entry: JsonEntry, config: DocereConfig): Entry {
 
 	return ({
 		...entry,
-		metadata: entry.metadata.reduce((prev, curr) => {
-			prev.set(curr.config.id, curr)
+		metadata: Object.keys(entry.metadata).reduce((prev, curr) => {
+			prev.set(curr, {
+				config: config.metadata2.find(md => md.id === curr),
+				value: entry.metadata[curr],
+			})
 			return prev
-		}, new Map()),
+		}, new Map() as Entry['metadata']),
 		textData: {
 			entities: createEntityLookup(entry.layers, config),
 			facsimiles: createFacsimileLookup(entry.layers)
