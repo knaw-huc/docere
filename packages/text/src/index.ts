@@ -9,7 +9,7 @@ function Empty(props: ComponentProps) {
 	return props.children
 }
 
-function Hilight(text: string) {
+function Highlight(text: string) {
 	return React.createElement(
 		'span',
 		{
@@ -21,12 +21,10 @@ function Hilight(text: string) {
 }
 
 function getComponentRenderer(props: DocereTextViewProps) {
-	// const annotations = new Map(props.standoffTree.annotations)
-
 	return function renderComponent(node: Node): JSX.Element | string {
 		if (isTextNode(node)) {
 			if (node.hasOwnProperty('rangeAnnotation')) {
-				return Hilight(node.text)
+				return Highlight(node.text)
 			} else {
 				return node.text
 			}
@@ -54,13 +52,8 @@ function getComponentRenderer(props: DocereTextViewProps) {
 export interface DocereTextViewProps {
 	components?: DocereComponents
 	highlight?: string[]
-	ignore?: string[]
-	onLoad?: (isReady: boolean, el: Element) => void
-	prepare?: (node: Element) => Element
-	setHighlightAreas?: (areas: number[]) => void
 	standoffTree: StandoffTree3
 }
-
 
 export const DocereTextView = React.memo(
 	function (props: DocereTextViewProps) {

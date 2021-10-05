@@ -2,11 +2,10 @@
   "name": "@docere/text",
   "version": "1.4.2",
   "description": "",
-  "main": "build/bundle.js",
-  "types": "build/types/index.d.ts",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
   "scripts": {
-    "build": "./build.sh",
-    "dist": "./dist.sh",
+    "build": "tsc",
     "watch": "tsc -w --pretty --preserveWatchOutput --noEmit"
   },
   "author": "",
