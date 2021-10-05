@@ -1,6 +1,7 @@
 import React from 'react'
 
-import { ComponentProps, DocereComponents, isTextNode, Node, ReactComponent, StandoffTree3 } from '@docere/common'
+import { isTextNode, StandoffTree3 } from '@docere/common'
+import type { ComponentProps, DocereComponents, Node, ReactComponent } from '@docere/common'
 
 export type { DocereComponents } from '@docere/common'
 

@@ -1,6 +1,6 @@
 {
   "name": "@docere/text",
-  "version": "1.4.2",
+  "version": "2.0.1",
   "description": "",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -11,7 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@docere/common": "^1.4.1",
+    "@docere/common": "^2.0.0",
     "react-tabs": "^3.2.2"
   },
   "devDependencies": {
