@@ -7,18 +7,23 @@
 		"incremental": true,
 		"isolatedModules": true,
 		"jsx": "react",
-		"module": "esnext",
+		"module": "commonjs",
 		"moduleResolution": "node",
 		"noImplicitAny": true,
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
-		"outDir": "./build/types",
-		"preserveConstEnums": true,
+		"outDir": "./build",
 		"removeComments": true,
 		"resolveJsonModule": true,
 		"target": "esnext",
 		"types": []
 	},
-	"include": ["./src/index.tsx", "../common/src/global.d.ts"],
-	"exclude": ["./node_modules", "./build", "./dist"]
+	"exclude": [
+		"./build",
+		"./dist",
+		"./node_modules"
+	],
+	"files": [
+		"./src/index.tsx"
+	]
 }

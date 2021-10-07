@@ -4,15 +4,13 @@ module.exports = {
 	entry: {
 		bundle: "./src/index.tsx",
 	},
-	mode: "development",
+	mode: "production",
 	output: {
-		filename: "[name].js",
+		filename: "docere.search.min.js",
 		globalObject: 'this',
-		library: "DocereSearch",
+		library: "DocereText",
 		libraryTarget: "umd",
-		// path: __dirname + "/dist",
-		path: path.resolve(__dirname, './build'),
-		// publicPath: "/build/"
+		path: path.resolve(__dirname, './dist'),
 	},
 	resolve: {
 		extensions: [".webpack.js", ".web.js", ".ts", ".tsx", ".js"]
@@ -39,5 +37,8 @@ module.exports = {
 			amd: "styled",
 			root: "styled"
 		}
+	},
+	optimization: {
+		usedExports: true		
 	}
 };

@@ -44,8 +44,6 @@ export function useSearchReducer(
 }
 
 function facetsDataReducer(state: FacetsState, action: FacetsDataReducerAction): FacetsState {
-	if (DOCERE_DTAP === DTAP.Development) console.log('[SearchContext]', action)
-
 	if (action.type === 'SET_CONFIG') {
 		return {
 			...state,
