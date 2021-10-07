@@ -6,16 +6,15 @@
   "private": true,
   "scripts": {
     "build": "./build.sh",
-    "watch": "tsc -w --pretty --preserveWatchOutput",
-    "watch:puppenv.data": "webpack -w --progress"
+    "watch": "tsc -w --pretty --preserveWatchOutput"
   },
   "dependencies": {
-    "@docere/common": "^1.4.1",
+    "@docere/common": "^2.0.0",
     "@docere/projects": "^1.4.2",
-    "@elastic/elasticsearch": "^7.10.0",
+    "@elastic/elasticsearch": "^7.15.0",
     "chalk": "^4.1.0",
     "express": "^4.17.1",
-    "node-fetch": "^2.6.1",
+    "node-fetch": "^3.0.0",
     "pg": "^8.3.0",
     "react-tabs": "^3.2.2",
     "sax": "^1.2.4"
@@ -23,17 +22,15 @@
   "devDependencies": {
     "@types/express": "^4.17.13",
     "@types/klaw": "^3.0.1",
-    "@types/node-fetch": "^2.5.7",
-    "@types/pg": "^7.14.7",
+    "@types/node-fetch": "^3.0.3",
+    "@types/pg": "^8.6.1",
     "@types/sax": "^1.2.1",
     "esm": "^3.2.25",
-    "klaw": "^3.0.0",
-    "nodemon": "^2.0.7",
+    "klaw": "^4.0.1",
+    "nodemon": "^2.0.13",
     "ts-node": "^10.2.1",
     "tslib": "^2.3.1",
-    "typescript": "^4.4.2",
-    "webpack": "^5.51.1",
-    "webpack-cli": "^4.8.0"
+    "typescript": "^4.4.2"
   },
   "author": "Gijsjan Brouwer",
   "license": "GPL-3.0-or-later"

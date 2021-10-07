@@ -12,7 +12,7 @@
     "watch": "tsc -w --pretty --preserveWatchOutput"
   },
   "dependencies": {
-    "@docere/common": "^1.4.1",
+    "@docere/common": "^2.0.0",
     "express": "^4.17.1",
     "react-tabs": "^3.2.2"
   },

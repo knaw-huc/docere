@@ -4,42 +4,19 @@
   "author": "Gijsjan Brouwer",
   "license": "GPL-3.0-or-later",
   "scripts": {
-    "build": "lerna run build",
-    "dist": "lerna run dist",
-    "dist:development": "cp .env.development .env && lerna run dist",
-    "dist:testing": "cp .env.testing .env && lerna run dist",
-    "install": "./install.sh",
-    "publish": "lerna publish",
     "start:development": "DOCERE_DTAP=Development ./packages/docker/start.sh",
     "start:testing": "DOCERE_DTAP=Testing ./packages/docker/start.sh",
     "test": "cd ./packages/tests && npm t",
     "test:development": "cp .env.development .env && cd ./packages/tests && npm t",
     "test:testing": "cp .env.testing .env && cd ./packages/tests && npm t",
-    "watch": "lerna run watch --parallel"
+    "watch": "workspaces-run --parallel --continue-on-error -- npm run watch"
   },
   "devDependencies": {
-    "@types/lodash.debounce": "^4.0.6",
-    "@types/openseadragon": "^2.4.7",
-    "@types/react": "^17.0.19",
-    "@types/react-dom": "^17.0.9",
-    "@types/react-router": "^5.1.16",
-    "@types/styled-components": "5.1.13",
-    "css-loader": "^6.2.0",
-    "dotenv": "^8.2.0",
-    "file-loader": "^6.2.0",
-    "lerna": "^4.0.0",
-    "style-loader": "^3.2.1",
-    "ts-loader": "^9.2.5",
-    "tslib": "^2.3.1",
-    "typedoc": "^0.21.6",
-    "typescript": "^4.4.2",
-    "webpack": "^5.51.1",
-    "webpack-cli": "^4.8.0"
+    "workspaces-run": "^1.0.1"
   },
   "dependencies": {
-    "lodash.debounce": "^4.0.8",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "styled-components": "^5.3.1"
-  }
+  },
+  "workspaces": [
+    "./packages/*"
+  ]
 }

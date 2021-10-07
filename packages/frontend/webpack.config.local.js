@@ -7,8 +7,9 @@ if (envError) throw envError
 
 module.exports = () => {
 	baseConfig.devServer = {
-		contentBase: path.resolve(process.cwd(), '../../public'),
-		disableHostCheck: true,
+		// contentBase: path.resolve(process.cwd(), '../../public'),
+		static: [path.resolve(process.cwd(), '../../public')],
+		// disableHostCheck: true,
 		headers: { "Access-Control-Allow-Origin": "*" },
 		historyApiFallback: {
 			disableDotRule: true
@@ -25,20 +26,21 @@ module.exports = () => {
 				target: `http://localhost:${env.DOCERE_SEARCH_PORT}`,
 				pathRewrite: {'^/search': ''}
 			},
-			'/iiif/vangogh': {
-				changeOrigin: true,
-				target: 'http://vangoghletters.org/vg/facsimiles',
-				pathRewrite: {'^/iiif/vangogh': ''}
-			},
-			'/iiif': {
-				changeOrigin: true,
-				target: env.DOCERE_IIIF_BASE_URL,
-				pathRewrite: {'^/iiif': ''}
-			},
+			// '/iiif/vangogh': {
+			// 	changeOrigin: true,
+			// 	target: 'http://vangoghletters.org/vg/facsimiles',
+			// 	pathRewrite: {'^/iiif/vangogh': ''}
+			// },
+			// '/iiif': {
+			// 	changeOrigin: true,
+			// 	target: env.DOCERE_IIIF_BASE_URL,
+			// 	pathRewrite: {'^/iiif': ''}
+			// },
 		},
-		watchOptions: {
-			ignored: /node_modules/
-		}
+	}
+
+	baseConfig.watchOptions = {
+		ignored: /node_modules/
 	}
 
 	baseConfig.entry = ['./src/index.tsx']

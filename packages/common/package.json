@@ -1,6 +1,6 @@
 {
   "name": "@docere/common",
-  "version": "1.4.1",
+  "version": "2.0.0",
   "description": "",
   "files": [
     "build",
@@ -16,10 +16,11 @@
   "author": "Gijsjan Brouwer",
   "license": "GPL-3.0-or-later",
   "devDependencies": {
-    "typedoc": "^0.21.6",
+    "styled-components": "^5.3.1",
+    "typedoc": "^0.22.5",
     "typescript": "^4.4.2"
   },
-  "dependencies": {
-    "react-tabs": "^3.2.2"
+  "peerDependencies": {
+    "styled-components": ">= 5"
   }
 }

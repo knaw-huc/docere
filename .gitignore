@@ -10,7 +10,7 @@ DEPLOY.md
 INTERNAL*
 README_INTERNAL.md
 .env*
-packages/_*
+packages/editor
 
 build-dev-server
 packages/docker/secrets

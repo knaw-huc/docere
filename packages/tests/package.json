@@ -9,17 +9,16 @@
     "test:testing": "cp .env.testing .env && npm t"
   },
   "dependencies": {
-    "@docere/common": "^1.4.1",
+    "@docere/common": "^2.0.0",
     "chalk": "^4.1.0",
     "react-tabs": "^3.2.2"
   },
   "devDependencies": {
-    "@types/jest": "^26.0.20",
-    "@types/node": "^14.14.20",
+    "@types/jest": "^27.0.2",
+    "@types/node": "^16.10.2",
     "esm": "^3.2.25",
-    "jest": "^26.4.2",
-    "nodemon": "^2.0.7",
-    "ts-jest": "^26.3.0",
+    "jest": "^27.0.2",
+    "ts-jest": "^27.0.5",
     "ts-node": "^10.2.1",
     "tslib": "^2.3.1",
     "typescript": "^4.4.2"
