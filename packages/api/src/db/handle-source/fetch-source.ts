@@ -22,7 +22,7 @@ export async function fetchSource(
 	if (projectConfig.documents.type === 'xml') {
 		source = await result.text()	
 	} else {
-		source = await result.json()
+		source = await result.json() as string | object
 	}
 
 	return source

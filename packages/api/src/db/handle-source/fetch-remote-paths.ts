@@ -15,7 +15,7 @@ export async function fetchRemotePaths(remotePath: string, projectConfig: Docere
 		console.log(`[${projectConfig.slug}] remote path not found: '${remotePath}'`)
 		return
 	}
-	const dirStructure: XmlDirectoryStructure = await result.json()
+	const dirStructure: XmlDirectoryStructure = await result.json() as XmlDirectoryStructure
 	let { files, directories } = dirStructure
 
 	// If the maxPerDir option is set, slice the files
