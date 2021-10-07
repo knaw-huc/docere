@@ -43,20 +43,9 @@ const Blocker = styled.div`
 	z-index: 1;
 `
 
-const Bar = styled.div`
-	position: absolute;
-	top: ${(props: { top: number }) => props.top}px;
-	height: .3em;
-	background-color: rgba(255, 255, 0, 1);
-	margin-top: -.07em;
-	width: 100%;
-`
-
 interface Props {
 	activeAreaRef: React.RefObject<HTMLDivElement>
 	hasHeader: boolean
-	highlightAreas: number[]
-	isReady: boolean
 	textWrapperRef: React.RefObject<HTMLDivElement>
 }
 function Minimap(props: Props) {
@@ -101,11 +90,6 @@ function Minimap(props: Props) {
 				textWrapperRef={props.textWrapperRef}
 			/>
 			<Blocker className="blocker" />
-			<div style={{ position: 'relative' }}>
-				{props.highlightAreas.map((ha: number) => {
-					return <Bar key={ha} top={(ha - 64)/10} />
-				})}
-			</div>
 			<div className="container" />
 		</Wrapper>
 	)

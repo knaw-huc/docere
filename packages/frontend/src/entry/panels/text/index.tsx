@@ -80,9 +80,6 @@ function TextPanel(props: Props) {
 	const textWrapperRef = React.useRef<HTMLDivElement>()
 	const activeAreaRef = React.useRef<HTMLDivElement>()
 
-	const [docereTextViewReady, setDocereTextViewReady] = React.useState(false)
-	const [highlightAreas, setHighlightAreas] = React.useState<number[]>([])
-
 	// const layer = entry.layers.filter(isTextLayer).find(tl => tl.id === props.layer.id)
 	const components = useComponents(ContainerType.Layer, props.layer.id)
 
@@ -135,8 +132,6 @@ function TextPanel(props: Props) {
 							components={components}
 							highlight={searchQueries}
 							standoffTree={props.layer.standoffTree3}
-							onLoad={setDocereTextViewReady}
-							setHighlightAreas={setHighlightAreas}
 						/>
 					</Text>
 				</TextWrapper>
@@ -145,8 +140,6 @@ function TextPanel(props: Props) {
 					<Minimap
 						activeAreaRef={activeAreaRef}
 						hasHeader={settings['panels.showHeaders']}
-						highlightAreas={highlightAreas}
-						isReady={docereTextViewReady}
 						textWrapperRef={textWrapperRef}
 					/>
 				}
