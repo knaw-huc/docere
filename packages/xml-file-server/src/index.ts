@@ -33,6 +33,7 @@ app.get(['/:projectId', '/:projectId/*'], (req, res) => {
 		return
 	}
 	console.log(`Request from: ${req.path} (${structure.directories.length} directories and ${structure.files.length} files)`)
+
 	res.json(structure)
 })
 

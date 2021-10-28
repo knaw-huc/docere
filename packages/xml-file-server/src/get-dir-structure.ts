@@ -32,12 +32,12 @@ export function getDirStructure(
 	let dirents = getDirents(dir)
 	if (dirents == null) return
 
-	let files = dirents
+	let files = dirents.filter(dirent => dirent.isFile() && !dirent.isSymbolicLink())
 
 	if (filterByExt != null) {
-		files = dirents
+		files = files
 			.filter(dirent =>
-				dirent.isFile() && path.extname(dirent.name) === `.${filterByExt}`
+				path.extname(dirent.name) === `.${filterByExt}`
 			)
 	} 
 
