@@ -64,7 +64,7 @@ function createEntityLookup(layers: Entry['layers'], config: DocereConfig): Map<
 					})
 
 					// TODO should be a Map<string, Annotation3[]>? There could be
-					// more instances with the samen entityId
+					// more instances with the same entityId
 					entitiesById.set(annotation.props.entityId, annotation)
 				}
 			}

@@ -11,6 +11,8 @@ INTERNAL*
 README_INTERNAL.md
 .env*
 packages/editor
+packages/text-components/types
+packages/ui-components/types
 
 build-dev-server
 packages/docker/secrets

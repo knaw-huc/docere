@@ -7,6 +7,7 @@ import { getProjectConfig, isError, sendJson } from '../utils'
 import { handleSource } from '../db/handle-source'
 import { DocereDB } from '../db/docere-db'
 import { DocereConfig, JsonEntry, CollectionDocument, isHierarchyMetadataConfig, isListMetadataConfig, isRangeMetadataConfig, HierarchyMetadata } from '@docere/common'
+import { fetchSource, sourceIsXml } from '../db/handle-source/fetch-source'
 
 export default function handleDocumentApi(app: Express) {
 	app.get(DOCUMENT_BASE_PATH, async (req, res) => {
@@ -45,12 +46,20 @@ export default function handleDocumentApi(app: Express) {
 		const config = await getProjectConfig(req.params.projectId)
 		if (isError(config)) return sendJson(config, res)
 
-		const pool = await getPool(req.params.projectId)
-		const { rows } = await pool.query(`SELECT standoff FROM source WHERE id=$1;`, [req.params.documentId])
-		if (!rows.length) res.sendStatus(404)
-		else {
-			res.json(rows[0].standoff)
-		}
+		// const pool = await getPool(req.params.projectId)
+		// const { rows } = await pool.query(`SELECT standoff FROM source WHERE id=$1;`, [req.params.documentId])
+		// if (!rows.length) res.sendStatus(404)
+		// else {
+		// 	res.json(rows[0].standoff)
+		// }
+
+		const source = await fetchSource(req.params.documentId, config);
+
+		console.log(source);
+
+		(sourceIsXml(source, config)) ?
+			res.send(source) :
+			res.json(source)
 	})
 
 	app.get(`${DOCUMENT_BASE_PATH}/collection`, async (req: Request, res) => {

@@ -1,110 +1,168 @@
-import { extendConfig, Colors, EntityType, LayerType } from '@docere/common'
+import { extendConfig, Colors, EntityType, LayerType, EsDataType, isChild, countChildren, createPartialStandoffFromAnnotation } from '@docere/common'
 
 export default extendConfig({
+	documents: {
+		// remoteDirectories: [
+		// 	'mondrian/editie-conversie/geschriften',
+		// 	'mondrian/editie-conversie/brieven/04_Transcriptie_DEF'
+		// ],
+		type: 'xml'
+	},
+
 	metadata2: [
-		// {
-		// 	facet: {
-		// 		datatype: EsDataType.Date,
-		// 		interval: 'y',
-		// 		order: 10,
-		// 	},
-		// 	// extract: entry => entry.document.querySelector('correspAction[type="sent"] > date')?.getAttribute('when'),
-		// 	getValue: (_config, props) => {
-		// 		const annotation = props.sourceTree.findChild(
-		// 			a => a.name === 'correspAction' && a.metadata.type === 'sent',
-		// 			a => a.name === 'date'
-		// 		)
-		// 		return annotation?.metadata.when
-		// 	},
-		// 	id: 'date',
-		// },
+		{
+			facet: {
+				datatype: EsDataType.Date,
+				interval: 'y',
+				order: 10,
+			},
+			getValue: (_config, props) => {
+				const sentAnno = props.source.annotations.find(a =>
+					a.name === 'correspAction' && a.sourceProps.type === 'sent'
+				)
+				const dateAnno = props.source.annotations.find(a =>
+					a.name === 'date' && isChild(a, sentAnno)
+				)
+				return dateAnno?.sourceProps.when
+			},
+			id: 'date',
+		},
 		{
 			facet: {
 				order: 15,
 			},
 			getValue: (_config, props) =>
-				props.id.slice(0, 7) === 'brieven' ? 'brief' : 'geschrift',
+				props.id.slice(0, 7) === 'brieven' ? 'brief' : 'geschrift'
+			,
 			id: 'type',
 		},
-		// {
-		// 	facet: {
-		// 		order: 20,
-		// 	},
-		// 	getValue: (_config, props) => {
-		// 		const annotation = props.sourceTree.findChild(
-		// 			a => a.name === 'correspAction' && a.metadata.type === 'sent',
-		// 			a => a.name === 'name'
-		// 		)
-		// 		return props.sourceTree.getTextContent(annotation)
-		// 	},
-		// 	id: 'author',
-		// },
-		// {
-		// 	facet: {
-		// 		order: 30,
-		// 	},
-		// 	getValue: (_config, props) => {
-		// 		const annotation = props.sourceTree.findChild(
-		// 			a => a.name === 'correspAction' && a.metadata.type === 'received',
-		// 			a => a.name === 'name'
-		// 		)
-		// 		return props.sourceTree.getTextContent(annotation)
-		// 	},
-		// 	id: 'addressee',
-		// },
-		// {
-		// 	facet: {
-		// 		order: 40,
-		// 	},
-		// 	getValue: (_config, props) => {
-		// 		const annotation = props.sourceTree.findChild(
-		// 			a => a.name === 'correspAction' && a.metadata.type === 'sent',
-		// 			a => a.name === 'placeName'
-		// 		)
-		// 		return props.sourceTree.getTextContent(annotation)
-		// 	},
-		// 	id: 'place',
-		// },
-		// {
-		// 	getValue: (_config, props) => {
-		// 		const children = props.sourceTree.getChildren(
-		// 			a => a.name === 'div' && a.metadata.type === 'notes',
-		// 			a => a.name === 'note'
-		// 		)
-		// 		return children.length
-		// 	},
-		// 	id: 'noteCount',
-		// },
-		// {
-		// 	getValue: (_config, props) => {
-		// 		const children = props.sourceTree.getChildren(
-		// 			a => a.name === 'div' && a.metadata.type === 'ogtnotes',
-		// 			a => a.name === 'note'
-		// 		)
-		// 		return children.length
-		// 	},
-		// 	id: 'ogtNoteCount',
-		// },
-		// {
-		// 	getValue: (_config, props) => {
-		// 		const children = props.sourceTree.getChildren(
-		// 			a => a.name === 'div' && a.metadata.type === 'typednotes',
-		// 			a => a.name === 'note'
-		// 		)
-		// 		return children.length
-		// 	},
-		// 	id: 'typedNoteCount',
-		// },
-		// {
-		// 	facet: {
-		// 		datatype: EsDataType.Boolean,
-		// 	},
-		// 	getValue: (_config, props) => {
-		// 		const annotation = props.sourceTree.find(a => a.name === 'div' && a.metadata.type === 'translation')
-		// 		return props.sourceTree.getTextContent(annotation).trim().length > 0
-		// 	},
-		// 	id: 'hasTranslation',
-		// }
+		{
+			facet: {
+				datatype: EsDataType.Boolean,
+				order: 15,
+			},
+			getValue: (_config, props) =>
+				[
+					'19090421y_IONG_1304',
+					'19140505_BREM_0049',
+					'19140607_SCHE_0050',
+					'19140609_SCHE_PM_5006',
+					'19140927_ASSE_0057',
+					'19141111_ASSE_1760'
+				].indexOf(props.id) > -1,
+			id: 'special',
+		},
+		{
+			facet: {
+				order: 20,
+			},
+			getValue: (_config, props) => {
+				const sentAnno = props.source.annotations.find(
+					a => a.name === 'correspAction' && a.sourceProps.type === 'sent'
+				)
+
+				const nameAnno = props.source.annotations.find(
+					a => a.name === 'name' && isChild(a, sentAnno)
+				)
+
+				if (nameAnno == null) return null
+				return props.source.text.slice(nameAnno.start, nameAnno.end)
+			},
+			id: 'author',
+		},
+		{
+			facet: {
+				order: 30,
+			},
+			getValue: (_config, props) => {
+				const recAnno = props.source.annotations.find(
+					a => a.name === 'correspAction' && a.sourceProps.type === 'received'
+				)
+
+				const nameAnno = props.source.annotations.find(
+					a => a.name === 'name' && isChild(a, recAnno)
+				)
+
+				if (nameAnno == null) return null
+				return props.source.text.slice(nameAnno.start, nameAnno.end)
+			},
+			id: 'addressee',
+		},
+		{
+			facet: {
+				order: 40,
+			},
+			getValue: (_config, props) => {
+				const recAnno = props.source.annotations.find(
+					a => a.name === 'correspAction' && a.sourceProps.type === 'sent'
+				)
+
+				const nameAnno = props.source.annotations.find(
+					a => a.name === 'placeName' && isChild(a, recAnno)
+				)
+
+				if (nameAnno == null) return null
+				return props.source.text.slice(nameAnno.start, nameAnno.end)
+			},
+			id: 'place',
+		},
+		{
+			facet: {
+				datatype: EsDataType.Integer,
+				range: 100,
+			},
+			getValue: (_config, props) => {
+				return countChildren(
+					props.source.annotations,
+					a => a.name === 'div' && a.sourceProps.type === 'notes',
+					a => a.name === 'note'
+				)
+			},
+			id: 'noteCount',
+		},
+		{
+			facet: {
+				datatype: EsDataType.Integer,
+				range: 100,
+			},
+			getValue: (_config, props) => {
+				return countChildren(
+					props.source.annotations,
+					a => a.name === 'div' && a.sourceProps.type === 'ogtnotes',
+					a => a.name === 'note'
+				)
+			},
+			id: 'ogtNoteCount',
+		},
+		{
+			facet: {
+				datatype: EsDataType.Integer,
+				range: 100,
+			},
+			getValue: (_config, props) => {
+				return countChildren(
+					props.source.annotations,
+					a => a.name === 'div' && a.sourceProps.type === 'typednotes',
+					a => a.name === 'note'
+				)
+			},
+			id: 'typedNoteCount',
+		},
+		{
+			facet: {
+				datatype: EsDataType.Boolean,
+			},
+			getValue: (_config, props) => {
+				const root = props.source.annotations
+					.find(a =>
+						a.name === 'div' && a.sourceProps.type === 'translation'
+					)
+
+				if (root == null) return false
+				return props.source.text.slice(root.start, root.end).trim().length > 0
+			},
+			id: 'hasTranslation',
+		}
 	],
 	entities2: [
 		{
@@ -115,9 +173,10 @@ export default extendConfig({
 			filter: a =>
 				a.name === 'rs' &&
 				a.sourceProps.type === 'artwork-m' && 
-				a.sourceProps.key?.length > 0,
-
+				a.sourceProps.key?.length > 0
+			,
 			getId: a => a.sourceProps.key,
+			getValue: props => props.annotation.sourceProps.key,
 			id: 'rkd-artwork-link',
 			title: 'Artwork',
 			type: EntityType.Artwork,
@@ -125,6 +184,9 @@ export default extendConfig({
 		{
 			color: Colors.Blue,
 			id: 'biblio',
+			facet: {
+				order: 90,
+			},
 			filter: a =>
 				a.name === 'ref' &&
 				a.sourceProps.target?.slice(0, 11) === 'biblio.xml#',
@@ -133,10 +195,8 @@ export default extendConfig({
 			// 		anchor: x,
 			// 		content: x.textContent,
 			// 	})),
-			facet: {
-				order: 90,
-			},
 			getId: a => a.sourceProps.target.split('#')[1],
+			getValue: props => props.annotation.sourceProps.target.split('#')[1],
 			type: EntityType.PagePart,
 			// selector: 'ref[target^="biblio.xml#"]',
 		},
@@ -151,6 +211,8 @@ export default extendConfig({
 				a.name === 'ref' &&
 				a.sourceProps.target?.slice(0, 8) === 'bio.xml#',
 			getId: a => a.sourceProps.target.split('#')[1],
+			getValue: props => props.annotation.sourceProps.target.split('#')[1],
+
 			// extractId: el => el.getAttribute('target').split('#')[1],
 			// extract: ({ entry, entityConfig }) =>
 			// Array.from(entry.preparedElement.querySelectorAll(entityConfig.selector))
@@ -163,12 +225,16 @@ export default extendConfig({
 		{
 			color: Colors.Blue,
 			id: 'editor',
-			filter: a => 
+			filter: a =>
 				a.name === 'ptr' &&
 				a.sourceProps.type === 'note' &&
-				a.sourceProps.target?.length > 0,
-
+				a.sourceProps.target?.length > 0
+			,
 			getId: a => a.sourceProps.target.split('#')[1],
+			getValue: props => {
+				const root = props.source.annotations.find(a => a.sourceProps['xml:id'] === props.annotation.props.entityId)
+				return createPartialStandoffFromAnnotation(props.source, root)
+			},
 
 			// extractId: el => el.getAttribute('target')?.slice(1),
 			// extract: ({ layerElement, entry, entityConfig }) =>
@@ -194,21 +260,15 @@ export default extendConfig({
 		filter: a => a.name === 'pb' && a.sourceProps.facs != null && a.sourceProps.facs.length > 0,
 		getId: a => a.sourceProps.facs.slice(1),
 		getPath: (props) => {
-			// const { facsimileId: id } = props.annotation.props
+			const { facsimileId: id } = props.annotation.props
 
-			// const graphic = props.sourceTree.findChild(
-			// 	a => a.name === 'surface' && a.metadata['xml:id'] === id,
-			// 	a => a.name === 'graphic' && a.metadata.url?.length > 0
-			// )
-			// if (graphic == null) return
+			const surface = props.source.annotations.find(a => a.name === 'surface' && a.sourceProps['xml:id'] === id)
+			if (surface == null) return null
+			const graphic = props.source.annotations.find(a => a.name === 'graphic' && isChild(a, surface))
+			if (graphic == null) return null
+			if (graphic.sourceProps.url == null) return null
 
-
-			// const { url } = graphic.metadata
-			// const imgPath = url.slice(0, url.indexOf('_')) + '/' + url
-			
-			props
-			let imgPath = 'unknown'
-			return `/iiif/mondrian/${imgPath}.jpg/info.json`
+			return `/iiif/mondrian/SRA024000001/${graphic.sourceProps.url}.jpg/info.json`
 		}
 	},
 
@@ -219,24 +279,16 @@ export default extendConfig({
 		},
 		{
 			id: 'original',
-			// extractElement: extractLayerElement('div[type="original"]'),
 			findRoot: a => a.name === 'div' && a.sourceProps.type === 'original',
 			type: LayerType.Text,
 		},
 		{
 			id: 'translation',
-			// extractElement: extractLayerElement('div[type="translation"]'),
 			findRoot: a => a.name === 'div' && a.sourceProps.type === 'translation',
 			type: LayerType.Text,
 		}
 	],
-	documents: {
-		remoteDirectories: [
-			'mondrian/editie-conversie/geschriften',
-			'mondrian/editie-conversie/brieven/04_Transcriptie_DEF'
-		],
-		type: 'xml'
-	},
+
 	pages: {
 		config: [
 			{

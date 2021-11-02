@@ -1,5 +1,6 @@
-import { PartialStandoffAnnotation } from "."
-import { TagShape } from "../enum"
+import { TagShape } from "."
+
+import type { PartialStandoffAnnotation } from "."
 
 /** Check if annotation1 comes after annotation2 */
 export function isAfter(
@@ -20,6 +21,17 @@ export function isChild(
 	}
 
 	return parent.start <= child.start && parent.end >= child.end
+}
+
+export function countChildren(
+	annotations: PartialStandoffAnnotation[],
+	parentFind: (anno: PartialStandoffAnnotation) => boolean,
+	childFilter: (anno: PartialStandoffAnnotation) => boolean
+): number {
+	const parent = annotations.find(parentFind)
+	return annotations.filter(a => 
+		childFilter(a) && isChild(a, parent)
+	).length
 }
 
 // import { ExportOptions } from './export-options'

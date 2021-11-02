@@ -121,7 +121,7 @@ export const EntityTag = React.memo(function EntityComp(props: EntityAnnotationC
 						entityConfig={entity.props.entityConfig}
 					/>
 				}
-				{firstChild}
+				{firstChild || "CLICK HERE"}
 				{
 					lastChild == null &&
 					tooltip
@@ -134,7 +134,6 @@ export const EntityTag = React.memo(function EntityComp(props: EntityAnnotationC
 					{lastChild}
 					{tooltip}
 				</TooltipContainer>
-
 			}
 		</Wrapper>
 	)

@@ -1,5 +1,5 @@
-import { ExportOptions, HIGHLIGHT_NODE_NAME, PartialStandoff, PartialStandoffAnnotation } from '.'
-import { TagShape } from '../enum'
+import { ExportOptions, extendExportOptions, HIGHLIGHT_NODE_NAME, PartialStandoff, PartialStandoffAnnotation } from '.'
+import { TagShape } from './index'
 import { isChild, isAfter } from './utils'
 
 export class StandoffTree3 {
@@ -10,7 +10,7 @@ export class StandoffTree3 {
 	private rangePairs: Map<string, string> = new Map()
 	private ranges: Map<Annotation3, [number, number]> = new Map()
 
-	constructor(public standoff: PartialStandoff, private options: ExportOptions) {
+	constructor(public standoff: PartialStandoff, private options: ExportOptions = extendExportOptions({})) {
 		/** 
 		 * Convert {@link PartialStandoffAnnotation } to {@link Annotation3}
 		 */
@@ -42,6 +42,8 @@ export class StandoffTree3 {
 	}
 
 	highlightSubString(subStrings: string[]) {
+		if (subStrings == null) return
+
 		/**
 		 * Remove current highlight
 		 */
@@ -266,9 +268,7 @@ function toAnnotation3(currAnnotation: PartialStandoffAnnotation): Annotation3 {
 	return {
 		end: currAnnotation.start,
 		endOrder: null,
-		id: currAnnotation.id == null ?
-			Math.random().toString().slice(2) :
-			null,
+		id: currAnnotation.id == null ? generateAnnotationId() : null,
 		props: {},
 		sourceProps: {},
 		startOrder: null,
@@ -277,13 +277,17 @@ function toAnnotation3(currAnnotation: PartialStandoffAnnotation): Annotation3 {
 	}
 }
 
+export function generateAnnotationId() {
+	return Math.random().toString().slice(2)
+}
+
 export function cloneAnnotation<T extends PartialStandoffAnnotation>(
 	annotation: T,
 	generateNewID = true
 ): T {
 	return {
 		...annotation,
-		id: generateNewID ? Math.random().toString().slice(2) : annotation.id,
+		id: generateNewID ? generateAnnotationId() : annotation.id,
 		props: { ...annotation.props },
 		sourceProps: { ...annotation.sourceProps },
 	}

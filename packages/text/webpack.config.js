@@ -4,9 +4,9 @@ module.exports = {
 	entry: {
 		bundle: "./src/index.ts",
 	},
-	mode: "development",
+	mode: "production",
 	output: {
-		filename: "[name].js",
+		filename: "docere.text.min.js",
 		globalObject: 'this',
 		library: "DocereText",
 		libraryTarget: "umd",

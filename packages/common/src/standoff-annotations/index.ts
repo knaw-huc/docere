@@ -1,8 +1,14 @@
 import React from 'react'
+import { GetValueProps } from '..'
 import { EntityConfig } from '../entry/entity'
 import { FacsimileArea } from '../entry/facsimile'
-import { TagShape } from '../enum'
 import { Annotation3 } from './annotation-tree3'
+
+export enum TagShape {
+	Default = 'default',
+	Range = 'range',
+	SelfClosing = 'self-closing'
+}
 
 // export * from './annotation-tree'
 export * from './annotation-tree3'
@@ -73,8 +79,8 @@ export interface PartialStandoffAnnotation {
 		areas?: FacsimileArea[]
 		entityConfig?: EntityConfig
 		entityConfigId?: string
-		entityId?: string
-		entityValue?: string
+		entityId?: ReturnType<EntityConfig['getId']>
+		entityValue?: ReturnType<EntityConfig['getValue']>
 		isRoot?: boolean
 		isRangeStart?: boolean
 		isRangeBody?: boolean

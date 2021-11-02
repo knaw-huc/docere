@@ -1,6 +1,6 @@
 import { PageConfig } from '../page'
 import { PartialStandoff, PartialStandoffAnnotation } from '../standoff-annotations'
-import { CreateJsonEntryPartProps, EntityConfig, FacsimileLayerConfig, ID, MetadataConfig, TextLayerConfig } from '../entry'
+import { CreateJsonEntryPartProps, EntityConfig, FacsimileLayerConfig, GetValueProps, ID, MetadataConfig, TextLayerConfig } from '../entry'
 import { PartialExportOptions } from '../standoff-annotations/export-options'
 import { FacetedSearchProps, SortOrder } from '../types'
 import type { EntrySettings } from './entry-settings'
@@ -23,22 +23,24 @@ export interface DocereConfig {
 
 	/** Options for the project documents */
 	documents?: {
-		/** 
-		 * Paths to project document dirs on the remote server
-		 * 
-		 * @default [<project ID>]
-		 */
-		remoteDirectories?: string[]
+		// /** 
+		//  * Paths to project document dirs on the remote server
+		//  * 
+		//  * @default [<project ID>]
+		//  * @todo remove this option, it doesn't work because the remote dirs aren't
+		//  * part of the document ID, there is no way to retrace where the doc came from
+		//  */
+		// remoteDirectories?: string[]
 
-		/**
-		 * By default the root directory to a document (not the sub directories!)
-		 * is removed from the ID. To disable this default behavior set this
-		 * option to false.
-		 * 
-		 * @default true
-		 * @example if remote directory is a/b and the file is in a/b/c/d/e.xml, the ID will be c/d/e.xml
-		 */
-		stripRemoteDirectoryFromDocumentId?: boolean
+		// /**
+		//  * By default the root directory to a document (not the sub directories!)
+		//  * is removed from the ID. To disable this default behavior set this
+		//  * option to false.
+		//  * 
+		//  * @default true
+		//  * @example if remote directory is a/b and the file is in a/b/c/d/e.xml, the ID will be c/d/e.xml
+		//  */
+		// stripRemoteDirectoryFromDocumentId?: boolean
 
 		/**
 		 * Type of documents. XML documents are converted to standoff before further
@@ -52,7 +54,7 @@ export interface DocereConfig {
 	entrySettings?: EntrySettings
 
 	facsimiles?: Pick<EntityConfig, 'filter' | 'getId'> & {
-		getPath: EntityConfig['getValue']
+		getPath: (props: GetValueProps) => string
 	}
 
 	language?: Language,
@@ -103,7 +105,7 @@ export interface DocereConfig {
 		 * and server), but to convert from XML to standoff, can only be done on
 		 * the server (for now)
 		 */
-		prepareSource?: (source: string | object) => PartialStandoff
+		prepareSource?: (source: object) => PartialStandoff
 
 		/**
 		 * Function to alter the partial standoff annotations before processing

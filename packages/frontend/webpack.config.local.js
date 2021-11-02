@@ -31,11 +31,11 @@ module.exports = () => {
 			// 	target: 'http://vangoghletters.org/vg/facsimiles',
 			// 	pathRewrite: {'^/iiif/vangogh': ''}
 			// },
-			// '/iiif': {
-			// 	changeOrigin: true,
-			// 	target: env.DOCERE_IIIF_BASE_URL,
-			// 	pathRewrite: {'^/iiif': ''}
-			// },
+			'/iiif': {
+				changeOrigin: true,
+				target: env.DOCERE_IIIF_BASE_URL,
+				pathRewrite: {'^/iiif': ''}
+			},
 		},
 	}
 

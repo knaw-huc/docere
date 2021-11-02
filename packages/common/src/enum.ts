@@ -1,9 +1,3 @@
-export enum TagShape {
-	Default = 'default',
-	Range = 'range',
-	SelfClosing = 'self-closing'
-}
-
 export enum Colors {
 	Blue = '#8080ff',
 	BlueLight = '#add8e6',
@@ -94,7 +88,7 @@ export enum AsideTab {
 export enum FooterTab {
 	Panels = 'panels',
 	Settings = 'settings',
-	// Downloads = "downloads",
+	Downloads = "downloads",
 }
 
 export enum SearchTab {

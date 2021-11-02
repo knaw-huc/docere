@@ -1,6 +1,6 @@
 {
   "name": "@docere/common",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "",
   "files": [
     "build",
@@ -11,7 +11,7 @@
   "scripts": {
     "build": "tsc",
     "docs": "typedoc --out docs src --jsx react --ignoreCompilerErrors",
-    "watch": "tsc -w --pretty --preserveWatchOutput"
+    "watch": "tsc -w"
   },
   "author": "Gijsjan Brouwer",
   "license": "GPL-3.0-or-later",
@@ -22,5 +22,6 @@
   },
   "peerDependencies": {
     "styled-components": ">= 5"
-  }
+  },
+  "sideEffects": false
 }

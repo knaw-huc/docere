@@ -1,23 +1,23 @@
 {
   "name": "@docere/text",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "",
-  "main": "build/index.js",
+  "main": "dist/docere.text.min.js",
   "types": "build/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "watch": "tsc -w --pretty --preserveWatchOutput --noEmit"
+    "dist": "webpack",
+    "watch": "tsc -w"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@docere/common": "^2.0.0",
-    "react-tabs": "^3.2.2"
+    "@docere/common": "^2.0.1"
   },
   "devDependencies": {
     "typescript": "^4.4.2",
-    "webpack": "^5.51.1",
-    "webpack-cli": "^4.8.0"
+    "webpack": "^5.57.1",
+    "webpack-cli": "^4.9.0"
   },
   "sideEffects": false
 }

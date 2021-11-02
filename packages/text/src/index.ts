@@ -1,9 +1,11 @@
 import React from 'react'
 
-import { isTextNode, StandoffTree3 } from '@docere/common'
+import { isTextNode, StandoffTree3, generateAnnotationId } from '@docere/common'
+
 import type { ComponentProps, DocereComponents, Node, ReactComponent } from '@docere/common'
 
 export type { DocereComponents } from '@docere/common'
+export { StandoffTree3 as Bla } from '@docere/common'
 
 function Empty(props: ComponentProps) {
 	if (props.children == null) return null
@@ -14,7 +16,7 @@ function Highlight(text: string) {
 	return React.createElement(
 		'span',
 		{
-			key: Math.random().toString(),
+			key: generateAnnotationId(),
 			style: { backgroundColor: 'yellow' }
 		},
 		text

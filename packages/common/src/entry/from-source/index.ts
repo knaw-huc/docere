@@ -1,8 +1,8 @@
 import { createJsonEntry, GetValueProps, JsonEntry } from ".."
 import { DocereConfig, PartialStandoff } from "../.."
 
-import { prepareSource } from './prepare-source'
-export { prepareSource }
+// import { prepareSource } from './prepare-source'
+// export { prepareSource }
 // 	// const sourceTree = await getSourceTree(source, projectConfig)
 // 	const partialStandoff = await prepareSource(source, projectConfig)
 
@@ -24,7 +24,6 @@ export async function getEntriesFromSource(
 	source: PartialStandoff,
 	projectConfig: DocereConfig
 ) {
-
 	for (const annotation of source.annotations) {
 		const props: GetValueProps = {
 			annotation,
@@ -35,12 +34,14 @@ export async function getEntriesFromSource(
 
 		const entityConfig = projectConfig.entities2.find(ec => ec.filter(annotation))
 		if (entityConfig != null) {
+			if (annotation.props == null) annotation.props = {}
 			annotation.props.entityConfigId = entityConfig.id
 			annotation.props.entityId = entityConfig.getId(annotation)
 			annotation.props.entityValue = entityConfig.getValue(props)
 		}
 
 		if (projectConfig.facsimiles?.filter(annotation)) {
+			if (annotation.props == null) annotation.props = {}
 			annotation.props.facsimileId = projectConfig.facsimiles.getId(annotation)
 			annotation.props.facsimilePath = projectConfig.facsimiles.getPath(props)
 		}

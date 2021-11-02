@@ -16,13 +16,19 @@ export function createElasticSearchDocument(
 			[]
 		)
 
+	const entitiesWithFacets = projectConfig.entities2
+		.filter(e => e.facet != null)
+		.map(e => e.id)
+
 	const entities = annotations
 		.reduce((map, curr) => {
 			if (curr.props.entityValue != null) {
-				const { entityConfigId: configId } = curr.props;
+				const { entityConfigId: configId } = curr.props
+				if (entitiesWithFacets.indexOf(configId) === -1) return map 
 
-				(map.has(configId)) ?
-					map.get(configId).add(curr.props.entityValue) :
+				if (map.has(configId)) 
+					map.get(configId).add(curr.props.entityValue)
+				else
 					map.set(configId, new Set([curr.props.entityValue]))
 			}
 

@@ -1,4 +1,5 @@
 import type { DocereConfig } from '.'
+import { PartialStandoff } from '..'
 import { defaultEntityConfig, EntityConfig } from '../entry/entity'
 import { BaseConfig, defaultFacetConfig, defaultMetadata } from '../entry/metadata'
 import { Language } from '../enum'
@@ -70,8 +71,8 @@ export function extendConfig(configDataRaw: DocereConfig): DocereConfig {
 	if (config.title == null) config.title = config.slug.charAt(0).toUpperCase() + config.slug.slice(1)
 
 	config.documents = {
-		remoteDirectories: [config.slug],
-		stripRemoteDirectoryFromDocumentId: true,
+		// remoteDirectories: [config.slug],
+		// stripRemoteDirectoryFromDocumentId: true,
 		type: 'standoff',
 		...(config.documents || {})
 	}
@@ -117,8 +118,7 @@ export function extendConfig(configDataRaw: DocereConfig): DocereConfig {
 			...config.standoff.exportOptions
 		},
 		prepareStandoff: (partialStandoff) => partialStandoff,
-		// prepareAnnotations: (partialAnnotations) => partialAnnotations,
-		// prepareExport: () => undefined,
+		prepareSource: (source) => source as PartialStandoff,
 		...config.standoff
 	}
 

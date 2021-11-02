@@ -1,7 +1,7 @@
-import { StandoffTree } from '../../../../common/src/standoff-annotations/annotation-tree'
+import { StandoffTree3 } from '../../../../common/src/standoff-annotations/annotation-tree3'
 import { xml2standoff } from '../../../../api/src/utils/xml2standoff'
 
-import { AnnotationNode } from '../../../../common/src/standoff-annotations'
+import { AnnotationNode as Annotation3 } from '../../../../common/src/standoff-annotations'
 import { TEXT_NODE_NAME } from '../../../../api/node_modules/@docere/common/build'
 
 const xml = `
@@ -28,16 +28,16 @@ const xml = `
 	</root>
 `.trim()
 
-let tree: StandoffTree
-let rangeStartXXX: AnnotationNode
-let rangeEndXXX: AnnotationNode
-let rangeStartYYY: AnnotationNode
-let node2: AnnotationNode
-let node3: AnnotationNode
+let tree: StandoffTree3
+let rangeStartXXX: Annotation3
+let rangeEndXXX: Annotation3
+let rangeStartYYY: Annotation3
+let node2: Annotation3
+let node3: Annotation3
 
 beforeAll(async () => {
 	const standoff = await xml2standoff(xml)
-	tree = new StandoffTree(standoff)
+	tree = new StandoffTree3(standoff)
 
 	rangeStartXXX = tree.find(a => a.name === 'rangeStart' && a.metadata.target === 'xxx')
 	rangeEndXXX = tree.find(a => a.name === 'rangeEnd' && a.metadata.key === 'xxx')

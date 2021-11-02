@@ -1,8 +1,8 @@
-import { AnnotationNode, ExportOptions, extendExportOptions, sortByOffset, toAnnotationNode } from '../../../../common/src'
+import { ExportOptions, extendExportOptions, PartialStandoffAnnotation, StandoffTree3 } from '../../../../common/src'
 
 describe('[Common][StandoffTree] sortByOffset', () => {
-	let annotationsInit: AnnotationNode[]
-	let annotations: AnnotationNode[]
+	let annotationsInit: PartialStandoffAnnotation[]
+	let standoffTree: StandoffTree3
 	let exportOptions: ExportOptions
 
 	beforeAll(() => {
@@ -12,53 +12,38 @@ describe('[Common][StandoffTree] sortByOffset', () => {
 			{ start: 8, end: 12, name: 'second' },
 			{ start: 8, end: 12, name: 'third' },
 			{ start: 8, name: 'start' }
-		].map(toAnnotationNode)
+		]
 
 		exportOptions = extendExportOptions({})
 	})
 
-	beforeEach(() => {
-		annotations = JSON.parse(JSON.stringify(annotationsInit))
-	})
-
 	it('should sort on start offset', () => {
-		annotations.sort(sortByOffset(exportOptions))
-		expect(annotations.map(a => a.name)).toEqual(['start', 'first', 'second', 'third', 'end'])
+		standoffTree = new StandoffTree3({ metadata: {}, text: '012345678910', annotations: annotationsInit}, exportOptions)
+		expect(standoffTree.annotations.slice(1).map(a => a.name)).toEqual(['start', 'first', 'second', 'third', 'end'])
 	})
 
 	it('should sort on annotation hierarchy', () => {
 		exportOptions.annotationHierarchy = ['second', 'first']
-		annotations.sort(sortByOffset(exportOptions))
-		expect(annotations.slice(1, 3).map(a => a.name)).toEqual(['second', 'first'])
+		standoffTree = new StandoffTree3({ metadata: {}, text: '012345678910', annotations: annotationsInit}, exportOptions)
+		expect(standoffTree.annotations.slice(2, 4).map(a => a.name)).toEqual(['second', 'first'])
 	})
 
 	it('Should sort on annotation hierarchy, with milestone', () => {
 		exportOptions.annotationHierarchy = ['first', 'start']
-		annotations.sort(sortByOffset(exportOptions))
-		expect(annotations.slice(0, 2).map(a => a.name)).toEqual(['first', 'start'])
+		standoffTree = new StandoffTree3({ metadata: {}, text: '012345678910', annotations: annotationsInit}, exportOptions)
+		expect(standoffTree.annotations.slice(1, 3).map(a => a.name)).toEqual(['first', 'start'])
 	})
 })
 
-describe('[Common][StandoffTree] sortByOffset 2', () => {
-	let annotationsInit: AnnotationNode[]
-	let annotations: AnnotationNode[]
-	let exportOptions: ExportOptions
-
-	beforeAll(() => {
-		annotationsInit = [
-			{ start: 0, end: 6, name: 'root', metadata: { _isRoot: true } },
-			{ start: 0, name: 'milestone' },
-		].map(toAnnotationNode)
-
-		exportOptions = extendExportOptions({})
-	})
-
-	beforeEach(() => {
-		annotations = JSON.parse(JSON.stringify(annotationsInit))
-	})
+describe('[Common][StandoffTree] keep root before milestone', () => {
+	const exportOptions = extendExportOptions({})
 
 	it('should keep root before milestone', () => {
-		annotations.sort(sortByOffset(exportOptions))
-		expect(annotations.map(a => a.name)).toEqual(['root', 'milestone'])
+		const standoffTree = new StandoffTree3({ metadata: {}, text: '012345', annotations: [
+			{ start: 0, end: 6, name: 'root' },
+			{ start: 0, name: 'milestone' },
+		]}, exportOptions)
+		// annotations.sort(sortByOffset(exportOptions))
+		expect(standoffTree.annotations.map(a => a.name)).toEqual(['root', 'milestone'])
 	})
 })

@@ -41,26 +41,23 @@ export function getEntryIdFromFilePath(xmlFilePath: string, projectId: string) {
 	return `${dir}/${base}`.replace(/^\//, '')
 }
 
-export function getDocumentIdFromRemoteFilePath(
+export function getSourceIdFromRemoteFilePath(
 	filePath: string,
-	remoteDir: string,
 	config: DocereConfig
 ) {
 	const ext = config.documents.type === 'xml' ? 'xml' : 'json'
-	let documentId = path.resolve(path.dirname(filePath), path.basename(filePath, `.${ext}`))
+	let sourceId = path.resolve(path.dirname(filePath), path.basename(filePath, `.${ext}`))
 
 	// Return null if withoutExtension and filePath are equal,
 	// which means it's a dir or not an XML file
-	if (documentId === filePath) return null
+	if (sourceId === filePath) return null
 
-	if (config.documents.stripRemoteDirectoryFromDocumentId) {
-		const re = new RegExp(`^/?${remoteDir}/?`)
-		documentId = documentId.replace(re, '')
-	}
+	const re = new RegExp(`^/?${config.slug}/?`)
+	sourceId = sourceId.replace(re, '')
 
-	if (documentId.charAt(0) === '/') documentId = documentId.slice(1)
+	if (sourceId.charAt(0) === '/') sourceId = sourceId.slice(1)
 
-	return documentId.length ? documentId : null
+	return sourceId.length ? sourceId : null
 }
 
 export function readFileContents(filePath: string) {

@@ -81,24 +81,30 @@ export default function handleProjectApi(app: Express) {
 	// 	}
 	// 	await addPagesToDb(config)
 	// })
+	let upserting = false
 
 	app.post(`${PROJECT_BASE_PATH}/upsert`, async (req: Request, res) => {
 		const { projectId } = req.params
+		if (upserting) {
+			res.sendStatus(503).end()
+			return
+		}
+
 		const config = await getProjectConfig(projectId)
 		if (isError(config)) return sendJson(config, res)
 
 		// Return an async ACCEPTED immediately, the server will handle it from here
 		res.sendStatus(202).end()
 
+		upserting = true
 		const t0 = performance.now()
-		for (const remotePath of config.documents.remoteDirectories) {
-			await addRemoteStandoffToDb(remotePath, config, {
-				force: req.query.force === '',
-				maxPerDir: castUrlQueryToNumber(req.query.max_per_dir as string),
-				maxPerDirOffset: castUrlQueryToNumber(req.query.max_per_dir_offset as string)
-			})
-		}
+		await addRemoteStandoffToDb(config.slug, config, {
+			force: req.query.force === '',
+			maxPerDir: castUrlQueryToNumber(req.query.max_per_dir as string),
+			maxPerDirOffset: castUrlQueryToNumber(req.query.max_per_dir_offset as string)
+		})
 		const t1 = performance.now(); console.log('Performance: ', `${t1 - t0}ms`)
+		upserting = false
 	})
 
 	app.post(`${PROJECT_BASE_PATH}/init`, async (req: Request, res) => {
@@ -132,7 +138,7 @@ export default function handleProjectApi(app: Express) {
 		await projectPool.query(
 			`CREATE TABLE source (
 				id TEXT PRIMARY KEY,
-				hash TEXT UNIQUE, 
+				hash TEXT UNIQUE,
 				standoff JSON,
 				updated TIMESTAMP WITH TIME ZONE
 			);

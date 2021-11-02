@@ -1,12 +1,13 @@
 {
   "name": "@docere/search",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "",
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "scripts": {
     "build": "tsc",
     "dist": "webpack",
+    "prepublish": "rm -rf build dist && npm run build && npm run dist",
     "watch": "tsc -w"
   },
   "author": "",

@@ -1,5 +1,5 @@
 import React from 'react'
-import { ActiveFilter, DTAP, FacetData, initialSearchContextState } from '@docere/common'
+import { ActiveFilter, FacetData, initialSearchContextState } from '@docere/common'
 
 import { extendFacetConfig } from './extend-facet-config'
 import { isListFacetData, isBooleanFacetData, isRangeFacetData, isDateFacetData, isHierarchyFacetData } from '@docere/common'

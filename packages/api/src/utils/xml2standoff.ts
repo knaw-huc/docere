@@ -1,6 +1,6 @@
 import sax from 'sax'
 
-import { PartialStandoff, PartialStandoffAnnotation, TagShape } from '@docere/common'
+import { Annotation3, generateAnnotationId, PartialStandoff, PartialStandoffAnnotation, TagShape } from '@docere/common'
 
 const strict = true
 const parser = sax.parser(strict)
@@ -36,13 +36,16 @@ export function xml2standoff(content: string): Promise<PartialStandoff> {
 	parser.onopentag = node => {
 		updateOrderByOffset()
 
-		const annotation: PartialStandoffAnnotation = {
+		const annotation: Annotation3 = {
 			end: node.isSelfClosing ? offset : offset + 1, // Set a temporary end when the node is not self closing, otherwise extendStandoffAnnotation will change it to a self closing annotation
-			sourceProps: node.attributes as Record<string, string>,
-			tagShape: node.isSelfClosing ? TagShape.SelfClosing : TagShape.Default,
+			endOrder: null,
+			id: generateAnnotationId(),
 			name: node.name,
+			props: {},
+			sourceProps: node.attributes as Record<string, string>,
 			start: offset,
 			startOrder: orderByOffset.get(offset),
+			tagShape: node.isSelfClosing ? TagShape.SelfClosing : TagShape.Default,
 		}
 
 		stack.push(annotation)

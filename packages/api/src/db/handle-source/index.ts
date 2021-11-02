@@ -1,8 +1,8 @@
 import * as es from '@elastic/elasticsearch'
-import { DocereConfig, getEntriesFromSource, prepareSource } from '@docere/common'
+import { DocereConfig, getEntriesFromSource, PartialStandoff } from '@docere/common'
 
-import { getDocumentIdFromRemoteFilePath, isError } from '../../utils'
-import { fetchSource } from './fetch-source'
+import { getSourceIdFromRemoteFilePath, isError } from '../../utils'
+import { fetchAndPrepareSource } from './fetch-source'
 import { fetchRemotePaths } from './fetch-remote-paths'
 import { DocereDB } from '../docere-db'
 
@@ -42,10 +42,10 @@ async function addFilesFromRemoteDir(
 
 	// Add every file to the database
 	for (const filePath of files) {
-		const source = await fetchSource(filePath, projectConfig)
+		const source = await fetchAndPrepareSource(filePath, projectConfig)
 		if (source == null) continue
-		const entryId = getDocumentIdFromRemoteFilePath(filePath, remotePath, projectConfig)
-		await handleSource(source, projectConfig, entryId, db, esClient, options.force)
+		const sourceId = getSourceIdFromRemoteFilePath(filePath, projectConfig)
+		await handleSource(source, projectConfig, sourceId, db, esClient, options.force)
 	}
 
 	// Recursively add sub dirs
@@ -72,16 +72,14 @@ export async function addRemoteStandoffToDb(
 }
 
 export async function handleSource(
-	source: string | object,
+	source: PartialStandoff,
 	projectConfig: DocereConfig,
 	sourceId: string,
 	db: DocereDB,
 	esClient: es.Client,
 	force = false
 ) {
-	const stringifiedSource = typeof source === 'string' ?
-		source :
-		JSON.stringify(source)
+	const stringifiedSource = JSON.stringify(source)
 
 	const isUpdate = await db.sourceExists(sourceId, stringifiedSource)
 	if (isUpdate && !force) {
@@ -91,8 +89,8 @@ export async function handleSource(
 		await db.deleteEntriesFromSource(sourceId)
 	}
 
- 	const partialStandoff = await prepareSource(source, projectConfig)
-	const entries = await getEntriesFromSource(sourceId, partialStandoff, projectConfig)
+ 	// const partialStandoff = await prepareSource(source, projectConfig)
+	const entries = await getEntriesFromSource(sourceId, source, projectConfig)
 
 	await db.begin()
 

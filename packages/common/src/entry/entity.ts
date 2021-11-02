@@ -2,7 +2,7 @@ import React from 'react'
 import { BaseMetadataConfig, ID } from '.'
 import { EntryContext } from '..'
 import { Colors, ContainerType, EntityType } from '../enum'
-import { Annotation3, PartialStandoffAnnotation } from '../standoff-annotations'
+import { Annotation3, PartialStandoff, PartialStandoffAnnotation } from '../standoff-annotations'
 import { GetValueProps } from './create-json'
 
 export interface EntityConfig extends BaseMetadataConfig {
@@ -36,7 +36,7 @@ export interface EntityConfig extends BaseMetadataConfig {
 	getValue?: (
 		props: GetValueProps,
 		// body?: PartialStandoffAnnotation
-	) => string
+	) => string | PartialStandoff
 
 	revealOnHover?: boolean
 

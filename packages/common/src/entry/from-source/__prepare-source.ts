@@ -1,4 +1,6 @@
 import { DocereConfig, PartialStandoff } from "../.."
+import { isBrowser, isNode } from 'browser-or-node'
+
 
 /**
  * Prepare source for further processing.
@@ -26,19 +28,24 @@ export async function prepareSource(
 
 	let partialStandoff: PartialStandoff
 	if (typeof preparedSource === 'string') {
-		try {
-			const response  = await fetch('/api/xml2standoff', {
-				method: 'POST',
-				body: preparedSource,
-				headers: {
-					'Content-Type': 'application/xml'
-				}
-			})
+		if (isBrowser) {
+			try {
+				const response  = await fetch('/api/xml2standoff', {
+					method: 'POST',
+					body: preparedSource,
+					headers: {
+						'Content-Type': 'application/xml'
+					}
+				})
 
-			partialStandoff = await response.json()
-		} catch (error) {
-			console.log('[xml2standoff]', error)	
-			return
+				partialStandoff = await response.json()
+			} catch (error) {
+				console.log('[xml2standoff]', error)	
+				return
+			}
+		} else if (isNode) {
+			xml2standoff
+
 		}
 	} else {
 		partialStandoff = preparedSource

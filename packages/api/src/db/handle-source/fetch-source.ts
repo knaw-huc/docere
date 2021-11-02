@@ -1,6 +1,7 @@
 import fetch from 'node-fetch'
-import { DocereConfig } from '@docere/common'
+import { DocereConfig, PartialStandoff } from '@docere/common'
 import { XML_SERVER_ENDPOINT } from '../../constants'
+import { xml2standoff } from '../../utils/xml2standoff'
 
 /**
  * Fetch and prepare source file
@@ -12,18 +13,35 @@ import { XML_SERVER_ENDPOINT } from '../../constants'
  * @param filePath 
  * @param projectConfig 
  */
-export async function fetchSource(
+export async function fetchAndPrepareSource(
 	filePath: string,
 	projectConfig: DocereConfig
-): Promise<any> {
-	const result = await fetch(`${XML_SERVER_ENDPOINT}${filePath}`)
+): Promise<PartialStandoff> {
+	const source = await fetchSource(filePath, projectConfig)
 
-	let source: string | object
-	if (projectConfig.documents.type === 'xml') {
-		source = await result.text()	
-	} else {
-		source = await result.json() as string | object
+	let partialStandoff: PartialStandoff
+	if (sourceIsXml(source, projectConfig)) {
+		partialStandoff = await xml2standoff(source)
 	}
 
-	return source
+	return projectConfig.standoff.prepareSource(partialStandoff)
+}
+
+export function sourceIsXml(_source: string | object, projectConfig: DocereConfig): _source is string {
+	return projectConfig.documents.type === 'xml'
+}
+
+export async function fetchSource(
+	documentId: string,
+	projectConfig: DocereConfig
+): Promise<string | object> {
+	const ext = (projectConfig.documents.type === 'xml') ? '.xml' : '.json'
+	const url = `${XML_SERVER_ENDPOINT}/${projectConfig.slug}/${documentId}${ext}`
+	const result = await fetch(url)
+
+	const tmp = (projectConfig.documents.type === 'xml') ?
+		await result.text()	:
+		await result.json()
+
+	return tmp
 }

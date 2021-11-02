@@ -31,6 +31,7 @@ export function createJsonEntry(props: CreateJsonEntryPartProps): JsonEntry {
 				// Remove findRoot? If you want a part of the document, use partConfig?
 				if (layerConfig.findRoot != null) {
 					const newRoot = partialStandoff.annotations.find(layerConfig.findRoot)
+					if (newRoot == null) return null
 					partialStandoff = createPartialStandoffFromAnnotation(partialStandoff, newRoot)
 				} else if (props.root != null) {
 					partialStandoff = createPartialStandoffFromAnnotation(partialStandoff, props.root)
@@ -97,7 +98,7 @@ export function createJsonEntry(props: CreateJsonEntryPartProps): JsonEntry {
  * out first, and concatenated later. The new root does not have to be sorted,
  * because the annotations in {@link PartialStandoff} don't have an order
  */
-function createPartialStandoffFromAnnotation(
+export function createPartialStandoffFromAnnotation(
 	partialStandoff: PartialStandoff,
 	newRoot: PartialStandoffAnnotation
 ) {

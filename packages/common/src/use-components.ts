@@ -5,11 +5,13 @@ import { ProjectContext } from './project/context'
 import { ActiveEntity, Entity } from './entry/entity'
 
 export function useComponents(container: ContainerType, id?: string) {
-	const [components, setComponents] = React.useState<DocereComponents>(null)
+	const [components, setComponents] = React.useState<DocereComponents>({})
 	const { getComponents } = React.useContext(ProjectContext)
 
 	React.useEffect(() => {
-		getComponents(container, id).then(c => setComponents(c))
+		getComponents(container, id).then(c => {
+			if (c != null) setComponents(c)
+		})
 	}, [container, id])
 
 	return components
