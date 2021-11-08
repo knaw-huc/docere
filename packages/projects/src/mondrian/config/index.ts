@@ -31,9 +31,11 @@ export default extendConfig({
 			facet: {
 				order: 15,
 			},
-			getValue: (_config, props) =>
-				props.id.slice(0, 7) === 'brieven' ? 'brief' : 'geschrift'
-			,
+			getValue: (_config, props) => {
+				if (props.id.slice(0, 7) === 'brieven') return 'brief'
+				if (props.id.slice(0, 11) === 'geschriften') return 'geschrift'
+				if (props.id.slice(0, 5) === 'pages') return 'achtergrond tekst'
+			},
 			id: 'type',
 		},
 		{
