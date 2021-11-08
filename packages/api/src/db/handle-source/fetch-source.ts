@@ -32,11 +32,10 @@ export function sourceIsXml(_source: string | object, projectConfig: DocereConfi
 }
 
 export async function fetchSource(
-	documentId: string,
+	filePath: string,
 	projectConfig: DocereConfig
 ): Promise<string | object> {
-	const ext = (projectConfig.documents.type === 'xml') ? '.xml' : '.json'
-	const url = `${XML_SERVER_ENDPOINT}/${projectConfig.slug}/${documentId}${ext}`
+	const url = `${XML_SERVER_ENDPOINT}${filePath}`
 	const result = await fetch(url)
 
 	const tmp = (projectConfig.documents.type === 'xml') ?

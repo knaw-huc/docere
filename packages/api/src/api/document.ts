@@ -43,21 +43,15 @@ export default function handleDocumentApi(app: Express) {
 	})
 
 	app.get(`${DOCUMENT_BASE_PATH}/source`, async (req: Request, res) => {
-		const config = await getProjectConfig(req.params.projectId)
-		if (isError(config)) return sendJson(config, res)
+		const projectConfig = await getProjectConfig(req.params.projectId)
+		if (isError(projectConfig)) return sendJson(projectConfig, res)
 
-		// const pool = await getPool(req.params.projectId)
-		// const { rows } = await pool.query(`SELECT standoff FROM source WHERE id=$1;`, [req.params.documentId])
-		// if (!rows.length) res.sendStatus(404)
-		// else {
-		// 	res.json(rows[0].standoff)
-		// }
+		const ext = (projectConfig.documents.type === 'xml') ? '.xml' : '.json'
+		const filePath = `/${projectConfig.slug}/${req.params.documentId}${ext}`
 
-		const source = await fetchSource(req.params.documentId, config);
+		const source = await fetchSource(filePath, projectConfig);
 
-		console.log(source);
-
-		(sourceIsXml(source, config)) ?
+		(sourceIsXml(source, projectConfig)) ?
 			res.send(source) :
 			res.json(source)
 	})
