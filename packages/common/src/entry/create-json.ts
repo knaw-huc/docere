@@ -102,6 +102,8 @@ export function createPartialStandoffFromAnnotation(
 	partialStandoff: PartialStandoff,
 	newRoot: PartialStandoffAnnotation
 ) {
+	if (partialStandoff == null || newRoot == null) return null
+
 	// Get the text first, because the root's offsets are to be shifted
 	const text = partialStandoff.text.slice(newRoot.start, newRoot.end)
 
