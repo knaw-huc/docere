@@ -65,6 +65,7 @@ export default async function entryComponents(_config: DocereConfig) {
 		// TODO restore note
 		ptr: EntityTag,
 		ref: EntityTag,
+		rs: EntityTag,
 		// 'ptr[type="note"][target]': EntityTag,
 		// 'ref[target^="bio.xml#"]': EntityTag,
 		// 'ref[target^="biblio.xml#"]': EntityTag,

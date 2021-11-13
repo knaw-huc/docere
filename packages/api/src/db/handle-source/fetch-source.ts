@@ -38,6 +38,8 @@ export async function fetchSource(
 	const url = `${XML_SERVER_ENDPOINT}${filePath}`
 	const result = await fetch(url)
 
+	if (result.status === 404) return null
+
 	const tmp = (projectConfig.documents.type === 'xml') ?
 		await result.text()	:
 		await result.json()

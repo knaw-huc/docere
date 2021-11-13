@@ -1,7 +1,8 @@
 import * as es from '@elastic/elasticsearch'
 import { DocereConfig, getEntriesFromSource, PartialStandoff } from '@docere/common'
 
-import { getSourceIdFromRemoteFilePath, isError } from '../../utils'
+import { getSourceIdFromRemoteFilePath } from './get-source-id-from-file-path'
+import { isError } from '../../utils'
 import { fetchAndPrepareSource } from './fetch-source'
 import { fetchRemotePaths } from './fetch-remote-paths'
 import { DocereDB } from '../docere-db'

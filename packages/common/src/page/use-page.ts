@@ -6,6 +6,7 @@ import { ProjectContext } from '../project/context'
 import type { Page, PageConfig } from './index'
 import { DocereConfig, isUrlMenuItem, UrlMenuItem } from '../config'
 import type { ID } from '../entry/layer'
+import { createPartialStandoffFromAnnotation, StandoffTree3 } from '..'
 
 const pageCache = new Map<string, Page>()
 
@@ -28,21 +29,21 @@ export function flattenPages(config: DocereConfig) {
 export async function fetchPage(id: ID, config: DocereConfig): Promise<Page> {
 	if (pageCache.has(id)) return pageCache.get(id)
 
-	const doc = await fetchPageXml(config.slug, id)
-	if (doc == null) return null
+	const standoff = await fetchPageXml(config.slug, id)
+	if (standoff == null) return null
 
 	const pageConfig = flattenPages(config).find(p => p.id === id)
-	let parts: Map<string, Element>
+	let parts: Map<string, StandoffTree3>
 	if (pageConfig.split != null) {
 		parts = new Map()
-		const partEls = doc.querySelectorAll(pageConfig.split.selector)
-		for (const partEl of partEls) {
-			const partId = pageConfig.split.extractId(partEl)
-			parts.set(partId, partEl)
+		for (const annotation of standoff.annotations.filter(pageConfig.split.filter)) {
+			const part = createPartialStandoffFromAnnotation(standoff, annotation)
+			const partId = pageConfig.split.getId(annotation)
+			parts.set(partId, new StandoffTree3(part))
 		}
 	}
 
-	pageCache.set(id, { ...pageConfig, doc, parts })
+	pageCache.set(id, { ...pageConfig, standoff: new StandoffTree3(standoff), parts })
 	return pageCache.get(id)
 }
 

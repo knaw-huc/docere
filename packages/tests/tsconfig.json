@@ -14,7 +14,7 @@
     "removeComments": true,
     "resolveJsonModule": true,
     "target": "es2020",
-    "types": ["jest"]
+    "types": ["jest", "node"]
   },
   "exclude": [
     "node_modules",

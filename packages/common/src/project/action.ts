@@ -46,7 +46,7 @@ export type SetFacsimile = {
 }
 
 export type SetProject =
-	ProjectContextValue &
+	Pick<ProjectContextValue, 'config' | 'getComponents' | 'uiComponents'> &
 	{
 		type: 'SET_PROJECT'
 	}

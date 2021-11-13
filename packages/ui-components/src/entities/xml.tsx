@@ -1,5 +1,5 @@
 import React from 'react'
-import { ContainerContext, PartialStandoff, StandoffTree3, useComponents } from '@docere/common'
+import { ContainerContext, isPartialStandoff, StandoffTree3, useComponents } from '@docere/common'
 import { DocereTextView } from '@docere/text'
 
 import { EntityComponentProps, EntityWrapper } from './wrapper'
@@ -11,7 +11,9 @@ export const XmlEntity = React.memo(function XmlEntity(props: EntityComponentPro
 	const containerContext = React.useContext(ContainerContext)
 
 	const components = useComponents(containerContext?.type, containerContext?.id)
-	const standoffTree = new StandoffTree3(props.entity.props.entityValue as PartialStandoff)
+
+	if (!isPartialStandoff(props.entity.props.entityValue)) return null
+	const standoffTree = new StandoffTree3(props.entity.props.entityValue)
 
 	return (
 		<EntityWrapper

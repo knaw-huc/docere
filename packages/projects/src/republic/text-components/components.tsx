@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { LbCommon, Pb } from '@docere/text-components'
 
-import { DispatchContext, useEntity, EntitiesContext, ContainerContext, EntityAnnotationComponentProps, EntryContext, ContainerType, Entry, EntrySettingsContext } from '@docere/common'
+import { DispatchContext, EntitiesContext, ContainerContext, EntityAnnotationComponentProps, EntryContext, ContainerType, Entry, EntrySettingsContext } from '@docere/common'
 
 export const LbWrapper = styled.div`
 	&:before {
@@ -25,8 +25,9 @@ export function RepublicLb(props: EntityAnnotationComponentProps) {
 	const container = React.useContext(ContainerContext)
 	const activeEntities = React.useContext(EntitiesContext)
 	const settings = React.useContext(EntrySettingsContext)
+	const entry = React.useContext(EntryContext)
 
-	const entity = useEntity(props.annotation.props.entityId)
+	const entity = entry.textData.entities.get(props.annotation.props.entityId)
 
 	const handleClick = React.useCallback(ev => {
 		ev.stopPropagation()
@@ -57,7 +58,7 @@ export function SessionPart(props: EntityAnnotationComponentProps) {
 	const container = React.useContext(ContainerContext)
 	const entry = React.useContext(EntryContext)
 
-	const entity = useEntity(props.annotation.props.entityId)
+	const entity = entry.textData.entities.get(props.annotation.props.entityId)
 
 	const handleClick = React.useCallback(ev => {
 		ev.stopPropagation()

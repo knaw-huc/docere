@@ -8,9 +8,9 @@ export default extendConfig({
 	// },
 	documents: {
 		type: 'xml',
-		remoteDirectories: [
-			'suriano/letters',
-		],
+		// remoteDirectories: [
+		// 	'suriano/letters',
+		// ],
 	},
 	slug: 'suriano',
 	title: "Suriano",

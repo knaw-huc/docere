@@ -34,7 +34,10 @@ function useOffset(
 	React.useEffect(() => {
 		let offset = 0
 
-		const textPanelRect = wrapperRef.current.closest('.text-panel').getBoundingClientRect()
+		const textPanelElement = wrapperRef.current.closest('.text-panel')
+		if (textPanelElement == null) return
+
+		const textPanelRect = textPanelElement.getBoundingClientRect()
 		const tooltipRect = wrapperRef.current.getBoundingClientRect()
 
 		const textPanelLeft = textPanelRect.left + 32

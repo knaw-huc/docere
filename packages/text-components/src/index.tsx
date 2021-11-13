@@ -19,7 +19,7 @@ const Hi = styled.span`
 		const { rend } = props.annotation.sourceProps
 		if (rend == null) return ''
 		const rules = []
-		if (has(rend, 'underline')) rules.push('text-decoration: underline;')
+		if (has(rend, 'underline')) rules.push('text-decoration-line: underline; text-underline-offset: 3px;')
 		if (has(rend, 'super')) rules.push('vertical-align: super; font-size: .85rem;')
 		if (has(rend, 'italic') || has(rend, 'i')) rules.push('font-style: italic;')
 		if (has(rend, 'spaced')) rules.push('letter-spacing: .1rem;')

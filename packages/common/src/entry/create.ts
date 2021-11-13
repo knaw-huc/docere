@@ -1,11 +1,11 @@
 import type { ID } from './layer'
-import { JsonEntry, Entry, Entity, Facsimile, isEntityAnnotation, isFacsimileAnnotation } from './index'
-import { generateId, isTextLayer } from '../utils'
+import { JsonEntry, Entry, Facsimile, isEntityAnnotation, isFacsimileAnnotation, EntityConfig } from './index'
+import { isTextLayer } from '../utils'
 import { DocereConfig } from '../config'
-import { EntityConfig } from './entity'
+// import { EntityConfig } from './entity'
 
-import { StandoffTree3 } from '../standoff-annotations/annotation-tree3'
-import { extendExportOptions } from '../standoff-annotations'
+import { AnnotationLookup, StandoffTree3 } from '../standoff-annotations/annotation-tree3'
+import { extendExportOptions, isPartialStandoff, PartialStandoffAnnotation } from '../standoff-annotations'
 
 /**
  * Converts the serialized entry, which is stored in the database to 
@@ -44,34 +44,82 @@ export function createEntry(entry: JsonEntry, config: DocereConfig): Entry {
 	})
 }
 
-function createEntityLookup(layers: Entry['layers'], config: DocereConfig): Map<ID, Entity> {
-	const entitiesById = new Map<ID, Entity>()
+function _createEntityLookup(annotations: PartialStandoffAnnotation[], entityConfigsById: Map<ID, EntityConfig>): AnnotationLookup {
+	const lookup: AnnotationLookup = new Map()
+
+	for (const annotation of annotations.filter(isEntityAnnotation)) {
+		annotation.props.entityConfig = entityConfigsById.get(annotation.props.entityConfigId)
+		lookup.set(annotation.props.entityId, annotation)
+		if (isPartialStandoff(annotation.props.entityValue)) {
+			const entities = _createEntityLookup(annotation.props.entityValue.annotations, entityConfigsById)
+
+			for (const entity of entities.values()) {
+				lookup.set(entity.props.entityId, entity)
+			}
+		}
+	}
+
+	return lookup
+}
+
+function createEntityLookup(layers: Entry['layers'], config: DocereConfig): AnnotationLookup {
 	const entityConfigsById = config.entities2.reduce<Map<ID, EntityConfig>>((prev, curr) => {
 		prev.set(curr.id, curr)
 		return prev
 	}, new Map())
 
-	layers
+	const initMap: AnnotationLookup = new Map()
+	const lookup = layers
 		.filter(isTextLayer)
-		.forEach(textLayer => {
-			for (const annotation of textLayer.standoffTree3.lookup.values()) {//.annotations
-				if (isEntityAnnotation(annotation)) {
-					annotation.props.entityConfig = entityConfigsById.get(annotation.props.entityConfigId)
+		.reduce((prev, curr) => {
+			return new Map([...prev, ..._createEntityLookup(curr.standoffTree3.annotations, entityConfigsById)])
+		}, initMap)
 
-					// TODO generate area ID in preprocessing step?
-					annotation.props.areas?.forEach(a => {
-						if (a.id == null) a.id = generateId()
-					})
-
-					// TODO should be a Map<string, Annotation3[]>? There could be
-					// more instances with the same entityId
-					entitiesById.set(annotation.props.entityId, annotation)
-				}
-			}
-		})
-
-	return entitiesById
+	return lookup
 }
+// 	const entitiesById = new Map<ID, Entity>()
+// 	const entityConfigsById = config.entities2.reduce<Map<ID, EntityConfig>>((prev, curr) => {
+// 		prev.set(curr.id, curr)
+// 		return prev
+// 	}, new Map())
+
+// 	layers
+// 		.filter(isTextLayer)
+// 		.forEach(textLayer => {
+
+// 			textLayer.standoffTree3.annotations
+// 				.filter(isEntityAnnotation)
+// 				.forEach(annotation => {
+// 					annotation.props.entityConfig = entityConfigsById.get(annotation.props.entityConfigId)
+
+// 					// TODO generate area ID in preprocessing step?
+// 					annotation.props.areas?.forEach(a => {
+// 						if (a.id == null) a.id = generateId()
+// 					})
+
+// 					// TODO should be a Map<string, Annotation3[]>? There could be
+// 					// more instances with the same entityId
+// 					entitiesById.set(annotation.props.entityId, annotation)
+
+// 				})
+// 			// for (const annotation of textLayer.standoffTree3.lookup.values()) {//.annotations
+// 			// 	if (isEntityAnnotation(annotation)) {
+// 			// 		annotation.props.entityConfig = entityConfigsById.get(annotation.props.entityConfigId)
+
+// 			// 		// TODO generate area ID in preprocessing step?
+// 			// 		annotation.props.areas?.forEach(a => {
+// 			// 			if (a.id == null) a.id = generateId()
+// 			// 		})
+
+// 			// 		// TODO should be a Map<string, Annotation3[]>? There could be
+// 			// 		// more instances with the same entityId
+// 			// 		entitiesById.set(annotation.props.entityId, annotation)
+// 			// 	}
+// 			// }
+// 		})
+
+// 	return entitiesById
+// }
 
 function createFacsimileLookup(layers: Entry['layers']): Map<ID, Facsimile> {
 	const facsimiles = new Map<ID, Facsimile>()

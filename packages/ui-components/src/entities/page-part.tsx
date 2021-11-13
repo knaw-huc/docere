@@ -43,9 +43,11 @@ export const PagePartEntity = React.memo(function(props: EntityComponentProps) {
 	const page = usePage(props.entity.props.entityConfig.id)
 	const components = useComponents(ContainerType.Page, page?.id)
 
+
 	if (page == null) return null
 
-	// TODO add tree
+	const part = page.parts.get(props.entity.props.entityId)
+
 	return (
 		<EntityWrapper
 			entity={props.entity}
@@ -53,7 +55,7 @@ export const PagePartEntity = React.memo(function(props: EntityComponentProps) {
 			<EntityWithLinkWrapper>
 				<DocereTextView
 					components={components}
-					standoffTree={null}
+					standoffTree={part}
 				/>
 				<PageLink
 					entity={props.entity}

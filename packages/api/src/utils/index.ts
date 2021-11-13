@@ -35,30 +35,11 @@ export function getPageXmlPath(projectId: string, pagePath: string) {
 }
 
 // TODO old, remove
-export function getEntryIdFromFilePath(xmlFilePath: string, projectId: string) {
-	const dir = path.dirname(xmlFilePath).replace(getXmlDir(projectId), '')
-	const base = path.basename(xmlFilePath, '.xml')
-	return `${dir}/${base}`.replace(/^\//, '')
-}
-
-export function getSourceIdFromRemoteFilePath(
-	filePath: string,
-	config: DocereConfig
-) {
-	const ext = config.documents.type === 'xml' ? 'xml' : 'json'
-	let sourceId = path.resolve(path.dirname(filePath), path.basename(filePath, `.${ext}`))
-
-	// Return null if withoutExtension and filePath are equal,
-	// which means it's a dir or not an XML file
-	if (sourceId === filePath) return null
-
-	const re = new RegExp(`^/?${config.slug}/?`)
-	sourceId = sourceId.replace(re, '')
-
-	if (sourceId.charAt(0) === '/') sourceId = sourceId.slice(1)
-
-	return sourceId.length ? sourceId : null
-}
+// export function getEntryIdFromFilePath(xmlFilePath: string, projectId: string) {
+// 	const dir = path.dirname(xmlFilePath).replace(getXmlDir(projectId), '')
+// 	const base = path.basename(xmlFilePath, '.xml')
+// 	return `${dir}/${base}`.replace(/^\//, '')
+// }
 
 export function readFileContents(filePath: string) {
 	return fs.readFileSync(filePath, 'utf8')

@@ -1,5 +1,5 @@
 import { BaseConfig } from '../entry/metadata'
-import { ComponentProps } from '../standoff-annotations'
+import { ComponentProps, PartialStandoffAnnotation, StandoffTree3 } from '../standoff-annotations'
 
 export * from './use-page'
 
@@ -37,17 +37,14 @@ export interface PageConfig extends BaseConfig {
 	 * @todo turn into function (function(doc) => PagePart[])
 	 */
 	split?: {
-		/** Extract the ID of an item */
-		extractId: (el: Element) => string
-
-		/** CSS selector to querySelectorAll the items  */
-		selector: string
+		filter: (a: PartialStandoffAnnotation) => boolean
+		getId: (a: PartialStandoffAnnotation) => string
 	}
 }
 
 export type Page = PageConfig & {
-	doc: XMLDocument
-	parts: Map<string, Element>
+	standoff: StandoffTree3
+	parts: Map<string, StandoffTree3>
 }
 
 export interface PageComponentProps extends ComponentProps {

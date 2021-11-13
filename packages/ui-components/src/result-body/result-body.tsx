@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { SearchTab, Colors } from '@docere/common'
+import { Colors } from '@docere/common'
 
 import { FacsimileThumbs } from './facsimile-thumbs'
 
@@ -9,15 +9,14 @@ import type { DocereResultBodyProps } from '@docere/common'
 interface WProps {
 	active: boolean
 	hasFacsimile: boolean
-	small: boolean
 }
 const Wrapper = styled.div`
 	border-left: 3px solid white;
 	border-right: 3px solid white;
 	border-bottom: 3px solid #EEE;
 	display: grid;
-	font-size: ${(props: WProps) => props.small ? '.8em' : '1em'};
-	grid-column-gap: ${(props: WProps) => props.small ? 32 / 2 : 32}px;
+	font-size: .8rem;
+	grid-column-gap: 32px;
 	grid-template-columns: ${(props: WProps) => props.hasFacsimile ?
 		'76px auto' :
 		'auto'
@@ -60,20 +59,16 @@ const Snippets = styled.ul`
 `
 
 export const ResultBody = React.memo(function ResultBody(props: DocereResultBodyProps) {
-	const small = props.searchTab === SearchTab.Results
-
 	return (
 		<Wrapper
 			active={props.result.id === props.activeId}
 			hasFacsimile={props.result.hasOwnProperty('facsimiles') && props.result.facsimiles.length > 0}
-			small={small}
 		>
 			<FacsimileThumbs
 				activeResult={props.result.id === props.activeId}
 				activeFacsimile={props.facsimile}
 				entryId={props.result.id}
 				facsimiles={props.result.facsimiles}
-				small={small}
 			/>
 			<div className="metadata">{props.children}</div>
 			{

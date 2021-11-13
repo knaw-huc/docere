@@ -1,6 +1,6 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
-import { EntrySettingsContext, EntitiesContext, useUIComponent, UIComponentType, ContainerContext, DispatchContext, useEntity, EntityAnnotationComponentProps, EntityConfig } from '@docere/common'
+import { EntrySettingsContext, EntitiesContext, useUIComponent, UIComponentType, ContainerContext, DispatchContext, EntityAnnotationComponentProps, EntityConfig, EntryContext } from '@docere/common'
 
 import { useChildren } from './hooks'
 import IconsByType from './icons'
@@ -35,14 +35,14 @@ const Wrapper = styled.span`
 	background-color: ${(props: WProps) => {
 		return props.active ? props.entityConfig.color : 'rgba(0, 0, 0, 0)'
 	}};
-	${(props: WProps) => 
-		props.active ?
-			`border-bottom: 3px solid ${props.entityConfig.color};` :
+	${(props: WProps) => {
+		const underline = `border-bottom: 3px solid ${props.entityConfig.color};`
+		return props.active ?
+			underline :
 			props.entityConfig.revealOnHover ?
-				`&:hover {
-					border-bottom: 3px solid ${props.entityConfig.color};
-				}` :
-				`border-bottom: 3px solid ${props.entityConfig.color};`
+				`&:hover {${underline}}` :
+				underline
+		}
 	}
 	color: ${props => props.active ? 'white' : 'inherit'};
 	cursor: pointer;
@@ -58,10 +58,11 @@ export const EntityTag = React.memo(function EntityComp(props: EntityAnnotationC
 	const activeEntities = React.useContext(EntitiesContext)
 	const settings = React.useContext(EntrySettingsContext)
 	const container = React.useContext(ContainerContext)
+	const entry = React.useContext(EntryContext)
 
 	if (!settings['panels.entities.show']) return <span>{props.children}</span>
 
-	const entity = useEntity(props.annotation.props.entityId)
+	const entity = entry.textData.entities.get(props.annotation.props.entityId)
 	const [firstChild, middleChildren, lastChild] = useChildren(props.children, entity)
 
 	const Component = useUIComponent(UIComponentType.Entity, entity?.props.entityConfig.id)
@@ -91,7 +92,10 @@ export const EntityTag = React.memo(function EntityComp(props: EntityAnnotationC
 		setShowTooltip(true)
 	}, [entity])
 
-	if (entity == null) return null
+	if (entity == null) {
+		console.error(`[DOCERE] Entity '${props.annotation.props.entityId}' not found`, props.annotation)
+		return null
+	}
 
 	const Icon = IconsByType[entity.props.entityConfig.type]
 

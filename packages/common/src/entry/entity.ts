@@ -82,15 +82,15 @@ export interface TriggerContainer {
 	triggerContainerId?: ID
 }
 
-export function useEntity(id: string) {
-	const entry = React.useContext(EntryContext)
+// export function useEntity(id: string) {
+// 	const entry = React.useContext(EntryContext)
 
-	const [entity, setEntity] = React.useState<Entity>(null)
+// 	const [entity, setEntity] = React.useState<Entity>(null)
 
-	React.useEffect(() => {
-		const _entity = entry.textData.entities.get(id)
-		setEntity(_entity)
-	}, [entry, id])
+// 	React.useEffect(() => {
+// 		const _entity = entry.textData.entities.get(id)
+// 		setEntity(_entity)
+// 	}, [entry, id])
 
-	return entity
-}
+// 	return entity
+// }

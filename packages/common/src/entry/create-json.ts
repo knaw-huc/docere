@@ -1,6 +1,6 @@
 import { DocereConfig, PartConfig } from '..'
 import { isTextLayerConfig } from '../utils'
-import { FacsimileLayer, ID, isEntityMetadataConfig, JsonEntry, TextLayer } from '.'
+import { FacsimileLayer, ID, isEntityMetadataConfig, JsonEntry, MetadataValue, TextLayer } from '.'
 import { cloneAnnotation, PartialStandoff, PartialStandoffAnnotation } from '../standoff-annotations'
 import { isChild } from '../standoff-annotations/utils'
 
@@ -60,7 +60,7 @@ export function createJsonEntry(props: CreateJsonEntryPartProps): JsonEntry {
 		.filter(x => x != null)
 
 	const metadata = props.projectConfig.metadata2.reduce((prev, metadataConfig) => {
-		let value
+		let value: MetadataValue
 
 		if (isEntityMetadataConfig(metadataConfig)) {
 			const entityConfig = props.projectConfig.entities2
@@ -72,7 +72,7 @@ export function createJsonEntry(props: CreateJsonEntryPartProps): JsonEntry {
 				.map(a => entityConfig.getValue({
 					...props,
 					annotation: a
-				}))
+				})) as MetadataValue
 		} else {
 			value = metadataConfig.getValue(metadataConfig, props, layers)
 		}

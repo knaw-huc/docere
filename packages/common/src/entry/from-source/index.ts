@@ -37,13 +37,30 @@ export async function getEntriesFromSource(
 			if (annotation.props == null) annotation.props = {}
 			annotation.props.entityConfigId = entityConfig.id
 			annotation.props.entityId = entityConfig.getId(annotation)
-			annotation.props.entityValue = entityConfig.getValue(props)
 		}
 
 		if (projectConfig.facsimiles?.filter(annotation)) {
 			if (annotation.props == null) annotation.props = {}
 			annotation.props.facsimileId = projectConfig.facsimiles.getId(annotation)
 			annotation.props.facsimilePath = projectConfig.facsimiles.getPath(props)
+		}
+	}
+
+	/**
+	 * Add the entity value after all entityConfigId's and entityId's have bene added to the annotations,
+	 * because the entity value can be a part (PartialStandoff) of the source. If entityConfig.getValue
+	 * is executed in the first loop, a sub partial standoff could have annotations without the entityConfigId
+	 * and entityId
+	 */
+	for (const annotation of source.annotations) {
+		if (annotation.props.entityConfigId != null) {
+			const entityConfig = projectConfig.entities2.find(ec => ec.id === annotation.props.entityConfigId)
+			annotation.props.entityValue = entityConfig.getValue({
+				annotation,
+				projectConfig,
+				sourceId,
+				source
+			})
 		}
 	}
 
