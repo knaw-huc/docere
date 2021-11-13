@@ -6,7 +6,7 @@ export class StandoffTree3 {
 	public tree: AnnotationNode
 	public lookup: AnnotationLookup
 	public annotations: Annotation3[]
-	private nodeLookup: Map<string, AnnotationNode> = new Map()
+	public nodeLookup: Map<string, AnnotationNode> = new Map()
 	private rangePairs: Map<string, string> = new Map()
 	private ranges: Map<Annotation3, [number, number]> = new Map()
 
@@ -247,7 +247,7 @@ interface TextNode {
 
 export type Node = AnnotationNode | TextNode
 
-type AnnotationLookup = Map<string, Annotation3>
+export type AnnotationLookup = Map<string, Annotation3>
 
 export type Annotation3 = Required<PartialStandoffAnnotation>
 

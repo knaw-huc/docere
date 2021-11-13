@@ -9,8 +9,8 @@ describe('[Common][ProjectConfig] Defaults', () => {
 
 	it('Should have sane defaults', () => {
 		expect(config.collection).toBeNull()
-		expect(config.documents.remoteDirectories[0]).toBe('test')
-		expect(config.documents.stripRemoteDirectoryFromDocumentId).toBeTruthy()
+		// expect(config.documents.remoteDirectories[0]).toBe('test')
+		// expect(config.documents.stripRemoteDirectoryFromDocumentId).toBeTruthy()
 		expect(config.entities2).toHaveLength(0)
 		expect(config.layers2).toHaveLength(0)
 		expect(config.metadata2).toHaveLength(0)

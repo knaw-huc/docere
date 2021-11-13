@@ -1,5 +1,5 @@
 import type { DocereConfig } from '.'
-import { PartialStandoff } from '..'
+import { ensureEnd, PartialStandoff } from '..'
 import { defaultEntityConfig, EntityConfig } from '../entry/entity'
 import { BaseConfig, defaultFacetConfig, defaultMetadata } from '../entry/metadata'
 import { Language } from '../enum'
@@ -53,9 +53,7 @@ function extendPage(config: DocereConfig) {
 
 function setPath(page: PageConfig, config: DocereConfig) {
 	if (page.remotePath == null) {
-		page.remotePath = config.pages.getRemotePath != null ?
-			config.pages.getRemotePath(page) :
-			`${page.id}.xml`
+		page.remotePath = `${config.pages.remotePath}${page.id}.xml`
 	}
 	return page
 }
@@ -71,11 +69,11 @@ export function extendConfig(configDataRaw: DocereConfig): DocereConfig {
 	if (config.title == null) config.title = config.slug.charAt(0).toUpperCase() + config.slug.slice(1)
 
 	config.documents = {
-		// remoteDirectories: [config.slug],
-		// stripRemoteDirectoryFromDocumentId: true,
+		remotePath: '',
 		type: 'standoff',
 		...(config.documents || {})
 	}
+	config.documents.remotePath = ensureEnd(config.documents.remotePath, '/')
 
 	config.entrySettings = { ...defaultEntrySettings, ...config.entrySettings }
 
@@ -106,9 +104,12 @@ export function extendConfig(configDataRaw: DocereConfig): DocereConfig {
 
 	if (config.pages != null) {
 		config.pages = {
+			remotePath: '',
 			...config.pages,
-			config: config.pages.config.map(extendPage(config))
 		}
+
+		config.pages.remotePath = ensureEnd(config.pages.remotePath, '/')
+		config.pages.config = config.pages.config.map(extendPage(config))
 	}
 
 	if (config.standoff == null) config.standoff = {}

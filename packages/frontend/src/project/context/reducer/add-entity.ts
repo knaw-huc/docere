@@ -27,7 +27,7 @@ export function addEntity(state: ProjectState, action: AddEntity): ProjectState 
 			}
 		}
 	}
-	
+
 	const nextState = {
 		...state,
 		activeEntities: new Map(activeEntities),

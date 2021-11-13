@@ -1,49 +1,39 @@
-import fetch from 'node-fetch'
-import { getPool, transactionQuery } from '.'
+import { DocereDB } from './docere-db'
+import { fetchSource, sourceIsXml } from './handle-source/fetch-source'
 
-import { flattenPages } from '@docere/common'
+import { flattenPages, PartialStandoff } from '@docere/common'
 
 import type { DocereConfig } from '@docere/common'
-
-async function fetchPageXml(remotePath: string) {
-	const url = new URL(`${process.env.DOCERE_XML_URL}/${remotePath}`)
-	const result = await fetch(url)
-	if (result.status === 404) return
-	return await result.text()
-}
+import { xml2standoff } from '../utils/xml2standoff'
+import { getSourceIdFromRemoteFilePath } from './handle-source/get-source-id-from-file-path'
 
 export async function addPagesToDb(config: DocereConfig) {
-	const pool = await getPool(config.slug)
-	const client = await pool.connect()
+	const db = new DocereDB(config.slug)
+	await db.init()
 
-	await transactionQuery(client, 'BEGIN')
+	await db.begin()
 
 	for (const pageConfig of flattenPages(config)) {
-		const content = await fetchPageXml(pageConfig.remotePath)
+		const filePath = `/${config.slug}/${pageConfig.remotePath}`
+		const content = await fetchSource(filePath, config)
+
 		if (content == null) {
 			console.log(`[${config.slug}] Page not found: ${pageConfig.remotePath}`)
 			continue
 		}
 
-		await transactionQuery(
-			client,
-			`INSERT INTO page
-				(name, hash, content, updated)
-			VALUES
-				($1, md5($2), $2, NOW())
-			ON CONFLICT (name) DO UPDATE
-			SET
-				hash=md5($2),
-				content=$2,
-				updated=NOW()
-			RETURNING id;`,
-			[pageConfig.id, content]
-		)
+		let partialStandoff: PartialStandoff
+		if (sourceIsXml(content, config)) {
+			partialStandoff = await xml2standoff(content)
+		}
 
-		console.log(`[${config.slug}] Added page: ${pageConfig.remotePath}`)
+
+		const pageId = getSourceIdFromRemoteFilePath(filePath, config, true)
+		await db.insertPage(pageId, JSON.stringify(partialStandoff))
+
+		console.log(`[${config.slug}] Added page: ${pageId}`)
 	}
 
-	await transactionQuery(client, 'COMMIT')
-
-	client.release()
+	await db.commit()
+	db.release()
 }

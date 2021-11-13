@@ -1,6 +1,8 @@
 import pg from 'pg'
 import { DocereApiError } from '../types'
 
+export { addPagesToDb } from './add-pages'
+
 // const pgConnection = {
 // 	password: process.env.PGPASSWORD,
 // 	user: process.env.PGUSER,

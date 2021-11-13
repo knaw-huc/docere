@@ -27,9 +27,9 @@ export function createElasticSearchDocument(
 				if (entitiesWithFacets.indexOf(configId) === -1) return map 
 
 				if (map.has(configId)) 
-					map.get(configId).add(curr.props.entityValue)
+					map.get(configId).add(curr.props.entityValue as string)
 				else
-					map.set(configId, new Set([curr.props.entityValue]))
+					map.set(configId, new Set([curr.props.entityValue as string]))
 			}
 
 			return map

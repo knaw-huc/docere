@@ -1,13 +1,16 @@
-import { extendConfig, Colors, EntityType, LayerType, EsDataType, isChild, countChildren, createPartialStandoffFromAnnotation } from '@docere/common'
+import { extendConfig, Colors, EntityType, LayerType, EsDataType, isChild, createPartialStandoffFromAnnotation, Language } from '@docere/common'
 
 export default extendConfig({
 	documents: {
-		// remoteDirectories: [
-		// 	'mondrian/editie-conversie/geschriften',
-		// 	'mondrian/editie-conversie/brieven/04_Transcriptie_DEF'
-		// ],
+		remotePath: 'entries',
 		type: 'xml'
 	},
+
+	entrySettings: {
+		"panels.entities.toggle": false
+	},
+
+	language: Language.NL,
 
 	metadata2: [
 		{
@@ -37,22 +40,6 @@ export default extendConfig({
 				if (props.id.slice(0, 5) === 'pages') return 'achtergrond tekst'
 			},
 			id: 'type',
-		},
-		{
-			facet: {
-				datatype: EsDataType.Boolean,
-				order: 15,
-			},
-			getValue: (_config, props) =>
-				[
-					'19090421y_IONG_1304',
-					'19140505_BREM_0049',
-					'19140607_SCHE_0050',
-					'19140609_SCHE_PM_5006',
-					'19140927_ASSE_0057',
-					'19141111_ASSE_1760'
-				].indexOf(props.id) > -1,
-			id: 'special',
 		},
 		{
 			facet: {
@@ -108,63 +95,84 @@ export default extendConfig({
 			},
 			id: 'place',
 		},
-		{
-			facet: {
-				datatype: EsDataType.Integer,
-				range: 100,
-			},
-			getValue: (_config, props) => {
-				return countChildren(
-					props.source.annotations,
-					a => a.name === 'div' && a.sourceProps.type === 'notes',
-					a => a.name === 'note'
-				)
-			},
-			id: 'noteCount',
-		},
-		{
-			facet: {
-				datatype: EsDataType.Integer,
-				range: 100,
-			},
-			getValue: (_config, props) => {
-				return countChildren(
-					props.source.annotations,
-					a => a.name === 'div' && a.sourceProps.type === 'ogtnotes',
-					a => a.name === 'note'
-				)
-			},
-			id: 'ogtNoteCount',
-		},
-		{
-			facet: {
-				datatype: EsDataType.Integer,
-				range: 100,
-			},
-			getValue: (_config, props) => {
-				return countChildren(
-					props.source.annotations,
-					a => a.name === 'div' && a.sourceProps.type === 'typednotes',
-					a => a.name === 'note'
-				)
-			},
-			id: 'typedNoteCount',
-		},
-		{
-			facet: {
-				datatype: EsDataType.Boolean,
-			},
-			getValue: (_config, props) => {
-				const root = props.source.annotations
-					.find(a =>
-						a.name === 'div' && a.sourceProps.type === 'translation'
-					)
+		// {
+		// 	showInAside: false,
+		// 	facet: {
+		// 		datatype: EsDataType.Boolean,
+		// 		order: 15,
+		// 	},
+		// 	getValue: (_config, props) =>
+		// 		[
+		// 			'19090421y_IONG_1304',
+		// 			'19140505_BREM_0049',
+		// 			'19140607_SCHE_0050',
+		// 			'19140609_SCHE_PM_5006',
+		// 			'19140927_ASSE_0057',
+		// 			'19141111_ASSE_1760'
+		// 		].indexOf(props.id) > -1,
+		// 	id: 'special',
+		// },
+		// {
+		// 	facet: {
+		// 		datatype: EsDataType.Integer,
+		// 		range: 100,
+		// 	},
+		// 	getValue: (_config, props) => {
+		// 		return countChildren(
+		// 			props.source.annotations,
+		// 			a => a.name === 'div' && a.sourceProps.type === 'notes',
+		// 			a => a.name === 'note'
+		// 		)
+		// 	},
+		// 	id: 'noteCount',
+		// 	showInAside: false,
+		// },
+		// {
+		// 	facet: {
+		// 		datatype: EsDataType.Integer,
+		// 		range: 100,
+		// 	},
+		// 	getValue: (_config, props) => {
+		// 		return countChildren(
+		// 			props.source.annotations,
+		// 			a => a.name === 'div' && a.sourceProps.type === 'ogtnotes',
+		// 			a => a.name === 'note'
+		// 		)
+		// 	},
+		// 	id: 'ogtNoteCount',
+		// 	showInAside: false,
+		// },
+		// {
+		// 	facet: {
+		// 		datatype: EsDataType.Integer,
+		// 		range: 100,
+		// 	},
+		// 	getValue: (_config, props) => {
+		// 		return countChildren(
+		// 			props.source.annotations,
+		// 			a => a.name === 'div' && a.sourceProps.type === 'typednotes',
+		// 			a => a.name === 'note'
+		// 		)
+		// 	},
+		// 	id: 'typedNoteCount',
+		// 	showInAside: false,
+		// },
+		// {
+		// 	facet: {
+		// 		datatype: EsDataType.Boolean,
+		// 	},
+		// 	getValue: (_config, props) => {
+		// 		const root = props.source.annotations
+		// 			.find(a =>
+		// 				a.name === 'div' && a.sourceProps.type === 'translation'
+		// 			)
 
-				if (root == null) return false
-				return props.source.text.slice(root.start, root.end).trim().length > 0
-			},
-			id: 'hasTranslation',
-		}
+		// 		if (root == null) return false
+		// 		return props.source.text.slice(root.start, root.end).trim().length > 0
+		// 	},
+		// 	id: 'hasTranslation',
+		// 	showInAside: false,
+		// }
 	],
 	entities2: [
 		{
@@ -192,15 +200,9 @@ export default extendConfig({
 			filter: a =>
 				a.name === 'ref' &&
 				a.sourceProps.target?.slice(0, 11) === 'biblio.xml#',
-			// extract: ({ entityConfig, entry }) => Array.from(entry.preparedElement.querySelectorAll(entityConfig.selector))
-			// 	.map(x => ({
-			// 		anchor: x,
-			// 		content: x.textContent,
-			// 	})),
 			getId: a => a.sourceProps.target.split('#')[1],
 			getValue: props => props.annotation.sourceProps.target.split('#')[1],
 			type: EntityType.PagePart,
-			// selector: 'ref[target^="biblio.xml#"]',
 		},
 		{
 			color: Colors.BrownLight,
@@ -214,22 +216,13 @@ export default extendConfig({
 				a.sourceProps.target?.slice(0, 8) === 'bio.xml#',
 			getId: a => a.sourceProps.target.split('#')[1],
 			getValue: props => props.annotation.sourceProps.target.split('#')[1],
-
-			// extractId: el => el.getAttribute('target').split('#')[1],
-			// extract: ({ entry, entityConfig }) =>
-			// Array.from(entry.preparedElement.querySelectorAll(entityConfig.selector))
-			// 	.map(x => ({
-			// 		anchor: x,
-			// 		content: x.textContent,
-			// 	})),
-			// selector: 'ref[target^="bio.xml#"]',
 		},
 		{
 			color: Colors.Blue,
 			id: 'editor',
 			filter: a =>
 				a.name === 'ptr' &&
-				a.sourceProps.type === 'note' &&
+				(a.sourceProps.type === 'note' || a.sourceProps.type === 'origNote' || a.sourceProps.type === 'edsNote') &&
 				a.sourceProps.target?.length > 0
 			,
 			getId: a => a.sourceProps.target.split('#')[1],
@@ -237,24 +230,7 @@ export default extendConfig({
 				const root = props.source.annotations.find(a => a.sourceProps['xml:id'] === props.annotation.props.entityId)
 				return createPartialStandoffFromAnnotation(props.source, root)
 			},
-
-			// extractId: el => el.getAttribute('target')?.slice(1),
-			// extract: ({ layerElement, entry, entityConfig }) =>
-			// 	Array.from(layerElement.querySelectorAll(entityConfig.selector))
-			// 		.map((ptr, index) => {
-			// 			const id = ptr.getAttribute('docere:id')
-			// 			const note = entry.preparedElement.querySelector(`note[*|id="${id}"]`)
-			// 			const n = (index + 1).toString()
-			// 			return {
-			// 				anchor: ptr,
-			// 				content: xmlToString(note),
-			// 				n,
-			// 				title: `Note ${n}`,
-			// 			}
-			// 		}),
 			type: EntityType.Note,
-			// selector: 'ptr[type="note"][target]',
-			// showAsFacet: false
 		}
 	],
 
@@ -296,23 +272,26 @@ export default extendConfig({
 			{
 				id: 'biblio',
 				split: {
-					extractId: (el) => el.getAttribute('xml:id'),
-					selector: 'bibl',
+					filter: a => a.name === 'bibl',
+					getId: a => a.sourceProps['xml:id']
 				},
 				title: 'Bibliography'
 			},
 			{
 				id: 'bio',
 				split: {
-					extractId: (el) => el.getAttribute('xml:id'),
-					selector: 'person',
+					filter: a => a.name === 'person',
+					getId: a => a.sourceProps['xml:id']
 				},
 				title: 'Biographies'
 			},
 		],
-		getRemotePath: config => `mondrian/editie/apparaat/${config.id}.xml`
+		remotePath: 'pages'
 	},
+
 	private: true,
+
 	slug: 'mondrian',
+
 	title: 'The Mondrian Papers',
 })

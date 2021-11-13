@@ -32,10 +32,7 @@ class DocereHistory {
 	 * non page (search or entry)
 	 */
 	getLastNonPage() {
-		const referrer = this.paths.find(p => !isPage(p))
-		return referrer != null ?
-			referrer :
-			'/projects/suriano'
+		return this.paths.find(p => !isPage(p))
 	}
 }
 export const docereHistory = new DocereHistory()

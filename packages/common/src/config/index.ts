@@ -23,14 +23,10 @@ export interface DocereConfig {
 
 	/** Options for the project documents */
 	documents?: {
-		// /** 
-		//  * Paths to project document dirs on the remote server
-		//  * 
-		//  * @default [<project ID>]
-		//  * @todo remove this option, it doesn't work because the remote dirs aren't
-		//  * part of the document ID, there is no way to retrace where the doc came from
-		//  */
-		// remoteDirectories?: string[]
+		/** 
+		 * Path to project document dirs on the remote server
+		 */
+		remotePath?: string
 
 		// /**
 		//  * By default the root directory to a document (not the sub directories!)
@@ -78,14 +74,9 @@ export interface DocereConfig {
 		config: (PageConfig | UrlMenuItem)[]
 
 		/**
-		 * Get the remote path of the pages.
-		 * 
-		 * Order of precedence to get the remote path:
-		 * 1. PageConfig['remotePath']
-		 * 2. getRemotePath
-		 * 3. ${PageConfig['id']}.xml
+		 * Get the remote path of the pages dir.
 		 */
-		getRemotePath?: (config: PageConfig) => string
+		remotePath?: string
 	}
 
 	parts?: PartConfig[],

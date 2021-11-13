@@ -15,7 +15,6 @@ interface Props {
 	activeResult: boolean
 	entryId: ID
 	facsimiles: Hit['facsimiles'],
-	small: boolean
 }
 export function FacsimileThumbs(props: Props) {
 	if (props.facsimiles == null || !props.facsimiles.length) return null

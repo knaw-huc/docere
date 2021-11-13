@@ -2,7 +2,7 @@ import { DEFAULT_SPACING, TEXT_PANEL_ASIDE_WIDTH, TEXT_PANEL_MINIMAP_WIDTH, TEXT
 import { LayerType } from './enum'
 import { ActiveEntities } from './project/context'
 
-import type { EntrySettings, LayerConfig, TextLayerConfig, Layer, TextLayer, FacsimileLayerConfig, FacsimileLayer, ID } from '.'
+import type { EntrySettings, LayerConfig, TextLayerConfig, Layer, TextLayer, FacsimileLayerConfig, FacsimileLayer, ID, PartialStandoff } from '.'
 import { getProjectPagePath } from './url'
 
 export function getTextPanelLeftSpacing(settings: EntrySettings) {
@@ -108,19 +108,10 @@ export function isSearchPage() {
 // 	return await fetchJson(endpoint)
 // }
 
-export async function fetchPageXml(projectId: string, pageId: string) {
-	let doc: XMLDocument
-	
+export async function fetchPageXml(projectId: string, pageId: string): Promise<PartialStandoff> {
 	const pagePath = getProjectPagePath(projectId, pageId)
-
-	try {
-		doc = await fetchXml(pagePath)
-	} catch (err) {
-		console.error(`Page '${pageId}' (${pagePath}) not not found on project '${projectId}' `)
-		doc = null			
-	}
-
-	return doc
+	const response = await fetch(pagePath)
+	return await response.json()
 }
 
 // export async function fetchEntryXml(projectSlug: string, documentId: string) {
@@ -266,4 +257,13 @@ export class CombinedKeysCache<T> {
 	private createKey(key1: string, key2: string) {
 		return `${key1}__${key2}`
 	}
+}
+
+function endsWith(str: string, end: string) {
+	if (str.length === 0) return false
+	return str.slice(end.length * -1) === end
+}
+
+export function ensureEnd(str: string, end: string) {
+	return endsWith(str, end) ? str : `${str}${end}`
 }

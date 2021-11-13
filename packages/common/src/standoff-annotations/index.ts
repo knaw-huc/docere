@@ -1,5 +1,4 @@
 import React from 'react'
-import { GetValueProps } from '..'
 import { EntityConfig } from '../entry/entity'
 import { FacsimileArea } from '../entry/facsimile'
 import { Annotation3 } from './annotation-tree3'
@@ -28,6 +27,14 @@ export const HIGHLIGHT_NODE_NAME = '__HI__'
 // 	metadata: Record<string, any>
 // 	text: string
 // }
+
+export function isPartialStandoff(standoff: any): standoff is PartialStandoff {
+	if (standoff == null) return false
+
+	return standoff.hasOwnProperty('annotations') && 
+		standoff.hasOwnProperty('metadata') &&
+		standoff.hasOwnProperty('text')
+}
 
 // TODO remove?
 export interface PartialStandoff {

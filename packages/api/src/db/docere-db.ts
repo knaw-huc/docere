@@ -14,6 +14,23 @@ export class DocereDB extends DB {
 		super(projectId)
 	}
 
+	async insertPage(id: string, stringifiedSource: string) {
+		return await this.transaction(
+			`INSERT INTO page
+				(id, hash, standoff, updated)
+			VALUES
+				($1, $2, $3, NOW())
+			ON CONFLICT (id) DO UPDATE
+			SET
+				hash=$2,
+				standoff=$3,
+				updated=NOW()
+			RETURNING id;`,
+			[id, getHash(stringifiedSource), stringifiedSource]
+		)
+	}
+
+
 	async insertSource(id: string, stringifiedSource: string) {
 		return await this.transaction(
 			`INSERT INTO source

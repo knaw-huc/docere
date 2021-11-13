@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { DocereTextView } from '@docere/text'
-import { TOP_OFFSET, DEFAULT_SPACING, ContainerType, useComponents, PageContext, DispatchContext } from '@docere/common'
+import { TOP_OFFSET, DEFAULT_SPACING, ContainerType, useComponents, PageContext, DispatchContext, getProjectPath, ProjectContext } from '@docere/common'
 import { ContainerProvider } from '../entry/panels/text/layer-provider'
 import { useHistory } from 'react-router'
 import { docereHistory } from '../app/history'
@@ -39,24 +39,26 @@ const Close = styled.div`
 
 export default function PageView() {
 	const dispatch = React.useContext(DispatchContext)
+	const { config } = React.useContext(ProjectContext)
 	const page = React.useContext(PageContext)
 	const components = useComponents(ContainerType.Page, page?.id)
 	const history = useHistory()
 
 	const closePage = React.useCallback(() => {
 		dispatch({ type: 'UNSET_PAGE' })
-		history.push(docereHistory.getLastNonPage())
+		let referrer = docereHistory.getLastNonPage()
+		if (referrer == null) referrer = getProjectPath(config.slug)
+		history.push(referrer)
 	}, [])
 
 	if (page == null) return null
 
-	// TODO add tree
 	return (
 		<Wrapper id="page-container">
 			<ContainerProvider id={page.id} type={ContainerType.Page}>
 				<DocereTextView
 					components={components}
-					standoffTree={null}
+					standoffTree={page.standoff}
 				/>
 			</ContainerProvider>
 			<Close onClick={closePage}>✕</Close>

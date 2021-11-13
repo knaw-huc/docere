@@ -9,7 +9,9 @@
     "test": "cd ./packages/tests && npm t",
     "test:development": "cp .env.development .env && cd ./packages/tests && npm t",
     "test:testing": "cp .env.testing .env && cd ./packages/tests && npm t",
-    "watch": "npx workspaces-run --parallel --continue-on-error -- tsc -w --pretty --preserveWatchOutput"
+    "watch": "npx workspaces-run --parallel --continue-on-error -- tsc -w --pretty --preserveWatchOutput",
+    "build": "npx workspaces-run --parallel --continue-on-error -- npm run build",
+    "dist": "npx workspaces-run --parallel --continue-on-error -- npm run dist"
   },
   "workspaces": [
     "./packages/*"

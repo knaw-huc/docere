@@ -10,7 +10,7 @@ export default function getComponents(config: DocereConfig) {
 		if (container === ContainerType.Page) {
 			if (_id === 'biblio') return await biblioComponents()
 			if (_id === 'bio') return await bioComponents()
-		} else if (container === ContainerType.Layer) {
+		} else if (container === ContainerType.Layer || container === ContainerType.Aside) {
 			return await entryComponents(config)
 		}
 	}

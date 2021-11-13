@@ -7,7 +7,7 @@ import { getProjectIndexMapping } from '../es'
 import { addRemoteStandoffToDb } from '../db/handle-source'
 import { initProjectIndex } from '../es'
 import { castUrlQueryToNumber } from '../utils'
-import { getPool } from '../db'
+import { addPagesToDb, getPool } from '../db'
 import { dtapMap } from '../../../projects/src/dtap'
 import { DTAP } from '@docere/common'
 import { PROJECT_BASE_PATH } from '../constants'
@@ -34,15 +34,16 @@ export default function handleProjectApi(app: Express) {
 
 	app.get(`${PROJECT_BASE_PATH}/pages`, async (req: Request, res) => {
 		const pool = await getPool(req.params.projectId)
-		const { rows } = await pool.query(`SELECT name FROM page;`)
+		const { rows } = await pool.query(`SELECT id FROM page;`)
 		sendJson(rows, res)
 	})
 
 	app.get(`${PROJECT_BASE_PATH}/pages/:pageId`, async (req: Request, res) => {
 		const pool = await getPool(req.params.projectId)
-		const { rows } = await pool.query(`SELECT content FROM page WHERE name=$1;`, [req.params.pageId])
+		const { rows } = await pool.query(`SELECT standoff FROM page WHERE id=$1;`, [req.params.pageId])
+		console.log(rows)
 		if (!rows.length) res.sendStatus(404)
-		else res.send(rows[0].content)
+		else sendJson(rows[0].standoff, res)
 	})
 
 	app.get(`${PROJECT_BASE_PATH}/pages/:pageId/config`, async (req: Request, res) => {
@@ -98,11 +99,13 @@ export default function handleProjectApi(app: Express) {
 
 		upserting = true
 		const t0 = performance.now()
-		await addRemoteStandoffToDb(config.slug, config, {
+		await addRemoteStandoffToDb(`${config.slug}/${config.documents.remotePath}`, config, {
 			force: req.query.force === '',
 			maxPerDir: castUrlQueryToNumber(req.query.max_per_dir as string),
 			maxPerDirOffset: castUrlQueryToNumber(req.query.max_per_dir_offset as string)
 		})
+
+		await addPagesToDb(config)
 		const t1 = performance.now(); console.log('Performance: ', `${t1 - t0}ms`)
 		upserting = false
 	})
@@ -144,12 +147,20 @@ export default function handleProjectApi(app: Express) {
 			);
 		`)
 
-
 		await projectPool.query(
 			`CREATE TABLE entry (
 				id TEXT PRIMARY KEY,
 				source_id TEXT REFERENCES source,
 				order_number INT,
+				standoff JSON,
+				updated TIMESTAMP WITH TIME ZONE
+			);
+		`)
+
+		await projectPool.query(
+			`CREATE TABLE page (
+				id TEXT PRIMARY KEY,
+				hash TEXT UNIQUE,
 				standoff JSON,
 				updated TIMESTAMP WITH TIME ZONE
 			);

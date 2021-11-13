@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import debounce from 'lodash.debounce'
 import { useComponents, DEFAULT_SPACING, TEXT_PANEL_TEXT_WIDTH, ContainerType, getTextPanelLeftSpacing, PANEL_HEADER_HEIGHT, StatefulTextLayer, EntrySettingsContext, SearchContext, EntryContext, ProjectContext, CombinedKeysCache } from '@docere/common'
@@ -41,7 +41,7 @@ const Text2 = styled.div`
 	color: #222;
 	counter-reset: linenumber notenumber;
 	font-family: Merriweather, serif;
-	font-size: 1.1rem;
+	font-size: 1rem;
 	font-weight: 400;
 	display: grid;
 	grid-template-columns: ${TEXT_PANEL_TEXT_WIDTH}px auto;

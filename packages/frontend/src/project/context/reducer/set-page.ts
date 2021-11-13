@@ -1,4 +1,4 @@
-import { ProjectState, SetPage, SetPageId, ActiveEntities } from '@docere/common';
+import { ProjectState, SetPage, SetPageId, ActiveEntities } from '@docere/common'
 
 export function setPage(state: ProjectState, action: SetPage): ProjectState {
 	return {
