@@ -4,7 +4,6 @@
   "description": "",
   "main": "build/index.js",
   "types": "build/index.d.ts",
-  "private": true,
   "scripts": {
     "build": "tsc && webpack",
     "watch": "tsc -w --pretty --preserveWatchOutput"
