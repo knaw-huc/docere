@@ -1,4 +1,4 @@
-import { extendConfig, Colors, EntityType, LayerType, EsDataType, isChild, createPartialStandoffFromAnnotation, Language } from '@docere/common'
+import { extendConfig, Colors, EntityType, LayerType, EsDataType, isChild, createPartialStandoffFromAnnotation } from '@docere/common'
 
 export default extendConfig({
 	documents: {
@@ -9,8 +9,6 @@ export default extendConfig({
 	entrySettings: {
 		"panels.entities.toggle": false
 	},
-
-	language: Language.NL,
 
 	metadata2: [
 		{
@@ -31,15 +29,15 @@ export default extendConfig({
 			id: 'date',
 		},
 		{
-			facet: {
-				order: 15,
-			},
 			getValue: (_config, props) => {
-				if (props.id.slice(0, 7) === 'brieven') return 'brief'
-				if (props.id.slice(0, 11) === 'geschriften') return 'geschrift'
-				if (props.id.slice(0, 5) === 'pages') return 'achtergrond tekst'
+				const anno = props.source.annotations.find(
+					a => a.name === 'note' && a.sourceProps.type === 'dating'
+				)
+				if (anno == null) return null
+
+				return createPartialStandoffFromAnnotation(props.source, anno)
 			},
-			id: 'type',
+			id: 'dating',
 		},
 		{
 			facet: {
@@ -95,6 +93,32 @@ export default extendConfig({
 			},
 			id: 'place',
 		},
+		{
+			facet: {
+				order: 50,
+			},
+			getValue: (_config, props) => {
+				const anno = props.source.annotations.find(
+					a => a.name === 'note' && a.sourceProps.type === 'transcrSource'
+				)
+				if (anno == null) return null
+
+				return props.source.text.slice(anno.start, anno.end)
+			},
+			id: 'transcrSource',
+			title: 'Transcription source'
+		},
+		// {
+		// 	facet: {
+		// 		order: 15,
+		// 	},
+		// 	getValue: (_config, props) => {
+		// 		if (props.id.slice(0, 7) === 'brieven') return 'brief'
+		// 		if (props.id.slice(0, 11) === 'geschriften') return 'geschrift'
+		// 		if (props.id.slice(0, 5) === 'pages') return 'achtergrond tekst'
+		// 	},
+		// 	id: 'type',
+		// },
 		// {
 		// 	showInAside: false,
 		// 	facet: {
@@ -246,7 +270,7 @@ export default extendConfig({
 			if (graphic == null) return null
 			if (graphic.sourceProps.url == null) return null
 
-			return `/iiif/mondrian/SRA024000001/${graphic.sourceProps.url}.jpg/info.json`
+			return `/iiif/mondrian/${graphic.sourceProps.url.replace('../', '')}/info.json`
 		}
 	},
 
@@ -292,6 +316,12 @@ export default extendConfig({
 	private: true,
 
 	slug: 'mondrian',
+
+	standoff: {
+		exportOptions: {
+			annotationHierarchy: ['p', 'lb']
+		}
+	},
 
 	title: 'The Mondrian Papers',
 })

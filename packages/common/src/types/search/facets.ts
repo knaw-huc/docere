@@ -20,6 +20,8 @@ export type FacetsData = Map<string, FacetData>
 export interface FacetConfigBase {
 	readonly datatype?: EsDataType
 	readonly description?: string
+	// TODO move order out of facet object, in metadata view, when not 
+	// a facet, the metadata should be orderable too
 	readonly order?: number
 }
 

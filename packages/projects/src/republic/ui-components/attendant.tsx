@@ -19,7 +19,6 @@ const Wrapper = styled.div`
 `
 
 function AttendantEntityBody(props: EntityComponentProps) {
-	console.log(props)
 	return (
 		<EntityWrapper
 			entity={props.entity}

@@ -1,9 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Pb, Lb, Hi, Paragraph, Space, EntityTag } from '@docere/text-components'
-import { Colors, EntrySettingsContext } from '@docere/common'
+import { Colors, EntrySettingsContext, Tooltip } from '@docere/common'
 
 import type { ComponentProps, DocereConfig } from '@docere/common'
+import { EntityTooltip } from '@docere/text-components/src/entity/entity-tooltip'
 
 function MondrianLb(props: ComponentProps) {
 	const settings = React.useContext(EntrySettingsContext)
@@ -63,7 +64,7 @@ export default async function entryComponents(_config: DocereConfig) {
 		p: Paragraph,
 
 		// TODO restore note
-		ptr: EntityTag,
+		ptr: Note,
 		ref: EntityTag,
 		rs: EntityTag,
 		// 'ptr[type="note"][target]': EntityTag,
@@ -72,5 +73,65 @@ export default async function entryComponents(_config: DocereConfig) {
 		// 'rs[type="artwork-m"][key]': EntityTag,
 
 		space: Space,
+
+		choice: Choice,
+		sic: Sic,
+		corr: Corr,
 	}
 }
+
+function Note(props: ComponentProps) {
+	return (
+		<EntityTag {...props}>{props.annotation?.props.entityOrder}</EntityTag>
+	)
+}
+
+function Sic(props: any) {
+	return (
+		<Tooltip color="#666">
+			<header>{props.annotation.sourceProps.type}</header>
+			<div className="body">
+				{props.children}
+			</div>
+		</Tooltip>
+	)
+}
+
+const Choice = styled.span`
+	cursor: pointer;
+	display: inline-block;
+	position: relative;
+	text-decoration-color: #666;
+	text-decoration-line: underline;
+	text-decoration-style: wavy;
+	text-decoration-thickness: 1px;
+	text-underline-offset: 3px;
+
+	.tooltip {
+		display: none;
+		width: 200px;
+		text-align: center;
+		margin-left: calc(50% - 100px);
+		margin-top: 2.7rem;
+
+		header {
+			background: #666;
+			color: white;
+			line-height: 1.2rem;
+		}
+
+		.body {
+			background: #EEE;
+			color: black;
+			font-size: 1rem;
+			padding: .5rem 0;
+		}		
+	}
+
+	&:hover .tooltip {
+		display: block;
+	}
+`
+
+const Corr = styled.span`
+`

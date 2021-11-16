@@ -46,6 +46,7 @@ interface Props {
 }
 export const Tooltip = React.forwardRef((props: Props, ref: React.RefObject<HTMLDivElement>) =>
 	<Wrapper
+		className="tooltip"
 		offset={props.offset}
 		ref={ref}
 		zIndexOffset={props.zIndexOffset}

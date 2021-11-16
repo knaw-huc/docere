@@ -1,5 +1,5 @@
 import React from 'react'
-import { MetadataItem, DEFAULT_SPACING, StringMetadata } from '@docere/common'
+import { MetadataItem, DEFAULT_SPACING, StringMetadata, isPartialStandoff, StandoffTree3, useUIComponent, useComponents, ContainerType, AsideTab } from '@docere/common'
 import styled from 'styled-components'
 import { isListMetadataItem, isBooleanMetadataItem, isDateMetadataItem, isHierarchyMetadataItem, isRangeMetadataItem } from '@docere/common'
 
@@ -8,6 +8,7 @@ import HierarchyFacetValue from './hierarchy-value'
 import BooleanFacetValue from './boolean-value'
 // import RangeFacetValue from './range-value'
 import DateFacetValue from './date-facet'
+import { DocereTextView } from '@docere/text'
 
 const Wrapper = styled.li`
 	margin-bottom: ${DEFAULT_SPACING}px;
@@ -27,6 +28,10 @@ interface Props {
 export function MetadataItemComp(props: Props) {
 	return (
 		<Wrapper>
+			{
+				isPartialStandoff(props.metadataItem.value) &&
+				<TextMetadata {...props} />
+			}
 			{
 				isListMetadataItem(props.metadataItem) &&
 				<StringMetadata
@@ -63,5 +68,24 @@ export function MetadataItemComp(props: Props) {
 				</>
 			}
 		</Wrapper>
+	)
+}
+
+
+const StandoffMetadataWrapper = styled.div`
+	font-size: .8rem;
+`
+
+function TextMetadata(props: Props) {
+	const components = useComponents(ContainerType.Aside, AsideTab.Metadata)
+
+	return (
+		<StandoffMetadataWrapper>
+			<Title>{props.metadataItem.config.title}</Title>
+			<DocereTextView
+				components={components}
+				standoffTree={new StandoffTree3(props.metadataItem.value)}
+			/>
+		</StandoffMetadataWrapper>
 	)
 }

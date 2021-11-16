@@ -15,7 +15,6 @@ import { extendExportOptions, isPartialStandoff, PartialStandoffAnnotation } fro
  * 
  * @param entry - the serialized entry 
  * @return Entry - the deserialized entry, used in the client
- * @todo fix the type errors on the layer conversion
  */
 export function createEntry(entry: JsonEntry, config: DocereConfig): Entry {
 	const t0 = performance.now()
@@ -24,8 +23,21 @@ export function createEntry(entry: JsonEntry, config: DocereConfig): Entry {
 		.forEach(tl => {
 			const expopts = extendExportOptions(config.standoff.exportOptions)
 			const sot = new StandoffTree3(tl.partialStandoff, expopts)
+
+			// TODO move to preprocessing?
+			const m = config.entities2.reduce<Map<string, number>>((prev, curr) => prev.set(curr.id, 1), new Map())
+			sot.annotations
+				.filter(a => isEntityAnnotation)
+				.forEach(a => {
+					const { entityConfigId } = a.props
+					const order = m.get(entityConfigId)
+					a.props.entityOrder = order
+					m.set(entityConfigId, order + 1)
+				})
+
 			tl.standoffTree3 = sot
 		})
+
 	const t1 = performance.now(); console.log('Performance: ', `${t1 - t0}ms`)
 
 	return ({

@@ -56,7 +56,10 @@ export function useChildren(children: React.ReactNode, entity: Entity): SplitChi
 		// <span> which could interfere with the non-string child's rendering
 		if (
 			childrenArray.length === 1 &&
-			typeof childrenArray[0] !== 'string'
+			(
+				typeof childrenArray[0] !== 'string' &&
+				typeof childrenArray[0] !== 'number'
+			)
 		) {
 			childrenArray.push(' ')
 		}
