@@ -13,7 +13,12 @@ function BirthDeath(props: PageComponentProps) {
 
 type PWProps = PageComponentProps & { ref?: any }
 const PersonWrapper = styled.div.attrs((props: PWProps) => ({ id: props.annotation.sourceProps['xml:id'] }))`
-	background: ${(props: PWProps) => props.activeId === props.annotation.sourceProps['xml:id'] ? 'green' : 'none'};
+	background: ${(props: PWProps) =>
+		props.activeId != null &&
+		props.activeId === props.annotation.sourceProps['xml:id'] ?
+			'green' :
+			'none'
+	};
 	margin-bottom: 1rem;
 	min-height: 40px;
 `
@@ -22,6 +27,7 @@ function useScrollIntoView(elementId: string, activeId: string) {
 	const ref = React.useRef<HTMLLIElement>()
 
 	React.useEffect(() => {
+		if (elementId == null || activeId == null) return
 		if (elementId === activeId) ref.current.scrollIntoView()
 	}, [elementId, activeId])
 

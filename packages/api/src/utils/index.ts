@@ -67,7 +67,6 @@ function getDirents(dirPath: string) {
 }
 
 export function listProjects() {
-	console.log(dtapMap, DOCERE_DTAP)
 	return Object.keys(dtapMap)
 		.filter(projectId => dtapMap[projectId] >= DOCERE_DTAP)
 }

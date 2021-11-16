@@ -43,7 +43,6 @@ export const PagePartEntity = React.memo(function(props: EntityComponentProps) {
 	const page = usePage(props.entity.props.entityConfig.id)
 	const components = useComponents(ContainerType.Page, page?.id)
 
-
 	if (page == null) return null
 
 	const part = page.parts.get(props.entity.props.entityId)

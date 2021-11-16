@@ -22,5 +22,5 @@
 		"./build",
 		"./node_modules"
 	],
-	"files": ["./src/index.tsx"]
+	"files": ["./src/index.tsx", "../common/src/global.d.ts"]
 }

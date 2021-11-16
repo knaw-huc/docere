@@ -1,6 +1,6 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
-import { EntrySettingsContext, EntitiesContext, useUIComponent, UIComponentType, ContainerContext, DispatchContext, EntityAnnotationComponentProps, EntityConfig, EntryContext } from '@docere/common'
+import { EntrySettingsContext, EntitiesContext, useUIComponent, UIComponentType, ContainerContext, DispatchContext, EntityAnnotationComponentProps, EntityConfig, EntryContext, DTAP } from '@docere/common'
 
 import { useChildren } from './hooks'
 import IconsByType from './icons'
@@ -93,8 +93,10 @@ export const EntityTag = React.memo(function EntityComp(props: EntityAnnotationC
 	}, [entity])
 
 	if (entity == null) {
-		console.error(`[DOCERE] Entity '${props.annotation.props.entityId}' not found`, props.annotation)
-		return null
+		if (DOCERE_DTAP === DTAP.Development) {
+			console.error(`[DOCERE] Entity '${props.annotation.props.entityId}' not found`, props.annotation)
+		}
+		return <span>{props.children}</span>
 	}
 
 	const Icon = IconsByType[entity.props.entityConfig.type]
