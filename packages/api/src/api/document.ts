@@ -47,7 +47,7 @@ export default function handleDocumentApi(app: Express) {
 		if (isError(projectConfig)) return sendJson(projectConfig, res)
 
 		const ext = (projectConfig.documents.type === 'xml') ? '.xml' : '.json'
-		const filePath = `/${projectConfig.slug}/${req.params.documentId}${ext}`
+		const filePath = `/${projectConfig.slug}/${projectConfig.documents.remotePath}/${req.params.documentId}${ext}`
 
 		const source = await fetchSource(filePath, projectConfig);
 
