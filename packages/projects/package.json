@@ -13,7 +13,7 @@
   "dependencies": {
     "@docere/common": "^2.0.0",
     "@docere/text": "^2.0.0",
-    "@docere/text-components": "^1.4.2",
+    "@docere/text-components": "^1.4.3",
     "@docere/ui-components": "^1.4.2",
     "dotenv": "^10.0.0",
     "react-tabs": "^3.2.2"

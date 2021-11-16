@@ -16,7 +16,7 @@
     "@docere/projects": "^1.4.2",
     "@docere/search": "^2.0.0",
     "@docere/text": "^2.0.0",
-    "@docere/text-components": "^1.4.2",
+    "@docere/text-components": "^1.4.3",
     "@docere/ui-components": "^1.4.2",
     "@types/openseadragon": "^2.4.8",
     "dotenv": "^10.0.0",
