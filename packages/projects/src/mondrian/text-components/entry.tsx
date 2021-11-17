@@ -4,7 +4,6 @@ import { Pb, Lb, Hi, Paragraph, Space, EntityTag } from '@docere/text-components
 import { Colors, EntrySettingsContext, Tooltip } from '@docere/common'
 
 import type { ComponentProps, DocereConfig } from '@docere/common'
-import { EntityTooltip } from '@docere/text-components/src/entity/entity-tooltip'
 
 function MondrianLb(props: ComponentProps) {
 	const settings = React.useContext(EntrySettingsContext)

@@ -1,5 +1,5 @@
 import React from 'react'
-import { MetadataItem, DEFAULT_SPACING, StringMetadata, isPartialStandoff, StandoffTree3, useUIComponent, useComponents, ContainerType, AsideTab } from '@docere/common'
+import { MetadataItem, DEFAULT_SPACING, StringMetadata, isPartialStandoff, StandoffTree3, useComponents, ContainerType, AsideTab, PartialStandoff } from '@docere/common'
 import styled from 'styled-components'
 import { isListMetadataItem, isBooleanMetadataItem, isDateMetadataItem, isHierarchyMetadataItem, isRangeMetadataItem } from '@docere/common'
 
@@ -84,7 +84,7 @@ function TextMetadata(props: Props) {
 			<Title>{props.metadataItem.config.title}</Title>
 			<DocereTextView
 				components={components}
-				standoffTree={new StandoffTree3(props.metadataItem.value)}
+				standoffTree={new StandoffTree3(props.metadataItem.value as unknown as PartialStandoff)}
 			/>
 		</StandoffMetadataWrapper>
 	)

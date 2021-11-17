@@ -87,6 +87,7 @@ export interface PartialStandoffAnnotation {
 		entityConfig?: EntityConfig
 		entityConfigId?: string
 		entityId?: ReturnType<EntityConfig['getId']>
+		entityOrder?: number
 		entityValue?: ReturnType<EntityConfig['getValue']>
 		isRoot?: boolean
 		isRangeStart?: boolean

@@ -29,6 +29,8 @@ export default extendConfig({
 			id: 'date',
 		},
 		{
+			// TODO add PartialStandoff to getValue return possibility
+			// @ts-ignore
 			getValue: (_config, props) => {
 				const anno = props.source.annotations.find(
 					a => a.name === 'note' && a.sourceProps.type === 'dating'
