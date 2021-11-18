@@ -13,7 +13,7 @@ export default extendConfig({
 		filter: a => {
 			return a.name === 'graphic' && a.sourceProps.hasOwnProperty('url')
 		},
-		getId: a => a.sourceProps['xml:id'],
+		getId: ({ annotation }) => annotation.sourceProps['xml:id'],
 		getPath: props => {
 			const fileName = props.annotation.sourceProps.url.replace(/^..\/images\//, '')
 			if (!fileName.length) return null

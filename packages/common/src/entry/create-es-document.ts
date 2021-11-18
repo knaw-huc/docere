@@ -55,10 +55,15 @@ export function createElasticSearchDocument(
 				a.props.facsimileId != null &&
 				a.props.facsimilePath != null
 			)
-			.map(a => ({
-				id: a.props.facsimileId,
-				path: a.props.facsimilePath
-			})) :
+			.reduce((prev, a) => {
+				if (prev.find(x => x.id === a.props.facsimileId) == null) {
+					prev.push({
+						id: a.props.facsimileId,
+						path: a.props.facsimilePath
+					})
+				}
+				return prev
+			}, []) :
 		[]
 
 	const metadata = Object.keys(jsonEntry.metadata).reduce((prev, curr) => {

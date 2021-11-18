@@ -211,7 +211,7 @@ export default extendConfig({
 				a.sourceProps.type === 'artwork-m' && 
 				a.sourceProps.key?.length > 0
 			,
-			getId: a => a.sourceProps.key,
+			getId: ({ annotation }) => annotation.sourceProps.key,
 			getValue: props => props.annotation.sourceProps.key,
 			id: 'rkd-artwork-link',
 			title: 'Artwork',
@@ -226,7 +226,7 @@ export default extendConfig({
 			filter: a =>
 				a.name === 'ref' &&
 				a.sourceProps.target?.slice(0, 11) === 'biblio.xml#',
-			getId: a => a.sourceProps.target.split('#')[1],
+			getId: ({ annotation }) => annotation.sourceProps.target.split('#')[1],
 			getValue: props => props.annotation.sourceProps.target.split('#')[1],
 			type: EntityType.PagePart,
 		},
@@ -236,11 +236,11 @@ export default extendConfig({
 				order: 70,
 			},
 			id: 'bio',
-			type: EntityType.PagePart,
+			type: EntityType.Person,
 			filter: a =>
 				a.name === 'ref' &&
 				a.sourceProps.target?.slice(0, 8) === 'bio.xml#',
-			getId: a => a.sourceProps.target.split('#')[1],
+			getId: ({ annotation }) => annotation.sourceProps.target.split('#')[1],
 			getValue: props => props.annotation.sourceProps.target.split('#')[1],
 		},
 		{
@@ -251,7 +251,7 @@ export default extendConfig({
 				(a.sourceProps.type === 'note' || a.sourceProps.type === 'origNote' || a.sourceProps.type === 'edsNote') &&
 				a.sourceProps.target?.length > 0
 			,
-			getId: a => a.sourceProps.target.split('#')[1],
+			getId: ({ annotation }) => annotation.sourceProps.target.split('#')[1],
 			getValue: props => {
 				const root = props.source.annotations.find(a => a.sourceProps['xml:id'] === props.annotation.props.entityId)
 				return createPartialStandoffFromAnnotation(props.source, root)
@@ -262,9 +262,11 @@ export default extendConfig({
 
 	facsimiles: {
 		filter: a => a.name === 'pb' && a.sourceProps.facs != null && a.sourceProps.facs.length > 0,
-		getId: a => a.sourceProps.facs.slice(1),
+		getId: props => props.sourceId + '__' + props.annotation.sourceProps.facs.slice(1),
 		getPath: (props) => {
-			const { facsimileId: id } = props.annotation.props
+			const { facsimileId } = props.annotation.props
+
+			const id = facsimileId.split('__')[1]
 
 			const surface = props.source.annotations.find(a => a.name === 'surface' && a.sourceProps['xml:id'] === id)
 			if (surface == null) return null

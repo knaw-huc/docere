@@ -132,7 +132,7 @@ export default extendConfig({
 			color: Colors.BlueBright,
 			id: 'note',
 			filter: a => a.name === 'ptr' && hasMetadataValue(a, 'target'),
-			getId: a => a.sourceProps.target.slice(1),
+			getId: ({ annotation }) => annotation.sourceProps.target.slice(1),
 			title: "Notes",
 			type: EntityType.Note,
 			showInAside: false,
@@ -141,7 +141,7 @@ export default extendConfig({
 			color: Colors.Pink,
 			id: 'personography',
 			filter: a => a.name === 'rs' && a.sourceProps.type === 'pers',
-			getId: a => a.sourceProps.key,
+			getId: ({ annotation }) => annotation.sourceProps.key,
 			title: "Persons",
 			type: EntityType.Person,
 		},
@@ -149,7 +149,7 @@ export default extendConfig({
 
 	facsimiles: {
 		filter: a => a.name === 'pb',
-		getId: a => a.sourceProps['xml:id'],
+		getId: ({ annotation }) => annotation.sourceProps['xml:id'],
 		getPath: props => {
 			const { _facsimileId: id } = props.annotation.sourceProps
 

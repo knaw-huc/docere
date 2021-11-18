@@ -25,7 +25,7 @@ export interface EntityConfig extends BaseMetadataConfig {
 	 * Set the ID of the entity. Not te be confused with the annotation ID!
 	 * An entity can consist of multiple annotations. Defaults to a.metadata._id
 	 */
-	getId?: (a: PartialStandoffAnnotation) => string
+	getId?: (props: GetValueProps) => string
 
 	/**
 	 * Get the value of the entity. This is primarily used to show in 

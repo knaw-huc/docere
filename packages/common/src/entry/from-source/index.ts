@@ -36,12 +36,12 @@ export async function getEntriesFromSource(
 		if (entityConfig != null) {
 			if (annotation.props == null) annotation.props = {}
 			annotation.props.entityConfigId = entityConfig.id
-			annotation.props.entityId = entityConfig.getId(annotation)
+			annotation.props.entityId = entityConfig.getId(props)
 		}
 
 		if (projectConfig.facsimiles?.filter(annotation)) {
 			if (annotation.props == null) annotation.props = {}
-			annotation.props.facsimileId = projectConfig.facsimiles.getId(annotation)
+			annotation.props.facsimileId = projectConfig.facsimiles.getId(props)
 			annotation.props.facsimilePath = projectConfig.facsimiles.getPath(props)
 		}
 	}

@@ -148,7 +148,7 @@ export default extendConfig({
 		{
 			id: '_attendant',
 			filter: a => a.name === 'attendant',
-			getId: a => a.sourceProps.delegate_id,
+			getId: ({ annotation }) => annotation.sourceProps.delegate_id,
 			getValue: props => props.annotation.sourceProps.delegate_name,
 			title: 'Aanwezigen',
 			type: EntityType.Person,
