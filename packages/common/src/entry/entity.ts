@@ -45,7 +45,7 @@ export const defaultEntityConfig: Required<EntityConfig> = {
 	color: Colors.Blue,
 	facet: null,
 	filter: null,
-	getId: a => a.id,
+	getId: ({ annotation }) => annotation.id,
 	getValue: () => null,
 	getBody: () => null,
 	id: null,

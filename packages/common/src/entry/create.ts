@@ -27,7 +27,7 @@ export function createEntry(entry: JsonEntry, config: DocereConfig): Entry {
 			// TODO move to preprocessing?
 			const m = config.entities2.reduce<Map<string, number>>((prev, curr) => prev.set(curr.id, 1), new Map())
 			sot.annotations
-				.filter(a => isEntityAnnotation)
+				.filter(isEntityAnnotation)
 				.forEach(a => {
 					const { entityConfigId } = a.props
 					const order = m.get(entityConfigId)

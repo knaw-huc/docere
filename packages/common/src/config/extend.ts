@@ -124,7 +124,7 @@ export function extendConfig(configDataRaw: DocereConfig): DocereConfig {
 	}
 
 	if (config.facsimiles != null && config.facsimiles.getId == null) {
-		config.facsimiles.getId = a => a.id
+		config.facsimiles.getId = ({ annotation }) => annotation.id
 	}
 
 	if (Array.isArray(config.parts)) {
