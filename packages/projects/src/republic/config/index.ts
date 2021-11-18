@@ -117,6 +117,14 @@ export default extendConfig({
 			id: 'type',
 			getValue: (_config, props) => typeTranslation[props.partConfig.id],
 		},
+		{
+			facet: {
+				order: 1,
+			},
+			id: 'resolution_type',
+			getValue: (_config, props) => props.source.metadata.type,
+			title: 'Resolutie type'
+		},
 	],
 
 	facsimiles: {

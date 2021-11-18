@@ -13,12 +13,7 @@ export default function handleDocumentApi(app: Express) {
 	app.get(DOCUMENT_BASE_PATH, async (req, res) => {
 		const pool = await getPool(req.params.projectId)
 
-		// TMP TODO remove (and re-index Republic)
-		const projectConfig = await getProjectConfig(req.params.projectId)
-		const table = projectConfig.slug === 'republic' ? 'document' : 'entry'
-		// \TMP
-
-		const { rows } = await pool.query(`SELECT standoff FROM ${table} WHERE id=$1;`, [req.params.documentId])
+		const { rows } = await pool.query(`SELECT standoff FROM entry WHERE id=$1;`, [req.params.documentId])
 		if (!rows.length) res.sendStatus(404)
 		else res.json(rows[0].standoff)
 	})

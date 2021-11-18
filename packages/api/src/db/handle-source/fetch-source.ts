@@ -22,6 +22,8 @@ export async function fetchAndPrepareSource(
 	let partialStandoff: PartialStandoff
 	if (sourceIsXml(source, projectConfig)) {
 		partialStandoff = await xml2standoff(source)
+	} else {
+		partialStandoff = source as PartialStandoff
 	}
 
 	return projectConfig.standoff.prepareSource(partialStandoff)
