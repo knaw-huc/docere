@@ -33,6 +33,7 @@ const NoWrap = styled.span`
 interface WProps { entityConfig: EntityConfig, active: boolean }
 const Wrapper = styled.span`
 	background-color: ${(props: WProps) => {
+		console.log(props.entityConfig.color)
 		return props.active ? props.entityConfig.color : 'rgba(0, 0, 0, 0)'
 	}};
 	${(props: WProps) => {

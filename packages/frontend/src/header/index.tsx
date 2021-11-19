@@ -1,7 +1,6 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { ProjectContext, TOP_OFFSET, DEFAULT_SPACING, Colors, getSearchPath } from '@docere/common'
-import PagesMenu from './pages'
+import { ProjectContext, TOP_OFFSET, DEFAULT_SPACING, Colors, getSearchPath, PagesMenu } from '@docere/common'
 import { Link } from 'react-router-dom'
 
 export const HEADER_DARK_TEXT = '#AAA'

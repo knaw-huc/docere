@@ -2,6 +2,7 @@ import { BaseConfig } from '../entry/metadata'
 import { ComponentProps, PartialStandoffAnnotation, StandoffTree3 } from '../standoff-annotations'
 
 export * from './use-page'
+export * from './pages'
 
 /**
  * Config for pages

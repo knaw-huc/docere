@@ -1,9 +1,11 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import { DEFAULT_SPACING, MAINHEADER_HEIGHT, Colors, ProjectContext, DispatchContext, isUrlMenuItem, UrlMenuItem } from '@docere/common'
+import { PageConfig } from '.'
+import { ProjectContext, DispatchContext } from '..'
+import { isUrlMenuItem, UrlMenuItem } from '../config'
+import { DEFAULT_SPACING, MAINHEADER_HEIGHT } from '../constants'
+import { Colors } from '../enum'
 
-import type { PageConfig } from '@docere/common'
-// import { Link } from 'react-router-dom'
 
 const Wrapper = styled.ul`
 	align-self: center;
@@ -112,7 +114,7 @@ function PageMenuItem(props: PageMenuItemProps) {
 	)
 }
 
-export default React.memo(function PagesMenu() {
+export const PagesMenu = React.memo(function() {
 	const { config } = React.useContext(ProjectContext)
 	const dispatch = React.useContext(DispatchContext)
 
@@ -128,7 +130,7 @@ export default React.memo(function PagesMenu() {
 	if (config.pages?.config == null) return null
 
 	return (
-		<Wrapper>
+		<Wrapper className="pages-menu">
 			{
 				config.pages.config.map(page =>
 					!isUrlMenuItem(page) && page.hasOwnProperty('children') ?
