@@ -1,6 +1,6 @@
 {
   "name": "@docere/text",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "",
   "main": "dist/docere.text.min.js",
   "types": "build/index.d.ts",
