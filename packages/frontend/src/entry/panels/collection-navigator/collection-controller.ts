@@ -113,7 +113,7 @@ export class CollectionNavigatorController extends CollectionNavigatorBaseContro
 	 */
 	private async fetchCollectionDocuments(entryId: string): Promise<CollectionDocument[]> {
 		const entryApiPath = getEntryApiPath(this.projectContext.config.slug, entryId)
-		const url = `${entryApiPath}/collection`
+		const url = `${entryApiPath}collection`
 		const response = await fetch(url)
 		return await response.json()
 
