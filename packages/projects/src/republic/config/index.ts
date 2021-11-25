@@ -114,6 +114,7 @@ export default extendConfig({
 				datatype: EsDataType.Keyword,
 				order: 0,
 			},
+
 			id: 'type',
 			getValue: (_config, props) => typeTranslation[props.partConfig.id],
 		},
@@ -121,9 +122,9 @@ export default extendConfig({
 			facet: {
 				order: 1,
 			},
-			id: 'resolution_type',
-			getValue: (_config, props) => props.source.metadata.type,
-			title: 'Resolutie type'
+			id: 'proposition_type',
+			getValue: (_config, props) => props.root?.sourceProps.proposition_type,
+			title: 'Propositie type'
 		},
 	],
 
