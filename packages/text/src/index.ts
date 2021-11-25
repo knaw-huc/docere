@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { isTextNode, StandoffTree3, generateAnnotationId, Annotation3 } from '@docere/common'
+import { isTextNode, StandoffTree3, generateAnnotationId, Annotation3, HIGHLIGHT_NODE_NAME } from '@docere/common'
 
 import type { ComponentProps, DocereComponents, Node, ReactComponent } from '@docere/common'
 
@@ -11,22 +11,25 @@ function Empty(props: ComponentProps) {
 	return props.children
 }
 
-// function Highlight(text: string) {
-// 	return React.createElement(
-// 		'span',
-// 		{
-// 			key: generateAnnotationId(),
-// 			style: { backgroundColor: 'yellow' }
-// 		},
-// 		text
-// 	)
-// }
+function Highlight(props: ComponentProps) {
+	return React.createElement(
+		'span',
+		{
+			key: generateAnnotationId(),
+			style: { backgroundColor: 'yellow' }
+		},
+		props.children
+	)
+}
 
 function getComponentRenderer(props: DocereTextViewProps) {
 	function getComponent(annotation: Annotation3) {
 		let component = props.components[annotation.name]
 		if (component == null && props.components._find != null) {
 			component = props.components._find(annotation)
+		}
+		if (component == null && annotation.name === HIGHLIGHT_NODE_NAME) {
+			component = Highlight
 		}
 		if (component == null) component = Empty as ReactComponent
 
